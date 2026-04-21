@@ -10,6 +10,7 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     "Inter-Bold": require("../Font/Inter_18pt-Bold.ttf"),
     "Inter-Regular": require("../Font/Inter_24pt-Regular.ttf"),
+    "Inter-Medium": require("../Font/Inter_24pt-Medium.ttf"),
   });
 
   useEffect(() => {

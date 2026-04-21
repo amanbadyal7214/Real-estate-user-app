@@ -8,6 +8,7 @@ module.exports = {
       fontFamily: {
         "inter-bold": ["Inter-Bold"],
         "inter-regular": ["Inter-Regular"],
+        "inter-medium": ["Inter-Medium"],
       },
       colors: {
         primary: "#008E96",
