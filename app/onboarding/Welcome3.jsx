@@ -43,14 +43,34 @@ const Welcome3 = () => {
           </View>
 
           {/* Next Button */}
-          <TouchableOpacity 
-            className="w-full h-14 bg-primary rounded-2xl flex-row justify-center items-center shadow-lg shadow-primary/30"
-            activeOpacity={0.8}
-            onPress={() => router.replace('/(auth)/onboard')}
+          <View
+            style={{
+              width: '100%',
+              shadowColor: '#DFFFFD',
+              shadowOffset: { width: 0, height: 10 },
+              shadowOpacity: 1,
+              shadowRadius: 15,
+              elevation: 10,
+            }}
           >
-            <Text className="text-white text-lg font-inter-bold mr-2 ml-4">Get Started</Text>
-            <ChevronRight color="white" size={20} strokeWidth={3} />
-          </TouchableOpacity>
+            <TouchableOpacity 
+              className="w-full h-14 items-center justify-center flex-row"
+              style={{
+                borderRadius: 14,
+                backgroundColor: '#008E96',
+                shadowColor: '#9ADDD9',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 1,
+                shadowRadius: 6,
+                elevation: 4,
+              }}
+              activeOpacity={0.8}
+              onPress={() => router.replace('/(auth)/onboard')}
+            >
+              <Text className="text-white text-lg font-inter-bold mr-2 ml-4">Get Started</Text>
+              <ChevronRight color="white" size={20} strokeWidth={3} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </SafeAreaView>

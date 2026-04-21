@@ -17,12 +17,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="px-4 pt-2">
-        <TouchableOpacity onPress={() => router.back()} className="p-2 self-start">
-          <Ionicons name="chevron-back" size={32} color="black" />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView className="flex-1 pt-12 bg-white">
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 py-7">
 
@@ -102,12 +97,31 @@ const Register = () => {
           </View>
         </View>
 
-        <TouchableOpacity 
-          className="mt-6 p-4 rounded-xl items-center shadow-md"
-          style={{ backgroundColor: PRIMARY_COLOR }}
+        <View
+          style={{
+            shadowColor: '#DFFFFD',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 1,
+            shadowRadius: 15,
+            elevation: 10,
+          }}
         >
-          <Text className="text-white font-inter-bold text-lg">Register and Create Account</Text>
-        </TouchableOpacity>
+          <TouchableOpacity 
+            className="p-4 mt-4 items-center"
+            style={{ 
+              borderRadius: 14,
+              backgroundColor: '#008E96',
+              shadowColor: '#9ADDD9',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 1,
+              shadowRadius: 6,
+              elevation: 4
+            }}
+            onPress={() => router.push("/screens/LocationSelection")}
+          >
+            <Text className="text-white font-inter-bold text-lg">Register and Create Account</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Social Login - Optimized height */}
         <View className="mt-6">
@@ -132,7 +146,7 @@ const Register = () => {
           className="mt-6 mb-4"
           onPress={() => router.push("/(auth)/Login")}
         >
-          <Text className="text-center text-gray-500">
+          <Text className="text-center font-inter-regular text-gray-500">
             Already have an account? <Text className="font-inter-bold" style={{ color: PRIMARY_COLOR }}>Login</Text>
           </Text>
         </TouchableOpacity>
