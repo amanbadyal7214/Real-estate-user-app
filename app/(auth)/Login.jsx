@@ -17,18 +17,26 @@ const Login = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 py-10">
-        <View className="items-center mb-12">
-          <Text className="text-3xl font-bold text-gray-900 mt-10">
+      <View className="px-4 pt-2">
+        <TouchableOpacity onPress={() => router.back()} className="p-2 self-start">
+          <Ionicons name="chevron-back" size={32} color="black" />
+        </TouchableOpacity>
+      </View>
+
+
+
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 py-4">
+        <View className="items-center mb-8">
+          <Text className="text-3xl font-bold text-gray-900 mt-4">
             Login to Your Account
           </Text>
-          <Text className="text-gray-500 mt-2 text-center text-lg">
+          <Text className="text-gray-500 mt-1 text-center text-lg">
             Welcome back! Please enter your details.
           </Text>
         </View>
 
-        {/* Form Fields */}
-        <View className="space-y-6">
+        {/* Form Fields - Tightened */}
+        <View className="space-y-4">
           <View className="flex-row items-center border border-gray-100 bg-gray-50 p-4 rounded-xl">
             <Ionicons name="mail-outline" size={20} color="#9CA3AF" />
             <TextInput
@@ -39,7 +47,7 @@ const Login = () => {
             />
           </View>
 
-          <View className="flex-row items-center border border-gray-100 bg-gray-50 p-4 rounded-xl mt-6">
+          <View className="flex-row items-center border border-gray-100 bg-gray-50 p-4 rounded-xl mt-4">
             <Ionicons name="lock-closed-outline" size={20} color="#9CA3AF" />
             <TextInput
               placeholder="Password"
@@ -58,7 +66,7 @@ const Login = () => {
         </TouchableOpacity>
 
         <TouchableOpacity 
-          className="mt-10 p-5 rounded-2xl items-center shadow-lg"
+          className="mt-8 p-5 rounded-2xl items-center shadow-lg"
           style={{ backgroundColor: PRIMARY_COLOR }}
         >
           <Text className="text-white font-bold text-lg">Login</Text>
