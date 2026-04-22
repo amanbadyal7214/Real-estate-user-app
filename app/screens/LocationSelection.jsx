@@ -65,7 +65,7 @@ const LocationSelection = () => {
   };
 
   const handleCitySelect = (cityName) => {
-    router.push("/screens/Buy");
+    router.push("/screens/Buy/BuySearch");
   };
 
   const popularCities = [
