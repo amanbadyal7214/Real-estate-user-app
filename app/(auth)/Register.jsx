@@ -2,14 +2,14 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import { PRIMARY_COLOR } from "../constants/index";
+import { PRIMARY_COLOR } from "../constants/theme";
 
 const Register = () => {
   const router = useRouter();

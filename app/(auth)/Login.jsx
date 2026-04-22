@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { PRIMARY_COLOR } from "../constants/index";
+import { PRIMARY_COLOR } from "../constants/theme";
 
 const Login = () => {
   const router = useRouter();

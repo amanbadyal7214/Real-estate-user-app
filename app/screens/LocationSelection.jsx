@@ -4,13 +4,13 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const LocationSelection = () => {
   const router = useRouter();
@@ -62,6 +62,10 @@ const LocationSelection = () => {
     } else {
       startRecording();
     }
+  };
+
+  const handleCitySelect = (cityName) => {
+    router.push("/screens/Buy");
   };
 
   const popularCities = [
@@ -144,6 +148,7 @@ const LocationSelection = () => {
           {popularCities.map((city, index) => (
             <TouchableOpacity
               key={index}
+              onPress={() => handleCitySelect(city.name)}
               className="w-[48%] flex-row items-center bg-[#F9FAFB] border border-[#E4E7EC] rounded-xl px-3 py-3"
             >
               <Text className="text-xl mr-2">{city.icon}</Text>
@@ -182,12 +187,18 @@ const LocationSelection = () => {
         <View className="pb-10">
           {citiesList.map((row, index) => (
             <View key={index} className="flex-row justify-between mb-4">
-              <TouchableOpacity className="w-[48%]">
+              <TouchableOpacity
+                className="w-[48%]"
+                onPress={() => handleCitySelect(row[0])}
+              >
                 <Text className="text-[#4A5565] text-[15px] font-inter-medium">
                   {row[0]}
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity className="w-[48%]">
+              <TouchableOpacity
+                className="w-[48%]"
+                onPress={() => handleCitySelect(row[1])}
+              >
                 <Text className="text-[#4A5565] text-[15px] font-inter-medium">
                   {row[1]}
                 </Text>
