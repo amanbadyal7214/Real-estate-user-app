@@ -2,6 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronDown, ChevronRight, Search, User } from 'lucide-react-native';
+import { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryTabs from '../../../components/CategoryTabs';
@@ -101,6 +102,7 @@ const Buy = () => {
   const topDevelopers = {
     summary: [
       { 
+        id: 'nirwana',
         name: 'Nirwana Group', 
         logoText: 'NIRWANA',
         logoColor: '#E7000B',
@@ -108,6 +110,7 @@ const Buy = () => {
         projectCount: '15' 
       },
       { 
+        id: 'vara',
         name: 'Vara Developers', 
         logoText: 'VARA',
         logoColor: '#008E96',
@@ -115,6 +118,7 @@ const Buy = () => {
         projectCount: '10' 
       },
       { 
+        id: 'hero',
         name: 'Hero Realty', 
         logoText: 'HERO',
         logoColor: '#D92D20',
@@ -122,31 +126,61 @@ const Buy = () => {
         projectCount: '45' 
       },
     ],
-    projects: [
-      {
-        image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-        logoText: 'N',
-        logoColor: '#E7000B',
-        title: 'D-Xperanza',
-        developerName: 'NIRWANA GROUP',
-        rating: '4.8',
-        config: '3, 4 BHK Apartment',
-        location: 'Sector 82, Mohali',
-        priceRange: '₹1.24 Cr - 1.55 Cr',
-      },
-      {
-        image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=400',
-        logoText: 'H',
-        logoColor: '#D92D20',
-        title: 'Hero Homes',
-        developerName: 'HERO REALTY',
-        rating: '4.9',
-        config: '2, 3 BHK Apartment',
-        location: 'Sector 88, Mohali',
-        priceRange: '₹85.0 L - 1.25 Cr',
-      }
-    ]
+    projects: {
+      nirwana: [
+        {
+          image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+          logoText: 'N',
+          logoColor: '#E7000B',
+          title: 'D-Xperanza',
+          developerName: 'NIRWANA GROUP',
+          rating: '4.8',
+          config: '3, 4 BHK Apartment',
+          location: 'Sector 82, Mohali',
+          priceRange: '₹1.24 Cr - 1.55 Cr',
+        },
+        {
+          image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
+          logoText: 'N',
+          logoColor: '#E7000B',
+          title: 'Nirwana The Moksha',
+          developerName: 'NIRWANA GROUP',
+          rating: '4.7',
+          config: '2, 3 BHK Apartment',
+          location: 'Kharar, Mohali',
+          priceRange: '₹45.03 L - 1.11 Cr',
+        }
+      ],
+      vara: [
+        {
+          image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400',
+          logoText: 'V',
+          logoColor: '#008E96',
+          title: 'Lok Awas',
+          developerName: 'Vara Developers',
+          rating: '4.6',
+          config: '2, 3 BHK Apartment',
+          location: 'Sector 74 A, Mohali',
+          priceRange: '₹51.9 L - 68.9 L',
+        }
+      ],
+      hero: [
+        {
+          image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=400',
+          logoText: 'H',
+          logoColor: '#D92D20',
+          title: 'Hero Homes',
+          developerName: 'HERO REALTY',
+          rating: '4.9',
+          config: '2, 3 BHK Apartment',
+          location: 'Sector 88, Mohali',
+          priceRange: '₹85.0 L - 1.25 Cr',
+        }
+      ]
+    }
   };
+
+  const [activeDeveloperId, setActiveDeveloperId] = useState('nirwana');
 
   const exploreMoreData = [
     { title: 'Commercial', subtitle: 'Shops, Offices, Warehouses', icon: 'business-outline', color: '#8B5CF6' },
@@ -224,7 +258,7 @@ const Buy = () => {
         </View>
 
         {/* Matches Section */}
-        <View className="px-2 mt-8 mb-10">
+        <View className="px-4 mt-8 mb-10">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
             <TouchableOpacity>
@@ -240,7 +274,7 @@ const Buy = () => {
      
 
         {/* Popular on Propertize Section */}
-        <View className="px-2 mb-10">
+        <View className="px-4 mb-10">
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
@@ -382,7 +416,7 @@ const Buy = () => {
           </LinearGradient>
         </View>
          {/* High Demand Projects Section */}
-        <View className="px-2 mb-10" style={{ gap: 16 }}>
+        <View className="px-4 mb-10" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
               <Text 
@@ -426,7 +460,7 @@ const Buy = () => {
           </ScrollView>
         </View>
            {/* Projects in Focus Section */}
-        <View className="px-2 mb-10" style={{ gap: 16 }}>
+        <View className="px-4 mb-10" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
               <Text 
@@ -464,7 +498,7 @@ const Buy = () => {
         </View>
 
         {/* Best Rated Localities Section */}
-        <View className="px-2 " style={{ height: 359 }}>
+        <View className="px-4 " style={{ height: 359 }}>
           <View className="flex-row items-center justify-between mb-4">
             <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in Mohali</Text>
             <TouchableOpacity>
@@ -493,7 +527,7 @@ const Buy = () => {
         </View>
 
         {/* Top Rated Developers Section */}
-        <View className="px-2 mb-10">
+        <View className="px-4 mb-10">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-bold text-[17px] text-[#101828]">Top rated developers</Text>
@@ -505,10 +539,14 @@ const Buy = () => {
           </View>
 
           {/* Developer Summary Cards */}
-          <View className="flex-row items-center ml-8 justify-between mb-4">
+          <View className="flex-row items-center ml-4 justify-between gap-4 mb-6">
             {topDevelopers.summary.slice(0, 2).map((dev, index) => (
-              <View key={`dev-summary-${index}`} style={{ width: '48%' }}>
-                <DeveloperSummaryCard {...dev} />
+              <View key={`dev-summary-${index}`} style={{ flex: 1 }}>
+                <DeveloperSummaryCard 
+                  {...dev} 
+                  isActive={activeDeveloperId === dev.id}
+                  onPress={() => setActiveDeveloperId(dev.id)}
+                />
               </View>
             ))}
           </View>
@@ -519,8 +557,8 @@ const Buy = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 16 }}
           >
-            {topDevelopers.projects.map((project, index) => (
-              <DeveloperProjectCard key={`dev-project-${index}`} {...project} />
+            {topDevelopers.projects[activeDeveloperId]?.map((project, index) => (
+              <DeveloperProjectCard key={`dev-project-${activeDeveloperId}-${index}`} {...project} />
             ))}
           </ScrollView>
         </View>

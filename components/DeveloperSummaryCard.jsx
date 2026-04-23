@@ -1,9 +1,10 @@
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
-const DeveloperSummaryCard = ({ logo, logoText, name, yearEstd, projectCount, logoColor = '#E7000B' }) => {
+const DeveloperSummaryCard = ({ logo, logoText, name, yearEstd, projectCount, logoColor = '#E7000B', onPress, isActive }) => {
   return (
-    <View 
-      className="bg-white border border-[#F3F4F6] rounded-[16px] p-3 items-center justify-center"
+    <TouchableOpacity 
+      onPress={onPress}
+      className={`bg-white border ${isActive ? 'border-primary' : 'border-[#F3F4F6]'} rounded-[16px] p-3 items-center justify-center`}
       style={{
         width: 160,
         height: 136.33,
@@ -55,7 +56,7 @@ const DeveloperSummaryCard = ({ logo, logoText, name, yearEstd, projectCount, lo
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
