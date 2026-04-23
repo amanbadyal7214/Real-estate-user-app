@@ -3,12 +3,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronDown, ChevronRight, Search, User } from 'lucide-react-native';
 import { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryTabs from '../../../components/CategoryTabs';
 import ContinueCards from '../../../components/ContinueCards';
 import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
 import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
+import FeaturedCollectionCard from '../../../components/FeaturedCollectionCard';
 import HighDemandProjectCard from '../../../components/HighDemandProjectCard';
 import LocalityCard from '../../../components/LocalityCard';
 import ProjectFocusCard from '../../../components/ProjectFocusCard';
@@ -40,6 +41,25 @@ const Buy = () => {
       location: 'Sector 66, Mohali',
       priceRange: '2.5 Cr. - 4.2 Cr',
     },
+  ];
+
+  const recommendedProperties = [
+    {
+      id: 1,
+      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=400',
+      price: '₹ 4.25 Cr',
+      title: '5 BHK Independent House',
+      area: '2000 sq.ft.',
+      location: 'Janta Sector 90 A, Mohali',
+    },
+    {
+      id: 2,
+      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400',
+      price: '₹ 2.10 Cr',
+      title: '3 BHK Modern Villa',
+      area: '1800 sq.ft.',
+      location: 'Sector 82, Mohali',
+    }
   ];
 
   const highDemandProjects = [
@@ -182,12 +202,6 @@ const Buy = () => {
 
   const [activeDeveloperId, setActiveDeveloperId] = useState('nirwana');
 
-  const exploreMoreData = [
-    { title: 'Commercial', subtitle: 'Shops, Offices, Warehouses', icon: 'business-outline', color: '#8B5CF6' },
-    { title: 'Plots/Land', subtitle: 'Residential & Commercial Plots', icon: 'map-outline', color: '#10B981' },
-    { title: 'Residential', subtitle: 'Flats, Houses, Villas', icon: 'home-outline', color: '#F59E0B' },
-  ];
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Top Header */}
@@ -256,6 +270,8 @@ const Buy = () => {
             <ChevronRight size={16} color="#101828" />
           </TouchableOpacity>
         </View>
+
+      
 
         {/* Matches Section */}
         <View className="px-4 mt-8 mb-10">
@@ -562,8 +578,40 @@ const Buy = () => {
             ))}
           </ScrollView>
         </View>
+            
+        {/* Featured Collections Section */}
+        <FeaturedCollectionCard />
 
-       
+          {/* Recommended Properties Section */}
+        <View className="px-4 py-6">
+          <View className="flex-row justify-between items-center mb-4">
+            <View>
+              <Text className="font-inter-bold text-[20px] text-[#101828]">Recommended Properties</Text>
+              <Text className="font-inter-regular text-[14px] text-[#667085]">Properties matching your requirements</Text>
+            </View>
+            <TouchableOpacity>
+              <Text className="font-inter-semibold text-[16px] text-[#008E96]">See all</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
+            {recommendedProperties.map((item) => (
+              <View key={item.id} className="mr-4 bg-white rounded-[24px] p-3 flex-row items-center border border-gray-100 shadow-sm" style={{ width: 340 }}>
+                <Image 
+                  source={{ uri: item.image }} 
+                  className="w-[140px] h-[140px] rounded-[16px]"
+                  resizeMode="cover"
+                />
+                <View className="flex-1 ml-4 py-1">
+                  <Text className="font-inter-bold text-[18px] text-[#101828] mb-1">{item.price}</Text>
+                  <Text className="font-inter-semibold text-[15px] text-[#101828] mb-2" numberOfLines={1}>{item.title}</Text>
+                  <Text className="font-inter-regular text-[13px] text-[#667085] mb-1">{item.area}</Text>
+                  <Text className="font-inter-regular text-[13px] text-[#667085]" numberOfLines={1}>{item.location}</Text>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
 
       </ScrollView>
     </SafeAreaView>
