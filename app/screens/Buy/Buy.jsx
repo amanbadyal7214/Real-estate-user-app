@@ -6,6 +6,9 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryTabs from '../../../components/CategoryTabs';
 import ContinueCards from '../../../components/ContinueCards';
+import HighDemandProjectCard from '../../../components/HighDemandProjectCard';
+import LocalityCard from '../../../components/LocalityCard';
+import ProjectFocusCard from '../../../components/ProjectFocusCard';
 import PropertyMatchedCards from '../../../components/PropertyMatchedCards';
 import Spotlight from '../../../components/Spotlight';
 
@@ -34,6 +37,69 @@ const Buy = () => {
       location: 'Sector 66, Mohali',
       priceRange: '2.5 Cr. - 4.2 Cr',
     },
+  ];
+
+  const highDemandProjects = [
+    {
+      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400",
+      priceRange: "₹51.9 L - 68.9 L",
+      title: "Lok Awas",
+      developer: "Vara Developers",
+      location: "Sector 74 A, Mohali"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
+      priceRange: "₹85.0 L - 1.2 Cr",
+      title: "Hero Homes",
+      developer: "Hero Realty",
+      location: "Sector 88, Mohali"
+    }
+  ];
+
+  const focusProjects = [
+    {
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
+      title: 'Nirwana The Moksha',
+      location: 'Kharar, Mohali',
+      price: '₹45.03 L - 1.11 Cr',
+      tag: 'TALLEST LANDMARK',
+      developer: 'NIRWANA GROUP',
+      badgeType: 'RERA',
+      badgeColor: '#155DFC'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
+      title: 'Premium Heights',
+      location: 'Sector 66, Mohali',
+      price: '₹62.50 L - 1.35 Cr',
+      tag: 'LUXURY LIVING',
+      developer: 'PREET DEVELOPERS',
+      badgeType: 'READY',
+      badgeColor: '#00A63E'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
+      title: 'Royal Residences',
+      location: 'Sector 71, Mohali',
+      price: '₹71.20 L - 1.58 Cr',
+      tag: 'PREMIUM LIVING',
+      developer: 'ROYAL GROUP',
+      badgeType: 'RERA',
+      badgeColor: '#155DFC'
+    }
+  ];
+
+  const bestLocalities = [
+    { title: 'Sector 115', rating: '4.8', reviews: '3', price: '₹5K/sqft.' },
+    { title: 'Sector 82', rating: '4.6', reviews: '12', price: '₹7K/sqft.' },
+    { title: 'Sector 66', rating: '4.9', reviews: '8', price: '₹12K/sqft.' },
+    { title: 'Sector 71', rating: '4.7', reviews: '5', price: '₹9K/sqft.' },
+  ];
+
+  const exploreMoreData = [
+    { title: 'Commercial', subtitle: 'Shops, Offices, Warehouses', icon: 'business-outline', color: '#8B5CF6' },
+    { title: 'Plots/Land', subtitle: 'Residential & Commercial Plots', icon: 'map-outline', color: '#10B981' },
+    { title: 'Residential', subtitle: 'Flats, Houses, Villas', icon: 'home-outline', color: '#F59E0B' },
   ];
 
   return (
@@ -119,8 +185,10 @@ const Buy = () => {
           <Spotlight />
         </View>
 
+     
+
         {/* Popular on Propertize Section */}
-        <View className="px-4 mb-20">
+        <View className="px-4 mb-10">
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
@@ -261,6 +329,119 @@ const Buy = () => {
             </View>
           </LinearGradient>
         </View>
+         {/* High Demand Projects Section */}
+        <View className="px-4 mb-10" style={{ gap: 16 }}>
+          <View className="flex-row items-center justify-between">
+            <View style={{ gap: 1 }}>
+              <Text 
+                className="font-inter-bold text-[#101828]" 
+                style={{ fontSize: 17, lineHeight: 21 }}
+              >
+                High Demand Projects
+              </Text>
+              <Text 
+                className="font-inter-regular text-[#6A7282]" 
+                style={{ fontSize: 13, lineHeight: 20 }}
+              >
+                Hurry! Only a few units left
+              </Text>
+            </View>
+            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <Text 
+                className="font-inter-medium text-[#008E96]" 
+                style={{ fontSize: 14, lineHeight: 21 }}
+              >
+                View more
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 16 }}
+          >
+            {highDemandProjects.map((project, index) => (
+              <HighDemandProjectCard 
+                key={index}
+                image={project.image}
+                priceRange={project.priceRange}
+                title={project.title}
+                developer={project.developer}
+                location={project.location}
+              />
+            ))}
+          </ScrollView>
+        </View>
+           {/* Projects in Focus Section */}
+        <View className="px-4 mb-10" style={{ gap: 16 }}>
+          <View className="flex-row items-center justify-between">
+            <View style={{ gap: 1 }}>
+              <Text 
+                className="font-inter-bold text-[#101828]" 
+                style={{ fontSize: 17, lineHeight: 21 }}
+              >
+                Projects in Focus
+              </Text>
+              <Text 
+                className="font-inter-regular text-[#6A7282]" 
+                style={{ fontSize: 13, lineHeight: 20 }}
+              >
+                Curated projects just for you
+              </Text>
+            </View>
+            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <Text 
+                className="font-inter-medium text-[#008E96]" 
+                style={{ fontSize: 14, lineHeight: 21 }}
+              >
+                View more
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 16 }}
+          >
+            {focusProjects.map((project, index) => (
+              <ProjectFocusCard key={index} {...project} />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Best Rated Localities Section */}
+        <View className="px-4 " style={{ height: 359 }}>
+          <View className="flex-row items-center justify-between mb-4">
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in Mohali</Text>
+            <TouchableOpacity>
+              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View className="relative">
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 27, paddingRight: 20 }}
+            >
+              <View className="flex-col gap-3">
+                {bestLocalities.slice(0, Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
+                  <LocalityCard key={`top-${index}`} {...locality} />
+                ))}
+              </View>
+              <View className="flex-col gap-3">
+                {bestLocalities.slice(Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
+                  <LocalityCard key={`bottom-${index}`} {...locality} />
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+
+
+        <View className="h-20" />
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,11 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 
-const HighDemandProjectCard = ({ priceRange, title, developer, location }) => {
+const HighDemandProjectCard = ({ image, priceRange, title, developer, location }) => {
   return (
     <View 
-      className="bg-white rounded-[20px] overflow-hidden"
+      className="bg-white rounded-[20px] mb-2 overflow-hidden"
       style={{
         width: 338,
         height: 284.5,
@@ -16,49 +16,69 @@ const HighDemandProjectCard = ({ priceRange, title, developer, location }) => {
         elevation: 4,
       }}
     >
-      {/* Container (Gradient Image Background) */}
+      {/* Container (Linear Gradient Background) */}
       <LinearGradient
         colors={['#FFFBEB', '#FFF7ED']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="items-center justify-center px-4"
+        className="flex-row items-center justify-center px-4"
         style={{ height: 160 }}
       >
         <View 
-          className="items-center justify-center rounded-xl bg-gray-200/50"
+          className="rounded-xl overflow-hidden"
           style={{ width: 306, height: 128 }}
         >
-          <Ionicons name="image-outline" size={40} color="#9CA3AF" />
+          {image ? (
+            <Image 
+              source={{ uri: image }} 
+              className="w-full h-full"
+              resizeMode="cover"
+            />
+          ) : (
+            <View className="w-full h-full bg-gray-200 items-center justify-center">
+              <Ionicons name="image-outline" size={40} color="#9CA3AF" />
+            </View>
+          )}
         </View>
       </LinearGradient>
 
       {/* Content Container */}
-      <View className="px-4 py-4 justify-between" style={{ height: 124.5 }}>
-        <View>
+      <View className="relative bg-white" style={{ height: 124.5 }}>
+        {/* Price Range */}
+        <View style={{ position: 'absolute', left: 16, top: 16, width: 306, height: 24 }}>
           <Text 
             className="font-inter-bold text-[#101828]"
             style={{ fontSize: 16, lineHeight: 24 }}
           >
             {priceRange}
           </Text>
+        </View>
+
+        {/* Title */}
+        <View style={{ position: 'absolute', left: 16, top: 44, width: 306, height: 22.5 }}>
           <Text 
             className="font-inter-semibold text-[#101828]"
-            style={{ fontSize: 15, lineHeight: 22, marginTop: 4 }}
+            style={{ fontSize: 15, lineHeight: 22.5 }}
           >
             {title}
           </Text>
         </View>
         
-        <View>
+        {/* Developer */}
+        <View style={{ position: 'absolute', left: 16, top: 70.5, width: 306, height: 18 }}>
           <Text 
             className="font-inter-regular text-[#4A5565]"
             style={{ fontSize: 12, lineHeight: 18 }}
           >
-            by {developer}
+            by <Text className="font-inter-medium">{developer}</Text>
           </Text>
+        </View>
+
+        {/* Location */}
+        <View style={{ position: 'absolute', left: 16, top: 90.5, width: 306, height: 18 }}>
           <Text 
             className="font-inter-regular text-[#4A5565]"
-            style={{ fontSize: 12, lineHeight: 18, marginTop: 2 }}
+            style={{ fontSize: 12, lineHeight: 18 }}
           >
             {location}
           </Text>

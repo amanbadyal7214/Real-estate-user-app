@@ -1,0 +1,59 @@
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ImageBackground, Text, View } from 'react-native';
+
+const ProjectFocusCard = ({ image, title, location, price, tag, developer, badgeType, badgeColor }) => {
+  return (
+    <View 
+      className="overflow-hidden bg-white shadow-sm"
+      style={{
+        width: 300,
+        height: 220,
+        borderRadius: 24,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      }}
+    >
+      <ImageBackground
+        source={{ uri: image }}
+        className="w-full h-full"
+        resizeMode="cover"
+      >
+        <LinearGradient
+          colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.85)']}
+          locations={[0, 0.4, 1]}
+          className="w-full h-full p-4 justify-between"
+        >
+          {/* Top Row: RERA Tag and Landmark Info */}
+          <View className="flex-row justify-between items-start">
+            <View 
+              className="px-2 py-1 rounded"
+              style={{ backgroundColor: badgeColor || '#155DFC' }}
+            >
+              <Text className="text-white font-inter-bold text-[10px] tracking-wider">{badgeType || 'RERA'}</Text>
+            </View>
+            <View className="items-end bg-black/20 px-2 py-1 rounded-lg">
+              <Text className="text-white font-inter-bold text-[10px] uppercase tracking-wide">{tag}</Text>
+              <Text className="text-white/90 font-inter-medium text-[8px] uppercase">BY {developer}</Text>
+            </View>
+          </View>
+
+          {/* Bottom Row: Project Details */}
+          <View>
+            <Text className="text-white font-inter-bold text-[18px] mb-0.5 leading-6" numberOfLines={1}>{title}</Text>
+            <View className="flex-row items-center mb-2">
+              <Ionicons name="location-sharp" size={10} color="rgba(255,255,255,0.8)" />
+              <Text className="text-white/80 font-inter-regular text-[12px] ml-1" numberOfLines={1}>{location}</Text>
+            </View>
+            <Text className="text-white font-inter-bold text-[16px] tracking-tight">{price}</Text>
+          </View>
+        </LinearGradient>
+      </ImageBackground>
+    </View>
+  );
+};
+
+export default ProjectFocusCard;

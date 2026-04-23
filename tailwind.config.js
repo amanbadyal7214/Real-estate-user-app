@@ -9,6 +9,7 @@ module.exports = {
         "inter-bold": ["Inter-Bold"],
         "inter-regular": ["Inter-Regular"],
         "inter-medium": ["Inter-Medium"],
+        "inter-semibold": ["Inter-SemiBold"],
       },
       colors: {
         primary: "#008E96",
