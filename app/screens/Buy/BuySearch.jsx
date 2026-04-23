@@ -120,7 +120,10 @@ const BuySearch = () => {
         </View>
 
         {/* Explore Nearby Properties Button */}
-        <TouchableOpacity className="mx-4 mb-10 p-4 flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20 rounded-2xl">
+        <TouchableOpacity 
+          onPress={() => router.push('/screens/Buy/Buy')}
+          className="mx-4 mb-10 p-4 flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20 rounded-2xl"
+        >
           <View className="flex-row items-center gap-3">
             <View className="w-9 h-9 bg-white items-center justify-center rounded-full border border-gray-100">
                <ArrowLeft size={16} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
