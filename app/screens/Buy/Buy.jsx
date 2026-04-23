@@ -15,6 +15,8 @@ import LocalityCard from '../../../components/LocalityCard';
 import ProjectFocusCard from '../../../components/ProjectFocusCard';
 import PropertyMatchedCards from '../../../components/PropertyMatchedCards';
 import Spotlight from '../../../components/Spotlight';
+import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
+import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 
 const Buy = () => {
   const recentSearches = [
@@ -59,6 +61,23 @@ const Buy = () => {
       title: '3 BHK Modern Villa',
       area: '1800 sq.ft.',
       location: 'Sector 82, Mohali',
+    }
+  ];
+
+  const recommendedSellers = [
+    {
+      id: 1,
+      name: 'Priya Sharma',
+      experienceYears: '29',
+      propertiesCount: '15',
+      location: 'Nabha',
+    },
+    {
+      id: 2,
+      name: 'Rahul Verma',
+      experienceYears: '12',
+      propertiesCount: '8',
+      location: 'Sector 66, Mohali',
     }
   ];
 
@@ -590,25 +609,48 @@ const Buy = () => {
               <Text className="font-inter-regular text-[14px] text-[#667085]">Properties matching your requirements</Text>
             </View>
             <TouchableOpacity>
-              <Text className="font-inter-semibold text-[16px] text-[#008E96]">See all</Text>
+              <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
           
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
+          >
             {recommendedProperties.map((item) => (
-              <View key={item.id} className="mr-4 bg-white rounded-[24px] p-3 flex-row items-center border border-gray-100 shadow-sm" style={{ width: 340 }}>
-                <Image 
-                  source={{ uri: item.image }} 
-                  className="w-[140px] h-[140px] rounded-[16px]"
-                  resizeMode="cover"
-                />
-                <View className="flex-1 ml-4 py-1">
-                  <Text className="font-inter-bold text-[18px] text-[#101828] mb-1">{item.price}</Text>
-                  <Text className="font-inter-semibold text-[15px] text-[#101828] mb-2" numberOfLines={1}>{item.title}</Text>
-                  <Text className="font-inter-regular text-[13px] text-[#667085] mb-1">{item.area}</Text>
-                  <Text className="font-inter-regular text-[13px] text-[#667085]" numberOfLines={1}>{item.location}</Text>
-                </View>
-              </View>
+              <RecommendedPropertyCard 
+                key={item.id}
+                image={item.image}
+                price={item.price}
+                title={item.title}
+                area={item.area}
+                location={item.location}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Recommended Sellers Section */}
+        <View className="px-4 mb-8 mt-2">
+          <View className="mb-4">
+            <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
+            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+          </View>
+          
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
+          >
+            {recommendedSellers.map((seller) => (
+              <RecommendedSellerCard 
+                key={seller.id}
+                name={seller.name}
+                experienceYears={seller.experienceYears}
+                propertiesCount={seller.propertiesCount}
+                location={seller.location}
+              />
             ))}
           </ScrollView>
         </View>
