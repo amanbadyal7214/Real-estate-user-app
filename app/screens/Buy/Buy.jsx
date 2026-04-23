@@ -19,6 +19,7 @@ import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import LastSearchedCard from '../../../components/LastSearchedCard';
+import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 
 const Buy = () => {
   const recentSearches = [
@@ -856,6 +857,50 @@ const Buy = () => {
               </View>
             </View>
           </View>
+        </View>
+
+        {/* Explore Localities Section */}
+        <View className="px-4 mb-10 mt-6">
+          <View className="flex-row items-center justify-between mb-4">
+            <View>
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
+            </View>
+            <TouchableOpacity>
+              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
+          >
+            <ExploreLocalityCard 
+              title="Kharar"
+              avgPrice="Avg. Price:"
+              priceSqft="₹6.2K/ sq.ft."
+              growth="+12.68% ▲"
+            />
+            <ExploreLocalityCard 
+              title="Sector 115"
+              avgPrice="Avg. Price:"
+              priceSqft="₹5.1K/ sq.ft."
+              growth="+7.25% ▲"
+            />
+            <ExploreLocalityCard 
+              title="Zirakpur"
+              avgPrice="Avg. Price:"
+              priceSqft="₹4.8K/ sq.ft."
+              growth="+5.12% ▲"
+            />
+            <ExploreLocalityCard 
+              title="Aerocity"
+              avgPrice="Avg. Price:"
+              priceSqft="₹8.5K/ sq.ft."
+              growth="+15.30% ▲"
+            />
+          </ScrollView>
         </View>
 
       </ScrollView>
