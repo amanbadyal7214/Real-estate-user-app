@@ -20,6 +20,8 @@ import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import LastSearchedCard from '../../../components/LastSearchedCard';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
+import NewsCard from '../../../components/NewsCard';
+import CalculatorCard from '../../../components/CalculatorCard';
 
 const Buy = () => {
   const recentSearches = [
@@ -120,6 +122,42 @@ const Buy = () => {
       builder: "by Uppal Chadha Hi Tech De...",
       location: "Patti Sohana, Mohali"
     }
+  ];
+
+  const newsArticles = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=600",
+      title: "How to apply for Mumbai Mhada Lottery?",
+      meta: "Posted on 25 Jan • 12 min read",
+      description: "The Mhada Mumbai Board lucky draw provides low-cost housing options for various income groups across the city."
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&q=80&w=600",
+      title: "Real Estate Trends to Watch in 2024",
+      meta: "Posted on 22 Jan • 8 min read",
+      description: "Discover the emerging trends in the real estate market, from sustainable building to AI-driven virtual tours."
+    }
+  ];
+
+  const emiVectors = [
+    { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
+    { left: 30, right: 52.5, top: 25, bottom: 18.75, background: '#D4A574' },
+    { left: 32.5, right: 55, top: 31.25, bottom: 62.5, background: '#8B6F47' },
+    { left: 32.5, right: 55, top: 41.25, bottom: 52.5, background: '#8B6F47' },
+    { left: 32.5, right: 60, top: 51.25, bottom: 42.5, background: '#8B6F47' },
+    { left: 20, right: 70, top: 50, bottom: 37.5, borderWidth: 2, borderColor: '#8B6F47' },
+    { left: 52.5, right: 32.5, top: 43.75, bottom: 25, background: '#D4A574' },
+    { left: 56, right: 36, top: 48.75, bottom: 31.25, background: '#FFF4E6', isDot: true }
+  ];
+
+  const affordabilityVectors = [
+    { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
+    { left: 35, right: 45, top: 31.25, bottom: 25, background: '#D4A574' },
+    { left: 37.5, right: 47.5, top: 37.5, bottom: 57.5, background: '#8B6F47' },
+    { left: 37.5, right: 47.5, top: 47.5, bottom: 47.5, background: '#8B6F47' },
+    { left: 37.5, right: 52.5, top: 57.5, bottom: 37.5, background: '#8B6F47' }
   ];
 
   const highDemandProjects = [
@@ -899,6 +937,55 @@ const Buy = () => {
               avgPrice="Avg. Price:"
               priceSqft="₹8.5K/ sq.ft."
               growth="+15.30% ▲"
+            />
+          </ScrollView>
+        </View>
+
+        {/* News For You Section */}
+        <View className="px-4 mb-8 mt-4">
+          <View className="flex-row items-center justify-between mb-4">
+            <View>
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
+            </View>
+            <TouchableOpacity>
+              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={{ paddingBottom: 8 }}
+          >
+            {newsArticles.map((item) => (
+              <NewsCard 
+                key={item.id}
+                image={item.image}
+                title={item.title}
+                meta={item.meta}
+                description={item.description}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Calculators Section */}
+        <View className="px-4 mb-10 mt-4">
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={{ paddingBottom: 8 }}
+          >
+            <CalculatorCard 
+              titlePrefix="EMI"
+              description="EMI starts at ₹10.60K"
+              vectorsConfig={emiVectors}
+            />
+            <CalculatorCard 
+              titlePrefix="Affordability"
+              description="Find the best budget for your home"
+              vectorsConfig={affordabilityVectors}
             />
           </ScrollView>
         </View>
