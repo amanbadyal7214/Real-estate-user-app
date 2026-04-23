@@ -1,3 +1,5 @@
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronDown, ChevronRight, Search, User } from 'lucide-react-native';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -115,6 +117,149 @@ const Buy = () => {
 
           <PropertyMatchedCards data={matchedHomes} />
           <Spotlight />
+        </View>
+
+        {/* Popular on Propertize Section */}
+        <View className="px-4 mb-20">
+          {/* Section Header */}
+          <View className="flex-row items-center gap-2 mb-4">
+            <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on Propertize</Text>
+          </View>
+
+          {/* Tools Grid Card */}
+          <View 
+            className="bg-white rounded-[24px] w-full min-h-[221.5px] p-4 pt-10 shadow-sm mb-6"
+            style={{
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 4
+            }}
+          >
+            <View className="flex-row justify-around mb-8">
+              <TouchableOpacity className="items-center w-[100px]">
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
+                  <Ionicons name="bulb-outline" size={24} color="#008E96" />
+                </View>
+                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Suggestions</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity className="items-center w-[100px]">
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
+                  <Ionicons name="pricetag-outline" size={24} color="#008E96" />
+                </View>
+                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Deals</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity className="items-center w-[100px]">
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
+                  <Ionicons name="newspaper-outline" size={24} color="#008E96" />
+                </View>
+                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View className="flex-row justify-around">
+              <TouchableOpacity className="items-center w-[100px]">
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
+                  <Ionicons name="calculator-outline" size={24} color="#008E96" />
+                </View>
+                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">EMI Calculator</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity className="items-center w-[100px]">
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
+                  <Ionicons name="stats-chart-outline" size={24} color="#008E96" />
+                </View>
+                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Affordability Calculator</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity className="items-center w-[100px]">
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
+                  <Ionicons name="checkmark-done-circle-outline" size={24} color="#008E96" />
+                </View>
+                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Eligibility Calculator</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Property Owner Banner */}
+          <LinearGradient
+            colors={['#DAEAEB', '#FFFFFF']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className=" p-4 rounded-2xl overflow-hidden border-[#1CB2A9] flex-row items-center justify-between"
+            style={{
+              height: 150.33,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.1,
+              shadowRadius: 3,
+              elevation: 2,
+            }}
+          >
+            <View className="flex-1 pr-2" style={{ height: 117, gap: 12 }}>
+              <Text 
+                className="font-inter-bold text-[14px] text-[#101828] leading-[21px]"
+                style={{ width: 193, height: 63 }}
+              >
+                Are you a property owner looking to rent/sell?
+              </Text>
+              
+              <View style={{ gap: 6 }}>
+                <View className="flex-row items-center" style={{ gap: 8 }}>
+                  <View className="w-4 h-4 bg-[#008E96] rounded-full items-center justify-center">
+                    <MaterialCommunityIcons name="check" size={10} color="white" />
+                  </View>
+                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Free Brokerage</Text>
+                </View>
+
+                <View className="flex-row items-center" style={{ gap: 8 }}>
+                  <View className="w-4 h-4 bg-[#008E96] rounded-full items-center justify-center">
+                    <MaterialCommunityIcons name="check" size={10} color="white" />
+                  </View>
+                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Genuine, verified leads</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Detailed Grid Pattern Icon */}
+            <View style={{ width: 96, height: 96, justifyContent: 'center', alignItems: 'center' }}>
+              <LinearGradient
+                colors={['#8B5CF6', '#6366F1']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{ 
+                  width: 80, 
+                  height: 80, 
+                  borderRadius: 12, 
+                  borderTopLeftRadius: 12,
+                  borderBottomLeftRadius: 12,
+                  borderTopRightRadius: 4,
+                  borderBottomRightRadius: 4,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <View className="flex-row flex-wrap justify-center items-center" style={{ width: 60, height: 60, gap: 4 }}>
+                  {[...Array(20)].map((_, i) => (
+                    <View 
+                      key={i} 
+                      style={{ 
+                        width: 8, 
+                        height: 8, 
+                        backgroundColor: '#FFFFFF', 
+                        opacity: 0.6,
+                        borderRadius: 1 
+                      }} 
+                    />
+                  ))}
+                </View>
+              </LinearGradient>
+            </View>
+          </LinearGradient>
         </View>
       </ScrollView>
     </SafeAreaView>
