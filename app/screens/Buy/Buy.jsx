@@ -17,6 +17,7 @@ import PropertyMatchedCards from '../../../components/PropertyMatchedCards';
 import Spotlight from '../../../components/Spotlight';
 import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
+import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 
 const Buy = () => {
   const recentSearches = [
@@ -78,6 +79,25 @@ const Buy = () => {
       experienceYears: '12',
       propertiesCount: '8',
       location: 'Sector 66, Mohali',
+    }
+  ];
+
+  const betterPricedProperties = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
+      title: "Ubber Mews Gate",
+      marketer: "rising star builtec",
+      details: "2, 3, 4 BHK ... • Aujala, Mohali",
+      priceRange: "₹ 69.43 L - 1.22 Cr"
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
+      title: "Green Valley Estate",
+      marketer: "Green Developers",
+      details: "3, 4 BHK ... • Sector 88, Mohali",
+      priceRange: "₹ 85.50 L - 1.45 Cr"
     }
   ];
 
@@ -650,6 +670,36 @@ const Buy = () => {
                 experienceYears={seller.experienceYears}
                 propertiesCount={seller.propertiesCount}
                 location={seller.location}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Better Priced Properties Section */}
+        <View className="px-4 mb-10">
+          <View className="flex-row items-center justify-between mb-4">
+            <View>
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Better Priced Properties</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on properties you viewed</Text>
+            </View>
+            <TouchableOpacity>
+              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={{ paddingBottom: 8 }}
+          >
+            {betterPricedProperties.map((property) => (
+              <BetterPricedPropertyCard 
+                key={property.id}
+                image={property.image}
+                title={property.title}
+                marketer={property.marketer}
+                details={property.details}
+                priceRange={property.priceRange}
               />
             ))}
           </ScrollView>
