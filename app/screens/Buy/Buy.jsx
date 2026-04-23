@@ -1,7 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { ChevronDown, ChevronRight, Search, User } from 'lucide-react-native';
+import { ChevronDown, ChevronRight, Search, User, MapPin, Home, LayoutGrid } from 'lucide-react-native';
 import { useState } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,6 +18,7 @@ import Spotlight from '../../../components/Spotlight';
 import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
+import LastSearchedCard from '../../../components/LastSearchedCard';
 
 const Buy = () => {
   const recentSearches = [
@@ -98,6 +99,25 @@ const Buy = () => {
       marketer: "Green Developers",
       details: "3, 4 BHK ... • Sector 88, Mohali",
       priceRange: "₹ 85.50 L - 1.45 Cr"
+    }
+  ];
+
+  const lastSearches = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
+      price: "₹ 2.03 Cr - 6.25 Cr",
+      title: "Wave Estate Group Housing",
+      builder: "by Uppal Chadha Hi Tech De...",
+      location: "Patti Sohana, Mohali"
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
+      price: "₹ 2.03 Cr - 6.25 Cr",
+      title: "Wave Estate Group Housing",
+      builder: "by Uppal Chadha Hi Tech De...",
+      location: "Patti Sohana, Mohali"
     }
   ];
 
@@ -703,6 +723,139 @@ const Buy = () => {
               />
             ))}
           </ScrollView>
+        </View>
+
+        {/* Last Searched Section */}
+        <View className="px-4 mb-10">
+          <View className="flex-row items-center justify-between mb-4">
+            <View className="flex-1 mr-4">
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Last Searched</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Collection for Ready to Move-In, Buy, Mohali, ...</Text>
+            </View>
+            <TouchableOpacity>
+              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={{ paddingBottom: 8 }}
+          >
+            {lastSearches.map((item) => (
+              <LastSearchedCard 
+                key={item.id}
+                image={item.image}
+                price={item.price}
+                title={item.title}
+                builder={item.builder}
+                location={item.location}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Recommended Insights Section */}
+        <View className="px-4 mb-10">
+          <View className="mb-4">
+            <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Insights</Text>
+            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on your Top Preference</Text>
+          </View>
+          
+          <View className="flex-row justify-center w-full" style={{ gap: 12 }}>
+            {/* Locality Card */}
+            <View 
+              style={{
+                flex: 1,
+                height: 166.33,
+                backgroundColor: '#EDFBFA',
+                borderWidth: 0.67,
+                borderColor: '#F3F4F6',
+                borderRadius: 16,
+                padding: 12,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 3,
+                elevation: 1.5,
+                justifyContent: 'space-between'
+              }}
+            >
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center" style={{ gap: 4 }}>
+                  <MapPin size={12} color="#364153" />
+                  <Text className="font-inter-semibold text-[13px] text-[#101828]">Locality</Text>
+                </View>
+                <ChevronRight size={14} color="#4A5565" />
+              </View>
+              <View>
+                <Text className="font-inter-regular text-[13px] text-[#364153] mb-2 leading-5">Sector 91</Text>
+                <Text className="font-inter-bold text-[13px] text-[#101828] leading-5">63{'\n'}Properties</Text>
+              </View>
+            </View>
+
+            {/* Price Range Card */}
+            <View 
+              style={{
+                flex: 1,
+                height: 166.33,
+                backgroundColor: '#EDFBFA',
+                borderWidth: 0.67,
+                borderColor: '#F3F4F6',
+                borderRadius: 16,
+                padding: 12,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 3,
+                elevation: 1.5,
+                justifyContent: 'space-between'
+              }}
+            >
+              <View className="flex-row items-start justify-between">
+                <View className="flex-row items-start" style={{ gap: 4 }}>
+                  <Home size={12} color="#364153" style={{ marginTop: 2, marginLeft: -2 }} />
+                  <Text className="font-inter-semibold text-[13px] text-[#101828] leading-3" style={{ width: 50 }}>Price{'\n'}range</Text>
+                </View>
+                <ChevronRight size={14} color="#4A5565" style={{ marginTop: 2 }} />
+              </View>
+              <View>
+                <Text className="font-inter-regular text-[13px] text-[#364153] mb-2 leading-5">₹ 75 L - ₹ 1 Cr</Text>
+                <Text className="font-inter-bold text-[13px] text-[#101828] leading-5">738{'\n'}Properties</Text>
+              </View>
+            </View>
+
+            {/* BHK Card */}
+            <View 
+              style={{
+                flex: 1,
+                height: 166.33,
+                backgroundColor: '#EDFBFA',
+                borderWidth: 0.67,
+                borderColor: '#F3F4F6',
+                borderRadius: 16,
+                padding: 12,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 3,
+                elevation: 1.5,
+                justifyContent: 'space-between'
+              }}
+            >
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center" style={{ gap: 4 }}>
+                  <LayoutGrid size={12} color="#364153" />
+                  <Text className="font-inter-semibold text-[13px] text-[#101828]">BHK</Text>
+                </View>
+                <ChevronRight size={14} color="#4A5565" />
+              </View>
+              <View>
+                <Text className="font-inter-regular text-[13px] text-[#364153] mb-2 leading-5">3 BHK</Text>
+                <Text className="font-inter-bold text-[13px] text-[#101828] leading-5">1958{'\n'}Properties</Text>
+              </View>
+            </View>
+          </View>
         </View>
 
       </ScrollView>
