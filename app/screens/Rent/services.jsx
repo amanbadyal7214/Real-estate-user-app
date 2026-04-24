@@ -10,7 +10,6 @@ const { width } = Dimensions.get('window');
 
 const Services = () => {
     const [expandedFaq, setExpandedFaq] = useState(0);
-    const [isAnimating, setIsAnimating] = useState(false);
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const translateY = useRef(new Animated.Value(-200)).current;
     const navigation = useNavigation();
@@ -31,10 +30,9 @@ const Services = () => {
                     duration: 1000,
                     useNativeDriver: true,
                 })
-            ]).start(() => setIsAnimating(false));
+            ]).start();
         };
 
-        setIsAnimating(true);
         // Run on initial mount
         resetAndStartAnimation();
 
@@ -173,7 +171,7 @@ const Services = () => {
                 {/* Abstract Illustration (Buildings as seen in image) */}
                 <View style={styles.illustrationContainer}>
                     {/* Tallest Building */}
-                    <View style={[styles.building, { height: 150, width: 60, bottom: 0, right: 30, opacity: 0.15 }]}>
+                    <View style={[styles.building, { height: 120, width: 60, bottom: 0, right: 30, opacity: 0.15 }]}>
                         <View style={styles.windowsRow}>
                             <View style={styles.window} /><View style={styles.window} /><View style={styles.window} />
                         </View>
@@ -185,7 +183,7 @@ const Services = () => {
                         </View>
                     </View>
                     {/* Medium Building */}
-                    <View style={[styles.building, { height: 120, width: 50, bottom: 0, right: 100, opacity: 0.1 }]}>
+                    <View style={[styles.building, { height: 90, width: 50, bottom: 0, right: 100, opacity: 0.1 }]}>
                         <View style={styles.windowsRow}>
                             <View style={styles.window} /><View style={styles.window} /><View style={styles.window} />
                         </View>
@@ -194,7 +192,7 @@ const Services = () => {
                         </View>
                     </View>
                     {/* Small Building */}
-                    <View style={[styles.building, { height: 80, width: 40, bottom: 0, right: 160, opacity: 0.05 }]} />
+                    <View style={[styles.building, { height: 60, width: 40, bottom: 0, right: 160, opacity: 0.05 }]} />
                 </View>
             </LinearGradient>
 
@@ -203,8 +201,7 @@ const Services = () => {
                     styles.contentWrapper,
                     {
                         opacity: fadeAnim,
-                        transform: [{ translateY: translateY }],
-                        zIndex: isAnimating ? 20 : 1
+                        transform: [{ translateY: translateY }]
                     }
                 ]}
             >
@@ -376,11 +373,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     heroHeader: {
-        height: 280,
+        height: 240,
         borderBottomLeftRadius: 24,
         borderBottomRightRadius: 24,
         overflow: 'hidden',
-        zIndex: 10,
     },
     headerContent: {
         paddingHorizontal: 16,
@@ -438,7 +434,6 @@ const styles = StyleSheet.create({
     contentWrapper: {
         flex: 1,
         marginTop: -20,
-        zIndex: 1,
     },
     section: {
         marginTop: 32,
