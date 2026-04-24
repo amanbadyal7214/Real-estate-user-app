@@ -1,28 +1,34 @@
 import { Building, Building2, Home, HomeIcon, Key, LandPlot } from 'lucide-react-native';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
 
 const CategoryTabs = ({ activeTab = 'Buy', onTabPress }) => {
   const tabs = [
     { id: 'Buy', label: 'Buy', icon: Home, color: '#008E96' },
     { id: 'Rent', label: 'Rent', icon: Key, color: '#101828' },
     { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
-    // { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828', },
-    // { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
+    { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828', },
+    { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
     { id: 'Commercial', label: 'Commercial', icon: Building, color: '#101828' },
   ];
 
   return (
-    <View className="flex-row justify-between mb-6">
-      {tabs.map((tab) => {
+    <ScrollView 
+      horizontal 
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ paddingRight: 16 }}
+      className="mb-6 flex-row"
+    >
+      {tabs.map((tab, index) => {
         const Icon = tab.icon;
         const isActive = activeTab === tab.id;
 
         return (
-          <View key={tab.id} className="w-[23%] relative">
+          <View key={tab.id} style={{ width: 85, marginRight: 12 }} className="relative">
             <TouchableOpacity
               onPress={() => onTabPress?.(tab.id)}
-              className={`items-center bg-white p-4 rounded-2xl ${
-                isActive ? 'border-2 border-[#008E96]' : ''
+              style={{ height: 88, justifyContent: 'center' }}
+              className={`items-center bg-white px-2 rounded-2xl border-2 ${
+                isActive ? 'border-[#008E96]' : 'border-transparent'
               }`}
             >
               <Icon size={28} color={isActive ? '#008E96' : '#101828'} />
@@ -31,6 +37,8 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress }) => {
                 className={`mt-2 text-[13px] text-center ${
                   isActive ? 'text-[#008E96]' : 'text-[#101828]'
                 } ${tab.id === 'Commercial' ? 'text-[11px]' : ''}`}
+                numberOfLines={1}
+                adjustsFontSizeToFit
               >
                 {tab.label}
               </Text>
@@ -43,7 +51,7 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress }) => {
           </View>
         );
       })}
-    </View>
+    </ScrollView>
   );
 };
 
