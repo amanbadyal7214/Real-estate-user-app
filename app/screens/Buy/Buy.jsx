@@ -400,7 +400,10 @@ const Buy = () => {
             }}
           >
             <View className="flex-row justify-around mb-8">
-              <TouchableOpacity className="items-center w-[100px]">
+              <TouchableOpacity 
+                onPress={() => router.push('/screens/Buy/Suggestions')}
+                className="items-center w-[100px]"
+              >
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="bulb-outline" size={24} color="#008E96" />
                 </View>
