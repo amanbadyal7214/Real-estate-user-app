@@ -379,7 +379,7 @@ const Buy = () => {
       
 
         {/* Matches Section */}
-        <View className="px-4 mt-8 mb-10">
+        <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
             <TouchableOpacity>
@@ -395,7 +395,7 @@ const Buy = () => {
      
 
         {/* Popular on Propertize Section */}
-        <View className="px-4 mb-10">
+        <View className="px-4 mb-6">
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
@@ -537,7 +537,7 @@ const Buy = () => {
           </LinearGradient>
         </View>
          {/* High Demand Projects Section */}
-        <View className="px-4 mb-10" style={{ gap: 16 }}>
+        <View className="px-4 mb-6" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
               <Text 
@@ -581,7 +581,7 @@ const Buy = () => {
           </ScrollView>
         </View>
            {/* Projects in Focus Section */}
-        <View className="px-4 mb-10" style={{ gap: 16 }}>
+        <View className="px-4 mb-6" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
               <Text 
@@ -619,7 +619,7 @@ const Buy = () => {
         </View>
 
         {/* Best Rated Localities Section */}
-        <View className="px-4 " style={{ height: 359 }}>
+        <View className="px-4 mb-4 " >
           <View className="flex-row items-center justify-between mb-4">
             <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in Mohali</Text>
             <TouchableOpacity>
@@ -648,7 +648,7 @@ const Buy = () => {
         </View>
 
         {/* Top Rated Developers Section */}
-        <View className="px-4 mb-10">
+        <View className="px-4 ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-bold text-[17px] text-[#101828]">Top rated developers</Text>
@@ -691,7 +691,7 @@ const Buy = () => {
         <View className="px-4 py-6">
           <View className="flex-row justify-between items-center mb-4">
             <View>
-              <Text className="font-inter-bold text-[20px] text-[#101828]">Recommended Properties</Text>
+              <Text className="font-inter-bold text-[18px] text-[#101828]">Recommended Properties</Text>
               <Text className="font-inter-regular text-[14px] text-[#667085]">Properties matching your requirements</Text>
             </View>
             <TouchableOpacity>
@@ -718,7 +718,7 @@ const Buy = () => {
         </View>
 
         {/* Recommended Sellers Section */}
-        <View className="px-4 mb-8 mt-2">
+        <View className="px-4 mb-3">
           <View className="mb-4">
             <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
             <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
@@ -742,7 +742,7 @@ const Buy = () => {
         </View>
 
         {/* Better Priced Properties Section */}
-        <View className="px-4 mb-10">
+        <View className="px-4 mb-3">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Better Priced Properties</Text>
@@ -772,7 +772,7 @@ const Buy = () => {
         </View>
 
         {/* Last Searched Section */}
-        <View className="px-4 mb-10">
+        <View className="px-4 mb-1">
           <View className="flex-row items-center justify-between mb-4">
             <View className="flex-1 mr-4">
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Last Searched</Text>
@@ -802,7 +802,7 @@ const Buy = () => {
         </View>
 
         {/* Recommended Insights Section */}
-        <View className="px-4 mb-10">
+        <View className="px-4 ">
           <View className="mb-4">
             <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Insights</Text>
             <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on your Top Preference</Text>
@@ -905,7 +905,7 @@ const Buy = () => {
         </View>
 
         {/* Explore Localities Section */}
-        <View className="px-4 mb-10 mt-6">
+        <View className="px-4  mt-6">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
@@ -949,7 +949,7 @@ const Buy = () => {
         </View>
 
         {/* News For You Section */}
-        <View className="px-4 mb-8 mt-4">
+        <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
@@ -978,7 +978,7 @@ const Buy = () => {
         </View>
 
         {/* Calculators Section */}
-        <View className="px-4 mb-10 mt-4">
+        <View className="px-4 mb-24 mt-4">
           <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false} 

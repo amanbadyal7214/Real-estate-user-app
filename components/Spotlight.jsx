@@ -174,7 +174,7 @@ const Spotlight = ({ data }) => {
 
       {/* Housing Assist Card */}
       <View 
-        className="h-[97px] mt-4 rounded-[20px] overflow-hidden shadow-md elevation-5"
+        className="h-[97px]  rounded-[20px] overflow-hidden shadow-md elevation-5"
         style={{
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 4 },

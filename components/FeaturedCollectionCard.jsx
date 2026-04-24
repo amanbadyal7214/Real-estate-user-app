@@ -70,7 +70,7 @@ const FeaturedCollectionCard = () => {
 
   return (
     <View
-      className="px-4 py-6"
+      className="px-4 pt-6"
       onLayout={(e) => {
         layoutY.current = e.nativeEvent.layout.y;
         layoutHeight.current = e.nativeEvent.layout.height;
