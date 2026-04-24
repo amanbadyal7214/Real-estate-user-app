@@ -7,7 +7,6 @@ import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import CalculatorCard from '../../../components/CalculatorCard';
-import CategoryTabs from '../../navigation/CategoryTabs';
 import ContinueCards from '../../../components/ContinueCards';
 import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
 import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
@@ -21,10 +20,11 @@ import ProjectFocusCard from '../../../components/ProjectFocusCard';
 import PropertyMatchedCards from '../../../components/PropertyMatchedCards';
 import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
+import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
-import SearchBox from '../../../components/SearchBox';
 import BottomTabBar from '../../navigation/BottomTabBar';
+import CategoryTabs from '../../navigation/CategoryTabs';
 
 const Buy = () => {
   const recentSearches = [
@@ -336,15 +336,6 @@ const Buy = () => {
         {/* Continue where you left Section */}
         <ContinueCards data={recentSearches} />
 
-        {/* Locality Banner */}
-        <View className="mx-4 mt-6 p-4 rounded-2xl bg-[#F0FBFA] flex-row items-center justify-between">
-          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#344054]">Not sure about locality?</Text>
-          <TouchableOpacity className="flex-row items-center">
-            <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[14px] text-[#101828] underline mr-1">Explore options</Text>
-            <ChevronRight size={16} color="#101828" />
-          </TouchableOpacity>
-        </View>
-
 
 
         {/* Matches Section */}
@@ -383,7 +374,7 @@ const Buy = () => {
             }}
           >
             <View className="flex-row justify-around mb-8">
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => router.push('/screens/Buy/Suggestions')}
                 className="items-center w-[100px]"
               >
