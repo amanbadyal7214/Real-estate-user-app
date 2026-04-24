@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) => {
   return (
-    <View 
+    <View
       className="bg-white rounded-[20px] mb-2 relative overflow-hidden shadow-sm"
       style={{
         width: 260,
@@ -13,15 +13,16 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
       }}
     >
       <LinearGradient
-        colors={['#FFFFFF', 'rgba(154, 221, 217, 0.03)', 'rgba(28, 178, 169, 0)']}
+        colors={['rgba(255, 255, 255, 1)', 'rgba(154, 221, 217, 0.03)', 'rgba(28, 178, 169, 0)']}
+        locations={[0, 0.4471, 1]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       />
-      
+
       <View className="flex-row justify-between items-start p-4 z-10">
         <View className="flex-1">
-          <Text 
+          <Text
             className="font-inter-semibold text-[15px] text-[#101828] leading-[22px] mb-1"
             style={{ marginTop: -2.33 }}
           >
@@ -37,7 +38,7 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
           <Text className="font-inter-bold text-[14px] text-[#101828] leading-[21px]">{price}</Text>
         </View>
 
-        <View 
+        <View
           className="w-[63px] h-[64px] rounded-[14px] items-center justify-center bg-[#DFFFFD]"
         >
           <Ionicons name="cube-outline" size={32} color={iconColor} style={{ opacity: 0.6 }} />
