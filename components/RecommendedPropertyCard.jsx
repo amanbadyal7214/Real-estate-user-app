@@ -32,24 +32,19 @@ const RecommendedPropertyCard = ({ image, price, title, area, location }) => {
       </View>
 
       {/* Details Container */}
-      <View className="flex-col justify-between py-1" style={{ flex: 1, height: 120 }}>
-        <View>
-          <Text className="font-inter-bold text-[#101828]" style={{ fontSize: 16, lineHeight: 24 }}>
-            {price}
-          </Text>
-          <Text className="font-inter-semibold text-[#101828] mt-1" style={{ fontSize: 14, lineHeight: 21 }} numberOfLines={1}>
-            {title}
-          </Text>
-        </View>
-
-        <View>
-          <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 12, lineHeight: 18 }}>
-            {area}
-          </Text>
-          <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 12, lineHeight: 18 }} numberOfLines={1}>
-            {location}
-          </Text>
-        </View>
+      <View className="flex-col pt-3 py-1" style={{ flex: 1, height: 120 }}>
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: 16, lineHeight: 24 }}>
+          {price}
+        </Text>
+        <Text className="font-inter-semibold text-[#101828] mt-1" style={{ fontSize: 14, lineHeight: 21 }} numberOfLines={1}>
+          {title}
+        </Text>
+        <Text className="font-inter-regular text-[#6A7282] mt-1" style={{ fontSize: 12, lineHeight: 18 }}>
+          {area}
+        </Text>
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 12, lineHeight: 18 }} numberOfLines={1}>
+          {location}
+        </Text>
       </View>
     </View>
   );
