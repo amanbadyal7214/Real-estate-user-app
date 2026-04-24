@@ -7,6 +7,9 @@ import { Animated, Dimensions, Image, ScrollView, StatusBar, Text, TouchableOpac
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LIGHT_SHADE, PRIMARY_COLOR } from '../../constants/theme';
 import ServicesCalculatorCard from '../../../components/ServicesCalculatorCard';
+import ServicesBenefitItem from '../../../components/ServicesBenefitItem';
+import ServicesTestimonialCard from '../../../components/ServicesTestimonialCard';
+import ServicesArticleCard from '../../../components/ServicesArticleCard';
 
 const { width } = Dimensions.get('window');
 
@@ -210,7 +213,7 @@ const Services = () => {
                 <ScrollView
                     className="flex-1 mt-[23px]"
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 100 }}
+                    contentContainerStyle={{ paddingBottom: 60 }}
                 >
                     {/* All Services Section */}
                     <View className="px-4 pt-6 gap-4">
@@ -250,112 +253,161 @@ const Services = () => {
                     </View>
 
                     {/* Benefits Section */}
-                    <View className="mt-8">
-                        <View className="px-4 mb-4">
-                            <Text className="text-[13px] font-inter-medium text-pink-500 tracking-[0.65px] mb-1">BENEFITS</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828]">Why to choose Propertize Edge</Text>
+                    {/* Benefits Section */}
+                    <View className="mt-8 px-4">
+                        {/* Header */}
+                        <View className="gap-1 mb-4">
+                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>BENEFITS</Text>
+                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Why to choose Housing Edge</Text>
                         </View>
-                        <View className="px-4">
-                            {benefits.map((benefit) => (
-                                <View key={benefit.id} className="flex-row items-center mb-5">
-                                    <View className="w-14 h-14 rounded-xl justify-center items-center mr-4" style={{ backgroundColor: benefit.color + '20' }}>
-                                        <MaterialCommunityIcons name={benefit.icon} size={28} color={benefit.color} />
-                                    </View>
-                                    <Text className="text-[16px] font-inter-regular text-[#4A5565] flex-1 leading-6">{benefit.text}</Text>
-                                </View>
+
+                        {/* Divider */}
+                        <View className="items-center mb-4">
+                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        </View>
+
+                        {/* Benefit Items */}
+                        <View className="gap-6">
+                            {benefits.map((benefit, index) => (
+                                <ServicesBenefitItem
+                                    key={benefit.id}
+                                    index={index}
+                                    text={benefit.text}
+                                />
                             ))}
                         </View>
                     </View>
 
                     {/* Testimonials Section */}
                     <View className="mt-8">
-                        <View className="px-4 mb-4">
-                            <Text className="text-[13px] font-inter-medium text-pink-500 tracking-[0.65px] mb-1" style={{ color: '#EC4899' }}>TESTIMONIALS</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828]">What our users say</Text>
+                        {/* Header */}
+                        <View className="px-4 gap-1 mb-4">
+                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>TESTIMONIALS</Text>
+                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">What our users say</Text>
                         </View>
+
+                        {/* Divider */}
+                        <View className="items-center mb-4">
+                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        </View>
+
+                        {/* Cards */}
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8, paddingTop: 16 }}
+                            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
                         >
                             {testimonials.map((item) => (
-                                <View key={item.id} className="w-[300px] bg-white border border-[#E4E7EC] rounded-2xl p-4 mr-4 shadow-sm elevation-2">
-                                    <View className="flex-row justify-between items-center mb-3">
-                                        <View className="flex-row items-center">
-                                            <Image source={{ uri: item.image }} className="w-12 h-12 rounded-full mr-3" />
-                                            <View>
-                                                <Text className="text-[15px] font-inter-semibold text-[#101828]">{item.name}</Text>
-                                                <Text className="text-[13px] font-inter-regular text-[#6A7282]">{item.location}</Text>
-                                            </View>
-                                        </View>
-                                        <View className="flex-row items-center gap-1">
-                                            <Ionicons name="star" size={14} color="#FFA726" />
-                                            <Text className="text-[14px] font-inter-semibold text-[#101828]">{item.rating}</Text>
-                                        </View>
-                                    </View>
-                                    <Text className="text-[14px] font-inter-regular text-[#4A5565] leading-[22px]">"{item.comment}"</Text>
-                                </View>
+                                <ServicesTestimonialCard
+                                    key={item.id}
+                                    name={item.name}
+                                    location={item.location}
+                                    rating={item.rating}
+                                    comment={item.comment}
+                                    image={item.image}
+                                />
                             ))}
                         </ScrollView>
                     </View>
 
                     {/* Articles Section */}
                     <View className="mt-8">
-                        <View className="px-4 mb-4">
-                            <Text className="text-[13px] font-inter-medium text-pink-500 tracking-[0.65px] mb-1" style={{ color: '#EC4899' }}>ARTICLES</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828]">Read more about our services</Text>
+                        {/* Header */}
+                        <View className="px-4 gap-1 mb-4">
+                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>ARTICLES</Text>
+                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Read more about our services</Text>
                         </View>
+
+                        {/* Divider */}
+                        <View className="items-center mb-4">
+                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        </View>
+
+                        {/* Cards */}
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8, paddingTop: 16 }}
+                            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
                         >
                             {articles.map((article) => (
-                                <TouchableOpacity key={article.id} className="w-[290px] bg-white border border-[#E4E7EC] rounded-2xl mr-4 overflow-hidden">
-                                    <Image source={{ uri: article.image }} className="w-full h-[140px]" />
-                                    <View className="p-4">
-                                        <Text className="text-[16px] font-inter-semibold text-[#101828] leading-[22px]" numberOfLines={2}>{article.title}</Text>
-                                        <Text className="text-[12px] font-inter-medium text-[#6A7282] my-[6px]">{article.date}</Text>
-                                        <Text className="text-[14px] font-inter-regular text-[#4A5565] leading-5" numberOfLines={2}>{article.excerpt}</Text>
-                                    </View>
-                                </TouchableOpacity>
+                                <ServicesArticleCard
+                                    key={article.id}
+                                    title={article.title}
+                                    date={article.date}
+                                    excerpt={article.excerpt}
+                                    image={article.image}
+                                />
                             ))}
                         </ScrollView>
                     </View>
 
                     {/* FAQ Section */}
                     <View className="mt-8">
-                        <View className="px-4 mb-4">
-                            <Text className="text-[13px] font-inter-medium text-pink-500 tracking-[0.65px] mb-1" style={{ color: '#EC4899' }}>SUPPORT</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828]">Frequently asked questions</Text>
+                        {/* Header */}
+                        <View className="px-4 gap-1 mb-4">
+                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>SUPPORT</Text>
+                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Frequently asked questions</Text>
                         </View>
 
-                        <View className="flex-row px-4 gap-3 mb-5">
-                            <TouchableOpacity className="px-4 py-[10px] rounded-[10px] bg-gray-100">
-                                <Text className="text-[14px] font-inter-medium text-[#6A7282]">Housing Propertize</Text>
+                        {/* Divider */}
+                        <View className="items-center mb-4">
+                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        </View>
+
+                        {/* Tab Buttons */}
+                        <View className="flex-row px-4 gap-2 mb-5">
+                            <TouchableOpacity
+                                className="rounded-[10px] px-4 justify-center items-center"
+                                style={{ height: 58, backgroundColor: '#F3F4F6' }}
+                            >
+                                <Text className="font-inter-medium text-[#6A7282] text-center" style={{ fontSize: 14, lineHeight: 21 }}>
+                                    Questions{'\n'}about
+                                </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity className={`px-4 py-[10px] rounded-[10px] ${true ? 'bg-primary/10' : 'bg-gray-100'}`}>
-                                <Text className="text-primary text-[14px] font-inter-medium">Home Loans</Text>
+                            <TouchableOpacity
+                                className="rounded-[10px] px-4 justify-center items-center"
+                                style={{ height: 58, backgroundColor: 'rgba(0, 142, 150, 0.1)' }}
+                            >
+                                <Text className="font-inter-medium text-center" style={{ fontSize: 14, lineHeight: 21, color: '#008E96' }}>
+                                    Home{'\n'}Loans
+                                </Text>
                             </TouchableOpacity>
                         </View>
 
-                        <View className="px-4">
+                        {/* FAQ Accordion */}
+                        <View className="px-4 gap-3">
                             {faqs.map((faq) => (
                                 <TouchableOpacity
                                     key={faq.id}
-                                    className={`border rounded-xl mb-3 bg-white overflow-hidden ${expandedFaq === faq.id ? 'border-primary' : 'border-[#E4E7EC]'}`}
+                                    className="bg-white rounded-xl overflow-hidden"
+                                    style={{
+                                        borderWidth: 0.667,
+                                        borderColor: expandedFaq === faq.id ? '#008E96' : '#E4E7EC',
+                                        borderRadius: 12,
+                                    }}
                                     onPress={() => setExpandedFaq(expandedFaq === faq.id ? -1 : faq.id)}
+                                    activeOpacity={0.8}
                                 >
-                                    <View className="flex-row justify-between items-center p-4">
-                                        <Text className="text-[15px] font-inter-medium text-[#101828] flex-1">{faq.question}</Text>
+                                    <View className="flex-row justify-between items-center px-4" style={{ minHeight: 56 }}>
+                                        <Text
+                                            className="font-inter-medium text-[#101828] flex-1 mr-4"
+                                            style={{ fontSize: 15, lineHeight: 22 }}
+                                        >
+                                            {faq.question}
+                                        </Text>
                                         <Ionicons
-                                            name={expandedFaq === faq.id ? "remove" : "add"}
+                                            name={expandedFaq === faq.id ? 'remove' : 'add'}
                                             size={20}
                                             color="#6A7282"
                                         />
                                     </View>
                                     {expandedFaq === faq.id && (
-                                        <Text className="text-[14px] font-inter-regular text-[#4A5565] leading-[22px] px-4 pb-4">{faq.answer}</Text>
+                                        <Text
+                                            className="font-inter-regular text-[#4A5565] px-4 pb-4"
+                                            style={{ fontSize: 14, lineHeight: 22 }}
+                                        >
+                                            {faq.answer}
+                                        </Text>
                                     )}
                                 </TouchableOpacity>
                             ))}
