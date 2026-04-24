@@ -1,7 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { ChevronDown, ChevronRight, Home, LayoutGrid, MapPin, Search } from 'lucide-react-native';
+import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useState } from 'react';
 import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,6 +23,7 @@ import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
+import SearchBox from '../../../components/SearchBox';
 import BottomTabBar from '../../navigation/BottomTabBar';
 
 const Buy = () => {
@@ -321,33 +322,15 @@ const Buy = () => {
           <CategoryTabs
             activeTab="Buy"
             onTabPress={(tabId) => {
-              if (tabId !== 'Buy') {
-                router.push(`/screens/Buy/${tabId}`);
+              if (tabId === 'Rent') {
+                router.push('/screens/Rent/Rent');
+              } else if (tabId !== 'Buy') {
+                router.push(`/screens/${tabId}/${tabId}`);
               }
             }}
           />
 
-          {/* Search Box inside container */}
-          <View className="bg-white p-5 rounded-[24px]">
-            <View className="flex-row items-center justify-between mb-4">
-              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">
-                Searching in <Text className="font-inter-bold">Mohali</Text>
-              </Text>
-              <ChevronDown size={20} color="#667085" />
-            </View>
-
-            <TouchableOpacity
-              onPress={() => router.push('/screens/Buy/BuySearch')}
-              className="flex-row items-center bg-[#F2F4F7] h-12 px-4 rounded-full"
-            >
-              <Text className="font-inter-regular flex-1 text-[#667085] text-[14px]">
-                Search city, locality, landmark ...
-              </Text>
-              <View className="w-9 h-9 bg-primary rounded-full items-center justify-center">
-                <Search size={18} color="white" />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <SearchBox />
         </View>
 
         {/* Continue where you left Section */}

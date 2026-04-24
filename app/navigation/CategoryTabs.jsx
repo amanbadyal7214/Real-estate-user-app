@@ -1,7 +1,9 @@
 import { Building, Building2, Home, HomeIcon, Key, LandPlot } from 'lucide-react-native';
 import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { useRef, useEffect } from 'react';
 
 const CategoryTabs = ({ activeTab = 'Buy', onTabPress }) => {
+  const scrollViewRef = useRef(null);
   const tabs = [
     { id: 'Buy', label: 'Buy', icon: Home, color: '#008E96' },
     { id: 'Rent', label: 'Rent', icon: Key, color: '#101828' },
@@ -11,8 +13,18 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress }) => {
     { id: 'Commercial', label: 'Commercial', icon: Building, color: '#101828' },
   ];
 
+  useEffect(() => {
+    const activeIndex = tabs.findIndex(tab => tab.id === activeTab);
+    if (activeIndex !== -1 && scrollViewRef.current) {
+        // Tab width is 85, marginRight is 12. Total 97 per tab.
+        const scrollToX = activeIndex * 97;
+        scrollViewRef.current.scrollTo({ x: scrollToX, animated: true });
+    }
+  }, [activeTab]);
+
   return (
     <ScrollView 
+        ref={scrollViewRef}
       horizontal 
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingRight: 16 }}
