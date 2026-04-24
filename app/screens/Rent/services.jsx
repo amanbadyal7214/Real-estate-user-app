@@ -1,8 +1,8 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useFocusEffect } from 'expo-router'; // or '@react-navigation/native'
 import { Animated, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,11 +10,13 @@ const { width } = Dimensions.get('window');
 
 const Services = () => {
     const [expandedFaq, setExpandedFaq] = useState(0);
+    const [isAnimating, setIsAnimating] = useState(false);
     const fadeAnim = useRef(new Animated.Value(0)).current;
-    const translateY = useRef(new Animated.Value(-100)).current;
-    useFocusEffect(
-        useCallback(() => {
-            // Reset animated values
+    const translateY = useRef(new Animated.Value(-200)).current;
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const resetAndStartAnimation = () => {
             fadeAnim.setValue(0);
             translateY.setValue(-150);
 
@@ -29,13 +31,18 @@ const Services = () => {
                     duration: 1000,
                     useNativeDriver: true,
                 })
-            ]).start();
-            
-            return () => {
-                // Optional cleanup
-            };
-        }, [])
-    );
+            ]).start(() => setIsAnimating(false));
+        };
+
+        setIsAnimating(true);
+        // Run on initial mount
+        resetAndStartAnimation();
+
+        // Run every time the screen is focused
+        const unsubscribe = navigation.addListener('focus', resetAndStartAnimation);
+
+        return unsubscribe;
+    }, [navigation, fadeAnim, translateY]);
 
     const calculators = [
         {
@@ -151,7 +158,7 @@ const Services = () => {
                 style={styles.heroHeader}
             >
                 <SafeAreaView edges={['top']}>
-                        <View style={styles.headerContent}>
+                    <View style={styles.headerContent}>
                         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                             <Ionicons name="arrow-back" size={24} color="white" />
                         </TouchableOpacity>
@@ -166,19 +173,19 @@ const Services = () => {
                 {/* Abstract Illustration (Buildings as seen in image) */}
                 <View style={styles.illustrationContainer}>
                     {/* Tallest Building */}
-                    <View style={[styles.building, { height: 120, width: 60, bottom: 0, right: 30, opacity: 0.15 }]}>
-                         <View style={styles.windowsRow}>
+                    <View style={[styles.building, { height: 150, width: 60, bottom: 0, right: 30, opacity: 0.15 }]}>
+                        <View style={styles.windowsRow}>
                             <View style={styles.window} /><View style={styles.window} /><View style={styles.window} />
-                         </View>
-                         <View style={styles.windowsRow}>
+                        </View>
+                        <View style={styles.windowsRow}>
                             <View style={styles.window} /><View style={styles.window} /><View style={styles.window} />
-                         </View>
-                         <View style={styles.windowsRow}>
+                        </View>
+                        <View style={styles.windowsRow}>
                             <View style={styles.window} /><View style={styles.window} /><View style={styles.window} />
-                         </View>
+                        </View>
                     </View>
                     {/* Medium Building */}
-                    <View style={[styles.building, { height: 90, width: 50, bottom: 0, right: 100, opacity: 0.1 }]}>
+                    <View style={[styles.building, { height: 120, width: 50, bottom: 0, right: 100, opacity: 0.1 }]}>
                         <View style={styles.windowsRow}>
                             <View style={styles.window} /><View style={styles.window} /><View style={styles.window} />
                         </View>
@@ -187,7 +194,7 @@ const Services = () => {
                         </View>
                     </View>
                     {/* Small Building */}
-                    <View style={[styles.building, { height: 60, width: 40, bottom: 0, right: 160, opacity: 0.05 }]} />
+                    <View style={[styles.building, { height: 80, width: 40, bottom: 0, right: 160, opacity: 0.05 }]} />
                 </View>
             </LinearGradient>
 
@@ -196,7 +203,8 @@ const Services = () => {
                     styles.contentWrapper,
                     {
                         opacity: fadeAnim,
-                        transform: [{ translateY: translateY }]
+                        transform: [{ translateY: translateY }],
+                        zIndex: isAnimating ? 20 : 1
                     }
                 ]}
             >
@@ -368,10 +376,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     heroHeader: {
-        height: 240,
+        height: 280,
         borderBottomLeftRadius: 24,
         borderBottomRightRadius: 24,
         overflow: 'hidden',
+        zIndex: 10,
     },
     headerContent: {
         paddingHorizontal: 16,
@@ -429,6 +438,7 @@ const styles = StyleSheet.create({
     contentWrapper: {
         flex: 1,
         marginTop: -20,
+        zIndex: 1,
     },
     section: {
         marginTop: 32,
