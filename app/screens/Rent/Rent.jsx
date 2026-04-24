@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from 'react';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -138,6 +139,27 @@ const emiVectors = [
     }
   ];
 
+    const [activeIndex, setActiveIndex] = useState(0);
+    const scrollRef = useRef(null);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            let nextIndex = (activeIndex + 1) % suggestions.length;
+            setActiveIndex(nextIndex);
+            scrollRef.current?.scrollTo({ x: nextIndex * 296, animated: true });
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [activeIndex, suggestions.length]);
+
+    const handleScroll = (event) => {
+        const scrollPosition = event.nativeEvent.contentOffset.x;
+        const index = Math.round(scrollPosition / 296);
+        if (index !== activeIndex) {
+            setActiveIndex(index);
+        }
+    };
+
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Top Header */}
@@ -185,16 +207,22 @@ const emiVectors = [
                     </View>
 
                     <View className="flex-row gap-2 px-4 mb-6">
-                        <View className="w-10 h-1 bg-[#008E96] rounded-full" />
-                        <View className="w-10 h-1 bg-[#E4E7EC] rounded-full" />
-                        <View className="w-10 h-1 bg-[#E4E7EC] rounded-full" />
-                        <View className="w-10 h-1 bg-[#E4E7EC] rounded-full" />
+                        {suggestions.map((_, index) => (
+                            <View 
+                                key={index}
+                                className={`w-10 h-1 rounded-full ${index === activeIndex ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'}`} 
+                            />
+                        ))}
                     </View>
 
                     <ScrollView
+                        ref={scrollRef}
                         horizontal
+                        onMomentumScrollEnd={handleScroll}
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
+                        snapToInterval={296}
+                        decelerationRate="fast"
                     >
                         {suggestions.map((item) => (
                             <PropertySuggestionCard key={item.id} {...item} />
