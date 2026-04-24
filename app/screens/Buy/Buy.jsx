@@ -1,27 +1,27 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { ChevronDown, ChevronRight, Search, User, MapPin, Home, LayoutGrid } from 'lucide-react-native';
+import { ChevronDown, ChevronRight, Home, LayoutGrid, MapPin, Search } from 'lucide-react-native';
 import { useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View, DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
+import CalculatorCard from '../../../components/CalculatorCard';
 import CategoryTabs from '../../../components/CategoryTabs';
 import ContinueCards from '../../../components/ContinueCards';
 import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
 import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
+import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 import FeaturedCollectionCard from '../../../components/FeaturedCollectionCard';
 import HighDemandProjectCard from '../../../components/HighDemandProjectCard';
+import LastSearchedCard from '../../../components/LastSearchedCard';
 import LocalityCard from '../../../components/LocalityCard';
+import NewsCard from '../../../components/NewsCard';
 import ProjectFocusCard from '../../../components/ProjectFocusCard';
 import PropertyMatchedCards from '../../../components/PropertyMatchedCards';
-import Spotlight from '../../../components/Spotlight';
 import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
-import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
-import LastSearchedCard from '../../../components/LastSearchedCard';
-import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
-import NewsCard from '../../../components/NewsCard';
-import CalculatorCard from '../../../components/CalculatorCard';
+import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
 
 const Buy = () => {
@@ -220,29 +220,29 @@ const Buy = () => {
 
   const topDevelopers = {
     summary: [
-      { 
+      {
         id: 'nirwana',
-        name: 'Nirwana Group', 
+        name: 'Nirwana Group',
         logoText: 'NIRWANA',
         logoColor: '#E7000B',
-        yearEstd: '2012', 
-        projectCount: '15' 
+        yearEstd: '2012',
+        projectCount: '15'
       },
-      { 
+      {
         id: 'vara',
-        name: 'Vara Developers', 
+        name: 'Vara Developers',
         logoText: 'VARA',
         logoColor: '#008E96',
-        yearEstd: '2016', 
-        projectCount: '10' 
+        yearEstd: '2016',
+        projectCount: '10'
       },
-      { 
+      {
         id: 'hero',
-        name: 'Hero Realty', 
+        name: 'Hero Realty',
         logoText: 'HERO',
         logoColor: '#D92D20',
-        yearEstd: '2004', 
-        projectCount: '45' 
+        yearEstd: '2004',
+        projectCount: '45'
       },
     ],
     projects: {
@@ -307,8 +307,8 @@ const Buy = () => {
       <UserHeader />
 
       {/* Scrollable Content */}
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         className="flex-1"
         scrollEventThrottle={16}
         onScroll={(e) => {
@@ -317,13 +317,13 @@ const Buy = () => {
       >
         {/* Main Category Blue Container */}
         <View className="mx-4 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
-          <CategoryTabs 
-            activeTab="Buy" 
+          <CategoryTabs
+            activeTab="Buy"
             onTabPress={(tabId) => {
               if (tabId !== 'Buy') {
                 router.push(`/screens/Buy/${tabId}`);
               }
-            }} 
+            }}
           />
 
           {/* Search Box inside container */}
@@ -334,8 +334,8 @@ const Buy = () => {
               </Text>
               <ChevronDown size={20} color="#667085" />
             </View>
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
               onPress={() => router.push('/screens/Buy/BuySearch')}
               className="flex-row items-center bg-[#F2F4F7] h-12 px-4 rounded-full"
             >
@@ -361,7 +361,7 @@ const Buy = () => {
           </TouchableOpacity>
         </View>
 
-      
+
 
         {/* Matches Section */}
         <View className="px-4 mt-8 mb-6">
@@ -377,7 +377,7 @@ const Buy = () => {
           <Spotlight />
         </View>
 
-     
+
 
         {/* Popular on Propertize Section */}
         <View className="px-4 mb-6">
@@ -388,7 +388,7 @@ const Buy = () => {
           </View>
 
           {/* Tools Grid Card */}
-          <View 
+          <View
             className="bg-white rounded-[24px] w-full min-h-[221.5px] p-4 pt-10 shadow-sm mb-6"
             style={{
               shadowColor: '#000',
@@ -461,13 +461,13 @@ const Buy = () => {
             }}
           >
             <View className="flex-1 pr-2" style={{ height: 117, gap: 12 }}>
-              <Text 
+              <Text
                 className="font-inter-bold text-[14px] text-[#101828] leading-[21px]"
                 style={{ width: 193, height: 63 }}
               >
                 Are you a property owner looking to rent/sell?
               </Text>
-              
+
               <View style={{ gap: 6 }}>
                 <View className="flex-row items-center" style={{ gap: 8 }}>
                   <View className="w-4 h-4 bg-[#008E96] rounded-full items-center justify-center">
@@ -491,10 +491,10 @@ const Buy = () => {
                 colors={['#8B5CF6', '#6366F1']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={{ 
-                  width: 80, 
-                  height: 80, 
-                  borderRadius: 12, 
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 12,
                   borderTopLeftRadius: 12,
                   borderBottomLeftRadius: 12,
                   borderTopRightRadius: 4,
@@ -505,15 +505,15 @@ const Buy = () => {
               >
                 <View className="flex-row flex-wrap justify-center items-center" style={{ width: 60, height: 60, gap: 4 }}>
                   {[...Array(20)].map((_, i) => (
-                    <View 
-                      key={i} 
-                      style={{ 
-                        width: 8, 
-                        height: 8, 
-                        backgroundColor: '#FFFFFF', 
+                    <View
+                      key={i}
+                      style={{
+                        width: 8,
+                        height: 8,
+                        backgroundColor: '#FFFFFF',
                         opacity: 0.6,
-                        borderRadius: 1 
-                      }} 
+                        borderRadius: 1
+                      }}
                     />
                   ))}
                 </View>
@@ -521,26 +521,26 @@ const Buy = () => {
             </View>
           </LinearGradient>
         </View>
-         {/* High Demand Projects Section */}
+        {/* High Demand Projects Section */}
         <View className="px-4 mb-6" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
-              <Text 
-                className="font-inter-bold text-[#101828]" 
+              <Text
+                className="font-inter-bold text-[#101828]"
                 style={{ fontSize: 17, lineHeight: 21 }}
               >
                 High Demand Projects
               </Text>
-              <Text 
-                className="font-inter-regular text-[#6A7282]" 
+              <Text
+                className="font-inter-regular text-[#6A7282]"
                 style={{ fontSize: 13, lineHeight: 20 }}
               >
                 Hurry! Only a few units left
               </Text>
             </View>
             <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text 
-                className="font-inter-medium text-[#008E96]" 
+              <Text
+                className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
               >
                 View more
@@ -548,13 +548,13 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 16 }}
           >
             {highDemandProjects.map((project, index) => (
-              <HighDemandProjectCard 
+              <HighDemandProjectCard
                 key={index}
                 image={project.image}
                 priceRange={project.priceRange}
@@ -565,26 +565,26 @@ const Buy = () => {
             ))}
           </ScrollView>
         </View>
-           {/* Projects in Focus Section */}
+        {/* Projects in Focus Section */}
         <View className="px-4 mb-6" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
-              <Text 
-                className="font-inter-bold text-[#101828]" 
+              <Text
+                className="font-inter-bold text-[#101828]"
                 style={{ fontSize: 17, lineHeight: 21 }}
               >
                 Projects in Focus
               </Text>
-              <Text 
-                className="font-inter-regular text-[#6A7282]" 
+              <Text
+                className="font-inter-regular text-[#6A7282]"
                 style={{ fontSize: 13, lineHeight: 20 }}
               >
                 Curated projects just for you
               </Text>
             </View>
             <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text 
-                className="font-inter-medium text-[#008E96]" 
+              <Text
+                className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
               >
                 View more
@@ -592,8 +592,8 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 16 }}
           >
@@ -613,8 +613,8 @@ const Buy = () => {
           </View>
 
           <View className="relative">
-            <ScrollView 
-              horizontal 
+            <ScrollView
+              horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ gap: 27, paddingRight: 20 }}
             >
@@ -648,8 +648,8 @@ const Buy = () => {
           <View className="flex-row items-center ml-4 justify-between gap-4 mb-6">
             {topDevelopers.summary.slice(0, 2).map((dev, index) => (
               <View key={`dev-summary-${index}`} style={{ flex: 1 }}>
-                <DeveloperSummaryCard 
-                  {...dev} 
+                <DeveloperSummaryCard
+                  {...dev}
                   isActive={activeDeveloperId === dev.id}
                   onPress={() => setActiveDeveloperId(dev.id)}
                 />
@@ -658,8 +658,8 @@ const Buy = () => {
           </View>
 
           {/* Developer Project Cards */}
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 16 }}
           >
@@ -668,11 +668,11 @@ const Buy = () => {
             ))}
           </ScrollView>
         </View>
-            
+
         {/* Featured Collections Section */}
         <FeaturedCollectionCard />
 
-          {/* Recommended Properties Section */}
+        {/* Recommended Properties Section */}
         <View className="px-4 py-6">
           <View className="flex-row justify-between items-center mb-4">
             <View>
@@ -683,14 +683,14 @@ const Buy = () => {
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
           >
             {recommendedProperties.map((item) => (
-              <RecommendedPropertyCard 
+              <RecommendedPropertyCard
                 key={item.id}
                 image={item.image}
                 price={item.price}
@@ -708,14 +708,14 @@ const Buy = () => {
             <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
             <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
           </View>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
           >
             {recommendedSellers.map((seller) => (
-              <RecommendedSellerCard 
+              <RecommendedSellerCard
                 key={seller.id}
                 name={seller.name}
                 experienceYears={seller.experienceYears}
@@ -737,14 +737,14 @@ const Buy = () => {
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8 }}
           >
             {betterPricedProperties.map((property) => (
-              <BetterPricedPropertyCard 
+              <BetterPricedPropertyCard
                 key={property.id}
                 image={property.image}
                 title={property.title}
@@ -767,14 +767,14 @@ const Buy = () => {
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8 }}
           >
             {lastSearches.map((item) => (
-              <LastSearchedCard 
+              <LastSearchedCard
                 key={item.id}
                 image={item.image}
                 price={item.price}
@@ -792,10 +792,10 @@ const Buy = () => {
             <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Insights</Text>
             <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on your Top Preference</Text>
           </View>
-          
+
           <View className="flex-row justify-center w-full" style={{ gap: 12 }}>
             {/* Locality Card */}
-            <View 
+            <View
               style={{
                 flex: 1,
                 height: 166.33,
@@ -826,7 +826,7 @@ const Buy = () => {
             </View>
 
             {/* Price Range Card */}
-            <View 
+            <View
               style={{
                 flex: 1,
                 height: 166.33,
@@ -857,7 +857,7 @@ const Buy = () => {
             </View>
 
             {/* BHK Card */}
-            <View 
+            <View
               style={{
                 flex: 1,
                 height: 166.33,
@@ -900,31 +900,31 @@ const Buy = () => {
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
           >
-            <ExploreLocalityCard 
+            <ExploreLocalityCard
               title="Kharar"
               avgPrice="Avg. Price:"
               priceSqft="₹6.2K/ sq.ft."
               growth="+12.68% ▲"
             />
-            <ExploreLocalityCard 
+            <ExploreLocalityCard
               title="Sector 115"
               avgPrice="Avg. Price:"
               priceSqft="₹5.1K/ sq.ft."
               growth="+7.25% ▲"
             />
-            <ExploreLocalityCard 
+            <ExploreLocalityCard
               title="Zirakpur"
               avgPrice="Avg. Price:"
               priceSqft="₹4.8K/ sq.ft."
               growth="+5.12% ▲"
             />
-            <ExploreLocalityCard 
+            <ExploreLocalityCard
               title="Aerocity"
               avgPrice="Avg. Price:"
               priceSqft="₹8.5K/ sq.ft."
@@ -944,14 +944,14 @@ const Buy = () => {
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
-          
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8 }}
           >
             {newsArticles.map((item) => (
-              <NewsCard 
+              <NewsCard
                 key={item.id}
                 image={item.image}
                 title={item.title}
@@ -964,17 +964,17 @@ const Buy = () => {
 
         {/* Calculators Section */}
         <View className="px-4 mb-24 mt-4">
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8 }}
           >
-            <CalculatorCard 
+            <CalculatorCard
               titlePrefix="EMI"
               description="EMI starts at ₹10.60K"
               vectorsConfig={emiVectors}
             />
-            <CalculatorCard 
+            <CalculatorCard
               titlePrefix="Affordability"
               description="Find the best budget for your home"
               vectorsConfig={affordabilityVectors}
