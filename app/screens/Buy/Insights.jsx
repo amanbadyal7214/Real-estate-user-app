@@ -304,7 +304,7 @@ const Insights = () => {
                 </View>
 
             </ScrollView>
-            <BottomTabBar activeTab="Insights" />
+            {/* <BottomTabBar activeTab="Insights" /> */}
         </SafeAreaView>
     );
 };

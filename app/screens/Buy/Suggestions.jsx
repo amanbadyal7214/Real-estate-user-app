@@ -80,7 +80,7 @@ const Suggestions = () => {
         ))}
       </ScrollView>
 
-      <BottomTabBar activeTab="Suggestions" />
+      {/* <BottomTabBar activeTab="Suggestions" /> */}
     </SafeAreaView>
   );
 };
