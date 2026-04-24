@@ -7,7 +7,7 @@ import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import CalculatorCard from '../../../components/CalculatorCard';
-import CategoryTabs from '../../../components/CategoryTabs';
+import CategoryTabs from '../../navigation/CategoryTabs';
 import ContinueCards from '../../../components/ContinueCards';
 import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
 import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
@@ -23,6 +23,7 @@ import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
+import BottomTabBar from '../../navigation/BottomTabBar';
 
 const Buy = () => {
   const recentSearches = [
@@ -983,6 +984,7 @@ const Buy = () => {
         </View>
 
       </ScrollView>
+      <BottomTabBar />
     </SafeAreaView>
   );
 };
