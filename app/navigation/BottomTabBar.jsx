@@ -38,7 +38,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
           <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Search</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+        <TouchableOpacity onPress={() => router.push('/screens/Rent/services')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <MaterialCommunityIcons name="room-service-outline" color={activeTab === 'Services' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
           <Text style={{ color: activeTab === 'Services' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>services</Text>
         </TouchableOpacity>
