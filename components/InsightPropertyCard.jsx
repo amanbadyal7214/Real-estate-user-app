@@ -16,7 +16,7 @@ const InsightPropertyCard = ({
 
   return (
     <View 
-      className="bg-white mr-4 mb-2 rounded-[16px] border-[0.67px] border-[#E4E7EC] pt-[12.67px] px-[12.67px] pb-[0.67px] w-[251px] h-[397px]"
+      className="bg-white mr-4 mb-2 rounded-[16px] border-[0.67px] border-[#E4E7EC] pt-[12.67px] px-[12.67px] pb-[0.67px] w-[221px] h-[397px]"
       style={{
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -25,7 +25,7 @@ const InsightPropertyCard = ({
         elevation: 4,
       }}
     >
-      <View className="w-[225.67px] h-[160px] rounded-[14px] overflow-hidden relative">
+      <View className="w-[195.67px] h-[160px] rounded-[14px] overflow-hidden relative">
         <Image 
           source={{ uri: image }} 
           className="w-full h-full"
@@ -72,14 +72,14 @@ const InsightPropertyCard = ({
           {area}
         </Text>
 
-        <View className="flex-row items-center gap-2 w-[225.67px] h-10">
+        <View className="flex-row items-center gap-2 w-[195.67px] h-10">
           <TouchableOpacity 
             className="w-10 h-10 bg-[#25D366]/10 rounded-full items-center justify-center"
           >
             <MessageCircle size={20} color="#25D366" fill="#25D366" />
           </TouchableOpacity>
           <TouchableOpacity 
-            className="w-[177.67px] h-10 bg-[#008E96]/10 rounded-[14px] items-center justify-center"
+            className="w-[147.67px] h-10 bg-[#008E96]/10 rounded-[14px] items-center justify-center"
           >
             <Text className="font-inter-medium text-[14px] leading-[21px] text-[#008E96] text-center">
               View Phone
