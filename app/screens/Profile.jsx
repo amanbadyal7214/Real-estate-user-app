@@ -314,7 +314,7 @@ const Profile = () => {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
       {/* Navigator Back Header */}
-      <View className="px-4 h-[44px] justify-center">
+      <View className="px-4  justify-center">
         <TouchableOpacity onPress={() => router.back()}>
           <ArrowLeft size={24} color="#101828" />
         </TouchableOpacity>
@@ -324,7 +324,7 @@ const Profile = () => {
 
       <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false}>
         {/* My Activity Section */}
-        <View className="py-6">
+        <View>
           <Text 
             className="text-[#101828] text-[18px] font-semibold mb-5 px-4"
             style={{ fontFamily: 'Inter-SemiBold' }}
