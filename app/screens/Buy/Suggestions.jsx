@@ -71,7 +71,7 @@ const Suggestions = () => {
 
       {/* Main Content */}
       <ScrollView 
-        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 60 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 30 }}
         showsVerticalScrollIndicator={false}
         className="flex-1"
       >

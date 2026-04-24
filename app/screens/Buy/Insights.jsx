@@ -158,7 +158,7 @@ const preferencesData = [
 const Insights = () => {
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <ScrollView contentContainerStyle={{ paddingBottom: 70 }} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 30 }} showsVerticalScrollIndicator={false}>
 
                 {/* Header Section */}
                 <TouchableOpacity
