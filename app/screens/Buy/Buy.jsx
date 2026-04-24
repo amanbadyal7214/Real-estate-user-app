@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronDown, ChevronRight, Search, User, MapPin, Home, LayoutGrid } from 'lucide-react-native';
 import { useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View, DeviceEventEmitter } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryTabs from '../../../components/CategoryTabs';
 import ContinueCards from '../../../components/ContinueCards';
@@ -322,7 +322,14 @@ const Buy = () => {
       </View>
 
       {/* Scrollable Content */}
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        className="flex-1"
+        scrollEventThrottle={16}
+        onScroll={(e) => {
+          DeviceEventEmitter.emit('onBuyScroll', e.nativeEvent.contentOffset.y);
+        }}
+      >
         {/* Main Category Blue Container */}
         <View className="mx-4 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
           <CategoryTabs 

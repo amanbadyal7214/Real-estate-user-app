@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { Image, LayoutAnimation, Platform, ScrollView, Text, TouchableOpacity, UIManager, View } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { DeviceEventEmitter, Dimensions, Image, LayoutAnimation, Platform, ScrollView, Text, TouchableOpacity, UIManager, View } from 'react-native';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -8,6 +9,37 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 const FeaturedCollectionCard = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const layoutY = useRef(0);
+  const layoutHeight = useRef(0);
+  const windowHeight = Dimensions.get('window').height;
+
+  useFocusEffect(
+    useCallback(() => {
+      // Return a cleanup function to reset state when the screen loses focus
+      return () => {
+        setIsExpanded(false);
+      };
+    }, [])
+  );
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('onBuyScroll', (offsetY) => {
+      if (!isExpanded) return;
+
+      const y = layoutY.current;
+      const height = layoutHeight.current;
+
+      if (y > 0 && height > 0) {
+        const isOutOfView = offsetY > y + height || offsetY + windowHeight < y;
+        if (isOutOfView) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          setIsExpanded(false);
+        }
+      }
+    });
+
+    return () => subscription.remove();
+  }, [isExpanded, windowHeight]);
 
   const collections = [
     {
@@ -37,14 +69,20 @@ const FeaturedCollectionCard = () => {
   };
 
   return (
-    <View className="px-4 py-6">
+    <View
+      className="px-4 py-6"
+      onLayout={(e) => {
+        layoutY.current = e.nativeEvent.layout.y;
+        layoutHeight.current = e.nativeEvent.layout.height;
+      }}
+    >
       <View className="mb-4">
         <Text className="font-inter-bold text-[20px] text-[#101828]">Featured Collections</Text>
         <Text className="font-inter-regular text-[14px] text-[#667085]">Category suited to your property needs</Text>
       </View>
 
-      <TouchableOpacity 
-        activeOpacity={0.9} 
+      <TouchableOpacity
+        activeOpacity={0.9}
         onPress={handlePress}
         disabled={isExpanded} // Disable the TouchableOpacity once expanded
       >
@@ -58,10 +96,10 @@ const FeaturedCollectionCard = () => {
             minWidth: isExpanded ? 'auto' : 600,
           }}
         >
-          <View 
-            className="flex-row" 
-            style={{ 
-              height: 350, 
+          <View
+            className="flex-row"
+            style={{
+              height: 350,
               width: isExpanded ? undefined : 600,
             }}
           >
@@ -71,7 +109,7 @@ const FeaturedCollectionCard = () => {
               // index 2 (Townships): 220 (leaves 120px of index 1 visible -> ~40%)
               // All cards are now more visible in the stack
               const leftPos = isExpanded ? 0 : (index === 0 ? 0 : (index === 1 ? 100 : 220));
-              
+
               return (
                 <View
                   key={item.id}
@@ -101,9 +139,12 @@ const FeaturedCollectionCard = () => {
                         </React.Fragment>
                       ))}
                     </Text>
-                    <View className="w-8 h-8 rounded-full bg-white/30 items-center justify-center mt-3">
-                      <Ionicons name="chevron-forward" size={16} color="white" />
-                    </View>
+                  </View>
+                  <View 
+                    className="absolute left-6 w-8 h-8 rounded-full bg-white/30 items-center justify-center"
+                    style={{ top: '50%', marginTop: -16 }}
+                  >
+                    <Ionicons name="chevron-forward" size={16} color="white" />
                   </View>
                 </View>
               );
