@@ -6,8 +6,8 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig }) => {
   return (
     <View 
       style={{
-        width: 320,
-        height: 320,
+        width: 233.33,
+        height: 269.33,
         backgroundColor: '#FFFFFF',
         borderWidth: 0.67,
         borderColor: '#D4A574',
@@ -59,8 +59,10 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig }) => {
           fontSize: 12,
           lineHeight: 18,
           color: '#6A7282',
-          width: 200
+          width: 200,
+          height: 36
         }}
+        numberOfLines={2}
       >
         {description}
       </Text>
@@ -99,17 +101,17 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig }) => {
       <TouchableOpacity 
         style={{
           position: 'absolute',
-          width: 44,
-          height: 44,
-          right: 16,
-          bottom: 16,
+          width: 36,
+          height: 36,
+          left: 180.67,
+          top: 216.67,
           backgroundColor: '#D4A574',
-          borderRadius: 22,
+          borderRadius: 18,
           justifyContent: 'center',
           alignItems: 'center'
         }}
       >
-        <ChevronRight size={20} color="#FFFFFF" strokeWidth={2} />
+        <ChevronRight size={20} color="#FFFFFF" strokeWidth={1.5} />
       </TouchableOpacity>
     </View>
   );
