@@ -30,11 +30,21 @@ const COMMERCIAL_TABS = [
   { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
 ];
 
+const PG_TABS = [
+  { id: 'Buy', label: 'Buy', icon: Home, color: '#101828' },
+  { id: 'Rent', label: 'Rent', icon: Key, color: '#101828' },
+  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#008E96' },
+  { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
+  { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
+  { id: 'Commercial', label: 'Commercial', icon: Building, color: '#101828' },
+];
+
 const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
   const scrollViewRef = useRef(null);
   const tabs = useMemo(() => {
     if (mode === 'Plot') return PLOT_TABS;
     if (mode === 'Commercial') return COMMERCIAL_TABS;
+    if (mode === 'PG') return PG_TABS;
     return DEFAULT_TABS;
   }, [mode]);
 

@@ -51,7 +51,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
     );
   }
 
-  if (mode === 'Rent') {
+  if (mode === 'Rent' || mode === 'PG') {
     return (
       <View
         style={{

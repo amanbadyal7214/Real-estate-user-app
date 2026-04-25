@@ -272,7 +272,7 @@ const emiVectors = [
             ))}
           </ScrollView>
         </View>
-        <FeaturedCollectionCard />
+       
         <FurnishedPropertiesSection />
 
         {/* Popular on Propertize Section */}

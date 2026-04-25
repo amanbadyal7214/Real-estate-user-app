@@ -7,6 +7,7 @@ import { DeviceEventEmitter, Image, ScrollView, Text, TouchableOpacity, View } f
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ContinueCards from '../../../components/ContinueCards';
 import SearchBox from '../../../components/SearchBox';
+import TestimonialCardPG from '../../../components/TestimonialCardPG';
 import UserHeader from '../../../components/UserHeader';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
@@ -57,6 +58,7 @@ const PG = () => {
           <CategoryTabs
             activeTab={selectedTab}
             onTabPress={setSelectedTab}
+            mode="PG"
           />
 
           <SearchBox
@@ -201,7 +203,7 @@ const PG = () => {
         <View className="mt-2 mb-6 w-full" style={{ height: 573 }}>
           {/* Heading */}
           <View className="px-4">
-            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">
+            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
               Home at First Sight
             </Text>
           </View>
@@ -262,7 +264,7 @@ const PG = () => {
         {/* Benefits of our P.G. Section */}
         <View className="px-4 gap-5 mb-6" style={{ height: 523.75 }}>
           {/* Heading */}
-          <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">
+          <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
             Benefits of our P.G.
           </Text>
 
@@ -280,7 +282,7 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="font-inter-semibold text-[16px] leading-[20px] text-center text-[#101828] mt-3">
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
                 Stress Free Search
               </Text>
               {/* Description */}
@@ -300,7 +302,7 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="font-inter-semibold text-[16px] leading-[20px] text-center text-[#101828] mt-3">
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
                 Find your Match
               </Text>
               {/* Description */}
@@ -320,7 +322,7 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="font-inter-semibold text-[16px] leading-[20px] text-center text-[#101828] mt-3">
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
                 Bon appétite
               </Text>
               {/* Description */}
@@ -340,7 +342,7 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="font-inter-semibold text-[16px] leading-[20px] text-center text-[#101828] mt-3">
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
                 Your Life, Your Rules
               </Text>
               {/* Description */}
@@ -352,9 +354,270 @@ const PG = () => {
           </View>
         </View>
 
+        {/* Featured Collections Section */}
+        <View className="mb-6" style={{ gap: 16 }}>
+          {/* Header */}
+          <View className="px-4" style={{ gap: 4 }}>
+            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
+              Featured Collections
+            </Text>
+            <Text className="text-[14px] leading-[21px] text-[#6A7282]" style={{ fontFamily: 'Inter-Regular' }}>
+              Category suited to your property needs
+            </Text>
+          </View>
+
+          {/* Cards Row */}
+          <View className="flex-row px-4" style={{ gap: 17 }}>
+            {/* For Boys Card */}
+            <LinearGradient
+              colors={['#E9D5FF', '#E7D5FF', '#E4D5FF', '#E2D6FE', '#DFD6FE', '#DDD6FE']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="rounded-2xl, ml-5"
+              style={{ width: 168, height: 130, borderRadius: 16, overflow: 'hidden' }}
+            >
+              {/* Person Icon Circle */}
+              <View
+                className="absolute rounded-full items-center justify-center"
+                style={{ width: 48, height: 48, left: 16, top: 31, backgroundColor: '#8B5CF6' }}
+              >
+                <Ionicons name="person" size={24} color="#FFFFFF" />
+              </View>
+
+              {/* Decorative White Dots */}
+              <View className="absolute" style={{ width: 40, height: 40, left: 112, top: 16 }}>
+                <View
+                  className="absolute rounded-full bg-white opacity-30"
+                  style={{ left: '10%', right: '70%', top: '10%', bottom: '70%' }}
+                />
+                <View
+                  className="absolute rounded-full bg-white opacity-30"
+                  style={{ left: '50%', right: '30%', top: '10%', bottom: '70%' }}
+                />
+                <View
+                  className="absolute rounded-full bg-white opacity-30"
+                  style={{ left: '10%', right: '70%', top: '50%', bottom: '30%' }}
+                />
+                <View
+                  className="absolute rounded-full bg-white opacity-20"
+                  style={{ left: '65%', right: '5%', top: '45%', bottom: '25%' }}
+                />
+              </View>
+
+              {/* Title */}
+              <Text
+                className="absolute text-[18px] leading-[27px] text-[#101828]"
+                style={{ left: 16, top: 87, fontFamily: 'Inter-SemiBold' }}
+              >
+                For Boys
+              </Text>
+            </LinearGradient>
+
+            {/* For Girls Card */}
+            <LinearGradient
+              colors={['#FCE7F3', '#FCE5F2', '#FCE2F1', '#FCE0F0', '#FCDDEF', '#FCDBEE', '#FCD9EC', '#FBD6EB', '#FBD4EA', '#FBD1E9', '#FBCFE8']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="rounded-2xl"
+              style={{ width: 168, height: 130, borderRadius: 16, overflow: 'hidden' }}
+            >
+              {/* Person Icon Circle */}
+              <View
+                className="absolute rounded-full items-center justify-center"
+                style={{ width: 48, height: 48, left: 16, top: 31, backgroundColor: '#EC4899' }}
+              >
+                <Ionicons name="person" size={24} color="#FFFFFF" />
+              </View>
+
+              {/* Decorative White Dots */}
+              <View className="absolute" style={{ width: 40, height: 40, left: 112, top: 16 }}>
+                <View
+                  className="absolute rounded-full bg-white opacity-30"
+                  style={{ left: '10%', right: '70%', top: '10%', bottom: '70%' }}
+                />
+                <View
+                  className="absolute rounded-full bg-white opacity-30"
+                  style={{ left: '50%', right: '30%', top: '10%', bottom: '70%' }}
+                />
+                <View
+                  className="absolute rounded-full bg-white opacity-30"
+                  style={{ left: '10%', right: '70%', top: '50%', bottom: '30%' }}
+                />
+                <View
+                  className="absolute rounded-full bg-white opacity-20"
+                  style={{ left: '65%', right: '5%', top: '45%', bottom: '25%' }}
+                />
+              </View>
+
+              {/* Title */}
+              <Text
+                className="absolute text-[18px] leading-[27px] text-[#101828]"
+                style={{ left: 16, top: 87, fontFamily: 'Inter-SemiBold' }}
+              >
+                For Girls
+              </Text>
+            </LinearGradient>
+          </View>
+        </View>
+
+        {/* Our Testimonials Section */}
+        <View className="mb-6" style={{ gap: 16 }}>
+          {/* Header */}
+          <View className="px-4" style={{ gap: 4 }}>
+            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
+              Our Testimonials
+            </Text>
+            <Text className="text-[14px] leading-[21px] text-[#6A7282]" style={{ fontFamily: 'Inter-Regular' }}>
+              Testimonials from our Housing edge customers
+            </Text>
+          </View>
+
+          {/* Testimonial Cards – Horizontal Scroll */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8, gap: 12 }}
+          >
+            <TestimonialCardPG
+              name="Amit Chakraborty"
+              subtitle="Co Living resident since last year"
+              image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100"
+              comment="I am one of those who likes a lot of variety in my food. The PG I found through Housing.com offers amazing meal options that change daily. The listing had all the details about food, amenities, and house rules which made my decision so much easier."
+            />
+
+            <TestimonialCardPG
+              name="Priya Sharma"
+              subtitle="PG resident for 2 years"
+              image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100"
+              comment="Finding a safe and comfortable PG was my top priority when I moved to the city. Housing.com made it so easy with verified listings and detailed information about each property. The pictures matched exactly what I saw during the visit."
+            />
+          </ScrollView>
+        </View>
+
+        {/* Stats Card */}
+        <View
+          className="self-center rounded-2xl mb-6"
+          style={{
+            width: 358,
+            height: 143.5,
+            backgroundColor: '#1F2937',
+            borderRadius: 16,
+            paddingHorizontal: 24,
+            paddingTop: 24,
+          }}
+        >
+          <View className="flex-row" style={{ gap: 16 }}>
+            {/* 30k+ Properties */}
+            <View className="items-center" style={{ width: 92.67 }}>
+              <Text
+                className="text-[24px] leading-[36px] text-white text-center"
+                style={{ fontFamily: 'Inter-Bold' }}
+              >
+                30k+
+              </Text>
+              <Text
+                className="text-[13px] leading-[20px] text-center mt-1"
+                style={{ fontFamily: 'Inter-Regular', color: '#D1D5DB' }}
+              >
+                Properties
+              </Text>
+            </View>
+
+            {/* 35+ Cities */}
+            <View className="items-center" style={{ width: 92.67 }}>
+              <Text
+                className="text-[24px] leading-[36px] text-white text-center"
+                style={{ fontFamily: 'Inter-Bold' }}
+              >
+                35+
+              </Text>
+              <Text
+                className="text-[13px] leading-[20px] text-center mt-1"
+                style={{ fontFamily: 'Inter-Regular', color: '#D1D5DB' }}
+              >
+                Cities
+              </Text>
+            </View>
+
+            {/* 2.5 Lakh+ Monthly Users */}
+            <View className="items-center" style={{ width: 92.67 }}>
+              <Text
+                className="text-[24px] leading-[36px] text-white text-center"
+                style={{ fontFamily: 'Inter-Bold' }}
+              >
+                2.5{'\n'}Lakh+
+              </Text>
+              <Text
+                className="text-[13px] leading-[20px] text-center mt-1"
+                style={{ fontFamily: 'Inter-Regular', color: '#D1D5DB' }}
+              >
+                Monthly Users
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Share App Card */}
+        <View className="mb-24 px-4">
+          <LinearGradient
+            colors={['#FEF3C7', '#FEF0B9', '#FEEEAF', '#FDEA9F', '#FDE68A']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            className="rounded-2xl overflow-hidden relative"
+            style={{ width: 388, height: 180, borderRadius: 16 }}
+          >
+            {/* Background Decorative Lines (Vectors) */}
+            <View className="absolute inset-0 opacity-10">
+              <View
+                className="absolute border-[#F59E0B] rounded-full"
+                style={{ width: 140, height: 140, left: -60, top: -40, borderWidth: 0.895 }}
+              />
+              <View
+                className="absolute border-[#F59E0B] rounded-full"
+                style={{ width: 140, height: 140, right: -60, bottom: -40, borderWidth: 0.895 }}
+              />
+              <View
+                className="absolute border-[#F59E0B] border-dashed rounded-full"
+                style={{ width: 100, height: 100, left: '25%', top: '45%', borderWidth: 0.895 }}
+              />
+            </View>
+
+            <View className="flex-row items-center px-5" style={{ height: 180, gap: 16 }}>
+              {/* Left Side: Content */}
+              <View style={{ flex: 1, gap: 16 }}>
+                <Text
+                  className="text-[20px] leading-[25px] text-[#101828]"
+                  style={{ fontFamily: 'Inter-SemiBold' }}
+                >
+                  Like the app?{'\n'}Share the app
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  className="bg-[#008E96] rounded-[12px] items-center justify-center"
+                  style={{ width: 122, height: 44 }}
+                >
+                  <Text
+                    className="text-white text-[15px] leading-[22px]"
+                    style={{ fontFamily: 'Inter-SemiBold' }}
+                  >
+                    Share Now
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Right Side: Illustration */}
+              <Image
+                source={require('../../../assets/images/Icon (1).png')}
+                style={{ width: 140, height: 140 }}
+                resizeMode="contain"
+              />
+            </View>
+          </LinearGradient>
+        </View>
+
       </ScrollView>
 
-      <BottomTabBar />
+      <BottomTabBar mode="PG" />
     </SafeAreaView>
   );
 };
