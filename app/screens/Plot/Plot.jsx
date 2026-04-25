@@ -79,8 +79,49 @@ const Plot = () => {
       propertiesCount: '31',
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',
       tags: ['Residential', 'Verified'],
-    }
+    },
+    {
+      id: 3,
+      name: 'Urban Nest Realty',
+      experienceYears: '10',
+      propertiesCount: '52',
+      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200',
+      tags: ['Commercial', 'Trusted'],
+    },
+    {
+      id: 4,
+      name: 'PrimeKeys Mohali',
+      experienceYears: '6',
+      propertiesCount: '27',
+      avatar: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&q=80&w=200',
+      tags: ['Residential', 'Verified'],
+    },
+    {
+      id: 5,
+      name: 'Elite Plot Experts',
+      experienceYears: '14',
+      propertiesCount: '63',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
+      tags: ['Plots', 'Verified'],
+    },
+    {
+      id: 6,
+      name: 'TrueNorth Advisors',
+      experienceYears: '9',
+      propertiesCount: '39',
+      avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&q=80&w=200',
+      tags: ['Luxury', 'Trusted'],
+    },
   ];
+
+  const sellerColumns = recommendedSellers.reduce((cols, seller, index) => {
+    const columnIndex = Math.floor(index / 2);
+    if (!cols[columnIndex]) {
+      cols[columnIndex] = [];
+    }
+    cols[columnIndex].push(seller);
+    return cols;
+  }, []);
 
   const betterPricedProperties = [
     {
@@ -470,23 +511,36 @@ const Plot = () => {
 
           {/* Recommended Sellers Section */}
         <View className="px-4 mb-3">
-          <View className="mb-4">
-            <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
-            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+          <View className="mb-4 flex-row items-center justify-between">
+            <View>
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+            </View>
+            <TouchableOpacity>
+              <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={{ gap: 12, paddingBottom: 8 }}>
-            {recommendedSellers.map((seller) => (
-              <SellerCard
-                key={seller.id}
-                name={seller.name}
-                experienceYears={seller.experienceYears}
-                propertiesCount={seller.propertiesCount}
-                avatar={seller.avatar}
-                tags={seller.tags}
-              />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 12, paddingBottom: 8, paddingRight: 8 }}
+          >
+            {sellerColumns.map((column, columnIndex) => (
+              <View key={`seller-col-${columnIndex}`} style={{ width: 340, gap: 12 }}>
+                {column.map((seller) => (
+                  <SellerCard
+                    key={seller.id}
+                    name={seller.name}
+                    experienceYears={seller.experienceYears}
+                    propertiesCount={seller.propertiesCount}
+                    avatar={seller.avatar}
+                    tags={seller.tags}
+                  />
+                ))}
+              </View>
             ))}
-          </View>
+          </ScrollView>
         </View>
 
              {/* Featured Collections Section */}
