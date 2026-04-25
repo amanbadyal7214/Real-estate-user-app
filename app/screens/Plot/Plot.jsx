@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, } from 'react';
 import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
@@ -36,31 +36,6 @@ const Plot = () => {
     }
   }, [selectedTab]);
 
-  const recentSearches = [
-    { title: 'Commercial, Buy, Mohali,', subtitle: 'Any price, Any area' },
-    { title: 'Buy, Sector 62', subtitle: 'Any price' },
-    { title: 'Apartment, Rent, Zirakpur', subtitle: 'Min ₹15K, 2+ BHK' },
-    { title: 'Plot, Buy, Kharar', subtitle: '100-150 sq.yd' },
-  ];
-
-  const matchedHomes = [
-    {
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-      tag: 'TALLEST LANDMARK',
-      developer: 'NIRWANA GROUP',
-      title: 'D-Xperanza',
-      location: 'Sector 82, Mohali',
-      priceRange: '1.24 Cr. - 1.55 Cr',
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-      tag: 'LUXURY LIVING',
-      developer: 'SKY HEIGHTS',
-      title: 'Sky Terrace',
-      location: 'Sector 66, Mohali',
-      priceRange: '2.5 Cr. - 4.2 Cr',
-    },
-  ];
 
 
   const recommendedSellers = [
@@ -142,24 +117,7 @@ const Plot = () => {
     }
   ];
 
-  const lastSearches = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      price: "₹ 2.03 Cr - 6.25 Cr",
-      title: "Wave Estate Group Housing",
-      builder: "by Uppal Chadha Hi Tech De...",
-      location: "Patti Sohana, Mohali"
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
-      price: "₹ 2.03 Cr - 6.25 Cr",
-      title: "Wave Estate Group Housing",
-      builder: "by Uppal Chadha Hi Tech De...",
-      location: "Patti Sohana, Mohali"
-    }
-  ];
+
 
   const newsArticles = [
     {
@@ -178,232 +136,17 @@ const Plot = () => {
     }
   ];
 
-  const emiVectors = [
-    { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
-    { left: 30, right: 52.5, top: 25, bottom: 18.75, background: '#D4A574' },
-    { left: 32.5, right: 55, top: 31.25, bottom: 62.5, background: '#8B6F47' },
-    { left: 32.5, right: 55, top: 41.25, bottom: 52.5, background: '#8B6F47' },
-    { left: 32.5, right: 60, top: 51.25, bottom: 42.5, background: '#8B6F47' },
-    { left: 20, right: 70, top: 50, bottom: 37.5, borderWidth: 2, borderColor: '#8B6F47' },
-    { left: 52.5, right: 32.5, top: 43.75, bottom: 25, background: '#D4A574' },
-    { left: 56, right: 36, top: 48.75, bottom: 31.25, background: '#FFF4E6', isDot: true }
-  ];
 
-  const affordabilityVectors = [
-    { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
-    { left: 35, right: 45, top: 31.25, bottom: 25, background: '#D4A574' },
-    { left: 37.5, right: 47.5, top: 37.5, bottom: 57.5, background: '#8B6F47' },
-    { left: 37.5, right: 47.5, top: 47.5, bottom: 47.5, background: '#8B6F47' },
-    { left: 37.5, right: 52.5, top: 57.5, bottom: 37.5, background: '#8B6F47' }
-  ];
 
-  const highDemandProjects = [
-    {
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400",
-      priceRange: "₹51.9 L - 68.9 L",
-      title: "Lok Awas",
-      developer: "Vara Developers",
-      location: "Sector 74 A, Mohali"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      priceRange: "₹85.0 L - 1.2 Cr",
-      title: "Hero Homes",
-      developer: "Hero Realty",
-      location: "Sector 88, Mohali"
-    }
-  ];
 
-  const focusProjects = [
-    {
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-      title: 'Nirwana The Moksha',
-      location: 'Kharar, Mohali',
-      price: '₹45.03 L - 1.11 Cr',
-      tag: 'TALLEST LANDMARK',
-      developer: 'NIRWANA GROUP',
-      badgeType: 'RERA',
-      badgeColor: '#155DFC'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-      title: 'Premium Heights',
-      location: 'Sector 66, Mohali',
-      price: '₹62.50 L - 1.35 Cr',
-      tag: 'LUXURY LIVING',
-      developer: 'PREET DEVELOPERS',
-      badgeType: 'READY',
-      badgeColor: '#00A63E'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-      title: 'Royal Residences',
-      location: 'Sector 71, Mohali',
-      price: '₹71.20 L - 1.58 Cr',
-      tag: 'PREMIUM LIVING',
-      developer: 'ROYAL GROUP',
-      badgeType: 'RERA',
-      badgeColor: '#155DFC'
-    }
-  ];
 
-  const bestLocalities = [
-    { title: 'Sector 115', rating: '4.8', reviews: '3', price: '₹5K/sqft.' },
-    { title: 'Sector 82', rating: '4.6', reviews: '12', price: '₹7K/sqft.' },
-    { title: 'Sector 66', rating: '4.9', reviews: '8', price: '₹12K/sqft.' },
-    { title: 'Sector 71', rating: '4.7', reviews: '5', price: '₹9K/sqft.' },
-  ];
 
-  const topDevelopers = {
-    summary: [
-      {
-        id: 'nirwana',
-        name: 'Nirwana Group',
-        logoText: 'NIRWANA',
-        logoColor: '#E7000B',
-        yearEstd: '2012',
-        projectCount: '15'
-      },
-      {
-        id: 'vara',
-        name: 'Vara Developers',
-        logoText: 'VARA',
-        logoColor: '#008E96',
-        yearEstd: '2016',
-        projectCount: '10'
-      },
-      {
-        id: 'hero',
-        name: 'Hero Realty',
-        logoText: 'HERO',
-        logoColor: '#D92D20',
-        yearEstd: '2004',
-        projectCount: '45'
-      },
-    ],
-    projects: {
-      nirwana: [
-        {
-          image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-          logoText: 'N',
-          logoColor: '#E7000B',
-          title: 'D-Xperanza',
-          developerName: 'NIRWANA GROUP',
-          rating: '4.8',
-          config: '3, 4 BHK Apartment',
-          location: 'Sector 82, Mohali',
-          priceRange: '₹1.24 Cr - 1.55 Cr',
-        },
-        {
-          image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-          logoText: 'N',
-          logoColor: '#E7000B',
-          title: 'Nirwana The Moksha',
-          developerName: 'NIRWANA GROUP',
-          rating: '4.7',
-          config: '2, 3 BHK Apartment',
-          location: 'Kharar, Mohali',
-          priceRange: '₹45.03 L - 1.11 Cr',
-        }
-      ],
-      vara: [
-        {
-          image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400',
-          logoText: 'V',
-          logoColor: '#008E96',
-          title: 'Lok Awas',
-          developerName: 'Vara Developers',
-          rating: '4.6',
-          config: '2, 3 BHK Apartment',
-          location: 'Sector 74 A, Mohali',
-          priceRange: '₹51.9 L - 68.9 L',
-        }
-      ],
-      hero: [
-        {
-          image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=400',
-          logoText: 'H',
-          logoColor: '#D92D20',
-          title: 'Hero Homes',
-          developerName: 'HERO REALTY',
-          rating: '4.9',
-          config: '2, 3 BHK Apartment',
-          location: 'Sector 88, Mohali',
-          priceRange: '₹85.0 L - 1.25 Cr',
-        }
-      ]
-    }
-  };
 
-    const suggestions = [
-        {
-            id: 1,
-            image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Nirwana Group',
-            developerInitial: 'N',
-            price: '₹ 45.03 L - 1.11 Cr',
-            title: 'Nirwana The Moksha',
-            location: 'Khanpur, Mohali',
-            config: '1, 2, 3 BHK Flats'
-        },
-        {
-            id: 2,
-            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Vatika Group',
-            developerInitial: 'V',
-            price: '₹ 51.9 L - 89.3 L',
-            title: 'Vatika Seven Lamps',
-            location: 'Sector 82, Mohali',
-            config: '2 BHK Flats'
-        },
-        {
-            id: 3,
-            image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600',
-            developerName: 'DLF Limited',
-            developerInitial: 'D',
-            price: '₹ 62.5 L - 1.25 Cr',
-            title: 'DLF Garden City',
-            location: 'Sector 91, Mohali',
-            config: '2, 3, 4 BHK Flats'
-        },
-        {
-            id: 4,
-            image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Emaar India',
-            developerInitial: 'E',
-            price: '₹ 75.2 L - 1.45 Cr',
-            title: 'Emaar Palm Heights',
-            location: 'Sector 77, Mohali',
-            config: '2, 3 BHK Flats'
-        }
-    ];
 
-  const [activeDeveloperId, setActiveDeveloperId] = useState('nirwana');
-   const [activeIndex, setActiveIndex] = useState(0);
-  const scrollRef = useRef(null);
 
-   const handleScroll = (event) => {
-        const scrollPosition = event.nativeEvent.contentOffset.x;
-        const index = Math.round(scrollPosition / 296);
-        if (index !== activeIndex) {
-            setActiveIndex(index);
-        }
-    };
+  
+   
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveIndex((prevIndex) => {
-                const nextIndex = (prevIndex + 1) % suggestions.length;
-                scrollRef.current?.scrollTo({
-                    x: nextIndex * 296,
-                    animated: true,
-                });
-                return nextIndex;
-            });
-        }, 3000);
-
-        return () => clearInterval(interval);
-      }, [suggestions.length]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -609,7 +352,7 @@ const Plot = () => {
 
 
       </ScrollView>
-      <BottomTabBar />
+      <BottomTabBar mode="Plot" activeTab="Search" />
     </SafeAreaView>
   );
 };

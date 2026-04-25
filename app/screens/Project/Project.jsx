@@ -1,7 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

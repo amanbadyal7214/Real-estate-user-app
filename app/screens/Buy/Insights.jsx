@@ -9,7 +9,7 @@ import TopRatedProjectCard from '../../../components/TopRatedProjectCard';
 import HighestGrowthCard from '../../../components/HighestGrowthCard';
 import UniqueAmenityCard from '../../../components/UniqueAmenityCard';
 import PreferenceCard from '../../../components/PreferenceCard';
-import BottomTabBar from '../../navigation/BottomTabBar';
+
 
 const mockProperties = [
     {
