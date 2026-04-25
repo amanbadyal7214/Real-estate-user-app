@@ -1,24 +1,45 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import CalculatorCard from '../../../components/CalculatorCard';
 import ContinueCards from '../../../components/ContinueCards';
-import PropertySuggestionCard from '../../../components/PropertySuggestionCard';
-import SearchBox from '../../../components/SearchBox';
-import UserHeader from '../../../components/UserHeader';
-import CategoryTabs from '../../navigation/CategoryTabs';
-import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
+import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 import FeaturedCollectionCard from '../../../components/FeaturedCollectionCard';
 import FurnishedPropertiesSection from '../../../components/FurnishedPropertiesSection';
-import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
-import CalculatorCard from '../../../components/CalculatorCard';
-import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 import NewsCard from '../../../components/NewsCard';
+import PropertySuggestionCard from '../../../components/PropertySuggestionCard';
+import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
+import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
+import SearchBox from '../../../components/SearchBox';
+import UserHeader from '../../../components/UserHeader';
+import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
+import CategoryTabs from '../../navigation/CategoryTabs';
 
 const Rent = () => {
+  const { selectedTab, setSelectedTab } = useCategoryTab();
+  const skipFirstRedirect = useRef(true);
+
+  useEffect(() => {
+    setSelectedTab('Rent');
+  }, [setSelectedTab]);
+
+  useEffect(() => {
+    if (skipFirstRedirect.current) {
+      skipFirstRedirect.current = false;
+      return;
+    }
+
+    if (selectedTab !== 'Rent') {
+      const targetRoute = getCategoryRoute(selectedTab);
+      if (targetRoute) {
+        router.replace(targetRoute);
+      }
+    }
+  }, [selectedTab]);
+
     const recentSearches = [
         { title: 'Apartment, Rent, Mohali,', subtitle: 'Min ₹15K, 2+ BHK' },
         { title: 'Rent, Sector 66', subtitle: 'Max ₹40K' },
@@ -173,15 +194,8 @@ const emiVectors = [
                 {/* Main Category Blue Container */}
                 <View className="mx-4 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
                     <CategoryTabs
-                        activeTab="Rent"
-                        onTabPress={(tabId) => {
-                            if (tabId === 'Buy') {
-                                router.push('/screens/Buy/Buy');
-                            } else if (tabId !== 'Rent') {
-                                // handle other tabs if needed
-                                router.push(`/screens/${tabId}/${tabId}`);
-                            }
-                        }}
+                    activeTab={selectedTab}
+                    onTabPress={setSelectedTab}
                     />
 
                     <SearchBox
@@ -262,7 +276,7 @@ const emiVectors = [
         <FurnishedPropertiesSection />
 
         {/* Popular on Propertize Section */}
-        <View className="px-4 pt-4 mb-6 items-center">
+        <View className="px-4 pt-12 mb-6 items-center">
           <View
             style={{
               width: 320,

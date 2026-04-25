@@ -2,7 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
@@ -23,10 +23,32 @@ import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
+import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
 
 const Buy = () => {
+  const { selectedTab, setSelectedTab } = useCategoryTab();
+  const skipFirstRedirect = useRef(true);
+
+  useEffect(() => {
+    setSelectedTab('Buy');
+  }, [setSelectedTab]);
+
+  useEffect(() => {
+    if (skipFirstRedirect.current) {
+      skipFirstRedirect.current = false;
+      return;
+    }
+
+    if (selectedTab !== 'Buy') {
+      const targetRoute = getCategoryRoute(selectedTab);
+      if (targetRoute) {
+        router.replace(targetRoute);
+      }
+    }
+  }, [selectedTab]);
+
   const recentSearches = [
     { title: 'Commercial, Buy, Mohali,', subtitle: 'Any price, Any area' },
     { title: 'Buy, Sector 62', subtitle: 'Any price' },
@@ -320,14 +342,8 @@ const Buy = () => {
         {/* Main Category Blue Container */}
         <View className="mx-4 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
           <CategoryTabs
-            activeTab="Buy"
-            onTabPress={(tabId) => {
-              if (tabId === 'Rent') {
-                router.push('/screens/Rent/Rent');
-              } else if (tabId !== 'Buy') {
-                router.push(`/screens/${tabId}/${tabId}`);
-              }
-            }}
+            activeTab={selectedTab}
+            onTabPress={setSelectedTab}
           />
 
           <SearchBox />

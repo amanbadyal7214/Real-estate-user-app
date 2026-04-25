@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "../global.css";
+import { CategoryTabProvider } from "./context/CategoryTabContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,5 +24,9 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <CategoryTabProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </CategoryTabProvider>
+  );
 }
