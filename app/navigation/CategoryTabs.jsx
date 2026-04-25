@@ -21,9 +21,22 @@ const PLOT_TABS = [
   
 ];
 
+const COMMERCIAL_TABS = [
+  { id: 'Rent', label: 'Rent', icon: Key, color: '#101828' },
+  { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
+  { id: 'Commercial', label: 'Commercial', icon: Building, color: '#008E96' },
+  { id: 'Buy', label: 'Buy', icon: Home, color: '#101828' },
+  { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
+  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
+];
+
 const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
   const scrollViewRef = useRef(null);
-  const tabs = useMemo(() => (mode === 'Plot' ? PLOT_TABS : DEFAULT_TABS), [mode]);
+  const tabs = useMemo(() => {
+    if (mode === 'Plot') return PLOT_TABS;
+    if (mode === 'Commercial') return COMMERCIAL_TABS;
+    return DEFAULT_TABS;
+  }, [mode]);
 
   useEffect(() => {
     const activeIndex = tabs.findIndex(tab => tab.id === activeTab);
