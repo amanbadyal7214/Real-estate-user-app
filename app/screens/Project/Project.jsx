@@ -10,7 +10,7 @@ import ContinueCards from '../../../components/ContinueCards';
 import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
 import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
-import FeaturedCollectionCard from '../../../components/FeaturedCollectionCard';
+
 import HighDemandProjectCard from '../../../components/HighDemandProjectCard';
 import LastSearchedCard from '../../../components/LastSearchedCard';
 import LocalityCard from '../../../components/LocalityCard';
@@ -713,8 +713,6 @@ const Project = () => {
         </View>
        
 
-          {/* Featured Collections Section */}
-        <FeaturedCollectionCard />
 
         {/* Top Rated Developers Section */}
         <View className="px-4 mb-4 ">
