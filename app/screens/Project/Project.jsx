@@ -324,75 +324,75 @@ const Project = () => {
     }
   };
 
-    const suggestions = [
-        {
-            id: 1,
-            image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Nirwana Group',
-            developerInitial: 'N',
-            price: '₹ 45.03 L - 1.11 Cr',
-            title: 'Nirwana The Moksha',
-            location: 'Khanpur, Mohali',
-            config: '1, 2, 3 BHK Flats'
-        },
-        {
-            id: 2,
-            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Vatika Group',
-            developerInitial: 'V',
-            price: '₹ 51.9 L - 89.3 L',
-            title: 'Vatika Seven Lamps',
-            location: 'Sector 82, Mohali',
-            config: '2 BHK Flats'
-        },
-        {
-            id: 3,
-            image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600',
-            developerName: 'DLF Limited',
-            developerInitial: 'D',
-            price: '₹ 62.5 L - 1.25 Cr',
-            title: 'DLF Garden City',
-            location: 'Sector 91, Mohali',
-            config: '2, 3, 4 BHK Flats'
-        },
-        {
-            id: 4,
-            image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Emaar India',
-            developerInitial: 'E',
-            price: '₹ 75.2 L - 1.45 Cr',
-            title: 'Emaar Palm Heights',
-            location: 'Sector 77, Mohali',
-            config: '2, 3 BHK Flats'
-        }
-    ];
+  const suggestions = [
+    {
+      id: 1,
+      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
+      developerName: 'Nirwana Group',
+      developerInitial: 'N',
+      price: '₹ 45.03 L - 1.11 Cr',
+      title: 'Nirwana The Moksha',
+      location: 'Khanpur, Mohali',
+      config: '1, 2, 3 BHK Flats'
+    },
+    {
+      id: 2,
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
+      developerName: 'Vatika Group',
+      developerInitial: 'V',
+      price: '₹ 51.9 L - 89.3 L',
+      title: 'Vatika Seven Lamps',
+      location: 'Sector 82, Mohali',
+      config: '2 BHK Flats'
+    },
+    {
+      id: 3,
+      image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600',
+      developerName: 'DLF Limited',
+      developerInitial: 'D',
+      price: '₹ 62.5 L - 1.25 Cr',
+      title: 'DLF Garden City',
+      location: 'Sector 91, Mohali',
+      config: '2, 3, 4 BHK Flats'
+    },
+    {
+      id: 4,
+      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
+      developerName: 'Emaar India',
+      developerInitial: 'E',
+      price: '₹ 75.2 L - 1.45 Cr',
+      title: 'Emaar Palm Heights',
+      location: 'Sector 77, Mohali',
+      config: '2, 3 BHK Flats'
+    }
+  ];
 
   const [activeDeveloperId, setActiveDeveloperId] = useState('nirwana');
-   const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
 
-   const handleScroll = (event) => {
-        const scrollPosition = event.nativeEvent.contentOffset.x;
-        const index = Math.round(scrollPosition / 296);
-        if (index !== activeIndex) {
-            setActiveIndex(index);
-        }
-    };
+  const handleScroll = (event) => {
+    const scrollPosition = event.nativeEvent.contentOffset.x;
+    const index = Math.round(scrollPosition / 296);
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+    }
+  };
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveIndex((prevIndex) => {
-                const nextIndex = (prevIndex + 1) % suggestions.length;
-                scrollRef.current?.scrollTo({
-                    x: nextIndex * 296,
-                    animated: true,
-                });
-                return nextIndex;
-            });
-        }, 3000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % suggestions.length;
+        scrollRef.current?.scrollTo({
+          x: nextIndex * 296,
+          animated: true,
+        });
+        return nextIndex;
+      });
+    }, 3000);
 
-        return () => clearInterval(interval);
-    }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -437,45 +437,45 @@ const Project = () => {
           <Spotlight />
         </View>
 
-         {/* Smart Suggestions Section */}
-                <View className=" mb-6">
-                    <View className="px-4 mb-4">
-                        <View className="flex-row justify-between items-center">
-                            <Text className="font-inter-bold text-[22px] text-[#101828]">Smart Suggestions</Text>
-                            <TouchableOpacity>
-                                <Text className="font-inter-semibold text-[15px] text-[#008E96]">See all</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Text className="font-inter-regular text-[14px] text-[#6A7282] mt-1">
-                            Based on your last search in Khanpur
-                        </Text>
-                    </View>
+        {/* Smart Suggestions Section */}
+        <View className=" mb-6">
+          <View className="px-4 mb-4">
+            <View className="flex-row justify-between items-center">
+              <Text className="font-inter-bold text-[22px] text-[#101828]">Smart Suggestions</Text>
+              <TouchableOpacity>
+                <Text className="font-inter-semibold text-[15px] text-[#008E96]">See all</Text>
+              </TouchableOpacity>
+            </View>
+            <Text className="font-inter-regular text-[14px] text-[#6A7282] mt-1">
+              Based on your last search in Khanpur
+            </Text>
+          </View>
 
-                    <View className="flex-row gap-2 px-4 mb-6">
-                        {suggestions.map((_, index) => (
-                            <View 
-                                key={index}
-                                className={`w-10 h-1 rounded-full ${index === activeIndex ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'}`} 
-                            />
-                        ))}
-                    </View>
+          <View className="flex-row gap-2 px-4 mb-6">
+            {suggestions.map((_, index) => (
+              <View
+                key={index}
+                className={`w-10 h-1 rounded-full ${index === activeIndex ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'}`}
+              />
+            ))}
+          </View>
 
-                    <ScrollView
-                        ref={scrollRef}
-                        horizontal
-                        onMomentumScrollEnd={handleScroll}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
-                        snapToInterval={296}
-                        decelerationRate="fast"
-                    >
-                        {suggestions.map((item) => (
-                            <PropertySuggestionCard key={item.id} {...item} />
-                        ))}
-                    </ScrollView>
-                </View>
+          <ScrollView
+            ref={scrollRef}
+            horizontal
+            onMomentumScrollEnd={handleScroll}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
+            snapToInterval={296}
+            decelerationRate="fast"
+          >
+            {suggestions.map((item) => (
+              <PropertySuggestionCard key={item.id} {...item} />
+            ))}
+          </ScrollView>
+        </View>
 
-         {/* Projects in Focus Section */}
+        {/* Projects in Focus Section */}
         <View className="px-4 mb-6" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
@@ -731,7 +731,7 @@ const Project = () => {
             ))}
           </ScrollView>
         </View>
-       
+
 
 
         {/* Top Rated Developers Section */}
@@ -771,8 +771,8 @@ const Project = () => {
           </ScrollView>
         </View>
 
-      
-      
+
+
 
         {/* Recommended Sellers Section */}
         <View className="px-4 mb-3">
@@ -858,7 +858,7 @@ const Project = () => {
           </ScrollView>
         </View>
 
-   
+
         {/* Explore Localities Section */}
         <View className="px-4  mt-6">
           <View className="flex-row items-center justify-between mb-4">

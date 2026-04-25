@@ -1,14 +1,15 @@
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import HighestGrowthCard from '../../../components/HighestGrowthCard';
 import InsightPropertyCard from '../../../components/InsightPropertyCard';
 import LocalityExploreCard from '../../../components/LocalityExploreCard';
+import PreferenceCard from '../../../components/PreferenceCard';
 import RevisitPropertyCard from '../../../components/RevisitPropertyCard';
 import TopRatedProjectCard from '../../../components/TopRatedProjectCard';
-import HighestGrowthCard from '../../../components/HighestGrowthCard';
 import UniqueAmenityCard from '../../../components/UniqueAmenityCard';
-import PreferenceCard from '../../../components/PreferenceCard';
 
 
 const mockProperties = [
@@ -158,24 +159,27 @@ const preferencesData = [
 const Insights = () => {
     return (
         <SafeAreaView className="flex-1 bg-white">
+            <Stack.Screen options={{ animation: 'slide_from_bottom', gestureEnabled: true }} />
             <ScrollView contentContainerStyle={{ paddingBottom: 30 }} showsVerticalScrollIndicator={false}>
 
                 {/* Header Section */}
-                <TouchableOpacity
-                    className="flex-row items-center px-4 mt-2"
-                    onPress={() => router.back()}
-                >
-                    <ArrowLeft size={18} color="#6A7282" />
-                    <Text className="text-[#6A7282] text-[14px] font-inter-medium ml-2">Back to Home</Text>
-                </TouchableOpacity>
+                <Animated.View entering={FadeInUp.duration(600).delay(100)}>
+                    <TouchableOpacity
+                        className="flex-row items-center px-4 mt-2"
+                        onPress={() => router.back()}
+                    >
+                        <ArrowLeft size={18} color="#6A7282" />
+                        <Text className="text-[#6A7282] text-[14px] font-inter-medium ml-2">Back to Home</Text>
+                    </TouchableOpacity>
+                </Animated.View>
 
-                <View className="px-4 mt-6 mb-3">
+                <Animated.View entering={FadeInDown.duration(600).delay(200)} className="px-4 mt-6 mb-3">
                     <Text className="text-[#6A7282] text-[13px] font-inter-medium">Hi Prerna Sablok,</Text>
                     <Text className="text-[#101828] text-[24px] font-inter-bold mt-1">Welcome back!</Text>
-                </View>
+                </Animated.View>
 
                 {/* New Listings Section */}
-                <View className="pl-4">
+                <Animated.View entering={FadeInDown.duration(600).delay(300)} className="pl-4">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold">New Listings added nearby</Text>
                         <TouchableOpacity>
@@ -191,10 +195,10 @@ const Insights = () => {
                             <InsightPropertyCard key={prop.id} {...prop} />
                         ))}
                     </ScrollView>
-                </View>
+                </Animated.View>
 
                 {/* Revisit Properties Section */}
-                <View className="pl-4 mt-8">
+                <Animated.View entering={FadeInDown.duration(600).delay(400)} className="pl-4 mt-8">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold">Revisit properties seen by you</Text>
                         <TouchableOpacity>
@@ -210,10 +214,10 @@ const Insights = () => {
                             <RevisitPropertyCard key={`revisit-${index}`} {...prop} />
                         ))}
                     </ScrollView>
-                </View>
+                </Animated.View>
 
                 {/* Explore Localities Nearby Section */}
-                <View className="pl-4 mt-6">
+                <Animated.View entering={FadeInDown.duration(600).delay(500)} className="pl-4 mt-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-bold">Explore localities nearby</Text>
                         <TouchableOpacity>
@@ -231,10 +235,10 @@ const Insights = () => {
                             </View>
                         ))}
                     </ScrollView>
-                </View>
+                </Animated.View>
 
                 {/* Top Rated Projects Section */}
-                <View className="px-4 mt-6">
+                <Animated.View entering={FadeInDown.duration(600).delay(600)} className="px-4 mt-6">
                     <View className="flex-row items-center justify-between mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Top rated projects</Text>
                         <TouchableOpacity>
@@ -246,10 +250,10 @@ const Insights = () => {
                             <TopRatedProjectCard key={project.id} {...project} />
                         ))}
                     </View>
-                </View>
+                </Animated.View>
 
                 {/* Highest Growth Projects Section */}
-                <View className="pl-4 mt-6">
+                <Animated.View entering={FadeInDown.duration(600).delay(700)} className="pl-4 mt-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Highest growth projects</Text>
                         <TouchableOpacity>
@@ -267,10 +271,10 @@ const Insights = () => {
                             </View>
                         ))}
                     </ScrollView>
-                </View>
+                </Animated.View>
 
                 {/* Projects with Unique Amenities Section */}
-                <View className="pl-4 mt-6 pb-6">
+                <Animated.View entering={FadeInDown.duration(600).delay(800)} className="pl-4 mt-6 pb-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Projects with unique amenities</Text>
                         <TouchableOpacity>
@@ -288,10 +292,10 @@ const Insights = () => {
                             </View>
                         ))}
                     </ScrollView>
-                </View>
+                </Animated.View>
 
                 {/* Explore by your preferences Section */}
-                <View className="px-4 ">
+                <Animated.View entering={FadeInDown.duration(600).delay(900)} className="px-4 ">
                     <View className="mb-6">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold leading-[30px]">Explore by what matters to you</Text>
                         <Text className="text-[#6A7282] text-[14px] font-inter-regular leading-[21px]">See properties based on your top preferences</Text>
@@ -301,7 +305,7 @@ const Insights = () => {
                             <PreferenceCard key={pref.id} {...pref} />
                         ))}
                     </View>
-                </View>
+                </Animated.View>
 
             </ScrollView>
             {/* <BottomTabBar activeTab="Insights" /> */}
