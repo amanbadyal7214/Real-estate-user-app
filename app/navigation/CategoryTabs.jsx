@@ -1,17 +1,29 @@
 import { Building, Building2, Home, HomeIcon, Key, LandPlot } from 'lucide-react-native';
-import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
-import { useRef, useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-const CategoryTabs = ({ activeTab = 'Buy', onTabPress }) => {
+const DEFAULT_TABS = [
+  { id: 'Buy', label: 'Buy', icon: Home, color: '#008E96' },
+  { id: 'Rent', label: 'Rent', icon: Key, color: '#101828' },
+  { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
+  { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
+  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
+  { id: 'Commercial', label: 'Commercial', icon: Building, color: '#101828' },
+];
+
+const PLOT_TABS = [
+  { id: 'Rent', label: 'Rent', icon: Key, color: '#101828' },
+  { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
+  { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
+  { id: 'Buy', label: 'Buy', icon: Home, color: '#008E96' },
+  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
+  { id: 'Commercial', label: 'Commercial', icon: Building, color: '#101828' },
+  
+];
+
+const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
   const scrollViewRef = useRef(null);
-  const tabs = [
-    { id: 'Buy', label: 'Buy', icon: Home, color: '#008E96' },
-    { id: 'Rent', label: 'Rent', icon: Key, color: '#101828' },
-    { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
-    { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828', },
-    { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
-    { id: 'Commercial', label: 'Commercial', icon: Building, color: '#101828' },
-  ];
+  const tabs = useMemo(() => (mode === 'Plot' ? PLOT_TABS : DEFAULT_TABS), [mode]);
 
   useEffect(() => {
     const activeIndex = tabs.findIndex(tab => tab.id === activeTab);
@@ -20,7 +32,7 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress }) => {
         const scrollToX = activeIndex * 97;
         scrollViewRef.current.scrollTo({ x: scrollToX, animated: true });
     }
-  }, [activeTab]);
+  }, [activeTab, tabs]);
 
   return (
     <ScrollView 

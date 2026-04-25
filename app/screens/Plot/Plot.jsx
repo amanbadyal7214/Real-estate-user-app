@@ -167,6 +167,7 @@ const Plot = () => {
           <CategoryTabs
             activeTab={selectedTab}
             onTabPress={setSelectedTab}
+            mode="Plot"
           />
 
           <SearchBox />
