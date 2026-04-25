@@ -53,7 +53,7 @@ const Welcome1 = () => {
               elevation: 10,
             }}
           >
-            <TouchableOpacity 
+            <TouchableOpacity
               className="w-full h-14 items-center justify-center flex-row"
               style={{
                 borderRadius: 14,
