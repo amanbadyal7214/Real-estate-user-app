@@ -1,7 +1,8 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Heart } from 'lucide-react-native';
-import React from 'react';
-import { ImageBackground, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image } from 'expo-image';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 const PropertySuggestionCard = ({
   image,
@@ -14,59 +15,64 @@ const PropertySuggestionCard = ({
   onPress
 }) => {
   return (
-    <TouchableOpacity 
-      onPress={onPress}
-      activeOpacity={0.93}
-      style={styles.cardContainer}
-    >
-      <ImageBackground 
-        source={{ uri: image }} 
-        style={styles.imageBackground}
-        imageStyle={{ borderRadius: 20 }}
+    <Animated.View entering={FadeInUp.duration(600).delay(300)}>
+      <TouchableOpacity
+        onPress={onPress}
+        activeOpacity={0.93}
+        style={styles.cardContainer}
       >
-        <LinearGradient
-          colors={['rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
-          style={styles.fullGradient}
-        >
-          {/* Developer Badge Container - Positioned precisely at 16,16 */}
-          <View style={styles.devBadge}>
-            <LinearGradient
-              colors={['#008E96', '#1CB2A9']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.initialBubble}
-            >
-              <Text style={styles.initialText}>{developerInitial}</Text>
-            </LinearGradient>
-            <Text numberOfLines={1} style={styles.devNameText}>
-              {developerName}
-            </Text>
-          </View>
+        <View style={styles.imageBackground}>
+          <Image
+            source={image}
+            style={[StyleSheet.absoluteFill, { borderRadius: 20 }]}
+            contentFit="cover"
+            transition={800}
+            cachePolicy="memory-disk"
+          />
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
+            style={styles.fullGradient}
+          >
+            {/* Developer Badge Container - Positioned precisely at 16,16 */}
+            <View style={styles.devBadge}>
+              <LinearGradient
+                colors={['#008E96', '#1CB2A9']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.initialBubble}
+              >
+                <Text style={styles.initialText}>{developerInitial}</Text>
+              </LinearGradient>
+              <Text numberOfLines={1} style={styles.devNameText}>
+                {developerName}
+              </Text>
+            </View>
 
-          {/* Favorite/Heart Button - Positioned precisely at 224,16 */}
-          <TouchableOpacity style={styles.favButton}>
-            <Heart size={20} color="#4A5565" strokeWidth={1.5} />
-          </TouchableOpacity>
+            {/* Favorite/Heart Button - Positioned precisely at 224,16 */}
+            <View style={styles.favButton}>
+              <Heart size={20} color="#4A5565" strokeWidth={1.5} />
+            </View>
 
-          {/* Pricing - Positioned precisely at 20, 292.5 */}
-          <View style={styles.priceContainer}>
-            <Text style={styles.priceLabel}>{price}</Text>
-          </View>
+            {/* Pricing - Positioned precisely at 20, 292.5 */}
+            <View style={styles.priceContainer}>
+              <Text style={styles.priceLabel}>{price}</Text>
+            </View>
 
-          {/* Project Title - Positioned precisely at 20, 328.5 */}
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleLabel}>{title}</Text>
-          </View>
+            {/* Project Title - Positioned precisely at 20, 328.5 */}
+            <View style={styles.titleContainer}>
+              <Text style={styles.titleLabel}>{title}</Text>
+            </View>
 
-          {/* Location & Config Details - Positioned precisely at 20, 358 */}
-          <View style={styles.detailsContainer}>
-            <Text style={styles.detailText}>{location}</Text>
-            <Text style={styles.detailText}>{config}</Text>
-          </View>
+            {/* Location & Config Details - Positioned precisely at 20, 358 */}
+            <View style={styles.detailsContainer}>
+              <Text style={styles.detailText}>{location}</Text>
+              <Text style={styles.detailText}>{config}</Text>
+            </View>
 
-        </LinearGradient>
-      </ImageBackground>
-    </TouchableOpacity>
+          </LinearGradient>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 

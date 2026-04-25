@@ -1,10 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
+import { Image } from 'expo-image';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const HighDemandProjectCard = ({ image, priceRange, title, developer, location }) => {
   return (
-    <View 
+    <Animated.View
+      entering={FadeInDown.duration(600).springify().damping(12)}
       className="bg-white rounded-[20px] mb-2 overflow-hidden"
       style={{
         width: 338,
@@ -24,15 +27,17 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location }
         className="flex-row items-center justify-center px-4"
         style={{ height: 160 }}
       >
-        <View 
+        <View
           className="rounded-xl overflow-hidden"
           style={{ width: 306, height: 128 }}
         >
           {image ? (
-            <Image 
-              source={{ uri: image }} 
-              className="w-full h-full"
-              resizeMode="cover"
+            <Image
+              source={image}
+              style={StyleSheet.absoluteFill}
+              contentFit="cover"
+              transition={800}
+              cachePolicy="memory-disk"
             />
           ) : (
             <View className="w-full h-full bg-gray-200 items-center justify-center">
@@ -46,7 +51,7 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location }
       <View className="relative bg-white" style={{ height: 124.5 }}>
         {/* Price Range */}
         <View style={{ position: 'absolute', left: 16, top: 16, width: 306, height: 24 }}>
-          <Text 
+          <Text
             className="font-inter-bold text-[#101828]"
             style={{ fontSize: 16, lineHeight: 24 }}
           >
@@ -56,17 +61,17 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location }
 
         {/* Title */}
         <View style={{ position: 'absolute', left: 16, top: 44, width: 306, height: 22.5 }}>
-          <Text 
+          <Text
             className="font-inter-semibold text-[#101828]"
             style={{ fontSize: 15, lineHeight: 22.5 }}
           >
             {title}
           </Text>
         </View>
-        
+
         {/* Developer */}
         <View style={{ position: 'absolute', left: 16, top: 70.5, width: 306, height: 18 }}>
-          <Text 
+          <Text
             className="font-inter-regular text-[#4A5565]"
             style={{ fontSize: 12, lineHeight: 18 }}
           >
@@ -76,7 +81,7 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location }
 
         {/* Location */}
         <View style={{ position: 'absolute', left: 16, top: 90.5, width: 306, height: 18 }}>
-          <Text 
+          <Text
             className="font-inter-regular text-[#4A5565]"
             style={{ fontSize: 12, lineHeight: 18 }}
           >
@@ -84,7 +89,7 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location }
           </Text>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

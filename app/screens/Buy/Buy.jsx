@@ -57,7 +57,11 @@ const Buy = () => {
 
   const matchedHomes = [
     {
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+      images: [
+        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
+        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400'
+      ],
       tag: 'TALLEST LANDMARK',
       developer: 'NIRWANA GROUP',
       title: 'D-Xperanza',
@@ -65,7 +69,11 @@ const Buy = () => {
       priceRange: '1.24 Cr. - 1.55 Cr',
     },
     {
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
+      images: [
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
+        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=400'
+      ],
       tag: 'LUXURY LIVING',
       developer: 'SKY HEIGHTS',
       title: 'Sky Terrace',
@@ -203,7 +211,11 @@ const Buy = () => {
 
   const focusProjects = [
     {
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
+      images: [
+        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600'
+      ],
       title: 'Nirwana The Moksha',
       location: 'Kharar, Mohali',
       price: '₹45.03 L - 1.11 Cr',
@@ -213,7 +225,11 @@ const Buy = () => {
       badgeColor: '#155DFC'
     },
     {
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
+      images: [
+        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=600'
+      ],
       title: 'Premium Heights',
       location: 'Sector 66, Mohali',
       price: '₹62.50 L - 1.35 Cr',
@@ -223,7 +239,11 @@ const Buy = () => {
       badgeColor: '#00A63E'
     },
     {
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
+      images: [
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'
+      ],
       title: 'Royal Residences',
       location: 'Sector 71, Mohali',
       price: '₹71.20 L - 1.58 Cr',
