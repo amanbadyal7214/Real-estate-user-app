@@ -1,15 +1,12 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LIGHT_SHADE, PRIMARY_COLOR } from '../../constants/theme';
-import ServicesCalculatorCard from '../../../components/ServicesCalculatorCard';
-import ServicesBenefitItem from '../../../components/ServicesBenefitItem';
-import ServicesTestimonialCard from '../../../components/ServicesTestimonialCard';
+import { Animated, Dimensions, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import ServicesArticleCard from '../../../components/ServicesArticleCard';
+import ServicesBenefitItem from '../../../components/ServicesBenefitItem';
+import ServicesCalculatorCard from '../../../components/ServicesCalculatorCard';
+import ServicesTestimonialCard from '../../../components/ServicesTestimonialCard';
 
 const { width } = Dimensions.get('window');
 
