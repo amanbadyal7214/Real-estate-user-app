@@ -23,7 +23,6 @@ Features for the SearchBox, Voice Search, and personalized Home feed.
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
 | `/search/autocomplete` | `GET` | Real-time suggestions for City, Locality, or Project names as the user types. |
-| `/search/voice-transcribe` | `POST` | Convert voice search audio blobs to text (Server-side AI processing). |
 | `/search/recent` | `DELETE` | Remove a specific entry from search history. |
 | `/search/recent/clear` | `DELETE` | Wipe the entire search history for the user. |
 | `/properties/matched` | `GET` | Fetch properties that match 80% or more of user's saved preferences. |
@@ -78,5 +77,5 @@ For state-wide or city-wide exploration.
 ### Implementation Notes for Backend Developer
 1. **Analytics Logging**: The `/properties/view/{id}` should be lightweight (async) to avoid slowing down the property detail load.
 2. **Caching**: Insight and Trend data should be cached for at least 24 hours as they don't change frequently.
-3. **Third-Party APIs**: Consider using Whisper (OpenAI) or Google Cloud Speech for the `/search/voice-transcribe` endpoint.
-4. **Calculators**: Ensure the math logic is standardized so frontend and backend results match perfectly.
+
+3. **Calculators**: Ensure the math logic is standardized so frontend and backend results match perfectly.
