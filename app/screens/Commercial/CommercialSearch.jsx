@@ -73,6 +73,7 @@ const CommercialSearch = () => {
           {popularLocalities.map((item) => (
             <TouchableOpacity 
               key={item.id} 
+              onPress={() => router.push('/screens/Commercial/Commercial')}
               className="flex-row justify-between items-center px-4 py-4 border-b border-[#E4E7EC]"
             >
               <Text className="font-inter-medium text-[16px] text-[#101828]">{item.name}</Text>
@@ -93,6 +94,7 @@ const CommercialSearch = () => {
           {trendingProjects.map((project) => (
             <TouchableOpacity 
               key={project.id} 
+              onPress={() => router.push('/screens/Commercial/Commercial')}
               className="flex-row justify-between items-center px-4 py-4 border-b border-[#E4E7EC]"
             >
               <View className="flex-1 pr-4">

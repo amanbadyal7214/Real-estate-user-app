@@ -67,6 +67,7 @@ const PGSearch = () => {
           {popularLocalities.map((item) => (
             <TouchableOpacity 
               key={item.id} 
+              onPress={() => router.push('/screens/PG/PG')}
               className="flex-row justify-between items-center px-4 py-4 border-b border-[#E4E7EC]"
             >
               <Text className="font-inter-medium text-[16px] text-[#101828]">{item.name}</Text>

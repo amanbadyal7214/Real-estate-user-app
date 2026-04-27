@@ -377,7 +377,7 @@ const Buy = () => {
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/PrefectlyMatchedHome')}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
@@ -551,7 +551,10 @@ const Buy = () => {
                 Hurry! Only a few units left
               </Text>
             </View>
-            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity 
+              onPress={() => router.push('/screens/HighDemandProduct')}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Text
                 className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
@@ -595,7 +598,7 @@ const Buy = () => {
                 Curated projects just for you
               </Text>
             </View>
-            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => router.push('/screens/ProjectInFocus')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text
                 className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
