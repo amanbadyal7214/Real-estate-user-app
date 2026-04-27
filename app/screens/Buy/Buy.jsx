@@ -377,7 +377,7 @@ const Buy = () => {
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/PrefectlyMatchedHome')}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
