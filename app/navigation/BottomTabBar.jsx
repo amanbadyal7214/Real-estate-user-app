@@ -4,6 +4,17 @@ import { Heart, Search, User } from 'lucide-react-native';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 
 const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
+  const getSearchRoute = () => {
+    switch (mode) {
+      case 'Rent':
+      case 'PG':
+        return '/screens/Rent/Rentsearch';
+      case 'Buy':
+      default:
+        return '/screens/Buy/BuySearch';
+    }
+  };
+
   if (mode === 'Plot') {
     return (
       <View
@@ -33,7 +44,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
           elevation: 8,
         }}
       >
-        <TouchableOpacity onPress={() => router.push('/')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+        <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
           <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Search</Text>
         </TouchableOpacity>
@@ -80,7 +91,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
           elevation: 8,
         }}
       >
-        <TouchableOpacity onPress={() => router.push('/')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+        <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
           <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Search</Text>
         </TouchableOpacity>
@@ -132,7 +143,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
         elevation: 8,
       }}
     >
-      <TouchableOpacity onPress={() => router.push('/')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+      <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
         <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Search</Text>
       </TouchableOpacity>
