@@ -3,12 +3,12 @@ import { createContext, useContext, useMemo, useState } from 'react';
 const CategoryTabContext = createContext(null);
 
 const TAB_ROUTES = {
-  Buy: '/screens/Buy/Buy',
-  Rent: '/screens/Rent/Rent',
-  Project: '/screens/Project/Project',
-    Plot: '/screens/Plot/Plot',
-    PG: '/screens/PG/PG',
-    Commercial: '/screens/Commercial/Commercial',
+  Buy: '/screens/Buy/BuySearch',
+  Rent: '/screens/Rent/Rentsearch',
+  Project: '/screens/Project/ProjectSearch',
+    Plot: '/screens/Plot/PlotSearch',
+    PG: '/screens/PG/PGSearch',
+    Commercial: '/screens/Commercial/CommercialSearch',
 };
 
 export const CategoryTabProvider = ({ children }) => {
