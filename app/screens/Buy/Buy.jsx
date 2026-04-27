@@ -551,7 +551,10 @@ const Buy = () => {
                 Hurry! Only a few units left
               </Text>
             </View>
-            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity 
+              onPress={() => router.push('/screens/HighDemandProduct')}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Text
                 className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
@@ -595,7 +598,7 @@ const Buy = () => {
                 Curated projects just for you
               </Text>
             </View>
-            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => router.push('/screens/ProjectInFocus')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text
                 className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
