@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronDown, MapPin, Mic, Target } from 'lucide-react-native';
+import { ArrowLeft, ChevronDown, Mic, Target } from 'lucide-react-native';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

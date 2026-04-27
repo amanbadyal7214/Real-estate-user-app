@@ -1,22 +1,16 @@
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronDown, MapPin, Mic, Target } from 'lucide-react-native';
+import { ArrowLeft, ChevronDown,  Mic, Target } from 'lucide-react-native';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const PGSearch = () => {
+const PlotSearch = () => {
   const popularLocalities = [
     { id: 1, name: 'Kharar' },
     { id: 2, name: 'Sector 115' },
     { id: 3, name: 'Sector 116' },
   ];
 
-  const trendingProjects = [
-    { id: 1, name: 'STJ Mohali Citi Centre 3', location: 'Gmada Aerocity, Mohali', price: 'Price On Request' },
-    { id: 2, name: 'STJ Mohali Citi Centre Walk', location: 'Gmada Aerocity, Mohali', price: 'Price On Request' },
-    { id: 3, name: 'Icon Downtown Mohali', location: 'Sector 62, Mohali', price: 'Price On Request' },
-    { id: 4, name: 'Emaar Mohali Hills', location: 'Sector 105, Mohali', price: 'Price On Request' },
-    { id: 5, name: 'Ireo Victory Valley', location: 'Sector 67, Mohali', price: 'Price On Request' },
-  ];
+
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
@@ -91,4 +85,4 @@ const PGSearch = () => {
   );
 };
 
-export default PGSearch;
+export default PlotSearch;

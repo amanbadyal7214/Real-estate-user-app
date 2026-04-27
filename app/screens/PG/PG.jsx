@@ -327,7 +327,7 @@ const PG = () => {
               </Text>
               {/* Description */}
               <Text className="font-inter-regular text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
-                Info on meal type and offerings to know what's cooking
+                Info on meal type and offerings to know what cooking
               </Text>
             </View>
 
