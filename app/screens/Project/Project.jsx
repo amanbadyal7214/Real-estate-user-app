@@ -415,7 +415,9 @@ const Project = () => {
             onTabPress={setSelectedTab}
           />
 
-          <SearchBox />
+          <SearchBox 
+            onPress={() => router.push('/screens/Project/ProjectSearch')}
+          />
         </View>
 
         {/* Continue where you left Section */}
@@ -953,7 +955,7 @@ const Project = () => {
         </View>
 
       </ScrollView>
-      <BottomTabBar />
+      <BottomTabBar activeTab="Search" mode="Project" />
     </SafeAreaView>
   );
 };

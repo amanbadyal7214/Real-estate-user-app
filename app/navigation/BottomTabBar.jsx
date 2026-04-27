@@ -9,6 +9,8 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       case 'Rent':
       case 'PG':
         return '/screens/Rent/Rentsearch';
+      case 'Project':
+        return '/screens/Project/ProjectSearch';
       case 'Buy':
       default:
         return '/screens/Buy/BuySearch';
