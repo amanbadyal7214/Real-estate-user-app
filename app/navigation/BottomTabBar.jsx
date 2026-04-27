@@ -7,10 +7,15 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
   const getSearchRoute = () => {
     switch (mode) {
       case 'Rent':
-      case 'PG':
         return '/screens/Rent/Rentsearch';
+       case 'PG':
+        return '/screens/PG/PGSearch';
       case 'Project':
         return '/screens/Project/ProjectSearch';
+      case 'Commercial':
+        return '/screens/Commercial/CommercialSearch';
+        case 'Plot':
+          return '/screens/Plot/PlotSearch';
       case 'Buy':
       default:
         return '/screens/Buy/BuySearch';

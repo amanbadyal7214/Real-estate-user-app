@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Mic, Search, TrendingUp } from 'lucide-react-native';
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ArrowLeft, ChevronRight, MapPin, Mic, Search, TrendingUp } from 'lucide-react-native';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const RentSearch = () => {

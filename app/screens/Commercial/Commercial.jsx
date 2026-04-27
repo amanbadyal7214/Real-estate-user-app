@@ -269,7 +269,7 @@ const Commercial = () => {
             mode="Commercial"
           />
 
-          <SearchBox />
+          <SearchBox onPress={() => router.push('/screens/Commercial/CommercialSearch')} />
           
         </View>
 
@@ -586,7 +586,7 @@ const Commercial = () => {
 
 
       </ScrollView>
-      <BottomTabBar mode="Plot" activeTab="Search" />
+      <BottomTabBar mode="Commercial" activeTab="Search" />
     </SafeAreaView>
   );
 };

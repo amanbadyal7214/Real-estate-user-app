@@ -6,7 +6,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CalculatorCard from '../../../components/CalculatorCard';
 import ContinueCards from '../../../components/ContinueCards';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
-import FeaturedCollectionCard from '../../../components/FeaturedCollectionCard';
 import FurnishedPropertiesSection from '../../../components/FurnishedPropertiesSection';
 import NewsCard from '../../../components/NewsCard';
 import PropertySuggestionCard from '../../../components/PropertySuggestionCard';
