@@ -1,6 +1,7 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Animated, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropertyListingCard from '../../components/PropertyListingCard';
@@ -8,6 +9,7 @@ import PropertyListingCard from '../../components/PropertyListingCard';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const LastSearched = () => {
+  const router = useRouter();
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Price: High to Low');
@@ -77,7 +79,7 @@ const LastSearched = () => {
       <View className="flex-1">
         {/* Header Container (Based on CSS) */}
         <View className="flex-row justify-between items-center px-[16px] pt-[24px] pb-[16px] h-[64px]">
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="#4A5565" />
           </TouchableOpacity>
         </View>
