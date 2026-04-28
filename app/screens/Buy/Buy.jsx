@@ -655,7 +655,7 @@ const Buy = () => {
               <Text className="font-inter-bold text-[17px] text-[#101828]">Top rated developers</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282]">Projects from the best developers</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
@@ -693,7 +693,7 @@ const Buy = () => {
               <Text className="font-inter-bold text-[18px] text-[#101828]">Recommended Properties</Text>
               <Text className="font-inter-regular text-[14px] text-[#667085]">Properties matching your requirements</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/RecommendedProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -747,7 +747,7 @@ const Buy = () => {
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Better Priced Properties</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on properties you viewed</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/BestPriceProperty')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
