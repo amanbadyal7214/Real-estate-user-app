@@ -623,7 +623,7 @@ const Buy = () => {
         <View className="px-4 mb-4 " >
           <View className="flex-row items-center justify-between mb-4">
             <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in Mohali</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
