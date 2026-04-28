@@ -987,11 +987,19 @@ const Buy = () => {
               titlePrefix="EMI"
               description="EMI starts at ₹10.60K"
               vectorsConfig={emiVectors}
+              onPress={() => router.push('/screens/EMICalculator')}
             />
             <CalculatorCard
               titlePrefix="Affordability"
               description="Find the best budget for your home"
               vectorsConfig={affordabilityVectors}
+              onPress={() => router.push('/screens/AffordabilityCalculator')}
+            />
+             <CalculatorCard
+              titlePrefix=" Eligibility Calculator "
+              description="Find the best budget for your home"
+              vectorsConfig={affordabilityVectors}
+              onPress={() => router.push('/screens/ECalculator')}
             />
           </ScrollView>
         </View>

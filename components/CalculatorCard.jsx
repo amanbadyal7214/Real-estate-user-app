@@ -1,8 +1,7 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-const CalculatorCard = ({ titlePrefix, description, vectorsConfig }) => {
+const CalculatorCard = ({ titlePrefix, description, vectorsConfig, onPress }) => {
   return (
     <View 
       style={{
@@ -99,6 +98,7 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig }) => {
 
       {/* Button */}
       <TouchableOpacity 
+        onPress={onPress}
         style={{
           position: 'absolute',
           width: 36,
