@@ -113,7 +113,7 @@ const LastSearched = () => {
 
           {/* Shop Card (Based on CSS) */}
           <View 
-            className="mx-[27px] mt-[157px] bg-white p-[12px] rounded-[12px] border border-[#E4E7EC] flex-row items-start h-[116px]"
+            className="mx-[27px] mt-[24px] bg-white p-[12px] rounded-[12px] border border-[#E4E7EC] flex-row items-start h-[116px]"
             style={{ 
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 2 },
