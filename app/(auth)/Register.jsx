@@ -117,7 +117,7 @@ const Register = () => {
               shadowRadius: 6,
               elevation: 4
             }}
-            onPress={() => router.push("/screens/LocationSelection")}
+            onPress={() => router.push("/screens/Buy/Buy")}
           >
             <Text className="text-white font-inter-bold text-lg">Register and Create Account</Text>
           </TouchableOpacity>

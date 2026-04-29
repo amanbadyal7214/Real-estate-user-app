@@ -1,21 +1,71 @@
+import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { ChevronDown, Search } from 'lucide-react-native';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 const SearchBox = ({ 
-  location = "Mohali", 
+  location: initialLocation = "Mohali", 
   placeholder = "Search city, locality, landmark ...",
   onPress = () => router.push('/screens/Buy/BuySearch')
 }) => {
+  const [location, setLocation] = useState(initialLocation);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          console.log('Permission to access location was denied');
+          return;
+        }
+
+        // Use last known position for immediate result, then update with current
+        let lastKnown = await Location.getLastKnownPositionAsync({});
+        if (lastKnown) {
+          updateCity(lastKnown.coords.latitude, lastKnown.coords.longitude);
+        }
+
+        let currentLocation = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        updateCity(currentLocation.coords.latitude, currentLocation.coords.longitude);
+
+      } catch (error) {
+        console.error("Error fetching location:", error);
+      }
+    })();
+  }, []);
+
+  const updateCity = async (latitude, longitude) => {
+    try {
+      let reverseGeocode = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
+
+      if (reverseGeocode.length > 0) {
+        const city = reverseGeocode[0].city || reverseGeocode[0].district || reverseGeocode[0].subregion;
+        if (city) {
+          setLocation(city);
+        }
+      }
+    } catch (e) {
+      console.log("Reverse geocode error:", e);
+    }
+  };
+
   return (
     <View className="bg-white p-5 rounded-[24px]">
-      <View className="flex-row items-center mb-4">
+      <TouchableOpacity 
+        onPress={() => router.push('/screens/LocationSelection')}
+        className="flex-row items-center mb-4"
+      >
         <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">
           Searching in <Text className="font-inter-bold">{location}</Text>
         </Text>
         <ChevronDown size={20} color="#101828" style={{ marginLeft: 4 }} />
-      </View>
+      </TouchableOpacity>
 
       <TouchableOpacity
         onPress={onPress}
