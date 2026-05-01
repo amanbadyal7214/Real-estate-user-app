@@ -11,11 +11,10 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Design Constants from CSS
 const DESIGN_WIDTH = 393;
-const DESIGN_HEIGHT = 852;
 const scale = SCREEN_WIDTH / DESIGN_WIDTH;
 
 export default function Index() {
@@ -51,11 +50,11 @@ export default function Index() {
 
     // Glow overlay fade in (Rectangle 1 Simulation)
     overlayOpacity.value = withDelay(1000, withTiming(0.6, { duration: 1000 }));
-  }, []);
+  }, [bgOpacity, ellipseLeft, ellipseOpacity, ellipseTop, overlayOpacity]);
 
   const onAnimationComplete = () => {
     setTimeout(() => {
-      router.replace('/onboarding/Welcome1');
+      router.replace('/screens/Buy/Buy');
     }, 1000);
   };
 
