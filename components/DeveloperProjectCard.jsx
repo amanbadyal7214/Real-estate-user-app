@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { Image, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const DeveloperProjectCard = ({ 
   image, 
@@ -14,7 +15,9 @@ const DeveloperProjectCard = ({
   priceRange 
 }) => {
   return (
-    <View 
+    <TouchableOpacity 
+      activeOpacity={0.9} 
+      onPress={() => router.push('/screens/ProjectDetails')}
       className="bg-white rounded-[20px] mb-2 overflow-hidden mr-4"
       style={{
         width: 292.5,
@@ -83,7 +86,7 @@ const DeveloperProjectCard = ({
           {priceRange}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

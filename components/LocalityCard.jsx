@@ -1,10 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) => {
   return (
-    <View
+    <TouchableOpacity 
+      activeOpacity={0.9}
+      onPress={() => router.push('/screens/ProjectDetails')}
       className="bg-white rounded-[20px] mb-2 relative overflow-hidden shadow-sm"
       style={{
         width: 260,
@@ -49,7 +52,7 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
         <Text className="font-inter-medium text-[12px] text-[#2B7571] leading-[18px]">Read all reviews</Text>
         <Ionicons name="chevron-forward" size={14} color="#2B7571" className="ml-1" />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

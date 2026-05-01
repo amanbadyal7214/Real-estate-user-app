@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { ChevronRight, History } from 'lucide-react-native';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
@@ -18,6 +19,7 @@ const ContinueCards = ({ data = [] }) => {
         {data.map((item, index) => (
           <TouchableOpacity 
             key={index} 
+            onPress={() => router.push('/screens/ProjectDetails')}
             className="bg-white border border-[#EAECF0] p-4 rounded-2xl w-[280px] mr-3 flex-row items-center justify-between"
           >
             <View className="flex-1 mr-2">

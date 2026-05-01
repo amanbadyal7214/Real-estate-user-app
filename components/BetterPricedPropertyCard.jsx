@@ -1,11 +1,13 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { router } from 'expo-router';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const BetterPricedPropertyCard = ({ image, title, marketer, details, priceRange }) => {
   const marketerInitial = marketer ? marketer.charAt(0).toUpperCase() : '';
 
   return (
-    <View 
+    <TouchableOpacity 
+      activeOpacity={0.9} 
+      onPress={() => router.push('/screens/ProjectDetails')}
       className="bg-white mr-3"
       style={{
         width: 300,
@@ -73,7 +75,7 @@ const BetterPricedPropertyCard = ({ image, title, marketer, details, priceRange 
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -1,7 +1,8 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const PropertyCard = ({ item }) => {
@@ -22,7 +23,11 @@ const PropertyCard = ({ item }) => {
 
   return (
     <Animated.View entering={FadeInDown.duration(600).springify()}>
-      <TouchableOpacity activeOpacity={0.9} className="mr-5">
+      <TouchableOpacity 
+        activeOpacity={0.9} 
+        onPress={() => router.push('/screens/ProjectDetails')}
+        className="mr-5"
+      >
         <View className="w-[310px] h-[280px] rounded-[24px] overflow-hidden bg-gray-200 shadow-lg">
           <Image
             source={images[currentImageIndex]}

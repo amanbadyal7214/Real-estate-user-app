@@ -1,9 +1,11 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { router } from 'expo-router';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const RecommendedPropertyCard = ({ image, price, title, area, location }) => {
   return (
-    <View 
+    <TouchableOpacity 
+      onPress={() => router.push('/screens/ProjectDetails')}
+      activeOpacity={0.9}
       className="bg-white flex-row items-start p-3 mr-3"
       style={{
         width: 340,
@@ -46,7 +48,7 @@ const RecommendedPropertyCard = ({ image, price, title, area, location }) => {
           {location}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
