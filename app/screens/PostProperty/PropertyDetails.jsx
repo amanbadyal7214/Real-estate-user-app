@@ -1,11 +1,11 @@
-import { Ionicons, MaterialCommunityIcons, FontAwesome5, Entypo, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Dimensions, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {  SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { usePostProperty } from '../../context/PostPropertyContext';
 import PriceDetailsSection from './PriceDetailsSection';
 
-const { width } = Dimensions.get('window');
+
 
 // All items from Furnishings screen to match icons exactly
 const allFurnishingOptions = [
