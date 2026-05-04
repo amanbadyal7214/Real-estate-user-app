@@ -1,8 +1,9 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { User, ChevronDown } from 'lucide-react-native';
+import { useRouter } from "expo-router";
+import { ChevronDown, User } from 'lucide-react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 const UserHeader = ({ userName = "Prerna!" }) => {
+  const router = useRouter();
   return (
     <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
       <View className="flex-row items-center gap-2">
@@ -14,7 +15,10 @@ const UserHeader = ({ userName = "Prerna!" }) => {
           <ChevronDown size={18} color="#101828" className="ml-1" />
         </View>
       </View>
-      <TouchableOpacity className="flex-row items-center bg-[#F2F4F7] px-4 py-2 rounded-full h-10">
+      <TouchableOpacity 
+        onPress={() => router.push("/screens/PostProperty/Register")}
+        className="flex-row items-center bg-[#F2F4F7] px-4 py-2 rounded-full h-10"
+      >
         <Text className="font-inter-medium text-[13px] text-[#101828] mr-2">Post Property</Text>
         <View className="bg-primary px-1.5 py-0.5 rounded-md">
           <Text className="font-inter-bold text-[9px] text-white">FREE</Text>

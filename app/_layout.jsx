@@ -4,6 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "../global.css";
 import { CategoryTabProvider } from "./context/CategoryTabContext";
+import { PostPropertyProvider } from "./context/PostPropertyContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -12,6 +13,7 @@ export default function RootLayout() {
     "Inter-Bold": require("../Font/Inter_18pt-Bold.ttf"),
     "Inter-Regular": require("../Font/Inter_24pt-Regular.ttf"),
     "Inter-Medium": require("../Font/Inter_24pt-Medium.ttf"),
+    "Inter-SemiBold": require("../Font/Inter_18pt-SemiBold.ttf"),
   });
 
   useEffect(() => {
@@ -25,8 +27,10 @@ export default function RootLayout() {
   }
 
   return (
-    <CategoryTabProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </CategoryTabProvider>
+    <PostPropertyProvider>
+      <CategoryTabProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+      </CategoryTabProvider>
+    </PostPropertyProvider>
   );
 }
