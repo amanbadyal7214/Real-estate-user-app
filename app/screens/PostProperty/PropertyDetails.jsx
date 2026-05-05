@@ -4,6 +4,9 @@ import { useState } from 'react';
 import {  SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { usePostProperty } from '../../context/PostPropertyContext';
 import PriceDetailsSection from './PriceDetailsSection';
+import PhotosStep from './PhotosStep';
+import AdvancedDetailsStep from './AdvancedDetailsStep';
+import VerifyPropertyStep from './VerifyPropertyStep';
 
 
 
@@ -124,13 +127,13 @@ const PropertyDetails = () => {
       </View>
 
       {/* Main Card */}
-      <View className="flex-1 mt-[200px] bg-white rounded-t-[32px] mx-4 shadow-xl overflow-hidden mb-24">
+      <View className={`flex-1 ${currentStep === 3 ? 'mt-[180px]' : 'mt-[200px]'} bg-white rounded-t-[32px] mx-4 shadow-xl overflow-hidden mb-2`}>
         <ScrollView 
           className="flex-1"
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 20 }}
+          contentContainerStyle={{ paddingBottom: 100 }}
         >
-          <View className="p-5">
+          <View className={currentStep === 3 ? "p-0" : "p-5"}>
             {currentStep === 1 ? (
               <>
                 {/* Property Type Section */}
@@ -254,7 +257,7 @@ const PropertyDetails = () => {
                   )}
                 </TouchableOpacity>
               </>
-            ) : (
+            ) : currentStep === 2 ? (
               <View className="mb-4">
                 <PriceDetailsSection 
                   expectedPrice={expectedPrice}
@@ -265,6 +268,12 @@ const PropertyDetails = () => {
                   setIsNegotiable={setIsNegotiable}
                 />
               </View>
+            ) : currentStep === 3 ? (
+              <PhotosStep />
+            ) : currentStep === 4 ? (
+              <AdvancedDetailsStep />
+            ) : (
+              <VerifyPropertyStep />
             )}
           </View>
         </ScrollView>
@@ -276,15 +285,21 @@ const PropertyDetails = () => {
           onPress={() => {
             if (currentStep === 1) {
               setCurrentStep(2);
+            } else if (currentStep === 2) {
+              setCurrentStep(3);
+            } else if (currentStep === 3) {
+              setCurrentStep(4);
+            } else if (currentStep === 4) {
+              setCurrentStep(5);
             } else {
-              router.push('/screens/PostProperty/Photos');
+              // Final submission or navigate home
             }
           }}
-          className={`w-full py-4 rounded-xl items-center shadow-lg ${currentStep === 1 || isFormValid ? 'bg-[#008E96]' : 'bg-[#E5E7EB]'}`}
+          className={`w-full py-4 rounded-xl items-center shadow-lg ${currentStep === 1 || currentStep === 3 || currentStep === 4 || currentStep === 5 || (currentStep === 2 && isFormValid) ? 'bg-[#008E96]' : 'bg-[#E5E7EB]'}`}
           disabled={currentStep === 2 && !isFormValid}
         >
           <Text className="text-white text-base" style={{ fontFamily: 'Inter-Bold' }}>
-            {currentStep === 1 ? 'Next, Add Price' : 'Next, Add Photos'}
+            {currentStep === 1 ? 'Next, Add Price' : currentStep === 2 ? 'Next, Add Photos' : currentStep === 3 ? 'Next, Advanced Details' : currentStep === 4 ? 'Review & Verify' : 'Post Property'}
           </Text>
         </TouchableOpacity>
       </View>
