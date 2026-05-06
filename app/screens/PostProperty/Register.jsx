@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const PostProperty = () => {
   const router = useRouter();
@@ -11,8 +11,71 @@ const PostProperty = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  
+  // OTP State
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [verificationStep, setVerificationStep] = useState('phone'); // 'phone' or 'email'
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const otpInputs = useRef([]);
 
-  const isFormValid = phoneNumber.length === 10 && name.trim().length > 0 && city.trim().length > 0;
+  const isFormValid = 
+    phoneNumber.length === 10 && 
+    name.trim().length > 0 && 
+    city.trim().length > 0 &&
+    email.includes('@') &&
+    password.length >= 6;
+
+  const handleNext = () => {
+    if (isFormValid) {
+      setVerificationStep('phone');
+      setOtp(['', '', '', '', '', '']);
+      setShowOTPModal(true);
+    }
+  };
+
+  const handleOtpChange = (value, index) => {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Auto focus next input
+    if (value && index < 5) {
+      otpInputs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyPress = (e, index) => {
+    if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
+      otpInputs.current[index - 1].focus();
+    }
+  };
+
+  const verifyOTP = () => {
+    const otpValue = otp.join('');
+    if (otpValue.length === 6) {
+      setIsVerifying(true);
+      
+      // Simulate API call
+      setTimeout(() => {
+        setIsVerifying(false);
+        if (verificationStep === 'phone') {
+          // Phone verified, now move to email
+          setVerificationStep('email');
+          setOtp(['', '', '', '', '', '']);
+          // Focus first input after state update
+          setTimeout(() => otpInputs.current[0].focus(), 100);
+        } else {
+          // Email verified, all done
+          setShowOTPModal(false);
+          router.push('/screens/PostProperty/PropertyDetails');
+        }
+      }, 1500);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -139,6 +202,32 @@ const PostProperty = () => {
                   onChangeText={setName}
                 />
               </View>
+              <View className="border-b border-[#E5E7EB] pb-2">
+                <TextInput 
+                  placeholder="Email Address" 
+                  placeholderTextColor="#99A1AF"
+                  className="text-sm py-1"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
+                <TextInput 
+                  placeholder="Password" 
+                  placeholderTextColor="#99A1AF"
+                  className="flex-1 text-sm py-1"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#99A1AF" />
+                </TouchableOpacity>
+              </View>
               <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
                 <Ionicons name="location-outline" size={20} color="#5E35B1" />
                 <TextInput 
@@ -156,7 +245,7 @@ const PostProperty = () => {
             {/* Content Navigation Button */}
             <TouchableOpacity 
               disabled={!isFormValid}
-              onPress={() => router.push('/screens/PostProperty/PropertyDetails')}
+              onPress={handleNext}
               className={`w-full py-4 rounded-xl items-center mb-4 ${isFormValid ? 'bg-[#008E96]' : 'bg-[#E5E7EB]'}`}
             >
               <Text className={`${isFormValid ? 'text-white' : 'text-[#99A1AF]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Next, add address & price</Text>
@@ -165,6 +254,66 @@ const PostProperty = () => {
             <View className="w-full bg-[#008E9614] py-3 rounded-xl items-center mb-6">
               <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Regular' }}>Existing user? <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Login Here</Text></Text>
             </View>
+
+            {/* OTP Modal */}
+            <Modal
+              visible={showOTPModal}
+              transparent={true}
+              animationType="slide"
+            >
+              <KeyboardAvoidingView 
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                className="flex-1 justify-end bg-black/50"
+              >
+                <View className="bg-white rounded-t-3xl p-6">
+                  <View className="flex-row justify-between items-center mb-6">
+                    <Text className="text-xl" style={{ fontFamily: 'Inter-Bold' }}>
+                      {verificationStep === 'phone' ? 'Verify Phone' : 'Verify Email'}
+                    </Text>
+                    <TouchableOpacity onPress={() => setShowOTPModal(false)}>
+                      <Ionicons name="close" size={24} color="black" />
+                    </TouchableOpacity>
+                  </View>
+                  
+                  <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
+                    {verificationStep === 'phone' 
+                      ? `Enter the 6-digit code sent to +91 ${phoneNumber}`
+                      : `Enter the 6-digit code sent to ${email}`
+                    }
+                  </Text>
+
+                  <View className="flex-row justify-between mb-8">
+                    {otp.map((digit, index) => (
+                      <TextInput
+                        key={index}
+                        ref={(ref) => (otpInputs.current[index] = ref)}
+                        className="w-11 h-14 border-2 border-gray-200 rounded-lg text-center text-xl"
+                        style={{ fontFamily: 'Inter-Bold' }}
+                        keyboardType="number-pad"
+                        maxLength={1}
+                        value={digit}
+                        onChangeText={(value) => handleOtpChange(value, index)}
+                        onKeyPress={(e) => handleKeyPress(e, index)}
+                      />
+                    ))}
+                  </View>
+
+                  <TouchableOpacity 
+                    onPress={verifyOTP}
+                    disabled={otp.join('').length < 6 || isVerifying}
+                    className={`w-full py-4 rounded-xl items-center ${otp.join('').length === 6 ? 'bg-[#008E96]' : 'bg-gray-200'}`}
+                  >
+                    <Text className="text-white text-base" style={{ fontFamily: 'Inter-Medium' }}>
+                      {isVerifying ? 'Verifying...' : 'Verify & Continue'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity className="mt-4 items-center">
+                    <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Resend Code</Text>
+                  </TouchableOpacity>
+                </View>
+              </KeyboardAvoidingView>
+            </Modal>
 
             {/* Statistics Banner */}
             <View className="mt-6 bg-[#008E96] rounded-2xl p-4 flex-row justify-between items-center">
