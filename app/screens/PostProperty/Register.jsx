@@ -1,39 +1,54 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useRegister } from '../../../hooks/Register';
 
 const PostProperty = () => {
   const router = useRouter();
+  const {
+    step,
+    formData,
+    updateFormData,
+    loading,
+    setEnteredMockOtp,
+    setEmailOtp,
+    handlePhoneValidation,
+    verifyMockOtp,
+    handleRegister,
+    handleVerifyEmailOtp,
+  } = useRegister();
+
   const [propertyType, setPropertyType] = useState('Residential');
   const [lookingTo, setLookingTo] = useState('Rent');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [name, setName] = useState('');
-  const [city, setCity] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
   // OTP State
   const [showOTPModal, setShowOTPModal] = useState(false);
-  const [verificationStep, setVerificationStep] = useState('phone'); // 'phone' or 'email'
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [isVerifying, setIsVerifying] = useState(false);
   const otpInputs = useRef([]);
 
   const isFormValid = 
-    phoneNumber.length === 10 && 
-    name.trim().length > 0 && 
-    city.trim().length > 0 &&
-    email.includes('@') &&
-    password.length >= 6;
+    formData.phone.length === 10 && 
+    formData.name.trim().length > 0 && 
+    formData.email.includes('@') &&
+    formData.password.length >= 6;
 
-  const handleNext = () => {
+  useEffect(() => {
+    if (step === 2 && !showOTPModal) {
+      // Small delay to ensure state updates before modal actions if needed
+    }
+  }, [step]);
+
+  const handleNext = async () => {
     if (isFormValid) {
-      setVerificationStep('phone');
       setOtp(['', '', '', '', '', '']);
       setShowOTPModal(true);
+      // Call phone validation after modal is shown to avoid alert blocking modal transition
+      setTimeout(() => {
+        handlePhoneValidation();
+      }, 500);
     }
   };
 
@@ -46,6 +61,15 @@ const PostProperty = () => {
     if (value && index < 5) {
       otpInputs.current[index + 1].focus();
     }
+    
+    // Update hook state based on current step
+    const fullOtp = newOtp.join('');
+    console.log("OTP Change:", { step, fullOtp });
+    if (step === 1) {
+      setEnteredMockOtp(fullOtp);
+    } else if (step === 2 || step === 3) { // Step 2 can also happen during registration transistion
+      setEmailOtp(fullOtp);
+    }
   };
 
   const handleKeyPress = (e, index) => {
@@ -54,28 +78,39 @@ const PostProperty = () => {
     }
   };
 
-  const verifyOTP = () => {
+  const verifyOTP = async () => {
     const otpValue = otp.join('');
+    console.log("verifyOTP Clicked:", { step, otpValueLength: otpValue.length });
     if (otpValue.length === 6) {
-      setIsVerifying(true);
-      
-      // Simulate API call
-      setTimeout(() => {
-        setIsVerifying(false);
-        if (verificationStep === 'phone') {
-          // Phone verified, now move to email
-          setVerificationStep('email');
-          setOtp(['', '', '', '', '', '']);
-          // Focus first input after state update
-          setTimeout(() => otpInputs.current[0].focus(), 100);
-        } else {
-          // Email verified, all done
-          setShowOTPModal(false);
-          router.push('/screens/PostProperty/PropertyDetails');
-        }
-      }, 1500);
+      if (step === 1) {
+        console.log("Calling verifyMockOtp");
+        verifyMockOtp();
+      } else if (step === 2 || step === 3) {
+        console.log("Calling handleVerifyEmailOtp as fallback for step", step);
+        await handleVerifyEmailOtp();
+      }
+    } else {
+      console.log("OTP length is not 6");
     }
   };
+
+  // Effect to handle automatic transitions after successful actions
+  useEffect(() => {
+    const registerAndNext = async () => {
+      if (step === 2 && showOTPModal && !loading) {
+        // Mock OTP verified, now register
+        await handleRegister();
+      }
+    };
+    registerAndNext();
+  }, [step, showOTPModal]);
+
+  // Effect to clear OTP when moving to email verification or step 2
+  useEffect(() => {
+    if (step === 2 || step === 3) {
+      setOtp(['', '', '', '', '', '']);
+    }
+  }, [step]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -133,7 +168,75 @@ const PostProperty = () => {
               <Text className="text-[#5E35B1] text-base" style={{ fontFamily: 'Inter-Medium' }}>Owner</Text>
             </View>
 
-            {/* Property Type Section */}
+          
+
+            {/* User Inputs Section */}
+            <View className="gap-6 mb-6">
+              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
+                <Text className="text-black text-sm pr-3" style={{ fontFamily: 'Inter-Regular' }}>+91</Text>
+                <TextInput 
+                  placeholder="Enter Phone Number" 
+                  placeholderTextColor="#99A1AF"
+                  className="flex-1 text-sm py-1"
+                  keyboardType="phone-pad"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={formData.phone}
+                  onChangeText={(val) => updateFormData('phone', val)}
+                  maxLength={10}
+                />
+              </View>
+              <View className="border-b border-[#E5E7EB] pb-2">
+                <TextInput 
+                  placeholder="Your Name" 
+                  placeholderTextColor="#99A1AF"
+                  className="text-sm py-1"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={formData.name}
+                  onChangeText={(val) => updateFormData('name', val)}
+                />
+              </View>
+              <View className="border-b border-[#E5E7EB] pb-2">
+                <TextInput 
+                  placeholder="Email Address" 
+                  placeholderTextColor="#99A1AF"
+                  className="text-sm py-1"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={formData.email}
+                  onChangeText={(val) => updateFormData('email', val)}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
+                <TextInput 
+                  placeholder="Password" 
+                  placeholderTextColor="#99A1AF"
+                  className="flex-1 text-sm py-1"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={formData.password}
+                  onChangeText={(val) => {
+                    updateFormData('password', val);
+                    updateFormData('confirmPassword', val); // Simplified for this screen
+                  }}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#99A1AF" />
+                </TouchableOpacity>
+              </View>
+              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
+                <Ionicons name="location-outline" size={20} color="#5E35B1" />
+                <TextInput 
+                  placeholder="Search City" 
+                  placeholderTextColor="#99A1AF"
+                  className="flex-1 text-sm px-2 py-1"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={formData.city || ''}
+                  onChangeText={(val) => updateFormData('city', val)}
+                />
+                <Ionicons name="chevron-down" size={20} color="#5E35B1" />
+              </View>
+                {/* Property Type Section */}
             <View className="mb-6">
               <Text className="text-[#4A5565] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Property type</Text>
               <View className="flex-row justify-between">
@@ -176,70 +279,6 @@ const PostProperty = () => {
                 <Text className={`${lookingTo === 'PG' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>PG/Co-Living</Text>
               </TouchableOpacity>
             </View>
-
-            {/* User Inputs Section */}
-            <View className="gap-6 mb-6">
-              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
-                <Text className="text-black text-sm pr-3" style={{ fontFamily: 'Inter-Regular' }}>+91</Text>
-                <TextInput 
-                  placeholder="Enter Phone Number" 
-                  placeholderTextColor="#99A1AF"
-                  className="flex-1 text-sm py-1"
-                  keyboardType="phone-pad"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  maxLength={10}
-                />
-              </View>
-              <View className="border-b border-[#E5E7EB] pb-2">
-                <TextInput 
-                  placeholder="Your Name" 
-                  placeholderTextColor="#99A1AF"
-                  className="text-sm py-1"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={name}
-                  onChangeText={setName}
-                />
-              </View>
-              <View className="border-b border-[#E5E7EB] pb-2">
-                <TextInput 
-                  placeholder="Email Address" 
-                  placeholderTextColor="#99A1AF"
-                  className="text-sm py-1"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
-                <TextInput 
-                  placeholder="Password" 
-                  placeholderTextColor="#99A1AF"
-                  className="flex-1 text-sm py-1"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                />
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#99A1AF" />
-                </TouchableOpacity>
-              </View>
-              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
-                <Ionicons name="location-outline" size={20} color="#5E35B1" />
-                <TextInput 
-                  placeholder="Search City" 
-                  placeholderTextColor="#99A1AF"
-                  className="flex-1 text-sm px-2 py-1"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={city}
-                  onChangeText={setCity}
-                />
-                <Ionicons name="chevron-down" size={20} color="#5E35B1" />
-              </View>
             </View>
 
             {/* Content Navigation Button */}
@@ -268,7 +307,7 @@ const PostProperty = () => {
                 <View className="bg-white rounded-t-3xl p-6">
                   <View className="flex-row justify-between items-center mb-6">
                     <Text className="text-xl" style={{ fontFamily: 'Inter-Bold' }}>
-                      {verificationStep === 'phone' ? 'Verify Phone' : 'Verify Email'}
+                      {step === 1 ? 'Verify Phone' : 'Verify Email'}
                     </Text>
                     <TouchableOpacity onPress={() => setShowOTPModal(false)}>
                       <Ionicons name="close" size={24} color="black" />
@@ -276,9 +315,9 @@ const PostProperty = () => {
                   </View>
                   
                   <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
-                    {verificationStep === 'phone' 
-                      ? `Enter the 6-digit code sent to +91 ${phoneNumber}`
-                      : `Enter the 6-digit code sent to ${email}`
+                    {step === 1 
+                      ? `Enter the 6-digit code sent to +91 ${formData.phone}`
+                      : `Enter the 6-digit code sent to ${formData.email}`
                     }
                   </Text>
 
@@ -300,11 +339,10 @@ const PostProperty = () => {
 
                   <TouchableOpacity 
                     onPress={verifyOTP}
-                    disabled={otp.join('').length < 6 || isVerifying}
                     className={`w-full py-4 rounded-xl items-center ${otp.join('').length === 6 ? 'bg-[#008E96]' : 'bg-gray-200'}`}
                   >
                     <Text className="text-white text-base" style={{ fontFamily: 'Inter-Medium' }}>
-                      {isVerifying ? 'Verifying...' : 'Verify & Continue'}
+                      Verify & Continue
                     </Text>
                   </TouchableOpacity>
 

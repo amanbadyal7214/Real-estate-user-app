@@ -1,6 +1,4 @@
-#  API Documentation
-
-This documentation provides details for all available API endpoints in the EstateOne Real Estate platform.
+This documentation provides details for all available API endpoints in this Real Estate platform.
 
 **Base URL**: `https://real-back-x9ln.onrender.com` (or as configured in your environment)
 
@@ -8,28 +6,50 @@ This documentation provides details for all available API endpoints in the Estat
 
 ## 1. Authentication
 
-### Register Us...r (Multi-step Flow)
+### Registration Workflow (Full Flow)
+
+The registration is a multi-stage process involving both frontend-side phone validation and backend-side email verification.
+
+#### Step 1: Phone Validation (Frontend)
+Before details are collected, the frontend performs a mock phone verification.
+*   **Action**: User enters a 10-digit phone number.
+*   **Logic**: The frontend generates a 6-digit random code and displays it via an alert (Mock).
+*   **Outcome**: Once the correct code is entered, the user proceeds to the details form.
+
+#### Step 2: Account Registration (Backend OTP)
 *   **Endpoint**: `POST /auth/register`
-*   **Description**: Sends an OTP to the user's email and temporarily stores user data.
+*   **Description**: Validates that the email and phone are unique, sends a real OTP to the email address, and stores data in a temporary state.
 *   **Body**:
     ```json
     {
       "name": "John Doe",
       "email": "john@example.com",
       "password": "Password123!",
-      "role": "owner", 
+      "role": "owner",
       "profileData": {
         "phone": "9876543210",
-        "companyName": "Optional Firm Name"
+        "city": "Mumbai",
+        "companyName": "Optional Firm Name",
+        "businessSince": "2020"
       }
     }
     ```
-*   **Note**: Roles can be `owner`, `builder`, `broker`, `buyer`, or `flatmate`.
-*   **Error Case**: If email or phone is already registered, it returns `400 Bad Request` with `"error": "Email already registered"`.
+*   **Notes**:
+    - `city` is saved to both the `User` document and the role-specific profile (`OwnerProfile`, `BrokerProfile`, `BuilderProfile`, `BuyerProfile.preferences.city`).
+    - `companyName` maps to `firmName` for broker/builder profiles.
+    - `businessSince` is only relevant for `builder` role.
+*   **Roles**: `owner`, `builder`, `broker`, `buyer`.
+*   **Success Response**: `200 OK`
+    ```json
+    { "success": true, "message": "OTP sent to email" }
+    ```
+*   **Error Case**:
+    - `400`: "Email already registered" or "Phone number already registered".
+    - `500`: "Email could not be sent" (usually due to SMTP timeout on restricted environments).
 
-### Verify Registration OTP
+#### Step 3: Email OTP Verification
 *   **Endpoint**: `POST /auth/verify-otp`
-*   **Description**: Verifies the OTP and creates the permanent user account.
+*   **Description**: Verifies the email OTP, clears temporary data, and creates the permanent User and Role-specific Profile.
 *   **Body**:
     ```json
     {
@@ -37,7 +57,25 @@ This documentation provides details for all available API endpoints in the Estat
       "otp": "123456"
     }
     ```
-*   **Response**: `201 Created` with token and user profile.
+*   **Success Response**: `201 Created`
+    ```json
+    {
+      "success": true,
+      "token": "JWT_TOKEN_HERE",
+      "role": "owner",
+      "user": {
+        "id": "...",
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "9876543210",
+        "city": "Mumbai",
+        "profileImage": null
+      }
+    }
+    ```
+*   **What gets created**: A `User` document (with `name`, `email`, `phone`, `city`, `role`, `isVerified: true`) plus a role-specific profile document with all the same data.
+
+---
 
 ### Login User
 *   **Endpoint**: `POST /auth/login`
@@ -48,7 +86,23 @@ This documentation provides details for all available API endpoints in the Estat
       "password": "password123"
     }
     ```
-*   **Response**: `200 OK` with token and role. Use role for navigation (e.g., `owner` -> `/listings`).
+*   **Response**: `200 OK`
+    ```json
+    {
+      "success": true,
+      "token": "JWT_TOKEN_HERE",
+      "role": "owner",
+      "user": {
+        "id": "...",
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "9876543210",
+        "city": "Mumbai",
+        "profileImage": null
+      }
+    }
+    ```
+*   Use `role` for post-login navigation: `owner` → `/listings`, others → `/dashboard`.
 
 ---
 
@@ -76,7 +130,6 @@ This documentation provides details for all available API endpoints in the Estat
       "images": ["base64_string_1", "base64_string_2"],
       "amenities": ["ObjectId_1", "ObjectId_2"]
     }
-    ```
 
 ### Update Existing Property
 *   **Endpoint**: `PUT /properties/:id`
