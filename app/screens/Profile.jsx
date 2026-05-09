@@ -1,14 +1,35 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { 
-  Crown, ArrowLeft, Heart, Eye, Phone, Search, Folder, Building, 
-  ChevronRight, Gem, History, CreditCard, Star, ChevronUp, Zap, HandCoins,
-  ChevronDown, FileText, Home, Puzzle, Newspaper, Settings, TriangleAlert,
-  CircleHelp, LogOut
-} from 'lucide-react-native';
-import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+import {
+  ArrowLeft,
+  Building,
+  ChevronDown,
+  ChevronRight,
+  CircleHelp,
+  CreditCard,
+  Crown,
+  Eye,
+  FileText,
+  Folder,
+  Gem,
+  HandCoins,
+  Heart,
+  History,
+  Home,
+  LogOut,
+  Newspaper,
+  Phone,
+  Puzzle,
+  Search,
+  Settings,
+  Star,
+  TriangleAlert,
+  Zap
+} from 'lucide-react-native';
+import React from 'react';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ProfileHeader = () => {
   return (
@@ -303,6 +324,35 @@ const QuickLinks = () => {
 const Profile = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = React.useState('saved');
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  React.useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    const token = await SecureStore.getItemAsync('token');
+    setIsLoggedIn(!!token);
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Clean up secure storage
+      await Promise.all([
+        SecureStore.deleteItemAsync('token'),
+        SecureStore.deleteItemAsync('userRole'),
+        SecureStore.deleteItemAsync('userData')
+      ]);
+
+      Alert.alert("Success", "Logged out successfully!");
+      setIsLoggedIn(false);
+      // Redirect to login/register page
+      router.replace('/screens/PostProperty/Register');
+    } catch (error) {
+      console.error("Logout Error:", error);
+      Alert.alert("Error", "Failed to logout. Please try again.");
+    }
+  };
 
   const tabs = [
     { id: 'saved', label1: 'Saved', label2: 'Properties', icon: Heart, count: '00' },
@@ -423,6 +473,7 @@ const Profile = () => {
         {/* Log Out Section */}
         <View className="px-4 mt-4 mb-5">
           <TouchableOpacity 
+            onPress={isLoggedIn ? handleLogout : () => router.push('/screens/PostProperty/Register')}
             className="flex-row items-center justify-center h-[50.5px] border-2 border-[#E4E7EC] rounded-[12px] gap-[8px]"
             activeOpacity={0.7}
           >
@@ -431,7 +482,7 @@ const Profile = () => {
               className="text-[#101828] text-[15px] font-medium text-center"
               style={{ fontFamily: 'Inter-Medium' }}
             >
-              Log Out
+              {isLoggedIn ? "Log Out" : "Login"}
             </Text>
           </TouchableOpacity>
         </View>

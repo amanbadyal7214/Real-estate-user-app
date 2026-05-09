@@ -18,11 +18,13 @@ const PostProperty = () => {
     verifyMockOtp,
     handleRegister,
     handleVerifyEmailOtp,
+    handleLogin,
   } = useRegister();
 
   const [propertyType, setPropertyType] = useState('Residential');
   const [lookingTo, setLookingTo] = useState('Rent');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   
   // OTP State
   const [showOTPModal, setShowOTPModal] = useState(false);
@@ -172,32 +174,36 @@ const PostProperty = () => {
 
             {/* User Inputs Section */}
             <View className="gap-6 mb-6">
-              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
-                <Text className="text-black text-sm pr-3" style={{ fontFamily: 'Inter-Regular' }}>+91</Text>
-                <TextInput 
-                  placeholder="Enter Phone Number" 
-                  placeholderTextColor="#99A1AF"
-                  className="flex-1 text-sm py-1"
-                  keyboardType="phone-pad"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={formData.phone}
-                  onChangeText={(val) => updateFormData('phone', val)}
-                  maxLength={10}
-                />
-              </View>
+              {!isLogin && (
+                <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
+                  <Text className="text-black text-sm pr-3" style={{ fontFamily: 'Inter-Regular' }}>+91</Text>
+                  <TextInput 
+                    placeholder="Enter Phone Number" 
+                    placeholderTextColor="#99A1AF"
+                    className="flex-1 text-sm py-1"
+                    keyboardType="phone-pad"
+                    style={{ fontFamily: 'Inter-Regular' }}
+                    value={formData.phone}
+                    onChangeText={(val) => updateFormData('phone', val)}
+                    maxLength={10}
+                  />
+                </View>
+              )}
+              {!isLogin && (
+                <View className="border-b border-[#E5E7EB] pb-2">
+                  <TextInput 
+                    placeholder="Your Name" 
+                    placeholderTextColor="#99A1AF"
+                    className="text-sm py-1"
+                    style={{ fontFamily: 'Inter-Regular' }}
+                    value={formData.name}
+                    onChangeText={(val) => updateFormData('name', val)}
+                  />
+                </View>
+              )}
               <View className="border-b border-[#E5E7EB] pb-2">
                 <TextInput 
-                  placeholder="Your Name" 
-                  placeholderTextColor="#99A1AF"
-                  className="text-sm py-1"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={formData.name}
-                  onChangeText={(val) => updateFormData('name', val)}
-                />
-              </View>
-              <View className="border-b border-[#E5E7EB] pb-2">
-                <TextInput 
-                  placeholder="Email Address" 
+                  placeholder={isLogin ? "Email/Number" : "Email Address"} 
                   placeholderTextColor="#99A1AF"
                   className="text-sm py-1"
                   style={{ fontFamily: 'Inter-Regular' }}
@@ -224,75 +230,91 @@ const PostProperty = () => {
                   <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#99A1AF" />
                 </TouchableOpacity>
               </View>
-              <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
-                <Ionicons name="location-outline" size={20} color="#5E35B1" />
-                <TextInput 
-                  placeholder="Search City" 
-                  placeholderTextColor="#99A1AF"
-                  className="flex-1 text-sm px-2 py-1"
-                  style={{ fontFamily: 'Inter-Regular' }}
-                  value={formData.city || ''}
-                  onChangeText={(val) => updateFormData('city', val)}
-                />
-                <Ionicons name="chevron-down" size={20} color="#5E35B1" />
-              </View>
+              {!isLogin && (
+                <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
+                  <Ionicons name="location-outline" size={20} color="#5E35B1" />
+                  <TextInput 
+                    placeholder="Search City" 
+                    placeholderTextColor="#99A1AF"
+                    className="flex-1 text-sm px-2 py-1"
+                    style={{ fontFamily: 'Inter-Regular' }}
+                    value={formData.city || ''}
+                    onChangeText={(val) => updateFormData('city', val)}
+                  />
+                  <Ionicons name="chevron-down" size={20} color="#5E35B1" />
+                </View>
+              )}
                 {/* Property Type Section */}
-            <View className="mb-6">
-              <Text className="text-[#4A5565] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Property type</Text>
-              <View className="flex-row justify-between">
-                <TouchableOpacity 
-                  onPress={() => setPropertyType('Residential')}
-                  className={`flex-1 mr-2 py-3 rounded-xl border items-center ${propertyType === 'Residential' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                >
-                  <Text className={`${propertyType === 'Residential' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Residential</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  onPress={() => setPropertyType('Commercial')}
-                  className={`flex-1 ml-2 py-3 rounded-xl border items-center ${propertyType === 'Commercial' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                >
-                  <Text className={`${propertyType === 'Commercial' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Commercial</Text>
-                </TouchableOpacity>
+            {!isLogin && (
+              <View className="mb-6">
+                <Text className="text-[#4A5565] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Property type</Text>
+                <View className="flex-row justify-between">
+                  <TouchableOpacity 
+                    onPress={() => setPropertyType('Residential')}
+                    className={`flex-1 mr-2 py-3 rounded-xl border items-center ${propertyType === 'Residential' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
+                  >
+                    <Text className={`${propertyType === 'Residential' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Residential</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => setPropertyType('Commercial')}
+                    className={`flex-1 ml-2 py-3 rounded-xl border items-center ${propertyType === 'Commercial' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
+                  >
+                    <Text className={`${propertyType === 'Commercial' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Commercial</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
+            )}
 
             {/* Looking To Section */}
-            <View className="mb-6">
-              <Text className="text-[#4A5565] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>You're looking to...</Text>
-              <View className="flex-row justify-between mb-4">
+            {!isLogin && (
+              <View className="mb-6">
+                <Text className="text-[#4A5565] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>You're looking to...</Text>
+                <View className="flex-row justify-between mb-4">
+                  <TouchableOpacity 
+                    onPress={() => setLookingTo('Rent')}
+                    className={`flex-1 mr-2 py-3 rounded-xl border items-center ${lookingTo === 'Rent' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
+                  >
+                    <Text className={`${lookingTo === 'Rent' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Rent</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => setLookingTo('Sell')}
+                    className={`flex-1 ml-2 py-3 rounded-xl border items-center ${lookingTo === 'Sell' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
+                  >
+                    <Text className={`${lookingTo === 'Sell' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Sell</Text>
+                  </TouchableOpacity>
+                </View>
                 <TouchableOpacity 
-                  onPress={() => setLookingTo('Rent')}
-                  className={`flex-1 mr-2 py-3 rounded-xl border items-center ${lookingTo === 'Rent' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
+                  onPress={() => setLookingTo('PG')}
+                  className={`w-full py-3 rounded-xl border items-center ${lookingTo === 'PG' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
                 >
-                  <Text className={`${lookingTo === 'Rent' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Rent</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  onPress={() => setLookingTo('Sell')}
-                  className={`flex-1 ml-2 py-3 rounded-xl border items-center ${lookingTo === 'Sell' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                >
-                  <Text className={`${lookingTo === 'Sell' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Sell</Text>
+                  <Text className={`${lookingTo === 'PG' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>PG/Co-Living</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity 
-                onPress={() => setLookingTo('PG')}
-                className={`w-full py-3 rounded-xl border items-center ${lookingTo === 'PG' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-              >
-                <Text className={`${lookingTo === 'PG' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>PG/Co-Living</Text>
-              </TouchableOpacity>
-            </View>
+            )}
             </View>
 
             {/* Content Navigation Button */}
             <TouchableOpacity 
-              disabled={!isFormValid}
-              onPress={handleNext}
-              className={`w-full py-4 rounded-xl items-center mb-4 ${isFormValid ? 'bg-[#008E96]' : 'bg-[#E5E7EB]'}`}
+              disabled={loading || (isLogin ? !(formData.email.trim() && formData.password.length >= 6) : !isFormValid)}
+              onPress={isLogin ? handleLogin : handleNext}
+              className={`w-full py-4 rounded-xl items-center mb-4 ${(loading || (isLogin ? !(formData.email.trim() && formData.password.length >= 6) : !isFormValid)) ? 'bg-[#E5E7EB]' : 'bg-[#008E96]'}`}
             >
-              <Text className={`${isFormValid ? 'text-white' : 'text-[#99A1AF]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Next, add address & price</Text>
+              <Text className={`${(loading || (isLogin ? (formData.email.trim() && formData.password.length >= 6) : isFormValid)) ? 'text-white' : 'text-[#99A1AF]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>
+                {loading ? 'Processing...' : (isLogin ? 'Login to continue' : 'Next, add address & price')}
+              </Text>
             </TouchableOpacity>
 
-            <View className="w-full bg-[#008E9614] py-3 rounded-xl items-center mb-6">
-              <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Regular' }}>Existing user? <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Login Here</Text></Text>
-            </View>
+            <TouchableOpacity 
+              onPress={() => setIsLogin(!isLogin)}
+              className="w-full bg-[#008E9614] py-3 rounded-xl items-center mb-6"
+            >
+              <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Regular' }}>
+                {isLogin ? "New user? " : "Existing user? "}
+                <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>
+                  {isLogin ? "Register Here" : "Login Here"}
+                </Text>
+              </Text>
+            </TouchableOpacity>
 
             {/* OTP Modal */}
             <Modal

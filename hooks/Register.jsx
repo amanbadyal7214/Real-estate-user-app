@@ -70,6 +70,7 @@ export const useRegister = () => {
                 role: formData.role,
                 profileData: {
                     phone: formData.phone,
+                    city: formData.city,
                     companyName: formData.companyName,
                     businessSince: formData.businessSince,
                 }
@@ -133,12 +134,15 @@ export const useRegister = () => {
 
             if (response.data.success) {
                 const { token, role, user } = response.data;
-                await SecureStore.setItemAsync("token", token);
-                await SecureStore.setItemAsync("userRole", role);
-                await SecureStore.setItemAsync("userData", JSON.stringify(user));
+                // Wait for all storage operations to complete first
+                await Promise.all([
+                    SecureStore.setItemAsync("token", token),
+                    SecureStore.setItemAsync("userRole", role),
+                    SecureStore.setItemAsync("userData", JSON.stringify(user))
+                ]);
                 
                 Alert.alert("Success", "Account created successfully!");
-                router.replace("/(tabs)"); // Redirect to main app
+                router.replace("/screens/PostProperty/PropertyDetails"); // Redirect to post property flow
             } else {
                 Alert.alert("Verification Failed", response.data.message || "Invalid OTP");
             }
@@ -146,6 +150,46 @@ export const useRegister = () => {
             console.error("API Error: /auth/verify-otp", error.response?.data || error.message);
             const errorMessage = error.response?.data?.message || error.response?.data?.error || "Verification failed. Please try again.";
             Alert.alert("Error", errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLogin = async () => {
+        if (!formData.email || !formData.password) {
+            Alert.alert("Error", "Please enter both Email/Number and Password");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const payload = {
+                email: formData.email.trim().toLowerCase(),
+                password: formData.password
+            };
+            console.log("API Request: POST /auth/login", payload);
+            const response = await api.post("/auth/login", payload);
+            console.log("API Response: /auth/login", response.data);
+
+            if (response.data.success) {
+                const { token, role, user } = response.data;
+                // Wait for all storage operations to complete first
+                await Promise.all([
+                    SecureStore.setItemAsync("token", token),
+                    SecureStore.setItemAsync("userRole", role),
+                    SecureStore.setItemAsync("userData", JSON.stringify(user))
+                ]);
+
+                Alert.alert("Success", "Logged in successfully!");
+                router.replace("/screens/PostProperty/PropertyDetails"); // Redirect to post property flow
+            } else {
+                Alert.alert("Login Failed", response.data.message || "Invalid credentials");
+            }
+        } catch (error) {
+            console.error("API Error: /screens/PostProperty/Register", error.response?.data || error.message);
+            
+            const message = error.response?.data?.error || error.response?.data?.message || "Login failed. Please try again.";
+            Alert.alert("Error", message);
         } finally {
             setLoading(false);
         }
@@ -166,5 +210,6 @@ export const useRegister = () => {
         verifyMockOtp,
         handleRegister,
         handleVerifyEmailOtp,
+        handleLogin,
     };
 };
