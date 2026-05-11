@@ -1,9 +1,30 @@
 import { useRouter } from "expo-router";
 import { ChevronDown, User } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
+import * as SecureStore from "expo-secure-store";
+import { useEffect, useState } from "react";
 
 const UserHeader = ({ userName = "Guest!" }) => {
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    setIsLoggedIn(!!token);
+  };
+
+  const handlePostProperty = () => {
+    if (isLoggedIn) {
+      router.push("/screens/PostProperty/PropertyDetails");
+    } else {
+      router.push("/screens/PostProperty/Register");
+    }
+  };
+
   return (
     <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
       <View className="flex-row items-center gap-2">
@@ -16,7 +37,7 @@ const UserHeader = ({ userName = "Guest!" }) => {
         </View>
       </View>
       <TouchableOpacity 
-        onPress={() => router.push("/screens/PostProperty/Register")}
+        onPress={handlePostProperty}
         className="flex-row items-center bg-[#F2F4F7] px-4 py-2 rounded-full h-10"
       >
         <Text className="font-inter-medium text-[13px] text-[#101828] mr-2">Post Property</Text>

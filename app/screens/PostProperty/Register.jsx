@@ -4,9 +4,22 @@ import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useRegister } from '../../../hooks/Register';
+import * as SecureStore from "expo-secure-store";
 
 const PostProperty = () => {
   const router = useRouter();
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  const checkToken = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    if (token) {
+      router.replace("/screens/PostProperty/PropertyDetails");
+    }
+  };
+
   const {
     step,
     formData,

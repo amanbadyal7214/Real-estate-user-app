@@ -2,6 +2,7 @@ import { Ionicons, MaterialCommunityIcons, FontAwesome5, MaterialIcons } from '@
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
 import {  SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import * as SecureStore from "expo-secure-store";
 import { usePostProperty } from '../../context/PostPropertyContext';
 import { useLookup } from '../../../hooks/useLookup';
 import PriceDetailsSection from './PriceDetailsSection';
@@ -66,8 +67,16 @@ const PropertyDetails = () => {
   const [showUnitDropdown, setShowUnitDropdown] = useState(false);
 
   useEffect(() => {
+    checkAuth();
     fetchLookups();
   }, []);
+
+  const checkAuth = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    if (!token) {
+      router.replace("/screens/PostProperty/Register");
+    }
+  };
 
   const { expectedPrice, maintenance, isNegotiable } = postData.priceDetails;
   const { 
