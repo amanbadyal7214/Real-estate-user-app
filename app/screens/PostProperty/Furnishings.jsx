@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,16 @@ import {
 import { Ionicons, MaterialCommunityIcons, FontAwesome5, Entypo, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { usePostProperty } from '../../context/PostPropertyContext';
+import { useLookup } from '../../../hooks/useLookup';
 
 const FurnishingScreen = () => {
   const router = useRouter();
   const { postData, updateFurnishings } = usePostProperty();
+  const { amenities: apiAmenities, fetchLookups } = useLookup();
+
+  useEffect(() => {
+    fetchLookups();
+  }, []);
   
   const { counters, selectedItems } = postData.furnishings;
 
@@ -63,22 +69,11 @@ const FurnishingScreen = () => {
     { name: 'Wardrobe', key: 'Wardrobe', icon: 'checkroom', provider: 'MaterialIcons' },
   ];
 
-  const societyAmenities = [
-    { name: 'Swimming Pool', icon: 'pool', provider: 'MaterialIcons' },
-    { name: 'Gym', icon: 'fitness-center', provider: 'MaterialIcons' },
-    { name: 'Lift', icon: 'elevator', provider: 'MaterialIcons' },
-    { name: 'Power Backup', icon: 'electric-bolt', provider: 'MaterialIcons' },
-    { name: 'Intercom', icon: 'contact-phone', provider: 'MaterialIcons' },
-    { name: 'Garden', icon: 'park', provider: 'MaterialIcons' },
-    { name: 'Sports', icon: 'sports-basketball', provider: 'MaterialIcons' },
-    { name: 'Kids Area', icon: 'child-care', provider: 'MaterialIcons' },
-    { name: 'Community Hall', icon: 'groups', provider: 'MaterialIcons' },
-    { name: 'Gated Community', icon: 'security', provider: 'MaterialIcons' },
-    { name: 'Regular Water Supply', icon: 'opacity', provider: 'MaterialIcons' },
-    { name: 'Club House', icon: 'nightlife', provider: 'MaterialIcons' },
-    { name: 'CCTV', icon: 'videocam', provider: 'MaterialIcons' },
-    { name: 'Attached Balcony', icon: 'balcony', provider: 'MaterialIcons' },
-  ];
+  const societyAmenities = apiAmenities.map(amenity => ({
+    name: amenity.label || amenity.name,
+    icon: amenity.icon || 'grid-view',
+    provider: 'MaterialIcons' // Default to MaterialIcons for API icons
+  }));
 
   const renderIcon = (item) => {
     const { provider, icon } = item;

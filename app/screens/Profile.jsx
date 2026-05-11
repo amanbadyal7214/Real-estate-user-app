@@ -60,13 +60,13 @@ const ProfileHeader = () => {
             className="text-[#101828] text-[18px] font-semibold"
             style={{ fontFamily: 'Inter-SemiBold' }}
           >
-            Hello Prerna Sablok!
+            Hello Guest !
           </Text>
           <Text 
             className="text-[#4A5565] text-[13px] font-normal mt-0.5"
             style={{ fontFamily: 'Inter-Regular' }}
           >
-            sablokprerna003@gmail.com
+            guest@example.com
           </Text>
           <Text 
             className="text-[#4A5565] text-[13px] font-normal"

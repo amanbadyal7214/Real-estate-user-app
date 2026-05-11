@@ -1,8 +1,9 @@
 import { Ionicons, MaterialCommunityIcons, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {  SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { usePostProperty } from '../../context/PostPropertyContext';
+import { useLookup } from '../../../hooks/useLookup';
 import PriceDetailsSection from './PriceDetailsSection';
 import PhotosStep from './PhotosStep';
 import AdvancedDetailsStep from './AdvancedDetailsStep';
@@ -60,30 +61,57 @@ const RenderIcon = ({ name, size = 32, color = "#008E96" }) => {
 const PropertyDetails = () => {
   const router = useRouter();
   const { postData, updatePropertyDetails, updatePriceDetails } = usePostProperty();
+  const { propertyTypes: apiPropertyTypes, subPropertyTypes: apiSubPropertyTypes, categories: apiCategories, measurementUnits, furnishingStatus, fetchLookups, loading: lookupLoading } = useLookup();
   const [currentStep, setCurrentStep] = useState(1);
+  const [showUnitDropdown, setShowUnitDropdown] = useState(false);
+
+  useEffect(() => {
+    fetchLookups();
+  }, []);
 
   const { expectedPrice, maintenance, isNegotiable } = postData.priceDetails;
-  const { type: selectedPropertyType, bhk: selectedBHK, furnishing: selectedFurnish } = postData.propertyDetails;
+  const { 
+    type: selectedPropertyType, 
+    bhk: selectedBHK, 
+    furnishing: selectedFurnish, 
+    subPropertyType: selectedSubPropertyType,
+    category: selectedCategory 
+  } = postData.propertyDetails;
 
   const setExpectedPrice = (val) => updatePriceDetails({ expectedPrice: val });
   const setMaintenance = (val) => updatePriceDetails({ maintenance: val });
   const setIsNegotiable = (val) => updatePriceDetails({ isNegotiable: val });
 
-  const setSelectedPropertyType = (val) => updatePropertyDetails({ type: val });
+  const setSelectedCategory = (val) => updatePropertyDetails({ category: val });
+  const setSelectedPropertyType = (val) => {
+    updatePropertyDetails({ type: val, subPropertyType: "" }); // Reset sub-type when main type changes
+  };
+  const setSelectedSubPropertyType = (val) => updatePropertyDetails({ subPropertyType: val });
   const setSelectedBHK = (val) => updatePropertyDetails({ bhk: val });
   const setSelectedFurnish = (val) => updatePropertyDetails({ furnishing: val });
+  const setSelectedUnit = (val) => updatePropertyDetails({ measurementUnit: val });
 
-  const propertyTypes = [
-    { id: 'house', label: 'Independent House', icon: 'home-outline' },
-    { id: 'apartment', label: 'Apartments', icon: 'business-outline' },
-    { id: 'duplex', label: 'Duplex', icon: 'layers-outline' },
-    { id: 'floor', label: 'Independent Floor', icon: 'stats-chart-outline' },
-    { id: 'villa', label: 'Villa', icon: 'rose-outline' },
-  ];
+  const propertyTypes = apiPropertyTypes.map(pt => ({
+    id: pt._id,
+    label: pt.label || pt.name,
+    icon: (pt.label || pt.name).toLowerCase().includes('house') ? 'home-outline' : 
+          (pt.label || pt.name).toLowerCase().includes('apartment') ? 'business-outline' :
+          (pt.label || pt.name).toLowerCase().includes('villa') ? 'rose-outline' : 'layers-outline'
+  }));
+
+  const subPropertyTypes = apiSubPropertyTypes
+    .filter(sub => !selectedPropertyType || (sub.propertyType?.label === selectedPropertyType || sub.propertyType?.name === selectedPropertyType.toLowerCase()))
+    .map(sub => ({
+      id: sub._id,
+      label: sub.label || sub.name,
+      icon: (sub.label || sub.name).toLowerCase().includes('office') ? 'business-outline' : 
+            (sub.label || sub.name).toLowerCase().includes('shop') ? 'cart-outline' : 
+            (sub.label || sub.name).toLowerCase().includes('apartment') ? 'business-outline' : 'layers-outline'
+    }));
 
   const bhkOptions = ['1 RK', '1 BHK', '1.5 BHK', '2 BHK', '3 BHK', '4 BHK', '5 BHK'];
 
-  const isFormValid = expectedPrice.trim().length > 0;
+  const isFormValid = postData.propertyDetails.category && postData.propertyDetails.type && postData.propertyDetails.locality && expectedPrice.trim().length > 0;
 
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
@@ -136,6 +164,21 @@ const PropertyDetails = () => {
           <View className={currentStep === 3 ? "p-0" : "p-5"}>
             {currentStep === 1 ? (
               <>
+                {/* Category Section (Capsules) */}
+                <View className="flex-row gap-2 mb-6">
+                  {apiCategories.map((cat) => (
+                    <TouchableOpacity
+                      key={cat._id}
+                      onPress={() => setSelectedCategory(cat.label || cat.name)}
+                      className={`px-6 py-2 rounded-full border ${selectedCategory === (cat.label || cat.name) ? 'bg-[#008E96] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
+                    >
+                      <Text className={`text-sm ${selectedCategory === (cat.label || cat.name) ? 'text-white' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium' }}>
+                        {cat.label || cat.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
                 {/* Property Type Section */}
                 <Text className="text-[#6A7282] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Property Type</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
@@ -152,6 +195,27 @@ const PropertyDetails = () => {
                     ))}
                   </View>
                 </ScrollView>
+
+                {/* Sub-Property Type Section */}
+                {subPropertyTypes.length > 0 && (
+                  <>
+                    <Text className="text-[#6A7282] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Sub Property Type</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
+                      <View className="flex-row gap-3">
+                        {subPropertyTypes.map((item) => (
+                          <TouchableOpacity 
+                            key={item.id}
+                            onPress={() => setSelectedSubPropertyType(item.label)}
+                            className={`w-[100px] h-[100px] rounded-2xl items-center justify-center border-2 ${selectedSubPropertyType === item.label ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
+                          >
+                            <Ionicons name={item.icon} size={28} color={selectedSubPropertyType === item.label ? '#008E96' : '#99A1AF'} />
+                            <Text className={`text-[11px] text-center mt-1.5 px-1 ${selectedSubPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>{item.label}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </ScrollView>
+                  </>
+                )}
 
                 {/* Inputs Section */}
                 <View className="border-b border-[#D1D5DC] pb-2 mb-6">
@@ -194,33 +258,64 @@ const PropertyDetails = () => {
 
                 {/* Built Up Area Section */}
                 <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Built Up Area</Text>
-                <View className="flex-row items-center border-b border-[#D1D5DC] pb-2 mb-6">
-                  <TextInput 
-                    placeholder="Built Up Area" 
-                    placeholderTextColor="#A0A0A0"
-                    className="flex-1 text-base py-1"
-                    keyboardType="numeric"
-                    style={{ fontFamily: 'Inter-Regular' }}
-                    value={postData.propertyDetails.builtUpArea}
-                    onChangeText={(val) => updatePropertyDetails({ builtUpArea: val })}
-                  />
-                  <View className="flex-row items-center ml-2">
-                    <Ionicons name="information-circle-outline" size={20} color="#99A1AF" className="mr-2" />
-                    <Text className="text-[#6A7282] text-sm" style={{ fontFamily: 'Inter-Medium' }}>sq. ft.</Text>
-                    <Ionicons name="chevron-down" size={16} color="#6A7282" />
+                <View className="z-50">
+                  <View className="flex-row items-center border-b border-[#D1D5DC] pb-2 mb-2">
+                    <TextInput 
+                      placeholder="Built Up Area" 
+                      placeholderTextColor="#A0A0A0"
+                      className="flex-1 text-base py-1"
+                      keyboardType="numeric"
+                      style={{ fontFamily: 'Inter-Regular' }}
+                      value={postData.propertyDetails.builtUpArea}
+                      onChangeText={(val) => updatePropertyDetails({ builtUpArea: val })}
+                    />
+                    <TouchableOpacity 
+                      onPress={() => setShowUnitDropdown(!showUnitDropdown)}
+                      className="flex-row items-center ml-2 bg-[#F3F4F6] px-3 py-1.5 rounded-lg"
+                    >
+                      <Text className="text-[#364153] text-sm mr-1" style={{ fontFamily: 'Inter-Medium' }}>
+                        {postData.propertyDetails.measurementUnit || (measurementUnits[0]?.label || measurementUnits[0]?.name || 'sq. ft.')}
+                      </Text>
+                      <Ionicons name={showUnitDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
+                    </TouchableOpacity>
                   </View>
+
+                  {showUnitDropdown && (
+                    <View className="absolute top-[45px] right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl w-[150px] overflow-hidden">
+                      {measurementUnits.map((unit) => (
+                        <TouchableOpacity
+                          key={unit._id}
+                          onPress={() => {
+                            setSelectedUnit(unit.label || unit.name);
+                            setShowUnitDropdown(false);
+                          }}
+                          className={`px-4 py-3 border-b border-[#F3F4F6] ${(postData.propertyDetails.measurementUnit === (unit.label || unit.name)) ? 'bg-[#F0F9F9]' : 'bg-white'}`}
+                        >
+                          <Text 
+                            className={`text-sm ${(postData.propertyDetails.measurementUnit === (unit.label || unit.name)) ? 'text-[#008E96]' : 'text-[#364153]'}`}
+                            style={{ fontFamily: (postData.propertyDetails.measurementUnit === (unit.label || unit.name)) ? 'Inter-Bold' : 'Inter-Medium' }}
+                          >
+                            {unit.label || unit.name}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  )}
                 </View>
+
+                {/* Vertical margin to prevent overlap when dropdown is open */}
+                <View className="mb-4" />
 
                 {/* Furnish Type Section */}
                 <Text className="text-[#6A7282] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Furnish Type</Text>
                 <View className="flex-row gap-3 mb-8">
-                  {['Fully Furnished', 'Semi Furnished'].map((type) => (
+                  {furnishingStatus.map((status) => (
                     <TouchableOpacity 
-                      key={type}
-                      onPress={() => setSelectedFurnish(type)}
-                      className={`flex-1 py-4 rounded-2xl items-center border-2 ${selectedFurnish === type ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
+                      key={status._id}
+                      onPress={() => setSelectedFurnish(status.label || status.name)}
+                      className={`flex-1 py-4 rounded-2xl items-center border-2 ${selectedFurnish === (status.label || status.name) ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
                     >
-                      <Text className={`text-base ${selectedFurnish === type ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>{type}</Text>
+                      <Text className={`text-base ${selectedFurnish === (status.label || status.name) ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>{status.label || status.name}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>

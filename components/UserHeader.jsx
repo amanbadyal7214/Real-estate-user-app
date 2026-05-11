@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { ChevronDown, User } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-const UserHeader = ({ userName = "Prerna!" }) => {
+const UserHeader = ({ userName = "Guest!" }) => {
   const router = useRouter();
   return (
     <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">

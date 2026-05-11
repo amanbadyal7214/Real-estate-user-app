@@ -174,7 +174,7 @@ const Insights = () => {
                 </Animated.View>
 
                 <Animated.View entering={FadeInDown.duration(600).delay(200)} className="px-4 mt-6 mb-3">
-                    <Text className="text-[#6A7282] text-[13px] font-inter-medium">Hi Prerna Sablok,</Text>
+                    <Text className="text-[#6A7282] text-[13px] font-inter-medium">Hi  Guest,</Text>
                     <Text className="text-[#101828] text-[24px] font-inter-bold mt-1">Welcome back!</Text>
                 </Animated.View>
 

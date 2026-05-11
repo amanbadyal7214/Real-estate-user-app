@@ -5,12 +5,22 @@ const PostPropertyContext = createContext();
 export const PostPropertyProvider = ({ children }) => {
   const [postData, setPostData] = useState({
     propertyDetails: {
-      type: 'Independent House',
-      bhk: '1 BHK',
-      furnishing: 'Semi Furnished',
+      category: '',
+      type: '',
+      subPropertyType: '',
+      title: '',
+      bhk: '',
       builtUpArea: '',
+      measurementUnit: '',
       buildingName: '',
       locality: '',
+      city: 'Gurugram',
+      state: 'Haryana',
+      country: 'India',
+      furnishing: '',
+      description: '',
+      ownerName: '',
+      address: '',
     },
     furnishings: {
       selectedItems: [],
@@ -20,14 +30,29 @@ export const PostPropertyProvider = ({ children }) => {
         TV: 0,
         Geyser: 0,
         Wardrobe: 0,
-        Lifts: 0,
       },
     },
     priceDetails: {
       expectedPrice: '',
       maintenance: '',
+      securityDeposit: '',
       isNegotiable: false,
+      availableFrom: '',
     },
+    advancedDetails: {
+      floor: '',
+      totalFloors: '',
+      bathrooms: '',
+      balconies: '',
+      ageOfProperty: '',
+      parking: {
+        covered: 0,
+        open: 0
+      },
+      tenantType: [], // Bachelors, Family, any
+      petFriendly: null,
+    },
+    photos: [],
   });
 
   const updatePropertyDetails = (details) => {
@@ -51,6 +76,20 @@ export const PostPropertyProvider = ({ children }) => {
     }));
   };
 
+  const updateAdvancedDetails = (details) => {
+    setPostData((prev) => ({
+      ...prev,
+      advancedDetails: { ...prev.advancedDetails, ...details },
+    }));
+  };
+
+  const updatePhotos = (photos) => {
+    setPostData((prev) => ({
+      ...prev,
+      photos: photos,
+    }));
+  };
+
   return (
     <PostPropertyContext.Provider
       value={{
@@ -58,6 +97,8 @@ export const PostPropertyProvider = ({ children }) => {
         updatePropertyDetails,
         updateFurnishings,
         updatePriceDetails,
+        updateAdvancedDetails,
+        updatePhotos,
       }}
     >
       {children}
