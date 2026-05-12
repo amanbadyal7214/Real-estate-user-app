@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, ScrollView } from 'react-native';
+
 import { usePostProperty } from '../../context/PostPropertyContext';
 
 const VerifyPropertyStep = () => {

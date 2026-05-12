@@ -48,10 +48,16 @@ const FurnishingScreen = () => {
     }));
   };
 
-  const societyAmenities = apiAmenities.map(amenity => ({
+  const societyAmenities = apiAmenities.filter(a => !a.isCounter).map(amenity => ({
     name: amenity.label || amenity.name,
     icon: amenity.icon || 'grid-view',
     provider: 'MaterialIcons' // Default to MaterialIcons for API icons
+  }));
+
+  const counterAmenities = apiAmenities.filter(a => a.isCounter).map(amenity => ({
+    name: amenity.label || amenity.name,
+    icon: amenity.icon || 'grid-view',
+    provider: 'MaterialIcons'
   }));
 
   const renderIcon = (item) => {
@@ -106,22 +112,43 @@ const FurnishingScreen = () => {
             </TouchableOpacity>
           ))}
           
-          {/* Number of Lifts (Counter) */}
-          <View className="w-[31%] aspect-square mb-4 rounded-2xl border-2 border-[#E5E7EB] bg-white items-center justify-between py-2">
-            <MaterialIcons name="elevator" size={28} color="#6A7282" />
-            <Text className="text-[10px] text-[#364153] font-medium text-center" style={{ fontFamily: 'Inter-Medium' }}>
-              Number of Lifts
-            </Text>
-            <View className="flex-row items-center gap-2">
-              <TouchableOpacity onPress={() => updateCounter('Lifts', -1)}>
-                <Entypo name="minus" size={16} color="#99A1AF" />
-              </TouchableOpacity>
-              <Text className="text-base font-bold text-[#0A0A0A]">{counters.Lifts}</Text>
-              <TouchableOpacity onPress={() => updateCounter('Lifts', 1)}>
-                <Entypo name="plus" size={16} color="#99A1AF" />
-              </TouchableOpacity>
+          {/* Dynamic Counter Amenities */}
+          {counterAmenities.map((item, index) => (
+            <View key={`counter-${index}`} className="w-[31%] aspect-square mb-4 rounded-2xl border-2 border-[#E5E7EB] bg-white items-center justify-between py-2 px-1">
+              <MaterialIcons name={item.icon} size={28} color="#6A7282" />
+              <Text className="text-[10px] text-[#364153] font-medium text-center" style={{ fontFamily: 'Inter-Medium' }} numberOfLines={1}>
+                {item.name}
+              </Text>
+              <View className="flex-row items-center gap-2">
+                <TouchableOpacity onPress={() => updateCounter(item.name, -1)}>
+                  <Entypo name="minus" size={16} color="#99A1AF" />
+                </TouchableOpacity>
+                <Text className="text-base font-bold text-[#0A0A0A]">{counters[item.name] || 0}</Text>
+                <TouchableOpacity onPress={() => updateCounter(item.name, 1)}>
+                  <Entypo name="plus" size={16} color="#99A1AF" />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          ))}
+          
+          {/* Default Lift Counter if not in API */}
+          {!counterAmenities.some(a => a.name === 'Lifts') && (
+            <View className="w-[31%] aspect-square mb-4 rounded-2xl border-2 border-[#E5E7EB] bg-white items-center justify-between py-2">
+              <MaterialIcons name="elevator" size={28} color="#6A7282" />
+              <Text className="text-[10px] text-[#364153] font-medium text-center" style={{ fontFamily: 'Inter-Medium' }}>
+                Number of Lifts
+              </Text>
+              <View className="flex-row items-center gap-2">
+                <TouchableOpacity onPress={() => updateCounter('Lifts', -1)}>
+                  <Entypo name="minus" size={16} color="#99A1AF" />
+                </TouchableOpacity>
+                <Text className="text-base font-bold text-[#0A0A0A]">{counters.Lifts || 0}</Text>
+                <TouchableOpacity onPress={() => updateCounter('Lifts', 1)}>
+                  <Entypo name="plus" size={16} color="#99A1AF" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
 
         <View className="h-24" />

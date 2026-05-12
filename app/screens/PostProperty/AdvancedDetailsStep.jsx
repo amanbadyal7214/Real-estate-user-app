@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { usePostProperty } from '../../context/PostPropertyContext';
+import { useLookup } from '../../../hooks/useLookup';
 
 const AdvancedDetailsStep = () => {
   const { postData, updateAdvancedDetails, updatePropertyDetails } = usePostProperty();
+  const { measurementUnits: measurementUnitsData, facingDirections: facingData, fetchSingleLookup } = useLookup();
   const [showFacingDropdown, setShowFacingDropdown] = useState(false);
   const [showUnitDropdown, setShowUnitDropdown] = useState(false);
+
+  useEffect(() => {
+    fetchSingleLookup('measurementUnits');
+    fetchSingleLookup('facingDirections');
+  }, []);
 
   const { bathrooms, balconies, ageOfProperty, carpetArea, measurementUnit, reraId, facing } = postData.advancedDetails;
   const isResidential = postData.propertyDetails.type === 'Residential';
@@ -17,12 +24,32 @@ const AdvancedDetailsStep = () => {
 
   const bathroomOptions = ['1', '2', '3', '4'];
   const balconyOptions = ['0', '1', '2', '3'];
-  const facingOptions = ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West'];
-  const measurementUnits = ['Sq. Ft', 'Sq. Yards', 'Sq. Meter', 'Acre', 'Marla', 'Kanal'];
+  const facingOptions = facingData && facingData.length > 0
+    ? facingData.map(f => ({ label: f.label || f.name, value: f.label || f.name }))
+    : [
+        { label: 'North', value: 'North' },
+        { label: 'South', value: 'South' },
+        { label: 'East', value: 'East' },
+        { label: 'West', value: 'West' },
+        { label: 'North-East', value: 'North-East' },
+        { label: 'North-West', value: 'North-West' },
+        { label: 'South-East', value: 'South-East' },
+        { label: 'South-West', value: 'South-West' }
+      ];
+  const measurementUnits = measurementUnitsData && measurementUnitsData.length > 0 
+    ? measurementUnitsData.map(u => ({ label: u.label || u.unit_name || u.name, value: u.label || u.unit_name || u.name }))
+    : [
+        { label: 'Sq. Ft', value: 'Sq. Ft' },
+        { label: 'Sq. Yards', value: 'Sq. Yards' },
+        { label: 'Sq. Meter', value: 'Sq. Meter' },
+        { label: 'Acre', value: 'Acre' },
+        { label: 'Marla', value: 'Marla' },
+        { label: 'Kanal', value: 'Kanal' }
+      ];
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ padding: 16, gap: 24, paddingBottom: 100 }}>
+      <ScrollView contentContainerStyle={{ padding: 16, gap: 24, paddingBottom: 24 }}>
         {/* Info Banner */}
         <View className="bg-[#E6F7F6] p-4 rounded-[14px] border border-[#008E96]/20 flex-row items-start gap-2.5">
           <Ionicons name="information-circle-outline" size={20} color="#008E96" />
@@ -120,16 +147,16 @@ const AdvancedDetailsStep = () => {
                   </TouchableOpacity>
                   {showUnitDropdown && (
                     <View className="absolute bottom-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[65] overflow-hidden">
-                      {measurementUnits.map((unit) => (
+                      {measurementUnits.map((unit, index) => (
                         <TouchableOpacity
-                          key={unit}
+                          key={unit.id || `unit-${index}`}
                           onPress={() => {
-                            updateAdvancedDetails({ measurementUnit: unit });
+                            updateAdvancedDetails({ measurementUnit: unit.value });
                             setShowUnitDropdown(false);
                           }}
                           className="px-4 py-3 border-b border-[#F3F4F6]"
                         >
-                          <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{unit}</Text>
+                          <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{unit.label}</Text>
                         </TouchableOpacity>
                       ))}
                     </View>
@@ -171,61 +198,57 @@ const AdvancedDetailsStep = () => {
               </TouchableOpacity>
               {showFacingDropdown && (
                 <View className="absolute top-[85px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[55] overflow-hidden">
-                  {facingOptions.map((face) => (
+                  {facingOptions.map((face, index) => (
                     <TouchableOpacity
-                      key={face}
+                      key={face.id || `face-${index}`}
                       onPress={() => {
-                        updateAdvancedDetails({ facing: face });
+                        updateAdvancedDetails({ facing: face.value });
                         setShowFacingDropdown(false);
                       }}
                       className="px-4 py-3.5 border-b border-[#F3F4F6]"
                     >
-                      <Text className="text-[16px] text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{face}</Text>
+                      <Text className="text-[16px] text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{face.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
               )}
             </View>
 
-            {isBasicsFilled && (
-              <>
-                {/* Detailed Address Section */}
-                <View className="gap-3">
-                  <View className="flex-row items-center gap-2">
-                    <Ionicons name="location-outline" size={18} color="#008E96" />
-                    <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Detailed Address</Text>
-                  </View>
-                  <TextInput
-                    placeholder="e.g. Flat 101, Sector 45, CHANDIGARH"
-                    placeholderTextColor="#A0A0A0"
-                    multiline
-                    numberOfLines={2}
-                    className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
-                    style={{ fontFamily: 'Inter-Medium', height: 80 }}
-                    value={postData.propertyDetails.detailedAddress}
-                    onChangeText={(val) => updatePropertyDetails({ detailedAddress: val })}
-                  />
-                </View>
+            {/* Detailed Address Section */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="location-outline" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Detailed Address</Text>
+              </View>
+              <TextInput
+                placeholder="e.g. Flat 101, Sector 45, CHANDIGARH"
+                placeholderTextColor="#A0A0A0"
+                multiline
+                numberOfLines={2}
+                className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
+                style={{ fontFamily: 'Inter-Medium', height: 80 }}
+                value={postData.propertyDetails.detailedAddress}
+                onChangeText={(val) => updatePropertyDetails({ detailedAddress: val })}
+              />
+            </View>
 
-                {/* Property Description */}
-                <View className="gap-3">
-                  <View className="flex-row items-center gap-2">
-                    <Ionicons name="document-text-outline" size={18} color="#008E96" />
-                    <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Property Description</Text>
-                  </View>
-                  <TextInput
-                    placeholder="Tell us more about your property..."
-                    placeholderTextColor="#A0A0A0"
-                    multiline
-                    numberOfLines={4}
-                    className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
-                    style={{ fontFamily: 'Inter-Medium', height: 120, textAlignVertical: 'top' }}
-                    value={postData.propertyDetails.description}
-                    onChangeText={(val) => updatePropertyDetails({ description: val })}
-                  />
-                </View>
-              </>
-            )}
+            {/* Property Description */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="document-text-outline" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Property Description</Text>
+              </View>
+              <TextInput
+                placeholder="Tell us more about your property..."
+                placeholderTextColor="#A0A0A0"
+                multiline
+                numberOfLines={4}
+                className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
+                style={{ fontFamily: 'Inter-Medium', height: 120, textAlignVertical: 'top' }}
+                value={postData.propertyDetails.description}
+                onChangeText={(val) => updatePropertyDetails({ description: val })}
+              />
+            </View>
           </>
         )}
 

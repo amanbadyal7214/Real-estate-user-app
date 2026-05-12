@@ -49,7 +49,13 @@ const allFurnishingOptions = [
   { name: 'Wardrobe', key: 'Wardrobe', icon: 'checkroom', provider: 'MaterialIcons' },
 ];
 
-const RenderIcon = ({ name, size = 32, color = "#008E96" }) => {
+const RenderIcon = ({ name, size = 32, color = "#008E96", apiAmenities = [] }) => {
+  // Try to find in API amenities first
+  const apiItem = apiAmenities.find(a => a.label === name || a.name === name);
+  if (apiItem) {
+    return <MaterialIcons name={apiItem.icon || 'grid-view'} size={size} color={color} />;
+  }
+
   const item = allFurnishingOptions.find(o => o.name === name || o.key === name);
   if (!item) return <MaterialIcons name="grid-view" size={size} color={color} />;
   
@@ -64,7 +70,22 @@ const RenderIcon = ({ name, size = 32, color = "#008E96" }) => {
 const PropertyDetails = () => {
   const router = useRouter();
   const { postData, updatePropertyDetails, updatePriceDetails } = usePostProperty();
-  const { propertyTypes: apiPropertyTypes, subPropertyTypes: apiSubPropertyTypes, categories: apiCategories, measurementUnits, furnishingStatus, fetchLookups, loading: lookupLoading } = useLookup();
+  const { 
+    propertyTypes: apiPropertyTypes, 
+    subPropertyTypes: apiSubPropertyTypes, 
+    categories: apiCategories, 
+    measurementUnits, 
+    furnishingStatus,
+    possessionStatus,
+    constructionStatus,
+    zoneTypes,
+    locationHubs,
+    ownershipTypes,
+    facingDirections,
+    amenities: apiAmenities,
+    fetchLookups, 
+    loading: lookupLoading 
+  } = useLookup();
   const [currentStep, setCurrentStep] = useState(1);
   const [showUnitDropdown, setShowUnitDropdown] = useState(false);
   const [showStructureDropdown, setShowStructureDropdown] = useState(false);
@@ -150,12 +171,6 @@ const PropertyDetails = () => {
   const setSelectedFurnish = (val) => updatePropertyDetails({ furnishing: val });
   const setSelectedUnit = (val) => updatePropertyDetails({ measurementUnit: val });
 
-  const possessionStatusOptions = ['Ready to Move', 'Under Construction'];
-  const zoneTypes = ['Industrial', 'Commercial', 'Residential', 'Transport', 'Agriculture', 'Open Space'];
-  const locationHubs = ['IT Park', 'Business District', 'Industrial Area', 'Market Place', 'Shopping Mall', 'Airport Road'];
-  const ownershipTypes = ['Freehold', 'Leasehold', 'Power of Attorney', 'Co-operative Society'];
-  const constructionStatuses = ['Ready to Move', 'Under Construction'];
-  const structureTypes = ['Semi-Detailed', 'Detailed', 'Basic'];
   const parkingStatusOptions = ['Included', 'Separate'];
 
   const propertyTypes = apiPropertyTypes.map(pt => ({
@@ -184,6 +199,11 @@ const PropertyDetails = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
+      {lookupLoading && currentStep === 1 && (
+        <View className="absolute inset-0 bg-white/80 z-[999] items-center justify-center">
+          <Text className="text-[#008E96] font-inter-semibold">Loading data...</Text>
+        </View>
+      )}
       {/* Header Background */}
       <View className="absolute top-0 left-0 right-0 h-[230px] bg-[#008E96]">
         <View className="flex-row items-center px-4 mt-12 justify-between">
@@ -412,16 +432,16 @@ const PropertyDetails = () => {
 
                         {showStructureDropdown && (
                           <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[70] overflow-hidden">
-                            {structureTypes.map((type) => (
+                            {apiPropertyTypes.map((type) => (
                               <TouchableOpacity
-                                key={type}
+                                key={type._id}
                                 onPress={() => {
-                                  updatePropertyDetails({ structure: type });
+                                  updatePropertyDetails({ structure: type.label || type.name });
                                   setShowStructureDropdown(false);
                                 }}
                                 className="px-4 py-3 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{type}</Text>
+                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{type.label || type.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -470,16 +490,16 @@ const PropertyDetails = () => {
 
                       {showStatusDropdown && (
                         <View className="absolute top-[50px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[55] overflow-hidden">
-                          {constructionStatuses.map((status) => (
+                          {constructionStatus.map((status) => (
                             <TouchableOpacity
-                              key={status}
+                              key={status._id}
                               onPress={() => {
-                                updatePropertyDetails({ constructionStatus: status });
+                                updatePropertyDetails({ constructionStatus: status.label || status.name });
                                 setShowStatusDropdown(false);
                               }}
                               className="px-4 py-3 border-b border-[#F3F4F6]"
                             >
-                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{status}</Text>
+                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{status.label || status.name}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
@@ -502,16 +522,16 @@ const PropertyDetails = () => {
                       </TouchableOpacity>
                       {showStatusDropdown && (
                         <View className="absolute top-[50px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[85] overflow-hidden">
-                          {possessionStatusOptions.map((status) => (
+                          {possessionStatus.map((status) => (
                             <TouchableOpacity
-                              key={status}
+                              key={status._id}
                               onPress={() => {
-                                updatePropertyDetails({ possessionStatus: status });
+                                updatePropertyDetails({ possessionStatus: status.label || status.name });
                                 setShowStatusDropdown(false);
                               }}
                               className="px-4 py-3 border-b border-[#F3F4F6]"
                             >
-                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{status}</Text>
+                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{status.label || status.name}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
@@ -558,14 +578,14 @@ const PropertyDetails = () => {
                           <View className="absolute top-[70px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[90] overflow-hidden">
                             {zoneTypes.map((zone) => (
                               <TouchableOpacity
-                                key={zone}
+                                key={zone._id}
                                 onPress={() => {
-                                  updatePropertyDetails({ zoneType: zone });
+                                  updatePropertyDetails({ zoneType: zone.label || zone.name });
                                   setShowZoneDropdown(false);
                                 }}
                                 className="px-3 py-2 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-xs text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{zone}</Text>
+                                <Text className="text-xs text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{zone.label || zone.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -586,14 +606,14 @@ const PropertyDetails = () => {
                           <View className="absolute top-[70px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[95] overflow-hidden">
                             {locationHubs.map((hub) => (
                               <TouchableOpacity
-                                key={hub}
+                                key={hub._id}
                                 onPress={() => {
-                                  updatePropertyDetails({ locationHub: hub });
+                                  updatePropertyDetails({ locationHub: hub.label || hub.name });
                                   setShowHubDropdown(false);
                                 }}
                                 className="px-3 py-2 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-xs text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{hub}</Text>
+                                <Text className="text-xs text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{hub.label || hub.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -659,14 +679,14 @@ const PropertyDetails = () => {
                         <View className="absolute top-[50px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[75] overflow-hidden">
                           {ownershipTypes.map((type) => (
                             <TouchableOpacity
-                              key={type}
+                              key={type._id}
                               onPress={() => {
-                                updatePropertyDetails({ ownershipType: type });
+                                updatePropertyDetails({ ownershipType: type.label || type.name });
                                 setShowOwnershipDropdown(false);
                               }}
                               className="px-4 py-3 border-b border-[#F3F4F6]"
                             >
-                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{type}</Text>
+                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{type.label || type.name}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
@@ -704,7 +724,8 @@ const PropertyDetails = () => {
                       {Object.entries(postData.furnishings.counters).map(([key, value]) => (
                         value > 0 && (
                           <View key={key} className="flex-row items-center bg-[#F0F9F9] border border-[#008E96] px-3 py-1.5 rounded-full">
-                            <Text className="text-[#008E96] text-[12px]" style={{ fontFamily: 'Inter-Medium' }}>
+                            <RenderIcon name={key} size={14} color="#008E96" apiAmenities={apiAmenities} />
+                            <Text className="text-[#008E96] text-[12px] ml-1.5" style={{ fontFamily: 'Inter-Medium' }}>
                               {key} ({value})
                             </Text>
                           </View>
@@ -713,8 +734,9 @@ const PropertyDetails = () => {
 
                       {/* Selected Items (Wifi, Garden etc) as Capsules */}
                       {postData.furnishings.selectedItems.map((item, index) => (
-                        <View key={index} className="bg-[#F0F9F9] border border-[#008E96] px-3 py-1.5 rounded-full">
-                          <Text className="text-[#008E96] text-[12px]" style={{ fontFamily: 'Inter-Medium' }}>
+                        <View key={index} className="flex-row items-center bg-[#F0F9F9] border border-[#008E96] px-3 py-1.5 rounded-full">
+                          <RenderIcon name={item} size={14} color="#008E96" apiAmenities={apiAmenities} />
+                          <Text className="text-[#008E96] text-[12px] ml-1.5" style={{ fontFamily: 'Inter-Medium' }}>
                             {item}
                           </Text>
                         </View>

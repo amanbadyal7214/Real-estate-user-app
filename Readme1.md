@@ -1,6 +1,8 @@
-This documentation provides details for all available API endpoints in this Real Estate platform.
+# EstateOne API Documentation
 
-**Base URL**: `https://real-back-x9ln.onrender.com` (or as configured in your environment)
+This documentation provides details for all available API endpoints in the EstateOne Real Estate platform.
+
+**Base URL**: `http://localhost:5000` (or as configured in your environment)
 
 ---
 
@@ -128,8 +130,32 @@ Before details are collected, the frontend performs a mock phone verification.
       "area": 1200,
       "areaUnit": "ObjectId",
       "images": ["base64_string_1", "base64_string_2"],
-      "amenities": ["ObjectId_1", "ObjectId_2"]
+      "pincode": "400053", // Required
+      "amenities": [
+        { "amenity": "ObjectId_1", "count": 1 },
+        { "amenity": "ObjectId_2", "count": 3 }
+      ]
     }
+    ```
+
+### Specialized Discovery APIs
+*   **Find Properties by Location**
+    *   **Endpoint**: `GET /properties/find/location`
+    *   **Description**: Flexible search by locality, city, pincode, or project name.
+    *   **Params**: `city`, `locality`, `pincode`, `projectName`, `state`, `country`, `page`, `limit`.
+*   **Fetch High Demand Properties**
+    *   **Endpoint**: `GET /properties/find/high-demand`
+    *   **Description**: Returns properties sorted by the `demand` (view count) field in descending order.
+*   **Fetch Sellers by Location**
+    *   **Endpoint**: `GET /properties/find/sellers-by-location`
+    *   **Description**: Returns unique profiles of users (owners/brokers) who have active listings in a specific location.
+    *   **Params**: `city`, `locality`, `pincode`, `projectName`.
+
+### Demand Tracking
+*   **Log Property View**
+    *   **Endpoint**: `POST /properties/view/:id`
+    *   **Headers**: `Authorization: Bearer <token>`
+    *   **Description**: Logs a view in history and **increments the demand counter** ($inc) for the property.
 
 ### Update Existing Property
 *   **Endpoint**: `PUT /properties/:id`
@@ -162,7 +188,7 @@ These endpoints provide data for dropdowns. All return a `{ success: true, data:
 | **Sub Property Types** | `GET /sub-property-types` | Flat, Villa, Office, Shop, etc. |
 | **Measurement Units** | `GET /measurement-units` | sq. ft., sq. yards, acre, etc. |
 | **Furnishing Status** | `GET /furnishing-status` | Furnished, Unfurnished, Semi-furnished. |
-| **Amenities** | `GET /amenities` | Gym, Pool, Parking, etc. |
+| **Amenities** | `GET /amenities` | Gym, Pool, Parking, etc. Includes `isCounter` flag for quantity. |
 | **Construction Status**| `GET /construction-status` | Ready to Move, Under Construction. |
 | **Possession Status** | `GET /possession-status` | Immediate, 6 Months, etc. |
 | **Ownership Types** | `GET /ownership-types` | Freehold, Leasehold, etc. |
