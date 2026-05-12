@@ -1,14 +1,21 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft , Search } from 'lucide-react-native';
 
-import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import NoDataFound from '../../components/NoDataFound';
 import Svg, { Path } from 'react-native-svg';
+import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import { useLocation } from '../context/LocationContext';
 
 const PrefectlyMatchedHome = () => {
+  const { findPropertiesByLocation, loading } = usePropertyDiscovery();
+  const { currentLocation } = useLocation();
+  const searchParams = useLocalSearchParams();
+  const [properties, setProperties] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(searchParams.city || currentLocation?.city || '');
   const [tabs, setTabs] = useState([
     { id: 1, label: 'Perfectly Matches Homes' },
     { id: 2, label: 'Smart Deals' },
@@ -19,6 +26,41 @@ const PrefectlyMatchedHome = () => {
   ]);
 
   const [activeTab, setActiveTab] = useState(tabs[0].label);
+
+  useEffect(() => {
+    fetchMatches();
+  }, [searchQuery]);
+
+  const fetchMatches = async () => {
+    try {
+      const params = { limit: 20, lookingFor: 'sell' };
+      
+      // Check City from multiple sources (URL Params -> Context -> SearchBox)
+      const effectiveCity = searchParams.city || currentLocation?.city;
+
+      if (effectiveCity) {
+        params.city = effectiveCity;
+      }
+      
+      // Override with manual search query
+      if (searchQuery.trim().length > 0) {
+        if (/^\d{6}$/.test(searchQuery)) {
+          params.pincode = searchQuery;
+          delete params.city;
+        } else {
+          // Change manual search to search by city instead of locality
+          params.city = searchQuery;
+        }
+      }
+
+      const res = await findPropertiesByLocation(params);
+      if (res.success) {
+        setProperties(res.data);
+      }
+    } catch (err) {
+      console.error("Match Fetch Error:", err);
+    }
+  };
 
   const handleTabPress = (clickedTab) => {
     setActiveTab(clickedTab.label);
@@ -114,14 +156,18 @@ const PrefectlyMatchedHome = () => {
         </TouchableOpacity>
         
         <TouchableOpacity 
-          onPress={() => router.push('/screens/LocationSelection')}
           className="flex-row items-center border border-[#008E9633] bg-white h-[50px] px-5 rounded-[40px] flex-1"
           style={{ borderWidth: 1.5, borderColor: '#B2E0E2' }}
         >
           <Search size={22} color="#6A7282" />
-          <Text className="ml-3 flex-1 text-[#6A7282] text-[16px]" style={{ fontFamily: 'Inter-Regular' }}>
-            Locality, Landmark, Project...
-          </Text>
+          <TextInput
+            placeholder="Locality, Pincode, City..."
+            placeholderTextColor="#6A7282"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            className="ml-3 flex-1 text-[#101828] text-[16px]"
+            style={{ fontFamily: 'Inter-Regular' }}
+          />
         </TouchableOpacity>
       </View>
 
@@ -210,13 +256,29 @@ const PrefectlyMatchedHome = () => {
 
       {/* Property List */}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
-        {activeTab === 'Perfectly Matches Homes' || activeTab === 'Smart Deals' ? (
-          matchedProperties.map((property) => (
-            <PerfectMatchCard key={property.id} property={property} />
-          ))
-        ) : activeTab === 'Ready to move' ? (
-          readyToMoveProperties.map((property) => (
-            <PerfectMatchCard key={property.id} property={property} />
+        {loading ? (
+          <View className="py-20 items-center justify-center">
+            <ActivityIndicator size="large" color="#008E96" />
+            <Text className="mt-4 text-[#6A7282] font-inter-medium">Searching...</Text>
+          </View>
+        ) : properties.length > 0 ? (
+          properties.map((property) => (
+            <PerfectMatchCard 
+              key={property._id} 
+              property={{
+                id: property._id,
+                price: `₹ ${property.price}`,
+                name: property.title,
+                developer: property.projectName || "Unknown Developer",
+                location: `${property.locality}, ${property.city}`,
+                details: `${property.residential?.bedrooms || 0} BHK • ${property.area} ${property.areaUnit?.name || 'sq.ft.'}`,
+                seller: property.owner?.name || "Seller",
+                images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
+                photoCount: property.images?.length || 0,
+                isRera: true,
+                zeroBrokerage: true
+              }} 
+            />
           ))
         ) : (
           <NoDataFound />

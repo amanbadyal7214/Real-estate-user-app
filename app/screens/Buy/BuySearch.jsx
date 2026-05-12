@@ -1,9 +1,34 @@
 import { router } from 'expo-router';
 import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Mic, Search, TrendingUp } from 'lucide-react-native';
+import { useState } from 'react';
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocation } from '../../context/LocationContext';
 
 const BuySearch = () => {
+  const { currentLocation, updateLocation } = useLocation();
+  const [searchText, setSearchText] = useState("");
+
+  const handleLocalitySelect = (localityName) => {
+    updateLocation({
+      city: localityName, // Set the selected value as the city
+      locality: "",       // Clear locality
+      display: localityName
+    });
+    router.back();
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchText.trim()) {
+      updateLocation({
+        city: searchText.trim(), // Set the searched text as the city
+        locality: "",           // Clear locality
+        display: searchText.trim()
+      });
+      router.back();
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
@@ -18,9 +43,17 @@ const BuySearch = () => {
           <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[18px] text-[#101828]">Buy</Text>
         </View>
 
-        <TouchableOpacity className="flex-row items-center bg-white px-3 py-1.5 rounded-xl border border-gray-100 gap-1.5">
+        <TouchableOpacity 
+          className="flex-row items-center bg-white px-3 py-1.5 rounded-xl border border-gray-100 gap-1.5"
+        >
           <MapPin size={16} color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#4A5565]">Mohali</Text>
+          <TextInput
+            style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: '#4A5565', minWidth: 80, paddingVertical: 0 }}
+            value={currentLocation?.city || 'Mohali'}
+            placeholder="City"
+            onChangeText={(text) => updateLocation({ ...currentLocation, city: text, display: text })}
+            returnKeyType="done"
+          />
           <ChevronRight size={14} color="#6A7282" />
         </TouchableOpacity>
       </View>
@@ -34,6 +67,9 @@ const BuySearch = () => {
             placeholderTextColor="#6A7282"
             style={{ fontFamily: 'Inter-Regular' }}
             className="flex-1 ml-3 text-[14px] text-[#101828]"
+            value={searchText}
+            onChangeText={setSearchText}
+            onSubmitEditing={handleSearchSubmit}
           />
           <Mic size={18} color="#008E96" />
         </View>
@@ -54,6 +90,7 @@ const BuySearch = () => {
             ].map((locality, index) => (
               <TouchableOpacity 
                 key={index}
+                onPress={() => handleLocalitySelect(locality.name)}
                 className="w-[140px] p-3 mr-3 bg-[#F7F9FA] border border-[#E4E7EC] rounded-2xl shadow-sm"
               >
                 <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[15px] text-[#101828] mb-1">{locality.name}</Text>
@@ -77,6 +114,7 @@ const BuySearch = () => {
             ].map((landmark, index) => (
               <TouchableOpacity 
                 key={index}
+                onPress={() => handleLocalitySelect(landmark)}
                 className="flex-row items-center px-4 py-2.5 bg-white border border-[#E4E7EC] rounded-full gap-2"
               >
                 <MapPin size={14} color="#008E96" />
@@ -121,7 +159,7 @@ const BuySearch = () => {
 
         {/* Explore Nearby Properties Button */}
         <TouchableOpacity 
-          onPress={() => router.push('/screens/Buy/Buy')}
+          onPress={handleSearchSubmit}
           className="mx-4 mb-10 p-4 flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20 rounded-2xl"
         >
           <View className="flex-row items-center gap-3">

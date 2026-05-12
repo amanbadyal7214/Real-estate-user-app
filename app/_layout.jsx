@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import "../global.css";
 import { CategoryTabProvider } from "./context/CategoryTabContext";
 import { PostPropertyProvider } from "./context/PostPropertyContext";
+import { LocationProvider } from "./context/LocationContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,10 +28,12 @@ export default function RootLayout() {
   }
 
   return (
-    <PostPropertyProvider>
-      <CategoryTabProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-      </CategoryTabProvider>
-    </PostPropertyProvider>
+    <LocationProvider>
+      <PostPropertyProvider>
+        <CategoryTabProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+        </CategoryTabProvider>
+      </PostPropertyProvider>
+    </LocationProvider>
   );
 }

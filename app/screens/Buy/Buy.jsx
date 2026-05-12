@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
-import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import CalculatorCard from '../../../components/CalculatorCard';
@@ -23,16 +23,82 @@ import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
+import { useLocation } from '../../context/LocationContext';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
 
 const Buy = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
+  const { currentLocation } = useLocation();
+  const { findPropertiesByLocation, fetchHighDemandProperties, fetchSellersByLocation, loading: discoveryLoading } = usePropertyDiscovery();
+  const [properties, setProperties] = useState([]);
+  const [highDemandProperties, setHighDemandProperties] = useState([]);
+  const [sellers, setSellers] = useState([]);
   const skipFirstRedirect = useRef(true);
 
   useEffect(() => {
     setSelectedTab('Buy');
   }, [setSelectedTab]);
+
+  useEffect(() => {
+    const params = {
+      city: currentLocation?.city || "Sahibzada Ajit Singh Nagar",
+      locality: currentLocation?.locality || "",
+      pincode: currentLocation?.pincode || "",
+    };
+    
+    // Stringify location object to detect deep changes
+    const locationKey = JSON.stringify(params);
+    console.log("📍 Location changed, fetching data for:", locationKey);
+
+    fetchData(params);
+    loadHighDemand(params);
+    loadSellers(params);
+  }, [currentLocation?.city, currentLocation?.locality, currentLocation?.pincode]);
+
+  const fetchData = async (locationParams = {}) => {
+    try {
+      const res = await findPropertiesByLocation({ 
+        lookingFor: 'sell',
+        limit: 4,
+        ...locationParams
+      });
+      if (res.success) setProperties(res.data);
+    } catch (err) {
+      console.error("Discovery API Error:", err);
+    }
+  };
+
+  const loadHighDemand = async (locationParams = {}) => {
+    try {
+      const res = await fetchHighDemandProperties({ 
+        limit: 4,
+        lookingFor: 'sell', // Filtering for Buy/Sell as this is the Buy screen
+        ...locationParams 
+      });
+      if (res.success) setHighDemandProperties(res.data);
+    } catch (err) {
+      console.error("High Demand API Error:", err);
+    }
+  };
+
+  const loadSellers = async (locationParams = {}) => {
+    try {
+      const res = await fetchSellersByLocation({
+        limit: 10,
+        ...locationParams
+      });
+      if (res.success) setSellers(res.data);
+    } catch (err) {
+      console.error("Sellers API Error:", err);
+    }
+  };
+
+  const handleLocationUpdate = (loc) => {
+    // Location updating is now handled by LocationContext inside SearchBox
+    console.log("📍 Dashboard notified of location change:", loc);
+  };
 
   useEffect(() => {
     if (skipFirstRedirect.current) {
@@ -365,7 +431,7 @@ const Buy = () => {
             onTabPress={setSelectedTab}
           />
 
-          <SearchBox />
+          <SearchBox onLocationUpdate={handleLocationUpdate} />
         </View>
 
         {/* Continue where you left Section */}
@@ -377,13 +443,35 @@ const Buy = () => {
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
-            <TouchableOpacity onPress={() => router.push('/screens/PrefectlyMatchedHome')}>
+            <TouchableOpacity 
+              onPress={() => router.push({
+                pathname: '/screens/PrefectlyMatchedHome',
+                params: { 
+                  city: currentLocation?.city, 
+                  pincode: currentLocation?.pincode,
+                  locality: currentLocation?.locality 
+                }
+              })}
+            >
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
           <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[14px] text-[#667085] mb-4">Projects from the best developers</Text>
 
-          <PropertyMatchedCards data={matchedHomes} />
+          {discoveryLoading ? (
+            <ActivityIndicator color="#008E96" />
+          ) : (
+            <PropertyMatchedCards 
+              data={properties.map(p => ({
+                id: p._id,
+                images: p.images?.length > 0 ? p.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'],
+                developer: p.projectName || "Standard",
+                title: p.title,
+                location: `${p.locality || ''}, ${p.city || ''}`,
+                priceRange: p.price,
+              }))} 
+            />
+          )}
           <Spotlight />
         </View>
 
@@ -569,14 +657,14 @@ const Buy = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 16 }}
           >
-            {highDemandProjects.map((project, index) => (
+            {highDemandProperties.map((p, index) => (
               <HighDemandProjectCard
                 key={index}
-                image={project.image}
-                priceRange={project.priceRange}
-                title={project.title}
-                developer={project.developer}
-                location={project.location}
+                image={p.images?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400"}
+                priceRange={p.price}
+                title={p.title}
+                developer={p.projectName || "Standard"}
+                location={`${p.locality || ''}, ${p.city || ''}`}
               />
             ))}
           </ScrollView>
@@ -728,13 +816,13 @@ const Buy = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
           >
-            {recommendedSellers.map((seller) => (
+            {sellers.map((seller, index) => (
               <RecommendedSellerCard
-                key={seller.id}
-                name={seller.name}
-                experienceYears={seller.experienceYears}
-                propertiesCount={seller.propertiesCount}
-                location={seller.location}
+                key={index}
+                name={seller.name || "Seller"}
+                experienceYears={seller.experienceYears || "5"}
+                propertiesCount={seller.count || "0"}
+                location={seller.locality || seller.city || "Mohali"}
               />
             ))}
           </ScrollView>

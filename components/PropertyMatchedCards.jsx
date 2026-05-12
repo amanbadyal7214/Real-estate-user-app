@@ -89,11 +89,13 @@ const PropertyCard = ({ item }) => {
   );
 };
 
-const PropertyMatchedCards = ({ data }) => {
+const PropertyMatchedCards = ({ data = [] }) => {
+  if (!data || !Array.isArray(data)) return null;
+
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
       {data.map((item, index) => (
-        <PropertyCard key={index} item={item} />
+        <PropertyCard key={item.id || index} item={item} />
       ))}
     </ScrollView>
   );
