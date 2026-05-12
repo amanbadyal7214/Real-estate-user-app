@@ -4,8 +4,9 @@ import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useLookup } from '../../../hooks/useLookup';
+import { useProperty } from '../../../hooks/useProperty';
 import { usePostProperty } from '../../context/PostPropertyContext';
 import AdvancedDetailsStep from './AdvancedDetailsStep';
 import PhotosStep from './PhotosStep';
@@ -81,12 +82,12 @@ const PropertyDetails = () => {
     zoneTypes,
     locationHubs,
     ownershipTypes,
-    facingDirections,
     amenities: apiAmenities,
     structures: apiStructures,
     fetchLookups, 
     loading: lookupLoading 
   } = useLookup();
+  const { saveProperty, loading: isSaving } = useProperty();
   const [currentStep, setCurrentStep] = useState(1);
   const [showUnitDropdown, setShowUnitDropdown] = useState(false);
   const [showStructureDropdown, setShowStructureDropdown] = useState(false);
@@ -197,6 +198,83 @@ const PropertyDetails = () => {
   const isFormValid = postData.propertyDetails.category && postData.propertyDetails.type && postData.propertyDetails.locality && expectedPrice?.toString().trim().length > 0;
 
   const isStep1Valid = postData.propertyDetails.category && postData.propertyDetails.type && postData.propertyDetails.locality;
+
+  const handlePostProperty = async () => {
+    try {
+      // Map postData to the format expected by saveProperty
+      const formData = {
+        name: postData.propertyDetails.title,
+        country: postData.propertyDetails.country,
+        state: postData.propertyDetails.state,
+        city: postData.propertyDetails.city,
+        locality: postData.propertyDetails.locality,
+        pincode: postData.propertyDetails.pincode,
+        address: postData.propertyDetails.address || postData.propertyDetails.locality,
+        propertyType: apiPropertyTypes.find(t => (t.label || t.name) === postData.propertyDetails.type)?._id,
+        category: apiCategories.find(c => (c.label || c.name) === postData.propertyDetails.category)?._id,
+        subPropertyType: apiSubPropertyTypes.find(s => (s.label || s.name) === postData.propertyDetails.subPropertyType)?._id,
+        price: postData.priceDetails.expectedPrice,
+        monthlyRent: postData.priceDetails.expectedPrice, // for isRent logic
+        securityDeposit: postData.priceDetails.securityDeposit,
+        securityDepositAmount: postData.priceDetails.securityDeposit, // for isRent logic
+        availableFrom: postData.priceDetails.availableFrom,
+        constructionStatus: constructionStatus.find(s => (s.label || s.name) === postData.propertyDetails.constructionStatus)?._id,
+        possessionStatus: possessionStatus.find(s => (s.label || s.name) === postData.propertyDetails.possessionStatus)?._id,
+        amenities: [
+          ...postData.furnishings.selectedItems.map(item => ({
+            amenity: apiAmenities.find(a => (a.label || a.name) === item)?._id,
+            count: 1
+          })).filter(a => a.amenity),
+          ...Object.entries(postData.furnishings.counters)
+            .filter(([_, count]) => count > 0)
+            .map(([key, count]) => ({
+              amenity: apiAmenities.find(a => (a.label || a.name) === key)?._id,
+              count: count
+            })).filter(a => a.amenity)
+        ],
+        projectSociety: postData.propertyDetails.buildingName,
+        images: postData.photos.map(photo => photo.base64 || photo.uri).filter(Boolean),
+        description: postData.propertyDetails.description,
+        carpetArea: postData.propertyDetails.builtUpArea, // reused builtUpArea as carpet area if carpet not available
+        builtUpArea: postData.propertyDetails.builtUpArea,
+        areaUnit: measurementUnits.find(u => (u.label || u.name) === postData.propertyDetails.measurementUnit)?._id,
+        
+        // Residential fields
+        bedrooms: postData.propertyDetails.bedrooms,
+        bathrooms: postData.advancedDetails.bathrooms,
+        balconies: postData.advancedDetails.balconies,
+        floor: postData.propertyDetails.floor || postData.advancedDetails.floor,
+        totalFloors: postData.propertyDetails.totalFloors || postData.advancedDetails.totalFloors,
+        furnishingStatus: furnishingStatus.find(s => (s.label || s.name) === postData.propertyDetails.furnishing)?._id,
+        structure: apiStructures.find(s => (s.label || s.name) === postData.propertyDetails.structure)?._id,
+
+        // Commercial fields
+        noOfMeetingRooms: postData.advancedDetails.meetingRooms, // assuming name in context
+        zoneType: zoneTypes.find(z => (z.label || z.name) === postData.propertyDetails.zoneType)?._id,
+        locationHub: locationHubs.find(l => (l.label || l.name) === postData.propertyDetails.locationHub)?._id,
+        propertyCondition: postData.propertyDetails.propertyCondition,
+        ownershipType: ownershipTypes.find(o => (o.label || o.name) === postData.propertyDetails.ownershipType)?._id
+      };
+
+      const res = await saveProperty(formData, {
+        isEditMode: false,
+        isRent: postData.propertyDetails.category?.toLowerCase().includes('rent'),
+        isResidential: postData.propertyDetails.type?.toLowerCase().includes('residential'),
+        isCommercial: postData.propertyDetails.type?.toLowerCase().includes('commercial'),
+        getSubPropertyTypeName: postData.propertyDetails.subPropertyType
+      });
+
+      if (res.success) {
+        alert("Property posted successfully!");
+        router.replace("/(tabs)");
+      } else {
+        alert(res.error || "Failed to post property");
+      }
+    } catch (err) {
+      alert(err.message || "Network error");
+      console.error(err);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
@@ -781,15 +859,19 @@ const PropertyDetails = () => {
             } else if (currentStep === 4) {
               setCurrentStep(5);
             } else {
-              // Final submission or navigate home
+              handlePostProperty();
             }
           }}
           className={`w-full py-4 rounded-xl items-center shadow-lg ${(currentStep === 1 && isStep1Valid) || currentStep === 3 || currentStep === 4 || currentStep === 5 || (currentStep === 2 && isFormValid) ? 'bg-[#008E96]' : 'bg-[#E5E7EB]'}`}
-          disabled={(currentStep === 1 && !isStep1Valid) || (currentStep === 2 && !isFormValid)}
+          disabled={((currentStep === 1 && !isStep1Valid) || (currentStep === 2 && !isFormValid)) || isSaving}
         >
-          <Text className="text-white text-base" style={{ fontFamily: 'Inter-Bold' }}>
-            {currentStep === 1 ? 'Next, Add Price' : currentStep === 2 ? 'Next, Add Photos' : currentStep === 3 ? 'Next, Advanced Details' : currentStep === 4 ? 'Review & Verify' : 'Post Property'}
-          </Text>
+          {isSaving ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white text-base" style={{ fontFamily: 'Inter-Bold' }}>
+              {currentStep === 1 ? 'Next, Add Price' : currentStep === 2 ? 'Next, Add Photos' : currentStep === 3 ? 'Next, Advanced Details' : currentStep === 4 ? 'Review & Verify' : 'Post Property'}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
