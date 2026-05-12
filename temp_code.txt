@@ -1,0 +1,16 @@
+﻿                        {showStructureDropdown && (
+                          <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[70] overflow-hidden">
+                            {apiPropertyTypes.map((type) => (
+                              <TouchableOpacity
+                                key={type._id}
+                                onPress={() => {
+                                  updatePropertyDetails({ structure: type.label || type.name });
+                                  setShowStructureDropdown(false);
+                                }}
+                                className="px-4 py-3 border-b border-[#F3F4F6]"
+                              >
+                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{type.label || type.name}</Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}

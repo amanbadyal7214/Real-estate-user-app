@@ -18,11 +18,38 @@ const AdvancedDetailsStep = () => {
 
   const { bathrooms, balconies, ageOfProperty, carpetArea, measurementUnit, reraId, facing } = postData.advancedDetails;
   const isResidential = postData.propertyDetails.type === 'Residential';
+  const structureType = postData.propertyDetails.structure || '';
+  const numBedrooms = parseInt(postData.propertyDetails.bedrooms) || 0;
   
+  // Custom logic for bathroom options based on structure type
+  let bathroomOptions = [];
+  const isStudio = structureType.toLowerCase().includes('studio');
+  const isSingleRoom = structureType.toLowerCase() === 'single room';
+  const isServantRoom = structureType.toLowerCase().includes('servant');
+
+  if (isStudio) {
+    // For Studio, show an input field instead of numbers (handled in UI)
+    bathroomOptions = [];
+  } else if (isSingleRoom) {
+    // For Single Room, fix to 1 bathroom
+    bathroomOptions = ['1'];
+    // Auto-update if not already 1
+    useEffect(() => {
+      if (bathrooms !== '1') updateAdvancedDetails({ bathrooms: '1' });
+    }, [structureType]);
+  } else if (isServantRoom) {
+    // For BHK with servant room, show X+1 options (e.g., 2+1, 3+1, 4+1)
+    // We show options from 1+1 up to (numBedrooms+1)+1
+    const limit = Math.max(4, numBedrooms + 1);
+    bathroomOptions = Array.from({ length: limit }, (_, i) => `${i + 1}+1`);
+  } else {
+    // Standard BHK logic: bedrooms + 1
+    bathroomOptions = Array.from({ length: Math.max(4, numBedrooms + 1) }, (_, i) => (i + 1).toString());
+  }
+
   // Conditionally show detailed address and description only if bedroom/structure is filled (for Residential)
   const isBasicsFilled = !isResidential || (postData.propertyDetails.bedrooms && postData.propertyDetails.structure);
 
-  const bathroomOptions = ['1', '2', '3', '4'];
   const balconyOptions = ['0', '1', '2', '3'];
   const facingOptions = facingData && facingData.length > 0
     ? facingData.map(f => ({ label: f.label || f.name, value: f.label || f.name }))
@@ -66,17 +93,32 @@ const AdvancedDetailsStep = () => {
                 <MaterialCommunityIcons name="shower" size={18} color="#008E96" />
                 <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Bathrooms</Text>
               </View>
-              <View className="flex-row gap-2">
-                {bathroomOptions.map(opt => (
-                  <TouchableOpacity
-                    key={opt}
-                    onPress={() => updateAdvancedDetails({ bathrooms: opt })}
-                    className={`flex-1 h-12 rounded-xl border items-center justify-center ${bathrooms === opt ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
-                  >
-                    <Text className={`text-sm ${bathrooms === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium' }}>{opt}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              {isStudio ? (
+                <View className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] h-14 px-4 flex-row items-center">
+                  <TextInput
+                    placeholder="Enter number of bathrooms"
+                    placeholderTextColor="#A0A0A0"
+                    className="flex-1 text-[16px] text-[#101828]"
+                    style={{ fontFamily: 'Inter-Medium' }}
+                    value={bathrooms}
+                    onChangeText={(val) => updateAdvancedDetails({ bathrooms: val })}
+                    keyboardType="numeric"
+                  />
+                </View>
+              ) : (
+                <View className="flex-row flex-wrap gap-2">
+                  {bathroomOptions.map(opt => (
+                    <TouchableOpacity
+                      key={opt}
+                      onPress={() => updateAdvancedDetails({ bathrooms: opt })}
+                      className={`h-12 px-4 rounded-xl border items-center justify-center ${bathrooms === opt ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
+                      style={{ minWidth: 60 }}
+                    >
+                      <Text className={`text-sm ${bathrooms === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium' }}>{opt}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
             </View>
 
             {/* Balconies Selection */}

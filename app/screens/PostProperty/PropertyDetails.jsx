@@ -83,6 +83,7 @@ const PropertyDetails = () => {
     ownershipTypes,
     facingDirections,
     amenities: apiAmenities,
+    structures: apiStructures,
     fetchLookups, 
     loading: lookupLoading 
   } = useLookup();
@@ -432,7 +433,7 @@ const PropertyDetails = () => {
 
                         {showStructureDropdown && (
                           <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[70] overflow-hidden">
-                            {apiPropertyTypes.map((type) => (
+                            {(apiStructures && apiStructures.length > 0 ? apiStructures : apiPropertyTypes).map((type) => (
                               <TouchableOpacity
                                 key={type._id}
                                 onPress={() => {

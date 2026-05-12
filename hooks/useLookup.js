@@ -18,6 +18,7 @@ export const useLookup = () => {
         zoneTypes: [],
         locationHubs: [],
         facingDirections: [],
+        structures: [],
     });
 
     const fetchLookups = async () => {
@@ -37,6 +38,7 @@ export const useLookup = () => {
                 zoneTypes: "/zone-types",
                 locationHubs: "/location-hubs",
                 facingDirections: "/facing-directions",
+                structures: "/structures",
             };
 
             const keys = Object.keys(endpoints);
@@ -78,11 +80,12 @@ export const useLookup = () => {
             zoneTypes: "/zone-types",
             locationHubs: "/location-hubs",
             facingDirections: "/facing-directions",
-        };
+        structures: "/structures",
+    };
 
-        if (!endpoints[entity]) return;
+    if (!endpoints[entity]) return;
 
-        try {
+    try {
             const response = await api.get(endpoints[entity]);
             if (response.data && response.data.success) {
                 setLookups(prev => ({ ...prev, [entity]: response.data.data }));
