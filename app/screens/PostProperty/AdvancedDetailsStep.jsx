@@ -5,25 +5,24 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { usePostProperty } from '../../context/PostPropertyContext';
 
 const AdvancedDetailsStep = () => {
-  const { postData, updateAdvancedDetails } = usePostProperty();
-  const { floor, totalFloors, bathrooms, balconies, ageOfProperty, tenantType, petFriendly } = postData.advancedDetails;
+  const { postData, updateAdvancedDetails, updatePropertyDetails } = usePostProperty();
+  const [showFacingDropdown, setShowFacingDropdown] = useState(false);
+  const [showUnitDropdown, setShowUnitDropdown] = useState(false);
 
-  const tenantOptions = ['Bachelors', 'Family', 'Company'];
-  const ageOptions = ['Less than 1 year', '1-3 years', '3-5 years', '5-10 years', '10+ years'];
+  const { bathrooms, balconies, ageOfProperty, carpetArea, measurementUnit, reraId, facing } = postData.advancedDetails;
+  const isResidential = postData.propertyDetails.type === 'Residential';
+  
+  // Conditionally show detailed address and description only if bedroom/structure is filled (for Residential)
+  const isBasicsFilled = !isResidential || (postData.propertyDetails.bedrooms && postData.propertyDetails.structure);
 
-  const toggleTenant = (type) => {
-    let newTenants = [...tenantType];
-    if (newTenants.includes(type)) {
-      newTenants = newTenants.filter(t => t !== type);
-    } else {
-      newTenants.push(type);
-    }
-    updateAdvancedDetails({ tenantType: newTenants });
-  };
+  const bathroomOptions = ['1', '2', '3', '4'];
+  const balconyOptions = ['0', '1', '2', '3'];
+  const facingOptions = ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West'];
+  const measurementUnits = ['Sq. Ft', 'Sq. Yards', 'Sq. Meter', 'Acre', 'Marla', 'Kanal'];
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ padding: 16, gap: 24 }}>
+      <ScrollView contentContainerStyle={{ padding: 16, gap: 24, paddingBottom: 100 }}>
         {/* Info Banner */}
         <View className="bg-[#E6F7F6] p-4 rounded-[14px] border border-[#008E96]/20 flex-row items-start gap-2.5">
           <Ionicons name="information-circle-outline" size={20} color="#008E96" />
@@ -32,153 +31,243 @@ const AdvancedDetailsStep = () => {
           </Text>
         </View>
 
-        {/* Floor Section */}
-        <View className="flex-row gap-4">
-          <View className="flex-1 gap-3">
-            <View className="flex-row items-center gap-2">
-              <Ionicons name="business-outline" size={16} color="#008E96" />
-              <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Floor Number</Text>
+        {isResidential && (
+          <>
+            {/* Bathrooms Selection */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <MaterialCommunityIcons name="shower" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Bathrooms</Text>
+              </View>
+              <View className="flex-row gap-2">
+                {bathroomOptions.map(opt => (
+                  <TouchableOpacity
+                    key={opt}
+                    onPress={() => updateAdvancedDetails({ bathrooms: opt })}
+                    className={`flex-1 h-12 rounded-xl border items-center justify-center ${bathrooms === opt ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
+                  >
+                    <Text className={`text-sm ${bathrooms === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium' }}>{opt}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-            <TextInput
-              keyboardType="numeric"
-              placeholder="e.g. 2"
-              value={floor}
-              onChangeText={(val) => updateAdvancedDetails({ floor: val })}
-              className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] h-14 px-4 text-[16px]"
-              style={{ fontFamily: 'Inter-Medium' }}
-            />
-          </View>
-          <View className="flex-1 gap-3">
-            <Text className="text-[14px] text-[#101828] h-[20px]" style={{ fontFamily: 'Inter-SemiBold' }}>Total Floors</Text>
-            <TextInput
-              keyboardType="numeric"
-              placeholder="e.g. 5"
-              value={totalFloors}
-              onChangeText={(val) => updateAdvancedDetails({ totalFloors: val })}
-              className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] h-14 px-4 text-[16px]"
-              style={{ fontFamily: 'Inter-Medium' }}
-            />
-          </View>
-        </View>
 
-        {/* Bathrooms & Balconies */}
-        <View className="flex-row gap-4">
-          <View className="flex-1 gap-3">
-            <View className="flex-row items-center gap-2">
-              <MaterialCommunityIcons name="shower" size={18} color="#008E96" />
-              <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Bathrooms</Text>
+            {/* Balconies Selection */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <MaterialCommunityIcons name="balcony" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Balconies</Text>
+              </View>
+              <View className="flex-row gap-2">
+                {balconyOptions.map(opt => (
+                  <TouchableOpacity
+                    key={opt}
+                    onPress={() => updateAdvancedDetails({ balconies: opt })}
+                    className={`flex-1 h-12 rounded-xl border items-center justify-center ${balconies === opt ? 'bg-[#E6F7F7] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
+                  >
+                    <Text className={`text-sm ${balconies === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium' }}>{opt}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-            <TextInput
-              keyboardType="numeric"
-              placeholder="Count"
-              value={bathrooms}
-              onChangeText={(val) => updateAdvancedDetails({ bathrooms: val })}
-              className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] h-14 px-4 text-[16px]"
-              style={{ fontFamily: 'Inter-Medium' }}
-            />
-          </View>
-          <View className="flex-1 gap-3">
-            <View className="flex-row items-center gap-2">
-              <MaterialCommunityIcons name="balcony" size={18} color="#008E96" />
-              <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Balconies</Text>
+
+            {/* Age of Property */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <MaterialCommunityIcons name="calendar-clock" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Property Age (Years)</Text>
+              </View>
+              <View className="border-b border-[#D1D5DC] pb-2">
+                <TextInput
+                  placeholder="e.g. 5"
+                  placeholderTextColor="#A0A0A0"
+                  className="text-base py-1 text-[#101828]"
+                  keyboardType="numeric"
+                  style={{ fontFamily: 'Inter-Regular' }}
+                  value={ageOfProperty}
+                  onChangeText={(val) => updateAdvancedDetails({ ageOfProperty: val })}
+                />
+              </View>
             </View>
-            <TextInput
-              keyboardType="numeric"
-              placeholder="Count"
-              value={balconies}
-              onChangeText={(val) => updateAdvancedDetails({ balconies: val })}
-              className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] h-14 px-4 text-[16px]"
-              style={{ fontFamily: 'Inter-Medium' }}
-            />
-          </View>
-        </View>
 
-        {/* Age of Property */}
-        <View className="gap-3">
-          <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Age of Property</Text>
-          <View className="flex-row flex-wrap gap-2">
-            {ageOptions.map(option => (
-              <TouchableOpacity
-                key={option}
-                onPress={() => updateAdvancedDetails({ ageOfProperty: option })}
-                className={`px-4 py-2 rounded-full border ${ageOfProperty === option ? 'bg-[#008E96] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
-              >
-                <Text className={`text-xs ${ageOfProperty === option ? 'text-white' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium' }}>{option}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+            {/* Carpet Area Section */}
+            <View className="gap-3 z-[60]">
+              <View className="flex-row items-center gap-2">
+                <MaterialCommunityIcons name="floor-plan" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Carpet Area</Text>
+              </View>
+              <View className="flex-row gap-4">
+                <View className="flex-1 border-b border-[#D1D5DC] pb-2">
+                  <TextInput
+                    placeholder="Area"
+                    placeholderTextColor="#A0A0A0"
+                    className="text-base py-1 text-[#101828]"
+                    keyboardType="numeric"
+                    style={{ fontFamily: 'Inter-Regular' }}
+                    value={carpetArea}
+                    onChangeText={(val) => updateAdvancedDetails({ carpetArea: val })}
+                  />
+                </View>
+                <View className="w-[120px]">
+                  <TouchableOpacity
+                    onPress={() => setShowUnitDropdown(!showUnitDropdown)}
+                    className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-2 rounded-lg border border-[#E5E7EB]"
+                  >
+                    <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                      {measurementUnit || 'Sq. Ft'}
+                    </Text>
+                    <Ionicons name={showUnitDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
+                  </TouchableOpacity>
+                  {showUnitDropdown && (
+                    <View className="absolute bottom-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[65] overflow-hidden">
+                      {measurementUnits.map((unit) => (
+                        <TouchableOpacity
+                          key={unit}
+                          onPress={() => {
+                            updateAdvancedDetails({ measurementUnit: unit });
+                            setShowUnitDropdown(false);
+                          }}
+                          className="px-4 py-3 border-b border-[#F3F4F6]"
+                        >
+                          <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{unit}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
 
-        {/* Tenant Type */}
-        <View className="gap-3">
-          <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Preferred Tenant</Text>
-          <View className="flex-row gap-2">
-            {tenantOptions.map(type => (
-              <TouchableOpacity
-                key={type}
-                onPress={() => toggleTenant(type)}
-                className={`flex-1 py-3 rounded-xl border-2 items-center ${tenantType.includes(type) ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
-              >
-                <Text className={`text-sm ${tenantType.includes(type) ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>{type}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        {/* Pet Friendly */}
-        <View className="gap-3">
-          <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Pet Friendly?</Text>
-          <View className="flex-row gap-4">
-            <TouchableOpacity 
-              onPress={() => updateAdvancedDetails({ petFriendly: true })}
-              className={`flex-1 py-3 rounded-xl border-2 flex-row items-center justify-center gap-2 ${petFriendly === true ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
-            >
-              <Ionicons name="checkmark-circle" size={20} color={petFriendly === true ? "#008E96" : "#E5E7EB"} />
-              <Text className={`text-sm ${petFriendly === true ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={() => updateAdvancedDetails({ petFriendly: false })}
-              className={`flex-1 py-3 rounded-xl border-2 flex-row items-center justify-center gap-2 ${petFriendly === false ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
-            >
-              <Ionicons name="close-circle" size={20} color={petFriendly === false ? "#008E96" : "#E5E7EB"} />
-              <Text className={`text-sm ${petFriendly === false ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>No</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Parking Details Card */}
-        <LinearGradient
-          colors={['#F9FAFB', '#FFFFFF']}
-          className="p-5 rounded-[16px] border border-[#E5E7EB] gap-5"
-        >
-          <View className="flex-row items-center gap-2">
-            <Ionicons name="car-outline" size={20} color="#008E96" />
-            <Text className="text-[18px] text-[#101828]" style={{ fontFamily: 'Inter-Bold' }}>Parking Details</Text>
-          </View>
-
-          <View className="flex-row gap-4">
-            <View className="flex-1 gap-2">
-              <Text className="text-[12px] text-[#6A7282]" style={{ fontFamily: 'Inter-Medium' }}>Covered Parking</Text>
+            {/* RERA ID Section */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="shield-checkmark-outline" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>RERA ID</Text>
+              </View>
               <TextInput
-                keyboardType="numeric"
-                placeholder="0"
-                value={postData.advancedDetails.parking.covered.toString()}
-                onChangeText={(val) => updateAdvancedDetails({ parking: { ...postData.advancedDetails.parking, covered: parseInt(val) || 0 } })}
-                className="bg-white border border-[#E5E7EB] rounded-lg h-10 px-3"
+                placeholder="RERA Number"
+                placeholderTextColor="#A0A0A0"
+                className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] h-14 px-4 text-[16px] text-[#101828]"
+                style={{ fontFamily: 'Inter-Medium' }}
+                value={reraId}
+                onChangeText={(val) => updateAdvancedDetails({ reraId: val })}
               />
             </View>
-            <View className="flex-1 gap-2">
-              <Text className="text-[12px] text-[#6A7282]" style={{ fontFamily: 'Inter-Medium' }}>Open Parking</Text>
+
+            {/* Facing Dropdown */}
+            <View className="gap-3 z-[50]">
+              <View className="flex-row items-center gap-2">
+                <MaterialCommunityIcons name="compass-outline" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Facing</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setShowFacingDropdown(!showFacingDropdown)}
+                className="flex-row items-center justify-between bg-[#F3F4F6] px-4 py-3.5 rounded-xl border border-[#E5E7EB]"
+              >
+                <Text className="text-[#364153] text-[16px]" style={{ fontFamily: 'Inter-Medium' }}>
+                  {facing || 'East'}
+                </Text>
+                <Ionicons name={showFacingDropdown ? "chevron-up" : "chevron-down"} size={20} color="#6A7282" />
+              </TouchableOpacity>
+              {showFacingDropdown && (
+                <View className="absolute top-[85px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[55] overflow-hidden">
+                  {facingOptions.map((face) => (
+                    <TouchableOpacity
+                      key={face}
+                      onPress={() => {
+                        updateAdvancedDetails({ facing: face });
+                        setShowFacingDropdown(false);
+                      }}
+                      className="px-4 py-3.5 border-b border-[#F3F4F6]"
+                    >
+                      <Text className="text-[16px] text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{face}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+
+            {isBasicsFilled && (
+              <>
+                {/* Detailed Address Section */}
+                <View className="gap-3">
+                  <View className="flex-row items-center gap-2">
+                    <Ionicons name="location-outline" size={18} color="#008E96" />
+                    <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Detailed Address</Text>
+                  </View>
+                  <TextInput
+                    placeholder="e.g. Flat 101, Sector 45, CHANDIGARH"
+                    placeholderTextColor="#A0A0A0"
+                    multiline
+                    numberOfLines={2}
+                    className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
+                    style={{ fontFamily: 'Inter-Medium', height: 80 }}
+                    value={postData.propertyDetails.detailedAddress}
+                    onChangeText={(val) => updatePropertyDetails({ detailedAddress: val })}
+                  />
+                </View>
+
+                {/* Property Description */}
+                <View className="gap-3">
+                  <View className="flex-row items-center gap-2">
+                    <Ionicons name="document-text-outline" size={18} color="#008E96" />
+                    <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Property Description</Text>
+                  </View>
+                  <TextInput
+                    placeholder="Tell us more about your property..."
+                    placeholderTextColor="#A0A0A0"
+                    multiline
+                    numberOfLines={4}
+                    className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
+                    style={{ fontFamily: 'Inter-Medium', height: 120, textAlignVertical: 'top' }}
+                    value={postData.propertyDetails.description}
+                    onChangeText={(val) => updatePropertyDetails({ description: val })}
+                  />
+                </View>
+              </>
+            )}
+          </>
+        )}
+
+        {/* Commercial Details */}
+        {!isResidential && (
+          <View className="gap-6">
+            {/* Full Address */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="location-outline" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>Full Address</Text>
+              </View>
               <TextInput
-                keyboardType="numeric"
-                placeholder="0"
-                value={postData.advancedDetails.parking.open.toString()}
-                onChangeText={(val) => updateAdvancedDetails({ parking: { ...postData.advancedDetails.parking, open: parseInt(val) || 0 } })}
-                className="bg-white border border-[#E5E7EB] rounded-lg h-10 px-3"
+                placeholder="Enter complete address..."
+                placeholderTextColor="#A0A0A0"
+                multiline
+                className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
+                style={{ fontFamily: 'Inter-Medium', height: 80 }}
+                value={postData.propertyDetails.detailedAddress}
+                onChangeText={(val) => updatePropertyDetails({ detailedAddress: val })}
+              />
+            </View>
+
+            {/* About the Property */}
+            <View className="gap-3">
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="document-text-outline" size={18} color="#008E96" />
+                <Text className="text-[14px] text-[#101828]" style={{ fontFamily: 'Inter-SemiBold' }}>About the Property</Text>
+              </View>
+              <TextInput
+                placeholder="Tell us more about your property..."
+                placeholderTextColor="#A0A0A0"
+                multiline
+                numberOfLines={4}
+                className="bg-[#F9FAFB] border-2 border-[#E5E7EB] rounded-[14px] py-4 px-4 text-[16px] text-[#101828] text-start"
+                style={{ fontFamily: 'Inter-Medium', height: 120, textAlignVertical: 'top' }}
+                value={postData.propertyDetails.description}
+                onChangeText={(val) => updatePropertyDetails({ description: val })}
               />
             </View>
           </View>
-        </LinearGradient>
+        )}
       </ScrollView>
     </View>
   );

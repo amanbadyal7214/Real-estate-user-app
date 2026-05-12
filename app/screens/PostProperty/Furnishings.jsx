@@ -44,30 +44,9 @@ const FurnishingScreen = () => {
   const updateCounter = (key, delta) => {
     setCounters((prev) => ({
       ...prev,
-      [key]: Math.max(0, prev[key] + delta),
+      [key]: Math.max(0, (prev[key] || 0) + delta),
     }));
   };
-
-  const furnishingItems = [
-    { name: 'Gas Pipeline', icon: 'propane-tank', provider: 'MaterialIcons' },
-    { name: 'Fridge', icon: 'fridge', provider: 'MaterialCommunityIcons' },
-    { name: 'Washing Machine', icon: 'local-laundry-service', provider: 'MaterialIcons' },
-    { name: 'Sofa', icon: 'chair', provider: 'MaterialIcons' },
-    { name: 'Cupboard', icon: 'closet', provider: 'MaterialCommunityIcons' },
-    { name: 'Microwave', icon: 'microwave', provider: 'MaterialIcons' },
-    { name: 'Stove', icon: 'stove', provider: 'MaterialCommunityIcons' },
-    { name: 'Dining Table', icon: 'restaurant', provider: 'MaterialIcons' },
-    { name: 'Water Purifier', icon: 'water-drop', provider: 'MaterialIcons' },
-    { name: 'Modular Kitchen', icon: 'kitchen', provider: 'MaterialIcons' },
-  ];
-
-  const counterItems = [
-    { name: 'AC', key: 'AC', icon: 'ac-unit', provider: 'MaterialIcons' },
-    { name: 'Bed', key: 'Bed', icon: 'bed', provider: 'MaterialIcons' },
-    { name: 'TV', key: 'TV', icon: 'tv', provider: 'MaterialIcons' },
-    { name: 'Geyser', key: 'Geyser', icon: 'hot-tub', provider: 'MaterialIcons' },
-    { name: 'Wardrobe', key: 'Wardrobe', icon: 'checkroom', provider: 'MaterialIcons' },
-  ];
 
   const societyAmenities = apiAmenities.map(amenity => ({
     name: amenity.label || amenity.name,
@@ -102,54 +81,6 @@ const FurnishingScreen = () => {
       </View>
 
       <ScrollView className="flex-1 px-4 pt-6" showsVerticalScrollIndicator={false}>
-        {/* Flat Furnishings Section */}
-        <Text className="text-[#6A7282] text-lg font-medium mb-4" style={{ fontFamily: 'Inter-Medium' }}>
-          Flat Furnishings
-        </Text>
-
-        <View className="flex-row flex-wrap justify-between">
-          {furnishingItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => toggleItem(item.name)}
-              className={`w-[31%] aspect-square mb-4 rounded-2xl border-2 items-center justify-center p-2 ${
-                selectedItems.includes(item.name) ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'
-              }`}
-            >
-              {renderIcon(item)}
-              <Text 
-                className={`text-[10px] text-center mt-2 leading-tight ${selectedItems.includes(item.name) ? 'text-[#008E96]' : 'text-[#364153]'}`}
-                style={{ fontFamily: 'Inter-Medium' }}
-                numberOfLines={2}
-              >
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-
-          {/* Counter Items (AC, Bed, etc.) */}
-          {counterItems.map((item, index) => (
-            <View
-              key={index}
-              className="w-[31%] aspect-square mb-4 rounded-2xl border-2 border-[#E5E7EB] bg-white items-center justify-between py-2"
-            >
-              <MaterialIcons name={item.icon} size={28} color="#6A7282" />
-              <Text className="text-[10px] text-[#364153] font-medium" style={{ fontFamily: 'Inter-Medium' }}>
-                {item.name}
-              </Text>
-              <View className="flex-row items-center gap-2">
-                <TouchableOpacity onPress={() => updateCounter(item.key, -1)}>
-                  <Entypo name="minus" size={16} color="#99A1AF" />
-                </TouchableOpacity>
-                <Text className="text-base font-bold text-[#0A0A0A]">{counters[item.key]}</Text>
-                <TouchableOpacity onPress={() => updateCounter(item.key, 1)}>
-                  <Entypo name="plus" size={16} color="#99A1AF" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-        </View>
-
         {/* Society Amenities Section */}
         <Text className="text-[#6A7282] text-lg font-medium mt-6 mb-4" style={{ fontFamily: 'Inter-Medium' }}>
           Society Amenities
