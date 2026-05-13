@@ -1,221 +1,158 @@
-# EstateOne API Documentation
+BASE URL: https://real-back-x9ln.onrender.com/
 
-This documentation provides details for all available API endpoints in the EstateOne Real Estate platform.
+--------------------------------------------------------------------------------
+1. AUTHENTICATION & USER MANAGEMENT
+--------------------------------------------------------------------------------
 
-**Base URL**: `http://localhost:5000` (or as configured in your environment)
+[POST] /auth/register
+- Payload: { "name", "email", "password", "role", "profileData": { "phone", "city" } }
 
----
+[POST] /auth/verify-otp
+- Payload: { "email", "otp" }
 
-## 1. Authentication
+[POST] /auth/login
+- Payload: { "email", "password" }
 
-### Registration Workflow (Full Flow)
+[POST] /auth/forgot-password
+- Payload: { "email" }
 
-The registration is a multi-stage process involving both frontend-side phone validation and backend-side email verification.
+[PUT] /auth/reset-password/:resettoken
+- Payload: { "password" }
 
-#### Step 1: Phone Validation (Frontend)
-Before details are collected, the frontend performs a mock phone verification.
-*   **Action**: User enters a 10-digit phone number.
-*   **Logic**: The frontend generates a 6-digit random code and displays it via an alert (Mock).
-*   **Outcome**: Once the correct code is entered, the user proceeds to the details form.
+[GET] /auth/me (Protected)
+- Returns: Current user profile details.
 
-#### Step 2: Account Registration (Backend OTP)
-*   **Endpoint**: `POST /auth/register`
-*   **Description**: Validates that the email and phone are unique, sends a real OTP to the email address, and stores data in a temporary state.
-*   **Body**:
-    ```json
-    {
-      "name": "John Doe",
-      "email": "john@example.com",
-      "password": "Password123!",
-      "role": "owner",
-      "profileData": {
-        "phone": "9876543210",
-        "city": "Mumbai",
-        "companyName": "Optional Firm Name",
-        "businessSince": "2020"
-      }
-    }
-    ```
-*   **Notes**:
-    - `city` is saved to both the `User` document and the role-specific profile (`OwnerProfile`, `BrokerProfile`, `BuilderProfile`, `BuyerProfile.preferences.city`).
-    - `companyName` maps to `firmName` for broker/builder profiles.
-    - `businessSince` is only relevant for `builder` role.
-*   **Roles**: `owner`, `builder`, `broker`, `buyer`.
-*   **Success Response**: `200 OK`
-    ```json
-    { "success": true, "message": "OTP sent to email" }
-    ```
-*   **Error Case**:
-    - `400`: "Email already registered" or "Phone number already registered".
-    - `500`: "Email could not be sent" (usually due to SMTP timeout on restricted environments).
+--------------------------------------------------------------------------------
+2. LOCALITY MANAGEMENT
+--------------------------------------------------------------------------------
 
-#### Step 3: Email OTP Verification
-*   **Endpoint**: `POST /auth/verify-otp`
-*   **Description**: Verifies the email OTP, clears temporary data, and creates the permanent User and Role-specific Profile.
-*   **Body**:
-    ```json
-    {
-      "email": "john@example.com",
-      "otp": "123456"
-    }
-    ```
-*   **Success Response**: `201 Created`
-    ```json
-    {
-      "success": true,
-      "token": "JWT_TOKEN_HERE",
-      "role": "owner",
-      "user": {
-        "id": "...",
-        "name": "John Doe",
-        "email": "john@example.com",
-        "phone": "9876543210",
-        "city": "Mumbai",
-        "profileImage": null
-      }
-    }
-    ```
-*   **What gets created**: A `User` document (with `name`, `email`, `phone`, `city`, `role`, `isVerified: true`) plus a role-specific profile document with all the same data.
+[GET] /localities
+- Params: ?search=NAME
+- Returns: Matching localities.
 
----
+[POST] /localities (Single or Bulk)
+- Payload Single: { "name": "Sector 91", "label": "Sector 91, Mohali" }
+- Payload Bulk: [{ "name": "S1", "label": "L1" }, { "name": "S2", "label": "L2" }]
 
-### Login User
-*   **Endpoint**: `POST /auth/login`
-*   **Body**:
-    ```json
-    {
-      "email": "john@example.com", // Can be email or phone number
-      "password": "password123"
-    }
-    ```
-*   **Response**: `200 OK`
-    ```json
-    {
-      "success": true,
-      "token": "JWT_TOKEN_HERE",
-      "role": "owner",
-      "user": {
-        "id": "...",
-        "name": "John Doe",
-        "email": "john@example.com",
-        "phone": "9876543210",
-        "city": "Mumbai",
-        "profileImage": null
-      }
-    }
-    ```
-*   Use `role` for post-login navigation: `owner` → `/listings`, others → `/dashboard`.
+[PUT] /localities/:id
+- Payload: { "name", "label", "isActive" }
 
----
+[DELETE] /localities/:id
+- Description: Deactivates the locality.
 
-## 2. Property Management
+--------------------------------------------------------------------------------
+3. PROPERTY MANAGEMENT
+--------------------------------------------------------------------------------
 
-### Post a New Property
-*   **Endpoint**: `POST /properties`
-*   **Headers**: `Authorization: Bearer <token>`
-*   **Body (Common Fields)**:
-    ```json
-    {
-      "title": "2 BHK Apartment",
-      "city": "Mumbai",
-      "locality": "Andheri West",
-      "address": "Full street address",
-      "propertyType": "ObjectId",
-      "lookingFor": "ObjectId",
-      "subPropertyType": "ObjectId",
-      "price": 50000,
-      "availableFrom": "2026-05-05",
-      "constructionStatus": "ObjectId (Optional)",
-      "possessionStatus": "ObjectId (Optional)",
-      "area": 1200,
-      "areaUnit": "ObjectId",
-      "images": ["base64_string_1", "base64_string_2"],
-      "pincode": "400053", // Required
-      "amenities": [
-        { "amenity": "ObjectId_1", "count": 1 },
-        { "amenity": "ObjectId_2", "count": 3 }
-      ]
-    }
-    ```
+[GET] /properties
+- Params: ?city, ?lookingFor, ?propertyType, ?subPropertyType, ?minPrice, ?maxPrice, ?page, ?limit
 
-### Specialized Discovery APIs
-*   **Find Properties by Location**
-    *   **Endpoint**: `GET /properties/find/location`
-    *   **Description**: Flexible search by locality, city, pincode, or project name.
-    *   **Params**: `city`, `locality`, `pincode`, `projectName`, `state`, `country`, `page`, `limit`.
-*   **Fetch High Demand Properties**
-    *   **Endpoint**: `GET /properties/find/high-demand`
-    *   **Description**: Returns properties sorted by the `demand` (view count) field in descending order.
-*   **Fetch Sellers by Location**
-    *   **Endpoint**: `GET /properties/find/sellers-by-location`
-    *   **Description**: Returns unique profiles of users (owners/brokers) who have active listings in a specific location.
-    *   **Params**: `city`, `locality`, `pincode`, `projectName`.
+[POST] /properties (Protected)
+- Payload: { "title", "lookingFor", "propertyType", "subPropertyType", "city", "locality", "address", "pincode", "price", "area", "images": [], "amenities": [{ "amenity", "count" }] }
 
-### Demand Tracking
-*   **Log Property View**
-    *   **Endpoint**: `POST /properties/view/:id`
-    *   **Headers**: `Authorization: Bearer <token>`
-    *   **Description**: Logs a view in history and **increments the demand counter** ($inc) for the property.
+[GET] /properties/me (Protected)
+- Returns: Properties listed by the current user.
 
-### Update Existing Property
-*   **Endpoint**: `PUT /properties/:id`
-*   **Headers**: `Authorization: Bearer <token>`
-*   **Description**: Partially update any property field.
-*   **Example (Deactivate)**:
-    ```json
-    { "isActive": false, "deactivationReason": "Sold out" }
-    ```
+[GET] /properties/:id
+- Returns: Full property details.
 
-### Get My Properties (Dashboard/Listings)
-*   **Endpoint**: `GET /properties/me`
-*   **Headers**: `Authorization: Bearer <token>`
-*   **Description**: Retrieves all properties listed by the currently authenticated user.
+[PUT] /properties/:id (Protected)
+- Payload: { "price", "isActive", "title", etc. }
 
-### Get All Properties (Public Search)
-*   **Endpoint**: `GET /properties`
-*   **Query Params**: `?city=Mumbai&propertyType=...`
+[DELETE] /properties/:id (Protected)
 
----
+--------------------------------------------------------------------------------
+4. SPECIALIZED PROPERTY DISCOVERY
+--------------------------------------------------------------------------------
 
-## 3. Lookup Endpoints (Reference Data)
+[GET] /properties/find/location
+- Params: ?city, ?locality, ?pincode, ?projectName, ?lookingFor, ?demand=true, ?PriceAscending=true
 
-These endpoints provide data for dropdowns. All return a `{ success: true, data: [...] }` structure.
+[GET] /properties/find/high-demand
+- Returns: Properties sorted by highest view counts.
 
-| Entity | Endpoint | Description |
-| :--- | :--- | :--- |
-| **Property Types** | `GET /property-types` | Residential, Commercial, Plot, etc. |
-| **Categories** | `GET /categories` | Sell, Rent, PG, etc. |
-| **Sub Property Types** | `GET /sub-property-types` | Flat, Villa, Office, Shop, etc. |
-| **Measurement Units** | `GET /measurement-units` | sq. ft., sq. yards, acre, etc. |
-| **Furnishing Status** | `GET /furnishing-status` | Furnished, Unfurnished, Semi-furnished. |
-| **Amenities** | `GET /amenities` | Gym, Pool, Parking, etc. Includes `isCounter` flag for quantity. |
-| **Construction Status**| `GET /construction-status` | Ready to Move, Under Construction. |
-| **Possession Status** | `GET /possession-status` | Immediate, 6 Months, etc. |
-| **Ownership Types** | `GET /ownership-types` | Freehold, Leasehold, etc. |
-| **Zone Types** | `GET /zone-types` | Industrial, Commercial, Residential. |
-| **Location Hubs** | `GET /location-hubs` | IT Park, Business District, etc. |
-| **Facing Directions** | `GET /facing-directions` | North, East, etc. |
+[GET] /properties/find/sellers-by-location
+- Params: ?city, ?locality, ?pincode
+- Returns: Profiles of users selling/renting in that area.
 
----
+[POST] /properties/view/:id (Protected)
+- Description: Increments property demand and adds to user history.
 
-## 4. Search & Discovery
+[GET] /properties/recently-viewed (Protected)
+[GET] /properties/contacted (Protected)
+[GET] /properties/revisit (Protected)
+[GET] /properties/matched (Protected)
 
-### Advanced Search
-*   **Endpoint**: `GET /search`
-*   **Params**: `?city=...&category=...&minPrice=...&maxPrice=...`
+--------------------------------------------------------------------------------
+5. FINANCIAL CALCULATORS
+--------------------------------------------------------------------------------
 
----
+[POST] /calculators/affordability
+- Payload: { "monthlyIncome", "existingEmi", "tenureYears", "interestRate", "downPayment" }
 
-## Error Handling
+[POST] /calculators/eligibility
+- Payload: { "monthlyIncome", "age", "tenureYears", "interestRate", "existingLoans" }
 
-Responses for errors follow this format:
-```json
-{
-  "success": false,
-  "error": "Detailed error message"
-}
-```
-**Common Error Codes:**
-- `400`: Validation error (e.g., invalid ObjectId format, missing required fields).
-- `401`: Auth error (Invalid token or incorrect credentials).
-- `500`: Server error (Includes `ETIMEDOUT` for email failures on restricted hosts like Render).
+[POST] /calculators/emi-breakdown
+- Payload: { "loanAmount", "interestRate", "tenureYears" }
+
+--------------------------------------------------------------------------------
+6. REFERENCE DATA (LOOKUPS)
+--------------------------------------------------------------------------------
+
+All endpoints follow format: [GET] /ENDPOINT -> { success: true, data: [...] }
+
+- /categories             (Sell, Rent, PG)
+- /property-types         (Residential, Commercial, Plot)
+- /sub-property-types     (Flat, Villa, Office, Shop, Showroom, Warehouse)
+- /amenities              (Gym, Pool, Parking, Lift, Power Backup)
+- /furnishing-status      (Furnished, Semi-furnished, Unfurnished)
+- /facing-directions      (North, East, West, South, North-East, etc.)
+- /construction-status    (Ready to Move, Under Construction)
+- /possession-status      (Immediate, 6 Months, 1 Year)
+- /ownership-types        (Freehold, Leasehold, Power of Attorney)
+- /measurement-units      (sq. ft., sq. yards, acre, Kanal)
+- /zone-types             (Industrial, Commercial, Residential)
+- /location-hubs          (IT Park, Business District, Metro Station)
+- /electricity-types      (Single Phase, Three Phase)
+- /registration-types     (Registered, Not Registered)
+- /plc                    (Park Facing, Corner, Wide Road)
+- /structures             (BHK, RK, Studio)
+- /sub-structures         (1 BHK, 2 BHK, etc.)
+
+--------------------------------------------------------------------------------
+7. USER ACTIVITY & SEARCH
+--------------------------------------------------------------------------------
+
+[GET] /user/activity/recently-viewed
+[GET] /user/saved-searches (Protected)
+[POST] /user/saved-searches (Protected)
+- Payload: { "searchName", "filters": { "city", "category", etc. } }
+
+[GET] /search (Advanced)
+- Params: Flexible filters across all property attributes.
+
+[GET] /insights
+- Description: Market trends and area-wise price analytics.
+
+--------------------------------------------------------------------------------
+8. PROJECT & DEVELOPER MANAGEMENT
+--------------------------------------------------------------------------------
+
+[GET] /projects
+[GET] /projects/:id
+[GET] /developers
+[GET] /developers/:id
+
+--------------------------------------------------------------------------------
+9. ADMIN OPERATIONS (Protected/Admin)
+--------------------------------------------------------------------------------
+
+[GET] /admin/dashboard-stats
+[GET] /admin/users
+[PUT] /admin/verify-property/:id
+[PUT] /admin/verify-user/:id
+
+================================================================================
+END OF DIRECTORY
+================================================================================
