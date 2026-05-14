@@ -1,14 +1,21 @@
-import { router } from 'expo-router';
-import { ArrowLeft , Search } from 'lucide-react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { ArrowLeft, Search } from 'lucide-react-native';
 
-import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import PerfectMatchCard from '../../components/PerfectMatchCard';
-import NoDataFound from '../../components/NoDataFound';
 import Svg, { Path } from 'react-native-svg';
+import NoDataFound from '../../components/NoDataFound';
+import PerfectMatchCard from '../../components/PerfectMatchCard';
+import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import { useLocation } from '../context/LocationContext';
 
 const RecommendedProperties = () => {
+  const { findPropertiesByLocation, loading } = usePropertyDiscovery();
+  const { currentLocation } = useLocation();
+  const searchParams = useLocalSearchParams();
+  const [properties, setProperties] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(searchParams.city || currentLocation?.city || '');
   const [tabs, setTabs] = useState([
     { id: 1, label: 'Recommended Properties' },
     { id: 2, label: 'Smart Deals' },
@@ -19,6 +26,37 @@ const RecommendedProperties = () => {
   ]);
 
   const [activeTab, setActiveTab] = useState(tabs[0].label);
+
+  const fetchMatches = useCallback(async () => {
+    try {
+      const params = { limit: 20, lookingFor: 'sell' };
+      const effectiveCity = searchParams.city || currentLocation?.city;
+
+      if (effectiveCity) {
+        params.city = effectiveCity;
+      }
+
+      if (searchQuery.trim().length > 0) {
+        if (/^\d{6}$/.test(searchQuery)) {
+          params.pincode = searchQuery;
+          delete params.city;
+        } else {
+          params.city = searchQuery;
+        }
+      }
+
+      const res = await findPropertiesByLocation(params);
+      if (res.success) {
+        setProperties(res.data);
+      }
+    } catch (err) {
+      console.error('Match Fetch Error:', err);
+    }
+  }, [currentLocation?.city, findPropertiesByLocation, searchParams.city, searchQuery]);
+
+  useEffect(() => {
+    fetchMatches();
+  }, [fetchMatches]);
 
   const handleTabPress = (clickedTab) => {
     setActiveTab(clickedTab.label);
@@ -35,40 +73,19 @@ const RecommendedProperties = () => {
     });
   };
 
-  const matchedProperties = [
-    {
-      id: 1,
-      price: '₹ 45.03 L - ₹ 1.11 Cr',
-      name: 'Nirwana The Moksha',
-      developer: 'by Nirwana Group',
-      location: 'Khanpur, Mohali',
-      details: '1, 2, 3 BHK Flats • ₹ 5.7k per sq.ft.',
-      seller: 'Nirwana Group',
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400'
-      ],
-      photoCount: 22,
-      isRera: true,
-      zeroBrokerage: true
-    },
-    {
-      id: 2,
-      price: '₹ 45.03 L - ₹ 1.11 Cr',
-      name: 'Nirwana The Moksha',
-      developer: 'by Nirwana Group',
-      location: 'Khanpur, Mohali',
-      details: '1, 2, 3 BHK Flats • ₹ 5.7k per sq.ft.',
-      seller: 'Nirwana Group',
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400'
-      ],
-      photoCount: 22,
-      isRera: true,
-      zeroBrokerage: true
-    }
-  ];
+  const matchedProperties = properties.slice(0, 20).map((property, index) => ({
+    id: property._id || property.id || `matched-${index}`,
+    price: typeof property.price === 'number' ? `₹ ${property.price}` : property.price || property.priceRange || 'View details',
+    name: property.title || property.projectName || 'Property',
+    developer: property.projectName ? `by ${property.projectName}` : `by ${property.owner?.name || 'Developer'}`,
+    location: [property.locality, property.city].filter(Boolean).join(', ') || 'Location not available',
+    details: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK Flats • ${property.area || 'N/A'} ${property.areaUnit?.name || 'sq.ft.'}`,
+    seller: property.owner?.name || property.sellerName || 'Seller',
+    images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
+    photoCount: property.images?.length || 0,
+    isRera: true,
+    zeroBrokerage: true
+  }));
 
   const readyToMoveProperties = [
     {
@@ -114,14 +131,18 @@ const RecommendedProperties = () => {
         </TouchableOpacity>
         
         <TouchableOpacity 
-          onPress={() => router.push('/screens/LocationSelection')}
           className="flex-row items-center border border-[#008E9633] bg-white h-[50px] px-5 rounded-[40px] flex-1"
           style={{ borderWidth: 1.5, borderColor: '#B2E0E2' }}
         >
           <Search size={22} color="#6A7282" />
-          <Text className="ml-3 flex-1 text-[#6A7282] text-[16px]" style={{ fontFamily: 'Inter-Regular' }}>
-            Locality, Landmark, Project...
-          </Text>
+          <TextInput
+            placeholder="Locality, Landmark, Project..."
+            placeholderTextColor="#6A7282"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            className="ml-3 flex-1 text-[#101828] text-[16px]"
+            style={{ fontFamily: 'Inter-Regular' }}
+          />
         </TouchableOpacity>
       </View>
 
@@ -210,7 +231,12 @@ const RecommendedProperties = () => {
 
       {/* Property List */}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
-        {activeTab === 'Recommended Properties' || activeTab === 'Smart Deals' ? (
+        {loading ? (
+          <View className="py-20 items-center justify-center">
+            <ActivityIndicator size="large" color="#008E96" />
+            <Text className="mt-4 text-[#6A7282] font-inter-medium">Searching...</Text>
+          </View>
+        ) : activeTab === 'Recommended Properties' || activeTab === 'Smart Deals' ? (
           matchedProperties.map((property) => (
             <PerfectMatchCard key={property.id} property={property} />
           ))

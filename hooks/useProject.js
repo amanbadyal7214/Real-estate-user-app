@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import api from "../app/api";
 
 export const useProject = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchProjects = async (params = {}) => {
+    const fetchProjects = useCallback(async (params = {}) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/projects", { params });
+            const response = await api.get("/projects/all", { params });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || "Failed to fetch projects";
@@ -18,9 +18,9 @@ export const useProject = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchProjectById = async (id) => {
+    const fetchProjectById = useCallback(async (id) => {
         setLoading(true);
         setError(null);
         try {
@@ -33,13 +33,13 @@ export const useProject = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchDevelopers = async (params = {}) => {
+    const fetchDevelopers = useCallback(async (params = {}) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/developers", { params });
+            const response = await api.get("/developers/top-builders", { params });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || "Failed to fetch developers";
@@ -48,12 +48,28 @@ export const useProject = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    const fetchDeveloperProjects = useCallback(async (developerId, params = {}) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await api.get(`/developers/${developerId}/projects`, { params });
+            return response.data;
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || "Failed to fetch developer projects";
+            setError(errorMessage);
+            throw new Error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     return {
         fetchProjects,
         fetchProjectById,
         fetchDevelopers,
+        fetchDeveloperProjects,
         loading,
         error
     };

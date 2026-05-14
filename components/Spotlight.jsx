@@ -3,39 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ImageBackground, ScrollView, Text, View } from 'react-native';
 
 const Spotlight = ({ data }) => {
-  // Mock data if none provided
-  const spotlightData = data || [
-    {
-      id: 1,
-      developer: {
-        name: 'NIRWANA GROUP',
-        estd: '2024',
-        projects: '2'
-      },
-      property: {
-        title: 'Nirwana Heights',
-        location: 'Khanpur, Mohali',
-        config: '3, 4 BHK Apartment, Duplexes',
-        priceRange: '88.0 L - 1.99 Cr',
-        image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop'
-      }
-    },
-    {
-      id: 2,
-      developer: {
-        name: 'NIRWANA GROUP',
-        estd: '2024',
-        projects: '2'
-      },
-      property: {
-        title: 'Nirwana Heights',
-        location: 'Khanpur, Mohali',
-        config: '3, 4 BHK Apartment, Duplexes',
-        priceRange: '88.0 L - 1.99 Cr',
-        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1000&auto=format&fit=crop'
-      }
-    }
-  ];
+  const spotlightData = data || [];
 
   return (
     <View className="mt-6 gap-4">
@@ -45,15 +13,15 @@ const Spotlight = ({ data }) => {
           Spotlight
         </Text>
         <Text className="font-inter-regular text-[13px] text-[#6A7282]">
-          Projects from the best developer in Mohali
+          Projects from the best developers in Mohali
         </Text>
       </View>
 
       {/* Main Container - Relative to parent for triangle positioning */}
       <View className="relative">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row py-1">
-          {spotlightData.map((item, index) => (
-            <View key={index} className="mr-5 ml-1">
+          {spotlightData.length > 0 ? spotlightData.map((item, index) => (
+            <View key={item.id || index} className="mr-5 ml-1">
               {/* Developer Info Card Container for Shadow */}
               <View 
                 className="w-[338px] h-[95.5px] rounded-[20px] bg-white shadow-sm elevation-2 z-[1]"
@@ -87,7 +55,7 @@ const Spotlight = ({ data }) => {
                       {/* Year Estd */}
                       <View className="w-[53px] h-[34.5px]">
                         <Text className="font-inter-bold text-[12px] leading-[18px] text-[#101828]">
-                          {item.developer.estd}
+                          {item.developer.estd || '2024'}
                         </Text>
                         <Text className="font-inter-regular text-[11px] leading-[16px] text-[#6A7282]">
                           Year estd.
@@ -96,7 +64,7 @@ const Spotlight = ({ data }) => {
                       {/* Projects */}
                       <View className="w-[43px] h-[34.5px]">
                         <Text className="font-inter-bold text-[12px] leading-[18px] text-[#101828]">
-                          {item.developer.projects}
+                          {item.developer.projects || '1'}
                         </Text>
                         <Text className="font-inter-regular text-[11px] leading-[16px] text-[#6A7282]">
                           Projects
@@ -143,13 +111,17 @@ const Spotlight = ({ data }) => {
                       {item.property.config}
                     </Text>
                     <Text className="font-inter-bold text-[16px] h-6 leading-6 text-white mt-2">
-                      ₹{item.property.priceRange}
+                      {item.property.priceRange}
                     </Text>
                   </View>
                 </ImageBackground>
               </View>
             </View>
-          ))}
+          )) : (
+            <Text className="font-inter-regular text-[13px] text-[#6A7282] ml-1">
+              No spotlight projects available right now.
+            </Text>
+          )}
         </ScrollView>
 
         {/* Fixed Triangle indicator in the center of the viewport */}

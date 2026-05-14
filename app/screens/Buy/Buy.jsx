@@ -2,7 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
@@ -22,42 +22,37 @@ import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
+import { useProject } from '../../../hooks/useProject';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import { useLocation } from '../../context/LocationContext';
-import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
+
+const locationLoadCache = new Map();
+const developerProjectsCache = new Map();
 
 const Buy = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
   const { currentLocation } = useLocation();
-  const { findPropertiesByLocation, fetchHighDemandProperties, fetchSellersByLocation, loading: discoveryLoading } = usePropertyDiscovery();
+  const { findPropertiesByLocation, fetchHighDemandProperties, fetchSellersByLocation, fetchBetterPricedProperties, loading: discoveryLoading } = usePropertyDiscovery();
+  const { fetchProjects, fetchDevelopers, fetchDeveloperProjects } = useProject();
   const [properties, setProperties] = useState([]);
   const [highDemandProperties, setHighDemandProperties] = useState([]);
   const [sellers, setSellers] = useState([]);
+  const [betterPricedProperties, setBetterPricedProperties] = useState([]);
+  const [focusProjects, setFocusProjects] = useState([]);
+  const [topDevelopersList, setTopDevelopersList] = useState([]);
+  const [developerProjectsById, setDeveloperProjectsById] = useState({});
+  const [activeDeveloperId, setActiveDeveloperId] = useState(null);
+  const [activeDeveloperProjectsLoading, setActiveDeveloperProjectsLoading] = useState(false);
   const skipFirstRedirect = useRef(true);
 
   useEffect(() => {
     setSelectedTab('Buy');
   }, [setSelectedTab]);
 
-  useEffect(() => {
-    const params = {
-      city: currentLocation?.city || "Sahibzada Ajit Singh Nagar",
-      locality: currentLocation?.locality || "",
-      pincode: currentLocation?.pincode || "",
-    };
-    
-    // Stringify location object to detect deep changes
-    const locationKey = JSON.stringify(params);
-    console.log("📍 Location changed, fetching data for:", locationKey);
-
-    fetchData(params);
-    loadHighDemand(params);
-    loadSellers(params);
-  }, [currentLocation?.city, currentLocation?.locality, currentLocation?.pincode]);
-
-  const fetchData = async (locationParams = {}) => {
+  const fetchData = useCallback(async (locationParams = {}) => {
     try {
       const res = await findPropertiesByLocation({ 
         lookingFor: 'sell',
@@ -68,9 +63,9 @@ const Buy = () => {
     } catch (err) {
       console.error("Discovery API Error:", err);
     }
-  };
+  }, [findPropertiesByLocation]);
 
-  const loadHighDemand = async (locationParams = {}) => {
+  const loadHighDemand = useCallback(async (locationParams = {}) => {
     try {
       const res = await fetchHighDemandProperties({ 
         limit: 4,
@@ -81,9 +76,9 @@ const Buy = () => {
     } catch (err) {
       console.error("High Demand API Error:", err);
     }
-  };
+  }, [fetchHighDemandProperties]);
 
-  const loadSellers = async (locationParams = {}) => {
+  const loadSellers = useCallback(async (locationParams = {}) => {
     try {
       const res = await fetchSellersByLocation({
         limit: 10,
@@ -93,7 +88,172 @@ const Buy = () => {
     } catch (err) {
       console.error("Sellers API Error:", err);
     }
-  };
+  }, [fetchSellersByLocation]);
+
+  const loadBetterPriced = useCallback(async (locationParams = {}) => {
+    try {
+      const res = await fetchBetterPricedProperties({
+        limit: 4,
+        ...locationParams,
+      });
+
+      const source = Array.isArray(res) ? res : (res?.data || []);
+      const transformed = source.slice(0, 4).map((property, index) => ({
+        id: property._id || property.id || `better-priced-${index}`,
+        image: property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+        title: property.address || property.locality || property.title || 'Property',
+        marketer: property.sellerName || property.projectName || 'Developer',
+        details: `${property.area || 'N/A'} sq.ft. • ${property.locality || ''}, ${property.city || ''}`,
+        priceRange: property.price || property.priceRange || 'View details'
+      }));
+
+      setBetterPricedProperties(transformed);
+    } catch (err) {
+      console.error("Better Priced API Error:", err);
+      setBetterPricedProperties([]);
+    }
+  }, [fetchBetterPricedProperties]);
+
+  const loadFocusProjects = useCallback(async (locationParams = {}) => {
+    try {
+      const res = await fetchProjects({
+        isFocus: true, // Assuming your API supports this flag for "Project in Focus"
+        limit: 5,
+        ...locationParams
+      });
+      // Handle array response based on your API structure (the tool showed response.data)
+      if (res) setFocusProjects(Array.isArray(res) ? res : res.data || []);
+    } catch (err) {
+      console.error("Projects API Error:", err);
+    }
+  }, [fetchProjects]);
+
+  const loadTopDevelopers = useCallback(async (locationParams = {}) => {
+    try {
+      const res = await fetchDevelopers({
+        ...locationParams
+      });
+
+      if (res.success) {
+        setTopDevelopersList(res.data);
+        if (!activeDeveloperId && res.data.length > 0) {
+          setActiveDeveloperId(res.data[0]._id);
+        }
+      }
+    } catch (err) {
+      console.error("Developers API Error:", err);
+    }
+  }, [fetchDevelopers, activeDeveloperId]);
+
+  const loadDeveloperProjects = useCallback(async (developerId) => {
+    if (!developerId) {
+      return;
+    }
+
+    if (developerProjectsCache.has(developerId)) {
+      setDeveloperProjectsById((current) => ({
+        ...current,
+        [developerId]: developerProjectsCache.get(developerId),
+      }));
+      return developerProjectsCache.get(developerId);
+    }
+
+    setActiveDeveloperProjectsLoading(true);
+    try {
+      const res = await fetchDeveloperProjects(developerId);
+      const projects = res?.data || [];
+      developerProjectsCache.set(developerId, projects);
+      setDeveloperProjectsById((current) => ({
+        ...current,
+        [developerId]: projects,
+      }));
+      return projects;
+    } catch (err) {
+      console.error("Developer Projects API Error:", err);
+      setDeveloperProjectsById((current) => ({
+        ...current,
+        [developerId]: [],
+      }));
+      return [];
+    } finally {
+      setActiveDeveloperProjectsLoading(false);
+    }
+  }, [fetchDeveloperProjects]);
+
+  const spotlightData = topDevelopersList.slice(0, 2).map((dev) => {
+    const developerProjects = developerProjectsById[dev._id] || [];
+    const firstProject = developerProjects[0] || {};
+
+    return {
+      id: dev._id,
+      developer: {
+        name: dev.builderInfo?.name || 'Developer',
+        estd: '2024',
+        projects: String(dev.projectCount || developerProjects.length || 1),
+      },
+      property: {
+        title: firstProject.projectName || firstProject.title || 'Project',
+        location: `${firstProject.addressLine1 || firstProject.locality || ''}, ${firstProject.district || firstProject.city || ''}`,
+        config: firstProject.config || firstProject.possessionStatus?.label || 'Project',
+        priceRange: firstProject.priceRange || firstProject.price || 'View details',
+        image: firstProject.media?.[0]?.fileUrl || firstProject.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop',
+      }
+    };
+  });
+
+  const handleDeveloperSelect = useCallback((developerId) => {
+    setActiveDeveloperId(developerId);
+    loadDeveloperProjects(developerId);
+  }, [loadDeveloperProjects]);
+
+  useEffect(() => {
+    if (!activeDeveloperId) {
+      return;
+    }
+
+    if (developerProjectsById[activeDeveloperId]) {
+      return;
+    }
+
+    loadDeveloperProjects(activeDeveloperId);
+  }, [activeDeveloperId, developerProjectsById, loadDeveloperProjects]);
+
+  const loadDataForLocation = useCallback(async (params = {}) => {
+    const locationKey = JSON.stringify(params);
+
+    if (locationLoadCache.has(locationKey)) {
+      return locationLoadCache.get(locationKey);
+    }
+
+    const request = Promise.all([
+      fetchData(params),
+      loadHighDemand(params),
+      loadSellers(params),
+      loadBetterPriced(params),
+      loadFocusProjects(params),
+      loadTopDevelopers(params),
+    ]).finally(() => {
+      setTimeout(() => {
+        locationLoadCache.delete(locationKey);
+      }, 1000);
+    });
+
+    locationLoadCache.set(locationKey, request);
+    return request;
+  }, [fetchData, loadHighDemand, loadSellers, loadBetterPriced, loadFocusProjects, loadTopDevelopers]);
+
+  useEffect(() => {
+    const params = {
+      city: currentLocation?.city || "Sahibzada Ajit Singh Nagar",
+      locality: currentLocation?.locality || "",
+      pincode: currentLocation?.pincode || "",
+    };
+
+    const locationKey = JSON.stringify(params);
+    console.log("📍 Location changed, fetching data for:", locationKey);
+
+    loadDataForLocation(params);
+  }, [currentLocation?.city, currentLocation?.locality, currentLocation?.pincode, loadDataForLocation]);
 
   const handleLocationUpdate = (loc) => {
     // Location updating is now handled by LocationContext inside SearchBox
@@ -121,87 +281,14 @@ const Buy = () => {
     { title: 'Plot, Buy, Kharar', subtitle: '100-150 sq.yd' },
   ];
 
-  const matchedHomes = [
-    {
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400'
-      ],
-      tag: 'TALLEST LANDMARK',
-      developer: 'NIRWANA GROUP',
-      title: 'D-Xperanza',
-      location: 'Sector 82, Mohali',
-      priceRange: '1.24 Cr. - 1.55 Cr',
-    },
-    {
-      images: [
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=400'
-      ],
-      tag: 'LUXURY LIVING',
-      developer: 'SKY HEIGHTS',
-      title: 'Sky Terrace',
-      location: 'Sector 66, Mohali',
-      priceRange: '2.5 Cr. - 4.2 Cr',
-    },
-  ];
-
-  const recommendedProperties = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=400',
-      price: '₹ 4.25 Cr',
-      title: '5 BHK Independent House',
-      area: '2000 sq.ft.',
-      location: 'Janta Sector 90 A, Mohali',
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400',
-      price: '₹ 2.10 Cr',
-      title: '3 BHK Modern Villa',
-      area: '1800 sq.ft.',
-      location: 'Sector 82, Mohali',
-    }
-  ];
-
-  const recommendedSellers = [
-    {
-      id: 1,
-      name: 'Priya Sharma',
-      experienceYears: '29',
-      propertiesCount: '15',
-      location: 'Nabha',
-    },
-    {
-      id: 2,
-      name: 'Rahul Verma',
-      experienceYears: '12',
-      propertiesCount: '8',
-      location: 'Sector 66, Mohali',
-    }
-  ];
-
-  const betterPricedProperties = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      title: "Ubber Mews Gate",
-      marketer: "rising star builtec",
-      details: "2, 3, 4 BHK ... • Aujala, Mohali",
-      priceRange: "₹ 69.43 L - 1.22 Cr"
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
-      title: "Green Valley Estate",
-      marketer: "Green Developers",
-      details: "3, 4 BHK ... • Sector 88, Mohali",
-      priceRange: "₹ 85.50 L - 1.45 Cr"
-    }
-  ];
+  const recommendedProperties = properties.slice(0, 4).map((property, index) => ({
+    id: property._id || property.id || `recommended-${index}`,
+    image: property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+    price: typeof property.price === 'number' ? `₹ ${property.price}` : property.price || property.priceRange || 'View details',
+    title: property.title || property.projectName || 'Property',
+    area: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK • ${property.area || 'N/A'} ${property.areaUnit?.name || 'sq.ft.'}`,
+    location: [property.locality, property.city].filter(Boolean).join(', ') || 'Location not available',
+  }));
 
   const lastSearches = [
     {
@@ -258,157 +345,12 @@ const Buy = () => {
     { left: 37.5, right: 52.5, top: 57.5, bottom: 37.5, background: '#8B6F47' }
   ];
 
-  const highDemandProjects = [
-    {
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400",
-      priceRange: "₹51.9 L - 68.9 L",
-      title: "Lok Awas",
-      developer: "Vara Developers",
-      location: "Sector 74 A, Mohali"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      priceRange: "₹85.0 L - 1.2 Cr",
-      title: "Hero Homes",
-      developer: "Hero Realty",
-      location: "Sector 88, Mohali"
-    }
-  ];
-
-  const focusProjects = [
-    {
-      images: [
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600'
-      ],
-      title: 'Nirwana The Moksha',
-      location: 'Kharar, Mohali',
-      price: '₹45.03 L - 1.11 Cr',
-      tag: 'TALLEST LANDMARK',
-      developer: 'NIRWANA GROUP',
-      badgeType: 'RERA',
-      badgeColor: '#155DFC'
-    },
-    {
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=600'
-      ],
-      title: 'Premium Heights',
-      location: 'Sector 66, Mohali',
-      price: '₹62.50 L - 1.35 Cr',
-      tag: 'LUXURY LIVING',
-      developer: 'PREET DEVELOPERS',
-      badgeType: 'READY',
-      badgeColor: '#00A63E'
-    },
-    {
-      images: [
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'
-      ],
-      title: 'Royal Residences',
-      location: 'Sector 71, Mohali',
-      price: '₹71.20 L - 1.58 Cr',
-      tag: 'PREMIUM LIVING',
-      developer: 'ROYAL GROUP',
-      badgeType: 'RERA',
-      badgeColor: '#155DFC'
-    }
-  ];
-
   const bestLocalities = [
     { title: 'Sector 115', rating: '4.8', reviews: '3', price: '₹5K/sqft.' },
     { title: 'Sector 82', rating: '4.6', reviews: '12', price: '₹7K/sqft.' },
     { title: 'Sector 66', rating: '4.9', reviews: '8', price: '₹12K/sqft.' },
     { title: 'Sector 71', rating: '4.7', reviews: '5', price: '₹9K/sqft.' },
   ];
-
-  const topDevelopers = {
-    summary: [
-      {
-        id: 'nirwana',
-        name: 'Nirwana Group',
-        logoText: 'NIRWANA',
-        logoColor: '#E7000B',
-        yearEstd: '2012',
-        projectCount: '15'
-      },
-      {
-        id: 'vara',
-        name: 'Vara Developers',
-        logoText: 'VARA',
-        logoColor: '#008E96',
-        yearEstd: '2016',
-        projectCount: '10'
-      },
-      {
-        id: 'hero',
-        name: 'Hero Realty',
-        logoText: 'HERO',
-        logoColor: '#D92D20',
-        yearEstd: '2004',
-        projectCount: '45'
-      },
-    ],
-    projects: {
-      nirwana: [
-        {
-          image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-          logoText: 'N',
-          logoColor: '#E7000B',
-          title: 'D-Xperanza',
-          developerName: 'NIRWANA GROUP',
-          rating: '4.8',
-          config: '3, 4 BHK Apartment',
-          location: 'Sector 82, Mohali',
-          priceRange: '₹1.24 Cr - 1.55 Cr',
-        },
-        {
-          image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-          logoText: 'N',
-          logoColor: '#E7000B',
-          title: 'Nirwana The Moksha',
-          developerName: 'NIRWANA GROUP',
-          rating: '4.7',
-          config: '2, 3 BHK Apartment',
-          location: 'Kharar, Mohali',
-          priceRange: '₹45.03 L - 1.11 Cr',
-        }
-      ],
-      vara: [
-        {
-          image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400',
-          logoText: 'V',
-          logoColor: '#008E96',
-          title: 'Lok Awas',
-          developerName: 'Vara Developers',
-          rating: '4.6',
-          config: '2, 3 BHK Apartment',
-          location: 'Sector 74 A, Mohali',
-          priceRange: '₹51.9 L - 68.9 L',
-        }
-      ],
-      hero: [
-        {
-          image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=400',
-          logoText: 'H',
-          logoColor: '#D92D20',
-          title: 'Hero Homes',
-          developerName: 'HERO REALTY',
-          rating: '4.9',
-          config: '2, 3 BHK Apartment',
-          location: 'Sector 88, Mohali',
-          priceRange: '₹85.0 L - 1.25 Cr',
-        }
-      ]
-    }
-  };
-
-  const [activeDeveloperId, setActiveDeveloperId] = useState('nirwana');
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -472,7 +414,7 @@ const Buy = () => {
               }))} 
             />
           )}
-          <Spotlight />
+          <Spotlight data={spotlightData} />
         </View>
 
 
@@ -702,7 +644,17 @@ const Buy = () => {
             contentContainerStyle={{ gap: 16 }}
           >
             {focusProjects.map((project, index) => (
-              <ProjectFocusCard key={index} {...project} />
+              <ProjectFocusCard
+                key={index}
+                images={project.media?.map(m => m.fileUrl) || []}
+                title={project.projectName || project.title}
+                location={`${project.addressLine1 || project.locality || ''}, ${project.district || project.city || ''}`}
+                price={project.priceRange || project.price}
+                tag={project.tag || "PREMIUM"}
+                developer={project.builder?.name || project.projectName}
+                badgeType={project.badgeType}
+                badgeColor={project.badgeColor}
+              />
             ))}
           </ScrollView>
         </View>
@@ -748,29 +700,57 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Developer Summary Cards */}
-          <View className="flex-row items-center ml-4 justify-between gap-4 mb-6">
-            {topDevelopers.summary.slice(0, 2).map((dev, index) => (
-              <View key={`dev-summary-${index}`} style={{ flex: 1 }}>
-                <DeveloperSummaryCard
-                  {...dev}
-                  isActive={activeDeveloperId === dev.id}
-                  onPress={() => setActiveDeveloperId(dev.id)}
-                />
-              </View>
-            ))}
+          <View className="flex-row items-stretch gap-4 mb-6">
+            {topDevelopersList.length > 0 ? (
+              topDevelopersList.slice(0, 2).map((dev, index) => (
+                <View key={dev._id} style={{ flex: 1 }}>
+                  <DeveloperSummaryCard
+                    name={dev.builderInfo?.name || 'Developer'}
+                    logoText={dev.builderInfo?.name?.substring(0, 2).toUpperCase() || 'DEV'}
+                    logoColor={index === 0 ? '#E7000B' : '#008E96'}
+                    yearEstd="2012"
+                    projectCount={String(dev.projectCount || 0)}
+                    isActive={activeDeveloperId === dev._id}
+                    onPress={() => handleDeveloperSelect(dev._id)}
+                  />
+                </View>
+              ))
+            ) : (
+              <Text className="font-inter-regular text-[13px] text-[#6A7282]">No top developers available right now.</Text>
+            )}
           </View>
 
-          {/* Developer Project Cards */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
-          >
-            {topDevelopers.projects[activeDeveloperId]?.map((project, index) => (
-              <DeveloperProjectCard key={`dev-project-${activeDeveloperId}-${index}`} {...project} />
-            ))}
-          </ScrollView>
+          <View className="mt-1">
+
+            {activeDeveloperProjectsLoading ? (
+              <ActivityIndicator color="#008E96" />
+            ) : (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 16, paddingBottom: 8 }}
+              >
+                {(developerProjectsById[activeDeveloperId] || []).length > 0 ? (
+                  developerProjectsById[activeDeveloperId].map((project, index) => (
+                    <DeveloperProjectCard
+                      key={project._id || `dev-project-${activeDeveloperId}-${index}`}
+                      image={project.media?.[0]?.fileUrl || project.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'}
+                      logoText={(topDevelopersList.find((dev) => dev._id === activeDeveloperId)?.builderInfo?.name || 'D').substring(0, 1).toUpperCase()}
+                      logoColor="#008E96"
+                      title={project.projectName || project.title || 'Project'}
+                      developerName={topDevelopersList.find((dev) => dev._id === activeDeveloperId)?.builderInfo?.name || 'Developer'}
+                      rating={project.rating || '4.8'}
+                      config={project.config || project.possessionStatus?.label || 'Project'}
+                      location={`${project.addressLine1 || project.locality || ''}, ${project.district || project.city || ''}`}
+                      priceRange={project.priceRange || project.price || 'View details'}
+                    />
+                  ))
+                ) : (
+                  <Text className="font-inter-regular text-[13px] text-[#6A7282]">No projects found for this developer.</Text>
+                )}
+              </ScrollView>
+            )}
+          </View>
         </View>
 
 
@@ -845,9 +825,9 @@ const Buy = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8 }}
           >
-            {betterPricedProperties.map((property) => (
+            {betterPricedProperties.map((property, index) => (
               <BetterPricedPropertyCard
-                key={property.id}
+                key={property.id || `better-priced-${index}`}
                 image={property.image}
                 title={property.title}
                 marketer={property.marketer}

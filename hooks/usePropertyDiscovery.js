@@ -62,10 +62,30 @@ export const usePropertyDiscovery = () => {
         }
     };
 
+    /**
+     * Fetch better priced properties based on viewed properties or location
+     * @param {Object} params - { city, locality, pincode, limit, basedOnViewed: boolean }
+     */
+    const fetchBetterPricedProperties = async (params = {}) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await api.get("/properties?PriceAscending=true");
+            return response.data;
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || "Failed to fetch better priced properties";
+            setError(errorMessage);
+            throw new Error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         findPropertiesByLocation,
         fetchHighDemandProperties,
         fetchSellersByLocation,
+        fetchBetterPricedProperties,
         loading,
         error
     };
