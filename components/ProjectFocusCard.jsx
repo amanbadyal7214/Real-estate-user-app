@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 
-const ProjectFocusCard = ({ image, images: propImages, title, location, price, tag, developer, badgeType, badgeColor }) => {
+const ProjectFocusCard = ({ image, images: propImages, title, location, price, tag, developer, badgeType, badgeColor, projectId }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = propImages || (image ? [image] : []);
 
@@ -35,7 +35,7 @@ const ProjectFocusCard = ({ image, images: propImages, title, location, price, t
     >
       <TouchableOpacity 
         activeOpacity={0.9} 
-        onPress={() => router.push('/screens/ProjectDetails')}
+        onPress={() => router.push({ pathname: '/screens/ProjectDetails', params: { projectId } })}
         style={StyleSheet.absoluteFill}
       >
         <Image

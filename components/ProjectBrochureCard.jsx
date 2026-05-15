@@ -1,13 +1,26 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { Text, TouchableOpacity, View, Image } from "react-native";
+import { Linking, Text, TouchableOpacity, View, Image } from "react-native";
 
-const ProjectBrochureCard = ({ totalPages = 30, onDownload }) => {
-  const previewImages = [
-    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=300",
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=300",
-  ];
+const fallbackImages = [
+  "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
+  "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=300",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=300",
+];
+
+const ProjectBrochureCard = ({ totalPages = 30, onDownload, brochureUrl, previewImages = fallbackImages }) => {
+  const images = previewImages.length > 0 ? previewImages : fallbackImages;
+  const extraPages = Math.max(totalPages - 2, 0);
+  const handleDownload = async () => {
+    if (onDownload) {
+      onDownload();
+      return;
+    }
+
+    if (brochureUrl) {
+      await Linking.openURL(brochureUrl);
+    }
+  };
 
   return (
     <View 
@@ -28,7 +41,7 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload }) => {
       >
         <View className="flex-[2] rounded-[10px] overflow-hidden relative">
           <Image 
-            source={{ uri: previewImages[0] }} 
+            source={{ uri: images[0] }} 
             className="w-full h-full"
             resizeMode="cover"
           />
@@ -44,19 +57,19 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload }) => {
         <View className="flex-1 gap-2">
           <View className="flex-1 rounded-[10px] overflow-hidden">
             <Image 
-              source={{ uri: previewImages[1] }} 
+              source={{ uri: images[1] || images[0] }} 
               className="w-full h-full"
               resizeMode="cover"
             />
           </View>
           <View className="flex-1 rounded-[10px] overflow-hidden relative">
             <Image 
-              source={{ uri: previewImages[2] }} 
+              source={{ uri: images[2] || images[0] }} 
               className="w-full h-full"
               resizeMode="cover"
             />
             <View className="absolute inset-0 bg-black/40 items-center justify-center">
-              <Text className="text-white font-inter-medium text-[16px]">+{totalPages - 2}</Text>
+              <Text className="text-white font-inter-medium text-[16px]">+{extraPages}</Text>
             </View>
           </View>
         </View>
@@ -73,7 +86,7 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload }) => {
         </TouchableOpacity>
 
         <TouchableOpacity 
-          onPress={onDownload}
+          onPress={handleDownload}
           className="flex-[2] bg-[#F2F4F7] h-[48px] rounded-[10px] flex-row items-center justify-center gap-2"
         >
           <Ionicons name="download-outline" size={20} color="#101828" />

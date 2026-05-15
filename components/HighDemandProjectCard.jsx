@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-const HighDemandProjectCard = ({ image, priceRange, title, developer, location }) => {
+const HighDemandProjectCard = ({ image, priceRange, title, developer, location, projectId }) => {
   return (
     <Animated.View
       entering={FadeInDown.duration(600).springify().damping(12)}
@@ -20,7 +20,7 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location }
         elevation: 4,
       }}
     >
-      <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/screens/ProjectDetails')}>
+      <TouchableOpacity activeOpacity={0.9} onPress={() => router.push({ pathname: '/screens/ProjectDetails', params: { projectId } })}>
         {/* Container (Linear Gradient Background) */}
         <LinearGradient
           colors={['#FFFBEB', '#FFF7ED']}

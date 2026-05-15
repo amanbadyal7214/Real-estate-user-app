@@ -1,9 +1,10 @@
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useProjectDetails } from '../../hooks/useProjectDetails';
 import InvestmentInsightsCard from '../../components/InvestmentInsightsCard';
 import ProjectBrochureCard from '../../components/ProjectBrochureCard';
 import ProjectComparisonSection from '../../components/ProjectComparisonSection';
@@ -16,16 +17,14 @@ import ProjectSellerCard from '../../components/ProjectSellerCard';
 
 const ProjectDetails = () => {
   const router = useRouter();
+  const { projectId } = useLocalSearchParams();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeFloorTab, setActiveFloorTab] = useState('All');
   const flatListRef = useRef(null);
 
-  const images = [
-    'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-    'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400'
-  ];
+  // Use custom hook for project details
+  const { projectData, loading, error, images, brochureUrl, brochureImages, brochurePages, location, builderName, possessionDate } = useProjectDetails(projectId);
 
   const floorPlanData = [
     { type: '5 BHK', info: 'Super Builtup Area', area: '5280.0 sq.ft.', price: '₹ 5.02 Cr', bhk: '5 BHK', image: 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=400' },
@@ -62,6 +61,28 @@ const ProjectDetails = () => {
     const index = Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width);
     setCurrentImageIndex(index);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-white items-center justify-center" edges={['top']}>
+        <ActivityIndicator size="large" color="#008E96" />
+        <Text className="text-[#6A7282] mt-4">Loading project details...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  // Show error state
+  if (error || !projectData) {
+    return (
+      <SafeAreaView className="flex-1 bg-white items-center justify-center" edges={['top']}>
+        <Text className="text-red-600 text-center px-4 mb-4">{error || 'Failed to load project'}</Text>
+        <TouchableOpacity onPress={() => router.back()} className="bg-[#008E96] px-6 py-3 rounded-lg">
+          <Text className="text-white font-inter-medium">Go Back</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -105,11 +126,13 @@ const ProjectDetails = () => {
               <View className="absolute bottom-10 left-4 gap-2">
                 <View className="bg-[#008E96] self-start px-2 py-1 rounded-[4px] flex-row items-center gap-1">
                   <Ionicons name="checkmark" size={12} color="white" />
-                  <Text className="text-white text-[12px] font-inter-regular">RERA</Text>
+                  <Text className="text-white text-[12px] font-inter-regular">
+                    {projectData.isReraApproved ? 'RERA' : 'NON-RERA'}
+                  </Text>
                 </View>
-                <Text className="text-white text-[24px] font-inter-medium">Vamana Riseonic</Text>
+                <Text className="text-white text-[24px] font-inter-medium">{projectData.projectName}</Text>
                 <View className="flex-row justify-between items-center w-[358px]">
-                  <Text className="text-white text-[14px] font-inter-regular">New Chandigarh, Chandigarh</Text>
+                  <Text className="text-white text-[14px] font-inter-regular">{location}</Text>
                   <TouchableOpacity className="bg-white/20 px-4 py-2 rounded-[10px] flex-row items-center gap-2">
                     <Ionicons name="location-outline" size={16} color="white" />
                     <Text className="text-white font-inter-medium text-[14px]">See on Map</Text>
@@ -117,7 +140,7 @@ const ProjectDetails = () => {
                 </View>
               </View>
               <View className="absolute bottom-6 right-4 bg-black/60 px-3 py-1 rounded-full">
-                <Text className="text-white text-[14px] font-inter-regular">{currentImageIndex + 1}/{images.length}</Text>
+                <Text className="text-white text-[14px] font-inter-regular">{currentImageIndex + 1}/{images.length || 1}</Text>
               </View>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} className="p-4 gap-2 border-b border-[#E5E7EB]">
@@ -132,12 +155,18 @@ const ProjectDetails = () => {
           {activeTab === 'Overview' ? (
             <View className="p-4 gap-4">
               <View className="bg-white p-4 border rounded-[16px] border-[#E5E7EB]">
-                <Text className="text-[#6A7282] text-[12px] mb-2 font-inter-regular">Zero Brokerage • Possession by Feb, 2031 • Avg. rate ₹ 9.87K - ₹ 10.50K / sq.ft.</Text>
+                <Text className="text-[#6A7282] text-[12px] mb-2 font-inter-regular">
+                  Zero Brokerage • Possession by {possessionDate} • Avg. rate ₹ {projectData.costPerSqft || 'N/A'} / sq.ft.
+                </Text>
                 <View className="flex-row items-center gap-2 mb-1">
-                  <Text className="text-[#0A0A0A] text-[20px] font-inter-medium">₹ 3.24 Cr - ₹ 5.01 Cr</Text>
+                  <Text className="text-[#0A0A0A] text-[20px] font-inter-medium">
+                    ₹ {projectData.basePrice || 'N/A'}
+                  </Text>
                   <Text className="text-[#6A7282] text-[16px] font-inter-regular">ⓘ</Text>
                 </View>
-                <Text className="text-[#6A7282] text-[14px] font-inter-regular">3, 5 BHK Apartments</Text>
+                <Text className="text-[#6A7282] text-[14px] font-inter-regular">
+                  {projectData.bhkType || 'Apartments'}
+                </Text>
               </View>
               <View>
                 <Text className="text-[#101828] text-[18px] font-inter-medium mb-3">Project Configurations</Text>
@@ -147,18 +176,21 @@ const ProjectDetails = () => {
                   ))}
                 </ScrollView>
               </View>
-              <ProjectSellerCard sellerName="Passionate Developers" postedBy="Passionate Developers Pvt Ltd" />
+              <ProjectSellerCard sellerName={builderName} postedBy={projectData.builder?.designation || 'Developer'} />
               <View className="bg-white rounded-[16px] p-4 gap-2 shadow-sm border border-[#E5E7EB]">
-                <Text className="text-[#101828] text-[18px] font-inter-medium">About Vamana Riseonic</Text>
+                <Text className="text-[#101828] text-[18px] font-inter-medium">{projectData.projectName}</Text>
                 <Text className="text-[#000] text-[13px] leading-[27px] font-inter-regular">
-                  • Modern 3BHK apartment in a prime location with spacious, well-lit interiors and premium finishes{"\n"}
-                  • Equipped with essential amenities like 24/7 security, parking, and landscaped surroundings
+                  {projectData.description || 'Modern apartments in a prime location with premium amenities and finishes.'}
                 </Text>
               </View>
-              <InvestmentInsightsCard appreciation="127.6%" appreciationYear="2021" currentValue="3.24 Cr" projectedValue="4.08 Cr" roi="26.0%" potentialGain="84.18 L" />
-              <ProjectBrochureCard />
+              <InvestmentInsightsCard appreciation="127.6%" appreciationYear="2021" currentValue={projectData.basePrice || '3.24 Cr'} projectedValue="4.08 Cr" roi="26.0%" potentialGain="84.18 L" />
+              <ProjectBrochureCard
+                brochureUrl={brochureUrl}
+                previewImages={brochureImages}
+                totalPages={brochurePages}
+              />
               <ProjectMapCard />
-              <ProjectContactFormCard sellerName="Passionate Developers Pvt Ltd" sellerPhone="72180XXXXX" />
+              <ProjectContactFormCard sellerName={builderName} sellerPhone={projectData.builder?.phone || '1800XXXXXX'} />
               <ProjectComparisonSection properties={comparisonData} />
               
               <ProjectFinancialServicesCard />

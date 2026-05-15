@@ -71,7 +71,7 @@ const BetterPricedPropertyCard = ({ image, title, marketer, details, priceRange 
             style={{ fontSize: 15, lineHeight: 22 }}
             numberOfLines={1}
           >
-            {priceRange}
+           ₹{priceRange}
           </Text>
         </View>
       </View>

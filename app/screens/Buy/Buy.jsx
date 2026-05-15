@@ -406,6 +406,7 @@ const Buy = () => {
             <PropertyMatchedCards 
               data={properties.map(p => ({
                 id: p._id,
+                _id: p._id,
                 images: p.images?.length > 0 ? p.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'],
                 developer: p.projectName || "Standard",
                 title: p.title,
@@ -602,6 +603,7 @@ const Buy = () => {
             {highDemandProperties.map((p, index) => (
               <HighDemandProjectCard
                 key={index}
+                projectId={p._id}
                 image={p.images?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400"}
                 priceRange={p.price}
                 title={p.title}
@@ -646,6 +648,7 @@ const Buy = () => {
             {focusProjects.map((project, index) => (
               <ProjectFocusCard
                 key={index}
+                projectId={project._id}
                 images={project.media?.map(m => m.fileUrl) || []}
                 title={project.projectName || project.title}
                 location={`${project.addressLine1 || project.locality || ''}, ${project.district || project.city || ''}`}
@@ -734,6 +737,7 @@ const Buy = () => {
                   developerProjectsById[activeDeveloperId].map((project, index) => (
                     <DeveloperProjectCard
                       key={project._id || `dev-project-${activeDeveloperId}-${index}`}
+                      projectId={project._id}
                       image={project.media?.[0]?.fileUrl || project.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'}
                       logoText={(topDevelopersList.find((dev) => dev._id === activeDeveloperId)?.builderInfo?.name || 'D').substring(0, 1).toUpperCase()}
                       logoColor="#008E96"
