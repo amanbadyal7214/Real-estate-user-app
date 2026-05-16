@@ -1,12 +1,12 @@
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useLookup } from '../../../hooks/useLookup';
 import { useProperty } from '../../../hooks/useProperty';
+import api from '../../api';
 import { usePostProperty } from '../../context/PostPropertyContext';
 import AdvancedDetailsStep from './AdvancedDetailsStep';
 import PhotosStep from './PhotosStep';
@@ -95,6 +95,12 @@ const PropertyDetails = () => {
   const [showZoneDropdown, setShowZoneDropdown] = useState(false);
   const [showHubDropdown, setShowHubDropdown] = useState(false);
   const [showOwnershipDropdown, setShowOwnershipDropdown] = useState(false);
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [countries, setCountries] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+  const [citiesList, setCitiesList] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
 
@@ -112,6 +118,9 @@ const PropertyDetails = () => {
   };
 
   const getCurrentLocation = async () => {
+    // getCurrentLocation functionality commented out per request.
+    // Original implementation retained below for reference.
+    /*
     try {
       setIsLocating(true);
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -142,6 +151,7 @@ const PropertyDetails = () => {
     } finally {
       setIsLocating(false);
     }
+    */
   };
 
   const checkAuth = async () => {
@@ -175,6 +185,49 @@ const PropertyDetails = () => {
 
   const parkingStatusOptions = ['Included', 'Separate'];
 
+  const selectedCountryId = postData.propertyDetails.countryId;
+  const selectedStateId = postData.propertyDetails.stateId;
+  const selectedCountry = postData.propertyDetails.country;
+  const selectedState = postData.propertyDetails.state;
+  const availableStates = statesList || [];
+  const availableCities = citiesList || [];
+
+  const fetchCountries = async () => {
+    try {
+      const res = await api.get('/geo/countries');
+      const data = res.data?.data ?? res.data;
+      setCountries(data || []);
+    } catch (err) {
+      console.error('Error fetching countries', err);
+    }
+  };
+
+  const fetchStates = async (countryId) => {
+    if (!countryId) return;
+    try {
+      const res = await api.get('/geo/states', { params: { country: countryId } });
+      const data = res.data?.data ?? res.data;
+      setStatesList(data || []);
+    } catch (err) {
+      console.error('Error fetching states', err);
+    }
+  };
+
+  const fetchCities = async (stateId) => {
+    if (!stateId) return;
+    try {
+      const res = await api.get('/geo/cities', { params: { state: stateId } });
+      const data = res.data?.data ?? res.data;
+      setCitiesList(data || []);
+    } catch (err) {
+      console.error('Error fetching cities', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
   const propertyTypes = apiPropertyTypes.map(pt => ({
     id: pt._id,
     label: pt.label || pt.name,
@@ -204,9 +257,9 @@ const PropertyDetails = () => {
       // Map postData to the format expected by saveProperty
       const formData = {
         name: postData.propertyDetails.title,
-        country: postData.propertyDetails.country,
-        state: postData.propertyDetails.state,
-        city: postData.propertyDetails.city,
+        country: postData.propertyDetails.countryId || postData.propertyDetails.country,
+        state: postData.propertyDetails.stateId || postData.propertyDetails.state,
+        city: postData.propertyDetails.cityId || postData.propertyDetails.city,
         locality: postData.propertyDetails.locality,
         pincode: postData.propertyDetails.pincode,
         address: postData.propertyDetails.address || postData.propertyDetails.locality,
@@ -410,6 +463,7 @@ const PropertyDetails = () => {
 
                 <View className="flex-row items-center justify-between mb-4">
                   <Text className="text-[#6A7282] text-sm" style={{ fontFamily: 'Inter-Medium' }}>Location Details</Text>
+                  {/* Use Current Location button and handler commented out per request
                   <TouchableOpacity 
                     onPress={getCurrentLocation}
                     disabled={isLocating}
@@ -420,30 +474,40 @@ const PropertyDetails = () => {
                       {isLocating ? "Locating..." : "Use Current Location"}
                     </Text>
                   </TouchableOpacity>
+                  */}
                 </View>
-
-                <View className="border-b border-[#D1D5DC] pb-2 mb-6">
-                  <TextInput 
-                    placeholder="Enter Locality" 
-                    placeholderTextColor="#A0A0A0"
-                    className="text-base py-1"
-                    style={{ fontFamily: 'Inter-Regular' }}
-                    value={postData.propertyDetails.locality}
-                    onChangeText={(val) => updatePropertyDetails({ locality: val })}
-                  />
-                </View>
-
-                {/* City and Pincode Section */}
+                {/* Country and Pincode Section (swapped with City) */}
                 <View className="flex-row gap-4 mb-6">
-                  <View className="flex-1 border-b border-[#D1D5DC] pb-2">
-                    <TextInput 
-                      placeholder="City" 
-                      placeholderTextColor="#A0A0A0"
-                      className="text-base py-1"
-                      style={{ fontFamily: 'Inter-Regular' }}
-                      value={postData.propertyDetails.city}
-                      onChangeText={(val) => updatePropertyDetails({ city: val })}
-                    />
+                  <View className="flex-1">
+                    <TouchableOpacity 
+                      onPress={() => setShowCountryDropdown(!showCountryDropdown)}
+                      className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
+                    >
+                      <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                        {postData.propertyDetails.country || 'Select Country'}
+                      </Text>
+                      <Ionicons name={showCountryDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
+                    </TouchableOpacity>
+                    {showCountryDropdown && (
+                      <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[80] overflow-hidden">
+                        {countries.map((c) => (
+                          <TouchableOpacity
+                            key={c._id || c.id || c.name}
+                            onPress={() => {
+                              const label = c.label || c.name || c.country || c.title || c._id || '';
+                              updatePropertyDetails({ country: label, countryId: c._id || c.id, state: '', stateId: '', city: '', cityId: '' });
+                              setShowCountryDropdown(false);
+                              setStatesList([]);
+                              setCitiesList([]);
+                              fetchStates(c._id || c.id);
+                            }}
+                            className="px-4 py-3 border-b border-[#F3F4F6]"
+                          >
+                            <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{c.label || c.name || c.country || c.title}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    )}
                   </View>
                   <View className="flex-1 border-b border-[#D1D5DC] pb-2">
                     <TextInput 
@@ -460,27 +524,82 @@ const PropertyDetails = () => {
 
                 {/* State and Country Section */}
                 <View className="flex-row gap-4 mb-6">
-                  <View className="flex-1 border-b border-[#D1D5DC] pb-2">
-                    <TextInput 
-                      placeholder="State" 
-                      placeholderTextColor="#A0A0A0"
-                      className="text-base py-1"
-                      style={{ fontFamily: 'Inter-Regular' }}
-                      value={postData.propertyDetails.state}
-                      onChangeText={(val) => updatePropertyDetails({ state: val })}
-                    />
+                  <View className="flex-1">
+                    {selectedCountryId ? (
+                      <>
+                        <TouchableOpacity 
+                          onPress={() => setShowStateDropdown(!showStateDropdown)}
+                          className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
+                        >
+                          <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                            {postData.propertyDetails.state || 'Select State'}
+                          </Text>
+                          <Ionicons name={showStateDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
+                        </TouchableOpacity>
+                        {showStateDropdown && (
+                          <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[85] overflow-hidden">
+                            {(availableStates.length > 0 ? availableStates : []).map((s) => (
+                              <TouchableOpacity
+                                key={s._id || s.id || s.name}
+                                onPress={() => { updatePropertyDetails({ state: s.label || s.name, stateId: s._id || s.id, city: '', cityId: '' }); setShowStateDropdown(false); setCitiesList([]); fetchCities(s._id || s.id); }}
+                                className="px-4 py-3 border-b border-[#F3F4F6]"
+                              >
+                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{s.label || s.name}</Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}
+                      </>
+                    ) : (
+                      <View className="px-3 py-3">
+                        <Text className="text-sm text-[#9AA0A6]">Select country first</Text>
+                      </View>
+                    )}
                   </View>
-                  <View className="flex-1 border-b border-[#D1D5DC] pb-2">
-                    <TextInput 
-                      placeholder="Country" 
-                      placeholderTextColor="#A0A0A0"
-                      className="text-base py-1"
-                      style={{ fontFamily: 'Inter-Regular' }}
-                      value={postData.propertyDetails.country}
-                      onChangeText={(val) => updatePropertyDetails({ country: val })}
-                    />
+                  <View className="flex-1">
+                    {selectedStateId ? (
+                      <>
+                        <TouchableOpacity 
+                          onPress={() => setShowCityDropdown(!showCityDropdown)}
+                          className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
+                        >
+                          <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                            {postData.propertyDetails.city || 'Select City'}
+                          </Text>
+                          <Ionicons name={showCityDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
+                        </TouchableOpacity>
+                        {showCityDropdown && (
+                          <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[90] overflow-hidden">
+                            {(availableCities.length > 0 ? availableCities : []).map((c) => (
+                              <TouchableOpacity
+                                key={c._id || c.id || c.name}
+                                onPress={() => { updatePropertyDetails({ city: c.label || c.name, cityId: c._id || c.id }); setShowCityDropdown(false); }}
+                                className="px-4 py-3 border-b border-[#F3F4F6]"
+                              >
+                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{c.label || c.name}</Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}
+                      </>
+                    ) : (
+                      <View className="px-3 py-3">
+                        <Text className="text-sm text-[#9AA0A6]">Select state first</Text>
+                      </View>
+                    )}
                   </View>
                 </View>
+
+                  <View className="border-b border-[#D1D5DC] pb-2 mb-6">
+                    <TextInput 
+                      placeholder="Enter Locality" 
+                      placeholderTextColor="#A0A0A0"
+                      className="text-base py-1"
+                      style={{ fontFamily: 'Inter-Regular' }}
+                      value={postData.propertyDetails.locality}
+                      onChangeText={(val) => updatePropertyDetails({ locality: val })}
+                    />
+                  </View>
 
                 {selectedPropertyType === 'Residential' ? (
                   <>

@@ -9,7 +9,7 @@ export const useProject = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/projects/all", { params });
+            const response = await api.get("/projects/city", { params });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || "Failed to fetch projects";

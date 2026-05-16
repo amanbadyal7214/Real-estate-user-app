@@ -13,10 +13,29 @@ export const usePropertyDiscovery = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/properties/find/location", { params });
+            const response = await api.get("/properties/city", { params });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || "Failed to find properties";
+            setError(errorMessage);
+            throw new Error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * General properties fetch (supports queries like `?locality=sector 71`)
+     * @param {Object} params - { city, locality, pincode, limit, page, lookingFor, PriceAscending }
+     */
+    const fetchProperties = async (params = {}) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await api.get("/properties", { params });
+            return response.data;
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || "Failed to fetch properties";
             setError(errorMessage);
             throw new Error(errorMessage);
         } finally {
@@ -64,13 +83,13 @@ export const usePropertyDiscovery = () => {
 
     /**
      * Fetch better priced properties based on viewed properties or location
-     * @param {Object} params - { city, locality, pincode, limit, basedOnViewed: boolean }
+     * @param {Object} params - { city, locality, pincode, limit, lookingFor, PriceAscending }
      */
-    const fetchBetterPricedProperties = async (params = {}) => {
+    const fetchBetterPricedProperties = async (params) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/properties?PriceAscending=true");
+            const response = await api.get("/properties/city", { params });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || "Failed to fetch better priced properties";
@@ -86,6 +105,7 @@ export const usePropertyDiscovery = () => {
         fetchHighDemandProperties,
         fetchSellersByLocation,
         fetchBetterPricedProperties,
+        fetchProperties,
         loading,
         error
     };

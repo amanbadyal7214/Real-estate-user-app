@@ -44,13 +44,13 @@ const ContinueCards = ({ data = [] }) => {
       
     </View>
      {/* Locality Banner */}
-        <View className="mx-4 mt-6 p-4 rounded-2xl bg-[#F0FBFA] flex-row items-center justify-between">
+        {/* <View className="mx-4 mt-6 p-4 rounded-2xl bg-[#F0FBFA] flex-row items-center justify-between">
           <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#344054]">Not sure about locality?</Text>
           <TouchableOpacity className="flex-row items-center">
             <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[14px] text-[#101828] underline mr-1">Explore options</Text>
             <ChevronRight size={16} color="#101828" />
           </TouchableOpacity>
-        </View>
+        </View> */}
     </>
   );
 };

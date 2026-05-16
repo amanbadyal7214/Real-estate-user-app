@@ -18,27 +18,31 @@ export const useProperty = () => {
             const cleanId = (id) => (id && id !== "" ? id : undefined);
 
             const payload = {
-                title: formData.name,
-                country: formData.country,
-                state: formData.state,
-                city: formData.city,
+                title: formData.title || formData.name,
+                country: cleanId(formData.country),
+                state: cleanId(formData.state),
+                city: cleanId(formData.city),
                 locality: formData.locality,
                 pincode: formData.pincode,
                 address: formData.address,
-                propertyType: formData.propertyType,
-                lookingFor: formData.category,
-                subPropertyType: formData.subPropertyType,
+                propertyType: cleanId(formData.propertyType),
+                lookingFor: cleanId(formData.category) || cleanId(formData.lookingFor),
+                subPropertyType: cleanId(formData.subPropertyType),
                 price: isRent ? (parseInt(formData.monthlyRent) || 0) : (parseInt(formData.price) || 0),
                 securityDeposit: isRent ? (formData.securityDeposit === "None" ? 0 : (parseInt(formData.securityDepositAmount) || 0)) : 0,
                 availableFrom: formData.availableFrom || undefined,
                 constructionStatus: cleanId(formData.constructionStatus),
                 possessionStatus: cleanId(formData.possessionStatus),
-                amenities: formData.amenities,
+                amenities: Array.isArray(formData.amenities) ? formData.amenities : [],
                 projectName: formData.projectSociety,
-                images: formData.images,
+                images: Array.isArray(formData.images) ? formData.images : [],
                 description: formData.description,
-                area: parseInt(formData.carpetArea) || parseInt(formData.builtUpArea) || 0,
+                area: parseInt(formData.area) || parseInt(formData.carpetArea) || parseInt(formData.builtUpArea) || 0,
+                carpetArea: parseInt(formData.carpetArea) || 0,
+                builtUpArea: parseInt(formData.builtUpArea) || 0,
                 areaUnit: cleanId(formData.areaUnit),
+                isActive: typeof formData.isActive === 'boolean' ? formData.isActive : true,
+                verificationStatus: formData.verificationStatus || formData.verification || undefined
             };
 
             if (isResidential) {
@@ -49,7 +53,11 @@ export const useProperty = () => {
                     floor: parseInt(formData.floor) || 0,
                     totalFloors: parseInt(formData.totalFloors) || 0,
                     furnishingStatus: cleanId(formData.furnishingStatus),
-                    structure: cleanId(formData.structure)
+                    structure: cleanId(formData.structure),
+                    carpetArea: parseInt(formData.residential?.carpetArea) || parseInt(formData.carpetArea) || 0,
+                    builtUpArea: parseInt(formData.residential?.builtUpArea) || parseInt(formData.builtUpArea) || 0,
+                    carpetAreaUnit: cleanId(formData.residential?.carpetAreaUnit) || cleanId(formData.carpetAreaUnit) || cleanId(formData.areaUnit),
+                    builtUpAreaUnit: cleanId(formData.residential?.builtUpAreaUnit) || cleanId(formData.builtUpAreaUnit) || cleanId(formData.areaUnit)
                 };
             }
 

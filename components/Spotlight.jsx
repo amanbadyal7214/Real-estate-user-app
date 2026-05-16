@@ -145,7 +145,7 @@ const Spotlight = ({ data }) => {
       </View>
 
       {/* Housing Assist Card */}
-      <View 
+      {/* <View 
         className="h-[97px]  rounded-[20px] overflow-hidden shadow-md elevation-5"
         style={{
           shadowColor: '#000',
@@ -178,7 +178,7 @@ const Spotlight = ({ data }) => {
             <MaterialCommunityIcons name="chevron-right" size={24} color="#FFFFFF" />
           </View>
         </LinearGradient>
-      </View>
+      </View> */}
     </View>
   );
 };

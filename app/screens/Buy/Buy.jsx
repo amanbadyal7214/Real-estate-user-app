@@ -94,6 +94,9 @@ const Buy = () => {
     try {
       const res = await fetchBetterPricedProperties({
         limit: 4,
+        city: currentLocation?.city || 'Mohali',
+        lookingFor: 'sell',
+        PriceAscending: true,
         ...locationParams,
       });
 
@@ -112,7 +115,7 @@ const Buy = () => {
       console.error("Better Priced API Error:", err);
       setBetterPricedProperties([]);
     }
-  }, [fetchBetterPricedProperties]);
+  }, [fetchBetterPricedProperties, currentLocation?.city]);
 
   const loadFocusProjects = useCallback(async (locationParams = {}) => {
     try {
