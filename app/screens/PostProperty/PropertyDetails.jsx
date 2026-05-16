@@ -102,7 +102,7 @@ const PropertyDetails = () => {
   const [statesList, setStatesList] = useState([]);
   const [citiesList, setCitiesList] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [isLocating, setIsLocating] = useState(false);
+
 
   useEffect(() => {
     checkAuth();

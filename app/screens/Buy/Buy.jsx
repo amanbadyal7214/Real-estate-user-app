@@ -85,6 +85,33 @@ const formatLocalityName = (value, index) => {
     .join(' ');
 };
 
+const getLocationLabel = (value) => {
+  if (!value) return '';
+
+  if (typeof value === 'string') {
+    const trimmedValue = value.trim();
+    if (!trimmedValue || /^[a-f0-9]{24}$/i.test(trimmedValue)) return '';
+    return trimmedValue;
+  }
+
+  if (typeof value === 'object') {
+    return value.name || value.label || value.title || '';
+  }
+
+  return '';
+};
+
+const formatPropertyLocation = (property) => {
+  const directAddress = typeof property?.address === 'string' ? property.address.trim() : '';
+  if (directAddress) return directAddress;
+
+  const locality = getLocationLabel(property?.localityName || property?.locality);
+  const city = getLocationLabel(property?.city);
+  const state = getLocationLabel(property?.state);
+
+  return [locality, city, state].filter(Boolean).join(', ') || 'Location not available';
+};
+
 const Buy = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
   const { currentLocation } = useLocation();
@@ -161,7 +188,7 @@ const Buy = () => {
         image: property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
         title: property.address || property.locality || property.title || 'Property',
         marketer: property.sellerName || property.projectName || 'Developer',
-        details: `${property.area || 'N/A'} sq.ft. • ${property.locality || ''}, ${property.city || ''}`,
+        details: `${property.area || 'N/A'} sq.ft. • ${formatPropertyLocation(property)}`,
         priceRange: property.price || property.priceRange || 'View details'
       }));
 
@@ -256,6 +283,7 @@ const Buy = () => {
     const developerProjects = developerProjectsById[dev._id] || [];
     const firstProject = developerProjects[0] || {};
 
+
     return {
       id: dev._id,
       developer: {
@@ -289,6 +317,27 @@ const Buy = () => {
 
     loadDeveloperProjects(activeDeveloperId);
   }, [activeDeveloperId, developerProjectsById, loadDeveloperProjects]);
+
+  // Preload projects for top 2 developers for spotlight section
+  useEffect(() => {
+    if (topDevelopersList.length < 2) {
+      return;
+    }
+
+    const firstDevId = topDevelopersList[0]._id;
+    const secondDevId = topDevelopersList[1]._id;
+
+    const loadBoth = async () => {
+      if (!developerProjectsById[firstDevId]) {
+        await loadDeveloperProjects(firstDevId);
+      }
+      if (!developerProjectsById[secondDevId]) {
+        await loadDeveloperProjects(secondDevId);
+      }
+    };
+
+    loadBoth();
+  }, [topDevelopersList, developerProjectsById, loadDeveloperProjects]);
 
   const loadDataForLocation = useCallback(async (params = {}) => {
     const locationKey = JSON.stringify(params);
@@ -360,7 +409,7 @@ const Buy = () => {
     price: typeof property.price === 'number' ? `₹ ${property.price}` : property.price || property.priceRange || 'View details',
     title: property.title || property.projectName || 'Property',
     area: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK • ${property.area || 'N/A'} ${property.areaUnit?.name || 'sq.ft.'}`,
-    location: [property.locality, property.city].filter(Boolean).join(', ') || 'Location not available',
+    location: formatPropertyLocation(property),
   }));
 
   const lastSearches = [
@@ -418,12 +467,15 @@ const Buy = () => {
     { left: 37.5, right: 52.5, top: 57.5, bottom: 37.5, background: '#8B6F47' }
   ];
 
-  const bestLocalities = [
-    { title: 'Sector 115', rating: '4.8', reviews: '3', price: '₹5K/sqft.' },
-    { title: 'Sector 82', rating: '4.6', reviews: '12', price: '₹7K/sqft.' },
-    { title: 'Sector 66', rating: '4.9', reviews: '8', price: '₹12K/sqft.' },
-    { title: 'Sector 71', rating: '4.7', reviews: '5', price: '₹9K/sqft.' },
-  ];
+  const bestLocalities = [...exploreLocalities]
+    .sort((a, b) => (Number(b.averagePricePerSqft) || 0) - (Number(a.averagePricePerSqft) || 0))
+    .slice(0, 6)
+    .map((item, index) => ({
+      title: item.localityName || formatLocalityName(item.locality, index),
+      rating: '4.5',
+      reviews: String(item.totalProperties || 0),
+      price: formatPricePerSqft(item.averagePricePerSqft),
+    }));
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -483,7 +535,7 @@ const Buy = () => {
                 images: p.images?.length > 0 ? p.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'],
                 developer: p.projectName || "Standard",
                 title: p.title,
-                location: `${p.locality || ''}, ${p.city || ''}`,
+                location: formatPropertyLocation(p),
                 priceRange: p.price,
               }))} 
             />
@@ -681,7 +733,7 @@ const Buy = () => {
                 priceRange={p.price}
                 title={p.title}
                 developer={p.projectName || "Standard"}
-                location={`${p.locality || ''}, ${p.city || ''}`}
+                location={formatPropertyLocation(p)}
               />
             ))}
           </ScrollView>
@@ -738,30 +790,40 @@ const Buy = () => {
         {/* Best Rated Localities Section */}
         <View className="px-4 mb-4 " >
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in Mohali</Text>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in {currentLocation?.city || 'Mohali'}</Text>
             <TouchableOpacity onPress={() => router.push('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
-          <View className="relative">
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 27, paddingRight: 20 }}
-            >
-              <View className="flex-col gap-3">
-                {bestLocalities.slice(0, Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
-                  <LocalityCard key={`top-${index}`} {...locality} />
-                ))}
-              </View>
-              <View className="flex-col gap-3">
-                {bestLocalities.slice(Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
-                  <LocalityCard key={`bottom-${index}`} {...locality} />
-                ))}
-              </View>
-            </ScrollView>
-          </View>
+          {localityLoading ? (
+            <View className="h-[127px] items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]">
+              <ActivityIndicator size="small" color="#008E96" />
+            </View>
+          ) : bestLocalities.length === 0 ? (
+            <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No best-rated locality data available right now.</Text>
+            </View>
+          ) : (
+            <View className="relative">
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 27, paddingRight: 20 }}
+              >
+                <View className="flex-col gap-3">
+                  {bestLocalities.slice(0, Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
+                    <LocalityCard key={`top-${index}`} {...locality} />
+                  ))}
+                </View>
+                <View className="flex-col gap-3">
+                  {bestLocalities.slice(Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
+                    <LocalityCard key={`bottom-${index}`} {...locality} />
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
+          )}
         </View>
 
         {/* Top Rated Developers Section */}
@@ -878,7 +940,7 @@ const Buy = () => {
                 key={index}
                 name={seller.name || "Seller"}
                 experienceYears={seller.experienceYears || "5"}
-                propertiesCount={seller.count || "0"}
+                propertiesCount={seller.propertyCount || "0"}
                 location={seller.locality || seller.city || "Mohali"}
               />
             ))}
@@ -916,7 +978,7 @@ const Buy = () => {
         </View>
 
         {/* Last Searched Section */}
-        <View className="px-4 mb-1">
+        {/* <View className="px-4 mb-1">
           <View className="flex-row items-center justify-between mb-4">
             <View className="flex-1 mr-4">
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Last Searched</Text>
@@ -943,7 +1005,7 @@ const Buy = () => {
               />
             ))}
           </ScrollView>
-        </View>
+        </View> */}
 
         {/* Recommended Insights Section */}
         <View className="px-4 ">
