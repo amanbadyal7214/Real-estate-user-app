@@ -5,8 +5,6 @@ import { useRef, useState } from 'react';
 import { Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useProjectDetails } from '../../hooks/useProjectDetails';
-import InvestmentInsightsCard from '../../components/InvestmentInsightsCard';
-import ProjectBrochureCard from '../../components/ProjectBrochureCard';
 import ProjectComparisonSection from '../../components/ProjectComparisonSection';
 import ProjectConfigCard from '../../components/ProjectConfigCard';
 import ProjectContactFormCard from '../../components/ProjectContactFormCard';
@@ -24,7 +22,19 @@ const ProjectDetails = () => {
   const flatListRef = useRef(null);
 
   // Use custom hook for project details
-  const { projectData, loading, error, images, brochureUrl, brochureImages, brochurePages, location, builderName, possessionDate } = useProjectDetails(projectId);
+  const {
+    projectData: rawProjectData,
+    loading,
+    error,
+    images,
+    location,
+    builderName,
+    possessionDate,
+    averagePricePerSqFt,
+    minPricePerSqFt,
+    maxPricePerSqFt
+  } = useProjectDetails(projectId);
+  const projectData = Array.isArray(rawProjectData) ? rawProjectData[0] || {} : rawProjectData || {};
 
   const floorPlanData = [
     { type: '5 BHK', info: 'Super Builtup Area', area: '5280.0 sq.ft.', price: '₹ 5.02 Cr', bhk: '5 BHK', image: 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=400' },
@@ -57,6 +67,48 @@ const ProjectDetails = () => {
     }
   ];
 
+  const formatDate = (value) => {
+    if (!value) return 'N/A';
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+
+  const formatPricePerSqFt = (value) => {
+    if (value === null || value === undefined || value === '') return 'N/A';
+
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) return 'N/A';
+
+    if (numericValue >= 1000) {
+      return `₹ ${(numericValue / 1000).toFixed(1)}K/ sq.ft.`;
+    }
+
+    return `₹ ${numericValue.toFixed(0)}/ sq.ft.`;
+  };
+
+  const getDisplayValue = (value) => {
+    if (!value) return '';
+    if (typeof value === 'string' || typeof value === 'number') return String(value);
+    return value.label || value.name || value.title || value.value || value.cityName || value.stateName || value.districtName || '';
+  };
+
+  const formatArea = () => {
+    if (!projectData?.area) return 'N/A';
+    const unit = projectData.areaUnit?.label || projectData.areaUnit?.name || '';
+    return `${projectData.area}${unit ? ` ${unit}` : ''}`;
+  };
+
+  const formatAddress = () => {
+    const parts = [
+      getDisplayValue(projectData?.addressLine1),
+      getDisplayValue(projectData?.addressLine2),
+      getDisplayValue(projectData?.district),
+      getDisplayValue(projectData?.city),
+      getDisplayValue(projectData?.state)
+    ].filter(Boolean);
+    return parts.length ? parts.join(', ') : 'N/A';
+  };
+
   const handleScroll = (event) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width);
     setCurrentImageIndex(index);
@@ -73,7 +125,7 @@ const ProjectDetails = () => {
   }
 
   // Show error state
-  if (error || !projectData) {
+  if (error || (!loading && !rawProjectData)) {
     return (
       <SafeAreaView className="flex-1 bg-white items-center justify-center" edges={['top']}>
         <Text className="text-red-600 text-center px-4 mb-4">{error || 'Failed to load project'}</Text>
@@ -155,18 +207,29 @@ const ProjectDetails = () => {
           {activeTab === 'Overview' ? (
             <View className="p-4 gap-4">
               <View className="bg-white p-4 border rounded-[16px] border-[#E5E7EB]">
-                <Text className="text-[#6A7282] text-[12px] mb-2 font-inter-regular">
-                  Zero Brokerage • Possession by {possessionDate} • Avg. rate ₹ {projectData.costPerSqft || 'N/A'} / sq.ft.
-                </Text>
-                <View className="flex-row items-center gap-2 mb-1">
-                  <Text className="text-[#0A0A0A] text-[20px] font-inter-medium">
-                    ₹ {projectData.basePrice || 'N/A'}
-                  </Text>
-                  <Text className="text-[#6A7282] text-[16px] font-inter-regular">ⓘ</Text>
+                <View className="flex-row items-start justify-between gap-3">
+                  <View className="flex-1">
+                    <View className="flex-row items-center gap-2 mb-2">
+                      <View className="w-9 h-9 rounded-full bg-[#E6F7F7] items-center justify-center">
+                        <MaterialCommunityIcons name="cash-multiple" size={18} color="#008E96" />
+                      </View>
+                      <View>
+                        <Text className="text-[#667085] text-[12px] font-inter-medium">Starting from</Text>
+                        <Text className="text-[#0A0A0A] text-[16px] font-inter-semibold">{formatPricePerSqFt(minPricePerSqFt || averagePricePerSqFt || projectData.costPerSqft)} - {formatPricePerSqFt(maxPricePerSqFt || averagePricePerSqFt || projectData.costPerSqft)}</Text>
+                      </View>
+                    </View>
+                    <Text className="text-[#6A7282] text-[12px] mb-3 font-inter-regular">
+                      Zero Brokerage • Possession by {possessionDate}
+                    </Text>
+                    <Text className="text-[#6A7282] text-[12px] mb-3 font-inter-regular">
+                      Avg. price per sq.ft. {formatPricePerSqFt(averagePricePerSqFt || projectData.costPerSqft)}
+                    </Text>
+                  </View>
+                  <View className="bg-[#F0F9FA] rounded-[16px] px-3 py-2 border border-[#D2F0F2]">
+                    <Text className="text-[#008E96] text-[12px] font-inter-semibold text-center">{projectData.bhkType || 'Apartments'}</Text>
+                  </View>
                 </View>
-                <Text className="text-[#6A7282] text-[14px] font-inter-regular">
-                  {projectData.bhkType || 'Apartments'}
-                </Text>
+               
               </View>
               <View>
                 <Text className="text-[#101828] text-[18px] font-inter-medium mb-3">Project Configurations</Text>
@@ -183,12 +246,75 @@ const ProjectDetails = () => {
                   {projectData.description || 'Modern apartments in a prime location with premium amenities and finishes.'}
                 </Text>
               </View>
-              <InvestmentInsightsCard appreciation="127.6%" appreciationYear="2021" currentValue={projectData.basePrice || '3.24 Cr'} projectedValue="4.08 Cr" roi="26.0%" potentialGain="84.18 L" />
+              <View className="bg-white rounded-[24px] overflow-hidden border border-[#D7F0F0] shadow-sm">
+                <LinearGradient colors={['#F0F9FA', '#FFFFFF']} className="px-4 py-4 border-b border-[#E5F4F4]">
+                  <View className="flex-row items-center justify-between mb-3">
+                    <View className="flex-row items-center gap-2">
+                      <View className="w-10 h-10 rounded-full bg-white items-center justify-center shadow-sm border border-[#D7F0F0]">
+                        <MaterialCommunityIcons name="home-city-outline" size={20} color="#008E96" />
+                      </View>
+                      <View>
+                        <Text className="text-[#101828] text-[16px] font-inter-semibold">Project Snapshot</Text>
+                        <Text className="text-[#667085] text-[12px] font-inter-regular">Quick facts at a glance</Text>
+                      </View>
+                    </View>
+                    {projectData.isReraApproved ? (
+                      <View className="px-3 py-1 bg-[#EAFBF1] rounded-full border border-[#B7EBC8]">
+                        <Text className="text-[#078345] text-[12px] font-inter-semibold">RERA Approved</Text>
+                      </View>
+                    ) : (
+                      <View className="px-3 py-1 bg-[#FFF4E5] rounded-full border border-[#FFD7A8]">
+                        <Text className="text-[#B54708] text-[12px] font-inter-semibold">RERA Pending</Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <View className="flex-row flex-wrap gap-3">
+                    {[
+                      { label: 'Builder', value: projectData.builder?.name || 'N/A', icon: 'account-tie-outline' },
+                      { label: 'Possession', value: projectData.possessionStatus?.label || projectData.possessionStatus?.name || 'N/A', icon: 'calendar-clock-outline' },
+                      { label: 'Area', value: formatArea(), icon: 'ruler-square-compass' },
+                      { label: 'RERA No.', value: projectData.reraNumber || 'N/A', icon: 'file-document-outline' }
+                    ].map((item) => (
+                      <View key={item.label} className="w-[48%] bg-white rounded-[18px] p-3 border border-[#E5E7EB]">
+                        <View className="flex-row items-center gap-2 mb-2">
+                          <View className="w-8 h-8 rounded-full bg-[#F0F9FA] items-center justify-center">
+                            <MaterialCommunityIcons name={item.icon} size={16} color="#008E96" />
+                          </View>
+                          <Text className="text-[#667085] text-[12px] font-inter-medium">{item.label}</Text>
+                        </View>
+                        <Text className="text-[#101828] text-[14px] font-inter-semibold" numberOfLines={2}>{item.value}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </LinearGradient>
+
+                <View className="p-4 gap-3">
+                  
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-[#101828] text-[14px] font-inter-medium">Gated Community</Text>
+                    <Text className="text-[#344054] text-[14px] font-inter-semibold">{projectData.isGated ? 'Yes' : 'No'}</Text>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-[#101828] text-[14px] font-inter-medium">Start Date</Text>
+                    <Text className="text-[#344054] text-[14px] font-inter-semibold">{formatDate(projectData.startDate)}</Text>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-[#101828] text-[14px] font-inter-medium">Completion Date</Text>
+                    <Text className="text-[#344054] text-[14px] font-inter-semibold">{formatDate(projectData.completionDate)}</Text>
+                  </View>
+                  <View className="pt-2 border-t border-dashed border-[#E5E7EB]">
+                    <Text className="text-[#667085] text-[12px] font-inter-medium mb-1">Address</Text>
+                    <Text className="text-[#101828] text-[14px] font-inter-regular leading-5">{formatAddress()}</Text>
+                  </View>
+                </View>
+              </View>
+              {/* <InvestmentInsightsCard appreciation="127.6%" appreciationYear="2021" currentValue={projectData.basePrice || '3.24 Cr'} projectedValue="4.08 Cr" roi="26.0%" potentialGain="84.18 L" />
               <ProjectBrochureCard
                 brochureUrl={brochureUrl}
                 previewImages={brochureImages}
                 totalPages={brochurePages}
-              />
+              /> */}
               <ProjectMapCard />
               <ProjectContactFormCard sellerName={builderName} sellerPhone={projectData.builder?.phone || '1800XXXXXX'} />
               <ProjectComparisonSection properties={comparisonData} />

@@ -52,10 +52,10 @@ const ProjectContactFormCard = ({ sellerName, sellerPhone }) => {
             <Text className="font-inter-medium text-[#0A0A0A] text-[14px]">Allow sellers to get in touch</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row items-center gap-3">
+          {/* <TouchableOpacity className="flex-row items-center gap-3">
             <View className="w-5 h-5 border-2 border-[#E5E7EB] rounded-[4px]" />
             <Text className="font-inter-medium text-[#0A0A0A] text-[14px]">I am interested in Home loans</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         <View className="flex-row gap-2 bg-[#F9FAFB] p-2 rounded-lg">

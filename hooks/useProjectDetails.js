@@ -3,6 +3,7 @@ import api from "../app/api";
 
 export const useProjectDetails = (projectId) => {
     const [projectData, setProjectData] = useState(null);
+    const [priceInsights, setPriceInsights] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -17,18 +18,35 @@ export const useProjectDetails = (projectId) => {
             try {
                 setLoading(true);
                 setError(null);
+                setPriceInsights(null);
                 
                 // Try to fetch as project first
                 try {
                     const projectResponse = await api.get(`/projects/${projectId}`);
                     if (projectResponse.data?.success && projectResponse.data?.data) {
                         setProjectData(projectResponse.data.data);
+                        try {
+                            const priceResponse = await api.get(`/projects/${projectId}/average-price`);
+                            if (priceResponse.data?.success && priceResponse.data?.data) {
+                                setPriceInsights(priceResponse.data.data);
+                            }
+                        } catch (priceErr) {
+                            console.warn("Average price API Error:", priceErr?.response?.data || priceErr.message);
+                        }
                         return;
                     } else if (projectResponse.data?.data) {
                         setProjectData(projectResponse.data.data);
+                        try {
+                            const priceResponse = await api.get(`/projects/${projectId}/average-price`);
+                            if (priceResponse.data?.success && priceResponse.data?.data) {
+                                setPriceInsights(priceResponse.data.data);
+                            }
+                        } catch (priceErr) {
+                            console.warn("Average price API Error:", priceErr?.response?.data || priceErr.message);
+                        }
                         return;
                     }
-                } catch (projectErr) {
+                } catch (_projectErr) {
                     console.log("Not a project, trying as property...");
                     // If project fetch fails, try as property
                     const propertyResponse = await api.get(`/properties/${projectId}`);
@@ -64,10 +82,20 @@ export const useProjectDetails = (projectId) => {
         return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
     };
 
+    const getDisplayValue = (value) => {
+        if (!value) return '';
+        if (typeof value === 'string' || typeof value === 'number') return String(value);
+        return value.label || value.name || value.title || value.value || value.cityName || value.stateName || value.districtName || '';
+    };
+
     // Extract commonly used data - handle both project and property structures
-    const location = projectData 
-        ? `${projectData.district || projectData.city || "N/A"}, ${projectData.state || ""}`
-        : "";
+    const location = projectData
+        ? [
+            getDisplayValue(projectData.district),
+            getDisplayValue(projectData.city),
+            getDisplayValue(projectData.state)
+          ].filter(Boolean).join(', ')
+        : '';
     const builderName = projectData?.builder?.name || projectData?.developer || projectData?.sellerName || "N/A";
     const possessionDate = formatDate(projectData?.completionDate || projectData?.possessionDate);
     const startDate = formatDate(projectData?.startDate);
@@ -94,6 +122,11 @@ export const useProjectDetails = (projectId) => {
         builderName,
         possessionDate,
         startDate,
+        priceInsights,
+        averagePricePerSqFt: priceInsights?.averagePricePerSqFt ?? null,
+        minPricePerSqFt: priceInsights?.minPricePerSqFt ?? null,
+        maxPricePerSqFt: priceInsights?.maxPricePerSqFt ?? null,
+        totalProperties: priceInsights?.totalProperties ?? 0,
         formatDate
     };
 };

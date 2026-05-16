@@ -31,9 +31,14 @@ api.interceptors.response.use(
   async (error) => {
     console.error(`❌ API Error: ${error.config?.method.toUpperCase()} ${error.config?.url}`, error.response?.data || error.message);
     if (error.response && error.response.status === 401) {
-      // Clear secure storage and redirect to login if unauthorized
+      // Clear secure storage and redirect to login if unauthorized.
+      // The redirect is wrapped so API errors do not crash screens that fetch while rendering.
       await SecureStore.deleteItemAsync("token");
-      router.replace("/(auth)/Login");
+      try {
+        router.replace("/(auth)/Login");
+      } catch (navigationError) {
+        console.warn("Unable to redirect to login from API interceptor", navigationError?.message);
+      }
     }
     return Promise.reject(error);
   }
