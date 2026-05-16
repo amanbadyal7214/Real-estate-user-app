@@ -1,9 +1,24 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const ExploreLocalityCard = ({ title, avgPrice, priceSqft, growth }) => {
+const ExploreLocalityCard = ({
+  title,
+  avgLabel,
+  avgPrice,
+  priceSqft,
+  growth,
+  averagePrice,
+  priceRange,
+  totalProperties,
+}) => {
+  const displayPrice = averagePrice || priceSqft || avgPrice || 'N/A';
+  const secondaryText = priceRange || growth || (typeof totalProperties === 'number'
+    ? `${totalProperties} ${totalProperties === 1 ? 'Property' : 'Properties'}`
+    : '');
+  const secondaryTextColor = priceRange ? '#4A5565' : '#00A63E';
+
   return (
-    <View 
+    <View
       style={{
         width: 185,
         height: 132,
@@ -20,34 +35,34 @@ const ExploreLocalityCard = ({ title, avgPrice, priceSqft, growth }) => {
         overflow: 'hidden'
       }}
     >
-      {/* Header */}
-      <View 
-        style={{ 
-          height: 40, 
-          backgroundColor: '#EBF9F8', 
-          justifyContent: 'center', 
-          paddingHorizontal: 16 
+      <View
+        style={{
+          height: 40,
+          backgroundColor: '#EBF9F8',
+          justifyContent: 'center',
+          paddingHorizontal: 16
         }}
       >
         <Text className="font-inter-bold text-[#101828] text-[16px]">
           {title}
         </Text>
       </View>
-      
-      {/* Content */}
+
       <View style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 16, flex: 1, justifyContent: 'space-between' }}>
         <View className="flex-row items-start justify-between">
           <Text className="font-inter-regular text-[#6A7282] text-[12px] leading-[18px]">
-            Avg.{'\n'}Price:
+            {avgLabel || "Avg.\nPrice:"}
           </Text>
           <Text className="font-inter-semibold text-[#101828] text-[13px] leading-[20px]">
-            {priceSqft}
+            {displayPrice}
           </Text>
         </View>
-        
-        <Text className="font-inter-semibold text-[#00A63E] text-[13px]">
-          {growth}
-        </Text>
+
+        {!!secondaryText && (
+          <Text className="font-inter-semibold text-[13px]" style={{ color: secondaryTextColor }}>
+            {secondaryText}
+          </Text>
+        )}
       </View>
     </View>
   );

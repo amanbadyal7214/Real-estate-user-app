@@ -23,6 +23,7 @@ import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
 import { useProject } from '../../../hooks/useProject';
+import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import { useLocation } from '../../context/LocationContext';
@@ -32,15 +33,69 @@ import CategoryTabs from '../../navigation/CategoryTabs';
 const locationLoadCache = new Map();
 const developerProjectsCache = new Map();
 
+const formatPrice = (value) => {
+  if (value === null || value === undefined || value === '') return 'N/A';
+
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return 'N/A';
+
+  if (numericValue >= 10000000) {
+    return `₹ ${(numericValue / 10000000).toFixed(2).replace(/\.00$/, '')} Cr`;
+  }
+
+  if (numericValue >= 100000) {
+    return `₹ ${(numericValue / 100000).toFixed(2).replace(/\.00$/, '')} L`;
+  }
+
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(numericValue).replace('₹', '₹ ');
+};
+
+const formatPricePerSqft = (value) => {
+  if (value === null || value === undefined || value === '') return 'N/A';
+
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return 'N/A';
+
+  if (numericValue >= 1000) {
+    return `₹ ${(numericValue / 1000).toFixed(1)}K/ sq.ft.`;
+  }
+
+  return `₹ ${numericValue.toFixed(2)}/ sq.ft.`;
+};
+
+const formatLocalityName = (value, index) => {
+  if (!value || typeof value !== 'string') {
+    return `Locality ${index + 1}`;
+  }
+
+  const trimmedValue = value.trim();
+  const looksLikeId = /^[a-f0-9]{24}$/i.test(trimmedValue);
+
+  if (looksLikeId) {
+    return `Locality ${index + 1}`;
+  }
+
+  return trimmedValue
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 const Buy = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
   const { currentLocation } = useLocation();
   const { findPropertiesByLocation, fetchHighDemandProperties, fetchSellersByLocation, fetchBetterPricedProperties, loading: discoveryLoading } = usePropertyDiscovery();
+  const { fetchAveragePriceByCity, loading: localityLoading, error: localityError } = useLocalityAveragePrice();
   const { fetchProjects, fetchDevelopers, fetchDeveloperProjects } = useProject();
   const [properties, setProperties] = useState([]);
   const [highDemandProperties, setHighDemandProperties] = useState([]);
   const [sellers, setSellers] = useState([]);
   const [betterPricedProperties, setBetterPricedProperties] = useState([]);
+  const [exploreLocalities, setExploreLocalities] = useState([]);
   const [focusProjects, setFocusProjects] = useState([]);
   const [topDevelopersList, setTopDevelopersList] = useState([]);
   const [developerProjectsById, setDeveloperProjectsById] = useState({});
@@ -116,6 +171,20 @@ const Buy = () => {
       setBetterPricedProperties([]);
     }
   }, [fetchBetterPricedProperties, currentLocation?.city]);
+
+  const loadExploreLocalities = useCallback(async (city) => {
+    try {
+      const res = await fetchAveragePriceByCity(city || 'Mohali');
+      if (res?.success) {
+        setExploreLocalities(Array.isArray(res.data) ? res.data : []);
+      } else {
+        setExploreLocalities([]);
+      }
+    } catch (err) {
+      console.error("Average price API Error:", err);
+      setExploreLocalities([]);
+    }
+  }, [fetchAveragePriceByCity]);
 
   const loadFocusProjects = useCallback(async (locationParams = {}) => {
     try {
@@ -233,6 +302,7 @@ const Buy = () => {
       loadHighDemand(params),
       loadSellers(params),
       loadBetterPriced(params),
+      loadExploreLocalities(params.city),
       loadFocusProjects(params),
       loadTopDevelopers(params),
     ]).finally(() => {
@@ -243,7 +313,7 @@ const Buy = () => {
 
     locationLoadCache.set(locationKey, request);
     return request;
-  }, [fetchData, loadHighDemand, loadSellers, loadBetterPriced, loadFocusProjects, loadTopDevelopers]);
+  }, [fetchData, loadHighDemand, loadSellers, loadBetterPriced, loadExploreLocalities, loadFocusProjects, loadTopDevelopers]);
 
   useEffect(() => {
     const params = {
@@ -983,43 +1053,43 @@ const Buy = () => {
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See insights and videos in {currentLocation?.city || 'Mohali'}</Text>
             </View>
             <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
-          >
-            <ExploreLocalityCard
-              title="Kharar"
-              avgPrice="Avg. Price:"
-              priceSqft="₹6.2K/ sq.ft."
-              growth="+12.68% ▲"
-            />
-            <ExploreLocalityCard
-              title="Sector 115"
-              avgPrice="Avg. Price:"
-              priceSqft="₹5.1K/ sq.ft."
-              growth="+7.25% ▲"
-            />
-            <ExploreLocalityCard
-              title="Zirakpur"
-              avgPrice="Avg. Price:"
-              priceSqft="₹4.8K/ sq.ft."
-              growth="+5.12% ▲"
-            />
-            <ExploreLocalityCard
-              title="Aerocity"
-              avgPrice="Avg. Price:"
-              priceSqft="₹8.5K/ sq.ft."
-              growth="+15.30% ▲"
-            />
-          </ScrollView>
+            {localityLoading ? (
+              <View className="h-[132px] items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]">
+                <ActivityIndicator size="small" color="#008E96" />
+              </View>
+            ) : localityError ? (
+              <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
+                <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
+              </View>
+            ) : exploreLocalities.length === 0 ? (
+              <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+                <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
+              </View>
+            ) : (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
+              >
+                {exploreLocalities.map((item, index) => (
+                  <ExploreLocalityCard
+                    key={`${item.locality || 'locality'}-${index}`}
+                    title={item.localityName || formatLocalityName(item.locality, index)}
+                    avgLabel={"Avg.\nPrice/sq.ft:"}
+                    averagePrice={formatPricePerSqft(item.averagePricePerSqft)}
+                    priceRange={`${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`}
+                    totalProperties={item.totalProperties}
+                  />
+                ))}
+              </ScrollView>
+            )}
         </View>
 
         {/* News For You Section */}
