@@ -1,66 +1,98 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Share2 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import PropertyCard from '../../../components/PropertyCard';
-import BottomTabBar from '../../navigation/BottomTabBar';
+import { useProject } from '../../../hooks/useProject';
+import { useLocation } from '../../context/LocationContext';
+import api from "../../api";
 
 const Suggestions = () => {
   const router = useRouter();
+  const { fetchProjects, loading } = useProject();
+  const { currentLocation } = useLocation();
+  const [projectsList, setProjectsList] = useState([]);
 
-  // Mock Data
-  const suggestionsData = [
-    {
-      id: 1,
-      projectName: "Nirwana The Moksha",
-      location: "Khanpur, Mohali",
-      priceRange: "₹ 45.03 L – ₹ 1.11 Cr",
-      possessionDate: "Oct, 2030",
-      avgRate: "₹5,700",
-      bhkFlats: "1, 2, 3 BHK Flats",
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop&q=60",
-      imageCount: 22,
-      reraCertified: true,
-      configurations: [
-        { type: "1 BHK", area: "790 sq.ft.", price: "₹45.03 L" },
-        { type: "2 BHK", area: "1490 sq.ft.", price: "₹84.93 L" },
-        { type: "3 BHK", area: "1940 sq.ft.", price: "₹1.11 Cr" }
-      ]
-    },
-    {
-      id: 2,
-      projectName: "The Grand Residency",
-      location: "Sector 62, Mohali",
-      priceRange: "₹ 1.2 Cr – ₹ 2.5 Cr",
-      possessionDate: "Dec, 2028",
-      avgRate: "₹7,200",
-      bhkFlats: "3, 4, 5 BHK Apartments",
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=60",
-      imageCount: 15,
-      reraCertified: true,
-      configurations: [
-        { type: "3 BHK", area: "2100 sq.ft.", price: "₹1.2 Cr" },
-        { type: "4 BHK", area: "2800 sq.ft.", price: "₹1.8 Cr" },
-        { type: "5 BHK", area: "3500 sq.ft.", price: "₹2.5 Cr" }
-      ]
+  const loadSuggestions = useCallback(async () => {
+    try {
+      const city = currentLocation?.city || 'Mohali';
+      const res = await fetchProjects({ 
+        city,
+        limit: 10 
+      });
+      
+      const projects = Array.isArray(res) ? res : (res?.data || []);
+      
+      // Fetch summaries (BHK configurations) for each project in parallel
+      const projectsWithSummaries = await Promise.all(
+        projects.map(async (p) => {
+          try {
+            const summaryRes = await api.get(`/projects/${p._id}/summaries`);
+            // The API returns { success: true, data: [ { summaries: [...] } ] }
+            const summaryGroups = summaryRes.data?.data || [];
+            const allSummaries = summaryGroups.flatMap(group => group.summaries || []);
+            return { ...p, configurations: allSummaries };
+          } catch (err) {
+            console.warn(`Failed to fetch summaries for project ${p._id}:`, err?.message);
+            return p;
+          }
+        })
+      );
+
+      setProjectsList(projectsWithSummaries);
+    } catch (err) {
+      console.error("Failed to fetch suggestions:", err);
     }
-  ];
+  }, [fetchProjects, currentLocation?.city]);
+
+  useEffect(() => {
+    loadSuggestions();
+  }, [loadSuggestions]);
+
+  // Transform API data to PropertyCard format
+  const suggestionsData = projectsList.map((p, index) => {
+    // Handle price range and BHK flats info
+    const avgRateLabel = p.avgPriceUnit?.label || 'Sq. Ft';
+    
+    // Extract unique BHK types for the bhkFlats summary text
+    const bhkTypes = p.configurations?.map(s => `${s.structure?.value || ''} ${s.structure?.id?.name || 'BHK'}`).filter((v, i, a) => a.indexOf(v) === i);
+    const bhkInfo = bhkTypes?.length > 0 ? bhkTypes.join(', ') : 'Apartments';
+    
+    return {
+      id: p._id || `proj-${index}`,
+      _id: p._id,
+      projectName: p.projectName || 'Project',
+      location: p.addressLine1 || (p.city?.name ? `${p.city.name}` : 'Mohali'),
+      priceRange: p.avgPriceRate ? `₹ ${p.avgPriceRate} / ${avgRateLabel}` : 'View Details',
+      possessionDate: p.possessionStatus?.label || 'TBA',
+      avgRate: p.avgPriceRate ? `₹ ${p.avgPriceRate}` : 'TBA',
+      bhkFlats: bhkInfo,
+      image: p.media?.[0]?.fileUrl || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop&q=60",
+      imageCount: p.media?.length || 0,
+      reraCertified: p.isReraApproved ?? true,
+      configurations: p.configurations?.map(s => ({
+        type: `${s.structure?.value || ''} ${s.structure?.id?.name || 'BHK'}`,
+        area: `${s.area} ${s.areaUnit?.label || 'Sq. Ft'}`,
+        price: s.price ? `₹ ${s.price}` : (p.avgPriceRate ? `₹ ${(p.avgPriceRate * s.area).toLocaleString()}` : 'Price on Request')
+      })) || []
+    };
+  });
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center justify-between px-4  pb-5 border-b border-[#E4E7EC] bg-white">
+      <View className="flex-row items-center justify-between px-4 pb-5 border-b border-[#E4E7EC] bg-white">
         <TouchableOpacity onPress={() => router.back()} className="w-9 h-9 justify-center items-center rounded-full">
           <ArrowLeft size={24} color="#4A5565" />
         </TouchableOpacity>
         
         <View className="items-center flex-1">
           <Text className="text-[19px] font-inter-bold text-[#101828] leading-[24px] text-center">
-            10 Smart Suggestions
+            {suggestionsData.length > 0 ? `${suggestionsData.length} Smart Suggestions` : 'Smart Suggestions'}
           </Text>
           <Text className="text-[13px] text-[#6A7282] font-inter-regular leading-[16px] text-center mt-0.5">
-            Based on your last search in Mohali
+            Based on your last search in {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
 
@@ -70,15 +102,27 @@ const Suggestions = () => {
       </View>
 
       {/* Main Content */}
-      <ScrollView 
-        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 30 }}
-        showsVerticalScrollIndicator={false}
-        className="flex-1"
-      >
-        {suggestionsData.map((item) => (
-          <PropertyCard key={item.id} property={item} />
-        ))}
-      </ScrollView>
+      {loading && projectsList.length === 0 ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#008E96" />
+        </View>
+      ) : (
+        <ScrollView 
+          contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 30 }}
+          showsVerticalScrollIndicator={false}
+          className="flex-1"
+        >
+          {suggestionsData.length > 0 ? (
+            suggestionsData.map((item) => (
+              <PropertyCard key={item.id} property={item} />
+            ))
+          ) : (
+            <View className="flex-1 items-center justify-center mt-10">
+              <Text className="font-inter-medium text-[#6A7282]">No suggestions found for this location.</Text>
+            </View>
+          )}
+        </ScrollView>
+      )}
 
       {/* <BottomTabBar activeTab="Suggestions" /> */}
     </SafeAreaView>
@@ -86,3 +130,4 @@ const Suggestions = () => {
 };
 
 export default Suggestions;
+
