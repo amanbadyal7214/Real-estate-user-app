@@ -744,7 +744,17 @@ const Buy = () => {
                 Curated projects just for you
               </Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/ProjectInFocus')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity 
+              onPress={() => router.push({
+                pathname: '/screens/ProjectInFocus',
+                params: { 
+                  city: currentLocation?.city, 
+                  pincode: currentLocation?.pincode,
+                  locality: currentLocation?.locality 
+                }
+              })}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Text
                 className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}

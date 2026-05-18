@@ -4,7 +4,7 @@ import { Camera, Heart, CheckCircle2, MessageSquare, Phone } from 'lucide-react-
 import { useRouter } from 'expo-router';
 import { PRIMARY_COLOR } from "../app/constants/theme.js";
 
-const PerfectMatchCard = ({ property }) => {
+const PerfectMatchCard = ({ property, onPress }) => {
   const router = useRouter();
 
   const navigateToDetails = () => {
@@ -16,7 +16,7 @@ const PerfectMatchCard = ({ property }) => {
   return (
     <TouchableOpacity 
       activeOpacity={0.9}
-      onPress={navigateToDetails}
+      onPress={onPress || navigateToDetails}
       className="bg-white rounded-[16px] mb-6 p-3"
       style={{ 
         borderWidth: 0.667,
