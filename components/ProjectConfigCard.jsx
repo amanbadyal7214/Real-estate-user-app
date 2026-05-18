@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-const ProjectConfigCard = ({ title, areaRange, priceRange, onSeeFloorPlan }) => {
+const ProjectConfigCard = ({ title, areaRange, priceRange }) => {
   return (
     <View 
       className="bg-white border border-[#E5E7EB] rounded-[14px] p-[12.6px] mr-3"
@@ -22,11 +22,7 @@ const ProjectConfigCard = ({ title, areaRange, priceRange, onSeeFloorPlan }) => 
           <Text className="font-inter-regular text-[#101828] text-[16px] leading-[24px]">{priceRange}</Text>
         </View>
 
-        <TouchableOpacity onPress={onSeeFloorPlan}>
-          <Text className="font-inter-medium text-[#101828] text-[14px] leading-[20px] underline">
-            See Floor Plan →
-          </Text>
-        </TouchableOpacity>
+        {/* See Floor Plan button removed per request */}
       </View>
     </View>
   );

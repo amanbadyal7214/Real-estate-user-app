@@ -31,10 +31,12 @@ const ProjectDetails = () => {
     builderName,
     possessionDate,
     averagePricePerSqFt,
-    minPricePerSqFt,
-    maxPricePerSqFt
+    summaries
   } = useProjectDetails(projectId);
   const projectData = Array.isArray(rawProjectData) ? rawProjectData[0] || {} : rawProjectData || {};
+
+  const summariesArray = Array.isArray(summaries) ? summaries : (summaries ? [summaries] : []);
+  const summariesData = summariesArray[0] || null;
 
   const floorPlanData = [
     { type: '5 BHK', info: 'Super Builtup Area', area: '5280.0 sq.ft.', price: '₹ 5.02 Cr', bhk: '5 BHK', image: 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=400' },
@@ -45,6 +47,68 @@ const ProjectDetails = () => {
     { title: '3 BHK Apartment', areaRange: '1835 - 1950 sq.ft.', priceRange: '₹ 3.24 Cr - ₹ 3.44 Cr' },
     { title: '5 BHK Apartment', areaRange: '2800 - 3200 sq.ft.', priceRange: '₹ 4.50 Cr - ₹ 5.01 Cr' }
   ];
+
+  // If summaries are available, derive configuration cards from summaries.summaries
+  const derivedConfigData = (summariesData && summariesData.summaries && summariesData.summaries.length > 0)
+    ? summariesData.summaries.map((s) => {
+        const unit = s.areaUnit?.label || s.areaUnit?.name || '';
+        let areaRange = 'N/A';
+        if (s.areaMin && s.areaMax) areaRange = `${s.areaMin} - ${s.areaMax} ${unit}`;
+        else if (s.area) areaRange = `${s.area} ${unit}`;
+
+        let priceRange = 'N/A';
+        if (s.minPrice && s.maxPrice) priceRange = `₹ ${s.minPrice} - ₹ ${s.maxPrice}`;
+        else if (s.price) priceRange = `₹ ${s.price}`;
+
+        const structureLabel = s.structure?.value || s.structure?.label || '';
+        const titleBase = s.propertyItem?.label || s.propertyItem?.name || 'Configuration';
+        const title = structureLabel ? `${titleBase} • ${structureLabel}` : titleBase;
+
+        return {
+          title,
+          areaRange,
+          priceRange
+        };
+      })
+    : configData;
+
+  const dummyTourImage = 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&q=80&w=900';
+
+  const propertyTourData = (summariesData && summariesData.summaries && summariesData.summaries.length > 0)
+    ? summariesData.summaries.map((s, index) => {
+        const bhkValue = s.structure?.value ? `${s.structure.value} BHK` : 'Flat';
+        const areaUnit = s.areaUnit?.label || s.areaUnit?.name || '';
+
+        return {
+          id: s._id || index,
+          bhk: bhkValue,
+          info: s.propertyItem?.label || s.propertyItem?.name || 'Flat',
+          area: `${s.area || 'N/A'} ${areaUnit}`.trim(),
+          price: '₹ XX Cr',
+          image: dummyTourImage,
+          quantity: s.quantity,
+          activeTabKey: bhkValue,
+        };
+      })
+    : floorPlanData;
+
+  const propertyTourTabs = summariesData && summariesData.summaries && summariesData.summaries.length > 0
+    ? [
+        { label: 'All', count: propertyTourData.length },
+        ...Array.from(new Map(propertyTourData.map((item) => [item.activeTabKey, item])).values()).map((item) => ({
+          label: item.activeTabKey,
+          count: propertyTourData.filter((tourItem) => tourItem.activeTabKey === item.activeTabKey).length,
+        }))
+      ]
+    : [
+        { label: 'All', count: 6 },
+        { label: '3 BHK', count: 4 },
+        { label: '5 BHK', count: 2 }
+      ];
+
+  const visiblePropertyTourData = activeFloorTab === 'All'
+    ? propertyTourData
+    : propertyTourData.filter((item) => item.activeTabKey === activeFloorTab);
 
 
 
@@ -176,13 +240,14 @@ const ProjectDetails = () => {
                 <Text className="text-white text-[14px] font-inter-regular">{currentImageIndex + 1}/{images.length || 1}</Text>
               </View>
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="p-4 gap-2 border-b border-[#E5E7EB]">
-              {['Overview', 'Highlights', 'Property Tour', 'Data Insights'].map((tab) => (
-                <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} className={`px-4 py-2 rounded-[14px] ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'} mr-2`}>
+            <View className="flex-row gap-2 border-b border-[#E5E7EB] px-4 py-4">
+              {/* Data Insights tab hidden for now */}
+              {['Overview', 'Highlights', 'Property Tour'].map((tab) => (
+                <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} className={`flex-1 py-2 rounded-[14px] items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`}>
                   <Text className={`text-[14px] font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{tab}</Text>
                 </TouchableOpacity>
               ))}
-            </ScrollView>
+            </View>
           </View>
 
           {activeTab === 'Overview' ? (
@@ -196,7 +261,7 @@ const ProjectDetails = () => {
                       </View>
                       <View>
                         <Text className="text-[#667085] text-[12px] font-inter-medium">Starting from</Text>
-                        <Text className="text-[#0A0A0A] text-[16px] font-inter-semibold">{formatPricePerSqFt(minPricePerSqFt || averagePricePerSqFt || projectData.costPerSqft)} - {formatPricePerSqFt(maxPricePerSqFt || averagePricePerSqFt || projectData.costPerSqft)}</Text>
+                        <Text className="text-[#0A0A0A] text-[16px] font-inter-semibold">{formatPricePerSqFt(averagePricePerSqFt || projectData.costPerSqft)}</Text>
                       </View>
                     </View>
                     <Text className="text-[#6A7282] text-[12px] mb-3 font-inter-regular">
@@ -215,7 +280,7 @@ const ProjectDetails = () => {
               <View>
                 <Text className="text-[#101828] text-[18px] font-inter-medium mb-3">Project Configurations</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {configData.map((item, index) => (
+                  {derivedConfigData.map((item, index) => (
                     <ProjectConfigCard key={index} title={item.title} areaRange={item.areaRange} priceRange={item.priceRange} />
                   ))}
                 </ScrollView>
@@ -227,6 +292,34 @@ const ProjectDetails = () => {
                   {projectData.description || 'Modern apartments in a prime location with premium amenities and finishes.'}
                 </Text>
               </View>
+              {summariesData ? (
+                <View className="bg-white rounded-[16px] p-4 gap-3 border border-[#E5E7EB]">
+                  <Text className="text-[#101828] text-[18px] font-inter-medium">Project Summary</Text>
+                  {summariesData.amenities && summariesData.amenities.length > 0 && (
+                    <View className="flex-row flex-wrap gap-2">
+                      {summariesData.amenities.map((am) => (
+                        <View key={am._id} className="px-3 py-2 bg-[#F2F4F7] rounded-[12px] flex-row items-center gap-2">
+                          <MaterialIcons name={am.icon || am.name || 'check'} size={18} color="#008E96" />
+                          <Text className="text-[#101828] text-[12px]">{am.label}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+
+                  {summariesData.summaries && summariesData.summaries.length > 0 && (
+                    <View className="mt-2">
+                      {summariesData.summaries.map((s) => (
+                        <View key={s._id} className="flex-row items-center justify-between py-2 border-b border-[#F2F4F7]">
+                          <View>
+                            <Text className="text-[#101828] text-[14px] font-inter-semibold">{s.propertyItem?.label} • {s.structure?.value}{s.structure?.id?.name ? ` ${s.structure.id.name}` : ''}</Text>
+                            <Text className="text-[#667085] text-[12px]">{s.area} {s.areaUnit?.label} • {s.quantity} units</Text>
+                          </View>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              ) : null}
               <View className="bg-white rounded-[24px] overflow-hidden border border-[#D7F0F0] shadow-sm">
                 <LinearGradient colors={['#F0F9FA', '#FFFFFF']} className="px-4 py-4 border-b border-[#E5F4F4]">
                   <View className="flex-row items-center justify-between mb-3">
@@ -331,28 +424,39 @@ const ProjectDetails = () => {
               <View className="gap-3">
                 <Text className="text-[#101828] text-[18px] font-inter-medium">Amenities</Text>
                 <View className="flex-row flex-wrap gap-2">
-                  {[
-                    { icon: '🏊‍♂️', title: 'Swimming Pool' },
-                    { icon: '🌳', title: 'Landscape' },
-                    { icon: '🏋️', title: 'Gymnasium' },
-                    { icon: '🏊‍♂️', title: "Kid's Pool" },
-                    { icon: '💧', title: '24X7 Water' },
-                    { icon: '+20', title: 'More amenities', isMore: true }
-                  ].map((item, index) => (
-                    <View key={index} className="w-[31%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-2">
-                      {item.isMore ? (
+                  {summariesData && summariesData.amenities && summariesData.amenities.length > 0 ? (
+                    summariesData.amenities.map((am) => (
+                      <View key={am._id || am.label} className="w-[31%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-2">
                         <View className="items-center">
-                          <Text className="text-[#101828] text-[20px] font-inter-medium">+20</Text>
-                          <Text className="text-[#101828] text-[12px] font-inter-regular underline">More amenities</Text>
+                          <MaterialIcons name={am.icon || am.name || 'check'} size={28} color="#008E96" />
+                          <Text className="text-[#101828] text-[12px] text-center font-inter-regular mt-2" numberOfLines={2}>{am.label}</Text>
                         </View>
-                      ) : (
-                        <>
-                          <Text className="text-[24px] mb-1">{item.icon}</Text>
-                          <Text className="text-[#101828] text-[12px] text-center font-inter-regular" numberOfLines={1}>{item.title}</Text>
-                        </>
-                      )}
-                    </View>
-                  ))}
+                      </View>
+                    ))
+                  ) : (
+                    [
+                      { icon: '🏊‍♂️', title: 'Swimming Pool' },
+                      { icon: '🌳', title: 'Landscape' },
+                      { icon: '🏋️', title: 'Gymnasium' },
+                      { icon: '🏊‍♂️', title: "Kid's Pool" },
+                      { icon: '💧', title: '24X7 Water' },
+                      { icon: '+20', title: 'More amenities', isMore: true }
+                    ].map((item, index) => (
+                      <View key={index} className="w-[31%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-2">
+                        {item.isMore ? (
+                          <View className="items-center">
+                            <Text className="text-[#101828] text-[20px] font-inter-medium">+20</Text>
+                            <Text className="text-[#101828] text-[12px] font-inter-regular underline">More amenities</Text>
+                          </View>
+                        ) : (
+                          <>
+                            <Text className="text-[24px] mb-1">{item.icon}</Text>
+                            <Text className="text-[#101828] text-[12px] text-center font-inter-regular" numberOfLines={1}>{item.title}</Text>
+                          </>
+                        )}
+                      </View>
+                    ))
+                  )}
                 </View>
               </View>
               {/* <View className="gap-3">
@@ -414,196 +518,6 @@ const ProjectDetails = () => {
                   </TouchableOpacity>
                 </View> */}
               <ProjectPropertiesSection projectId={projectId} />
-            </View>) : activeTab === 'Data Insights' ? (
-              <View className="p-4 gap-4">
-                {/* Price Trends Section */}
-                <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">
-                  <Text className="text-[#101828] text-[18px] font-inter-bold leading-[28px]">Price trends for Apartments in New Chandigarh</Text>
-
-                  {/* Appreciation Card */}
-                  <View className="flex-row items-center border border-[#E5E7EB] rounded-[14px] p-3 gap-2 bg-white">
-                    <View className="flex-row items-center gap-1">
-                      <Ionicons name="trending-up" size={20} color="#00A63E" />
-                      <Text className="text-[#101828] text-[16px] font-inter-bold">11.72%</Text>
-                    </View>
-                    <Text className="text-[#6A7282] text-[12px] font-inter-regular flex-1">
-                      (Appreciation in last 1 year for New Chandigarh)
-                    </Text>
-                  </View>
-
-                  {/* Rates Header */}
-                  <View className="flex-row items-center gap-1">
-                    <Text className="text-[#364153] text-[14px] font-inter-medium">Rates in</Text>
-                    <TouchableOpacity className="flex-row items-center">
-                      <Text className="text-[#364153] text-[14px] font-inter-bold underline">Last 1 year</Text>
-                      <Ionicons name="chevron-down" size={16} color="#364153" />
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* Chart Mockup */}
-                  <View className="h-[215px] bg-white rounded-[14px] relative overflow-hidden">
-                    <LinearGradient
-                      colors={['#E6F7F6', '#FFFFFF']}
-                      className="absolute inset-0"
-                    />
-
-                    {/* Y-Axis Labels */}
-                    <View className="absolute left-2 top-2 bottom-6 justify-between py-2">
-                      {['₹10K', '₹8K', '₹6K', '₹5K', '₹3K', '₹2K', '₹0'].map((label, idx) => (
-                        <Text key={idx} className="text-[#4A5565] text-[12px] font-inter-regular">{label}</Text>
-                      ))}
-                    </View>
-
-                    {/* Grid Lines and Data Visualization Area */}
-                    <View className="ml-12 mt-4 mr-4 h-[160px] relative">
-                      {[...Array(7)].map((_, i) => (
-                        <View key={i} className="absolute w-full h-[0.5px] bg-gray-300" style={{ top: `${(i / 6) * 100}%` }} />
-                      ))}
-
-                      {/* Data Line (SVG representation or styled View) */}
-                      <View className="absolute inset-0 overflow-hidden">
-                        <View
-                          className="absolute bottom-[-10px] left-[-20px] w-[150%] h-[120px]"
-                          style={{
-                            borderTopWidth: 3,
-                            borderColor: '#008E96',
-                            backgroundColor: 'rgba(0, 142, 150, 0.15)',
-                            transform: [{ rotate: '-12deg' }]
-                          }}
-                        />
-                        {/* Floating Label */}
-                        <View className="absolute left-[40%] top-[45%] bg-white border border-[#E5E7EB] rounded-[10px] p-2 shadow-lg z-20 w-[127px]">
-                          <View className="flex-row items-center gap-2 mb-1">
-                            <View className="w-1.5 h-1.5 bg-[#008E96] rounded-full" />
-                            <Text className="text-[#364153] text-[12px] font-inter-regular">New Chan...</Text>
-                            <Text className="text-[#0A0A0A] text-[12px] font-inter-bold">₹9K/sq.ft</Text>
-                          </View>
-                          <Text className="text-[#6A7282] text-[10px] font-inter-regular text-center">Jan, 2026</Text>
-                        </View>
-                      </View>
-                    </View>
-
-                    {/* X-Axis Labels */}
-                    <View className="absolute left-12 right-4 bottom-1 flex-row justify-between">
-                      {['Jul, 25', 'Oct, 25', 'Jan, 26', 'Apr, 26'].map((label, idx) => (
-                        <Text key={idx} className="text-[#4A5565] text-[10px] font-inter-regular">{label}</Text>
-                      ))}
-                    </View>
-                  </View>
-
-                  {/* Property Rates Table */}
-                  <View className="gap-3 mt-4">
-                    <Text className="text-[#101828] text-[14px] font-inter-medium">Property rates over the years</Text>
-                    <View className="border border-[#E5E7EB] rounded-[14px] overflow-hidden">
-                      <View className="flex-row bg-white border-b border-[#E5E7EB] py-3 px-4">
-                        <Text className="flex-1 text-[#4A5565] text-[12px] font-inter-medium">Locality</Text>
-                        <Text className="w-[100px] text-[#4A5565] text-[12px] font-inter-medium">Current Price</Text>
-                        <Text className="w-[80px] text-[#4A5565] text-[12px] font-inter-medium">Last 1 Yr</Text>
-                      </View>
-                      <View className="flex-row bg-white py-4 px-4 items-center">
-                        <View className="flex-row items-center gap-2 flex-1">
-                          <View className="w-2 h-2 bg-[#5E35B1] rounded-full" />
-                          <Text className="text-[#101828] text-[14px] font-inter-regular" numberOfLines={1}>New Chandi...</Text>
-                        </View>
-                        <Text className="w-[100px] text-[#101828] text-[14px] font-inter-medium">₹ 9.6K/sq.ft</Text>
-                        <View className="w-[80px] flex-row items-center gap-1">
-                          <Ionicons name="trending-up" size={14} color="#00A63E" />
-                          <Text className="text-[#00A63E] text-[14px] font-inter-medium">11.72%</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Locality Insights Section */}
-                <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">
-                  <Text className="text-[#101828] text-[18px] font-inter-bold">Explore this locality</Text>
-                  <View className="flex-row gap-3">
-                    <View className="w-20 h-20 bg-purple-100 rounded-[10px] items-center justify-center">
-                      <Text className="text-[#C27AFF] text-[10px] font-inter-bold text-center">NO PHOTOS</Text>
-                    </View>
-                    <View className="flex-1 gap-1">
-                      <Text className="text-[#101828] text-[14px] font-inter-medium">New Chandigarh, Chandigarh</Text>
-                      <View className="flex-row items-center gap-1">
-                        <Ionicons name="trending-up" size={14} color="#00A63E" />
-                        <Text className="text-[#00A63E] text-[14px] font-inter-bold">12.96% YoY</Text>
-                      </View>
-                      <Text className="text-[#364153] text-[14px] font-inter-regular">Avg. rate ₹9.9K/sq.ft.</Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity className="flex-row items-center gap-1 mt-1">
-                    <Text className="text-[#101828] text-[14px] font-inter-bold underline">Get more insights</Text>
-                    <MaterialIcons name="open-in-new" size={16} color="#101828" />
-                  </TouchableOpacity>
-                </View>
-
-                {/* Reviews Section */}
-                <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">
-                  <View className="flex-row justify-between items-center">
-                    <View className="flex-row items-center gap-2">
-                      <Text className="text-[#101828] text-[18px] font-inter-bold" numberOfLines={1}>Reviews for New Chandig...</Text>
-                      <View className="bg-[#F0FDF4] border border-[#00A63E] rounded-[10px] px-2 py-1 flex-row items-center gap-1">
-                        <Ionicons name="star" size={12} color="#00A63E" />
-                        <Text className="text-[#00A63E] text-[14px] font-inter-bold">4.9</Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity>
-                      <Text className="text-[#008E96] text-[14px] font-inter-bold">See all</Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* Review Card */}
-                  <View className="border border-[#E5E7EB] rounded-[14px] p-4 gap-4">
-                    <View className="flex-row justify-between items-start">
-                      <View className="flex-row items-center gap-3">
-                        <LinearGradient colors={['#FFF085', '#FDC700']} className="w-12 h-12 rounded-full items-center justify-center">
-                          <Text className="text-[24px]">👤</Text>
-                        </LinearGradient>
-                        <View>
-                          <Text className="text-[#101828] text-[14px] font-inter-bold">Aditya Singh</Text>
-                          <Text className="text-[#6A7282] text-[12px] font-inter-regular">Owner | a month ago</Text>
-                        </View>
-                      </View>
-                      <View className="bg-[#F0FDF4] border border-[#00A63E] rounded-[10px] px-2 py-1 flex-row items-center gap-1">
-                        <Ionicons name="star" size={10} color="#00A63E" />
-                        <Text className="text-[#00A63E] text-[14px] font-inter-bold">4.8</Text>
-                      </View>
-                    </View>
-
-                    <View className="gap-2">
-                      <View className="flex-row items-center gap-2">
-                        <View className="bg-[#E5E7EB] rounded-[4px] px-1">
-                          <Text className="text-[12px]">✓</Text>
-                        </View>
-                        <Text className="text-[#364153] text-[12px] font-inter-bold uppercase">GOOD THINGS HERE</Text>
-                      </View>
-                      <Text className="text-[#4A5565] text-[14px] font-inter-regular leading-[23px]">
-                        New chandigrah is under siginficant physical and social development.
-                      </Text>
-                    </View>
-
-                    <View className="gap-2">
-                      <View className="flex-row items-center gap-2">
-                        <View className="bg-[#E5E7EB] rounded-[4px] px-1">
-                          <Text className="text-[12px]">🔧</Text>
-                        </View>
-                        <Text className="text-[#364153] text-[12px] font-inter-bold uppercase">THINGS NEED IMPROVEMENT</Text>
-                      </View>
-                      <Text className="text-[#4A5565] text-[14px] font-inter-regular leading-[23px]">
-                        Chandigrah roads are getting crowed. Many people are moving...
-                      </Text>
-                      <TouchableOpacity className="flex-row items-center gap-1 mt-1">
-                        <Text className="text-[#101828] text-[14px] font-inter-bold">Read more</Text>
-                        <Ionicons name="chevron-forward" size={14} color="#101828" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
-                  {/* Write Review Button */}
-                  <TouchableOpacity className="border-2 border-[#008E96] rounded-[14px] h-[48px] items-center justify-center">
-                    <Text className="text-[#008E96] text-[14px] font-inter-bold">Write your review</Text>
-                  </TouchableOpacity>
-                </View>
               </View>) : activeTab === 'Property Tour' ? (
                 <View className="p-4 gap-4">
                   <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">
@@ -613,33 +527,23 @@ const ProjectDetails = () => {
                     </View>
 
                     {/* Floor Tabs */}
-                    <View className="flex-row border border-[#E5E7EB] rounded-[14px] overflow-hidden">
-                      <TouchableOpacity
-                        onPress={() => setActiveFloorTab('All')}
-                        className={`flex-1 items-center py-3 border-r border-[#E5E7EB] ${activeFloorTab === 'All' ? 'bg-white' : 'bg-white'}`}
-                      >
-                        <Text className={`text-[14px] font-inter-medium ${activeFloorTab === 'All' ? 'text-[#364153]' : 'text-[#364153]'}`}>All</Text>
-                        <Text className="text-[#6A7282] text-[12px] font-inter-medium">6 Sizes</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => setActiveFloorTab('3 BHK')}
-                        className={`flex-1 items-center py-3 border-r border-[#E5E7EB] ${activeFloorTab === '3 BHK' ? 'bg-white' : 'bg-white'}`}
-                      >
-                        <Text className={`text-[14px] font-inter-medium ${activeFloorTab === '3 BHK' ? 'text-[#364153]' : 'text-[#364153]'}`}>3 BHK</Text>
-                        <Text className="text-[#6A7282] text-[12px] font-inter-medium">4 Sizes</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => setActiveFloorTab('5 BHK')}
-                        className={`flex-1 items-center py-3 ${activeFloorTab === '5 BHK' ? 'bg-[#E6F7F6]' : 'bg-white'}`}
-                      >
-                        <Text className={`text-[14px] font-inter-medium ${activeFloorTab === '5 BHK' ? 'text-[#008E96]' : 'text-[#364153]'}`}>5 BHK</Text>
-                        <Text className="text-[#6A7282] text-[12px] font-inter-medium">2 Sizes</Text>
-                      </TouchableOpacity>
-                    </View>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row border border-[#E5E7EB] rounded-[14px] overflow-hidden">
+                      {propertyTourTabs.map((tab, index) => (
+                        <TouchableOpacity
+                          key={tab.label}
+                          onPress={() => setActiveFloorTab(tab.label)}
+                          className={`items-center py-3 px-5 ${activeFloorTab === tab.label ? 'bg-[#E6F7F6]' : 'bg-white'} ${index < propertyTourTabs.length - 1 ? 'border-r border-[#E5E7EB]' : ''}`}
+                          style={{ minWidth: 92 }}
+                        >
+                          <Text className={`text-[14px] font-inter-medium ${activeFloorTab === tab.label ? 'text-[#008E96]' : 'text-[#364153]'}`}>{tab.label}</Text>
+                          <Text className="text-[#6A7282] text-[12px] font-inter-medium">{tab.count} Sizes</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
 
                     {/* Floor Cards */}
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-4">
-                      {floorPlanData.map((item, index) => (
+                      {visiblePropertyTourData.map((item, index) => (
                         <View key={index} className="w-[200px] border border-[#E5E7EB] rounded-[14px] p-2 gap-2 mr-4">
                           <View className="w-full h-[128px] bg-[#F3F4F6] rounded-[10px] overflow-hidden relative">
                             <Image source={{ uri: item.image }} className="w-full h-full" resizeMode="cover" />

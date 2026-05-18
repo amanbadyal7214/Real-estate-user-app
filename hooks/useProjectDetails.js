@@ -3,7 +3,8 @@ import api from "../app/api";
 
 export const useProjectDetails = (projectId) => {
     const [projectData, setProjectData] = useState(null);
-    const [priceInsights, setPriceInsights] = useState(null);
+    const [summaries, setSummaries] = useState(null);
+    // Removed priceInsights state and related /average-price API usage per request
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -18,7 +19,6 @@ export const useProjectDetails = (projectId) => {
             try {
                 setLoading(true);
                 setError(null);
-                setPriceInsights(null);
 
                 // Try to fetch as project first
                 try {
@@ -26,23 +26,23 @@ export const useProjectDetails = (projectId) => {
                     if (projectResponse.data?.success && projectResponse.data?.data) {
                         setProjectData(projectResponse.data.data);
                         try {
-                            const priceResponse = await api.get(`/projects/${projectId}/average-price`);
-                            if (priceResponse.data?.success && priceResponse.data?.data) {
-                                setPriceInsights(priceResponse.data.data);
+                            const summariesResp = await api.get(`/projects/${projectId}/summaries`);
+                            if (summariesResp.data?.success && summariesResp.data?.data) {
+                                setSummaries(summariesResp.data.data);
                             }
-                        } catch (priceErr) {
-                            console.warn("Average price API Error:", priceErr?.response?.data || priceErr.message);
+                        } catch (summErr) {
+                            console.warn('Project summaries API Error:', summErr?.response?.data || summErr.message);
                         }
                         return;
                     } else if (projectResponse.data?.data) {
                         setProjectData(projectResponse.data.data);
                         try {
-                            const priceResponse = await api.get(`/projects/${projectId}/average-price`);
-                            if (priceResponse.data?.success && priceResponse.data?.data) {
-                                setPriceInsights(priceResponse.data.data);
+                            const summariesResp = await api.get(`/projects/${projectId}/summaries`);
+                            if (summariesResp.data?.success && summariesResp.data?.data) {
+                                setSummaries(summariesResp.data.data);
                             }
-                        } catch (priceErr) {
-                            console.warn("Average price API Error:", priceErr?.response?.data || priceErr.message);
+                        } catch (summErr) {
+                            console.warn('Project summaries API Error:', summErr?.response?.data || summErr.message);
                         }
                         return;
                     }
@@ -52,12 +52,36 @@ export const useProjectDetails = (projectId) => {
                     const propertyResponse = await api.get(`/properties/${projectId}`);
                     if (propertyResponse.data?.success && propertyResponse.data?.data) {
                         setProjectData(propertyResponse.data.data);
+                        try {
+                            const summariesResp = await api.get(`/projects/${projectId}/summaries`);
+                            if (summariesResp.data?.success && summariesResp.data?.data) {
+                                setSummaries(summariesResp.data.data);
+                            }
+                        } catch (summErr) {
+                            console.warn('Project summaries API Error:', summErr?.response?.data || summErr.message);
+                        }
                         return;
                     } else if (propertyResponse.data?.data) {
                         setProjectData(propertyResponse.data.data);
+                        try {
+                            const summariesResp = await api.get(`/projects/${projectId}/summaries`);
+                            if (summariesResp.data?.success && summariesResp.data?.data) {
+                                setSummaries(summariesResp.data.data);
+                            }
+                        } catch (summErr) {
+                            console.warn('Project summaries API Error:', summErr?.response?.data || summErr.message);
+                        }
                         return;
                     } else if (propertyResponse.data) {
                         setProjectData(propertyResponse.data);
+                        try {
+                            const summariesResp = await api.get(`/projects/${projectId}/summaries`);
+                            if (summariesResp.data?.success && summariesResp.data?.data) {
+                                setSummaries(summariesResp.data.data);
+                            }
+                        } catch (summErr) {
+                            console.warn('Project summaries API Error:', summErr?.response?.data || summErr.message);
+                        }
                         return;
                     }
                 }
@@ -70,6 +94,7 @@ export const useProjectDetails = (projectId) => {
             } finally {
                 setLoading(false);
             }
+
         };
 
         fetchProjectDetails();
@@ -110,6 +135,12 @@ export const useProjectDetails = (projectId) => {
     const brochureImages = images.slice(0, 3);
     const brochurePages = projectData?.brochurePages || projectData?.documentCount || images.length || 30;
 
+    // Derive pricing information from the project payload (prefer project fields such as avgPriceRate)
+    const averagePricePerSqFt = projectData?.avgPriceRate ?? projectData?.avgPricePerSqft ?? projectData?.costPerSqft ?? null;
+    const minPricePerSqFt = projectData?.minPricePerSqFt ?? null;
+    const maxPricePerSqFt = projectData?.maxPricePerSqFt ?? null;
+    const totalProperties = projectData?.totalProperties ?? 0;
+
     return {
         projectData,
         loading,
@@ -122,11 +153,11 @@ export const useProjectDetails = (projectId) => {
         builderName,
         possessionDate,
         startDate,
-        priceInsights,
-        averagePricePerSqFt: priceInsights?.averagePricePerSqFt ?? null,
-        minPricePerSqFt: priceInsights?.minPricePerSqFt ?? null,
-        maxPricePerSqFt: priceInsights?.maxPricePerSqFt ?? null,
-        totalProperties: priceInsights?.totalProperties ?? 0,
+        averagePricePerSqFt,
+        minPricePerSqFt,
+        maxPricePerSqFt,
+        totalProperties,
+        summaries,
         formatDate
     };
 };
