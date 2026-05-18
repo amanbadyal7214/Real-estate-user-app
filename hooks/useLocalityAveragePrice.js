@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import api from "../app/api";
 
 const localityNameCache = new Map();
@@ -9,7 +9,7 @@ export const useLocalityAveragePrice = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const resolveLocalityName = async (locality) => {
+    const resolveLocalityName = useCallback(async (locality) => {
         if (!locality || !isObjectId(locality)) {
             return locality;
         }
@@ -23,9 +23,9 @@ export const useLocalityAveragePrice = () => {
         const localityName = response.data?.data?.name || response.data?.data?.label || cacheKey;
         localityNameCache.set(cacheKey, localityName);
         return localityName;
-    };
+    }, []);
 
-    const fetchAveragePriceByCity = async (city) => {
+    const fetchAveragePriceByCity = useCallback(async (city) => {
         setLoading(true);
         setError(null);
         try {
@@ -59,7 +59,7 @@ export const useLocalityAveragePrice = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [resolveLocalityName]);
 
     return {
         fetchAveragePriceByCity,
