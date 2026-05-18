@@ -1,17 +1,20 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Search } from 'lucide-react-native';
+import { ArrowLeft } from 'lucide-react-native';
 
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import NoDataFound from '../../components/NoDataFound';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import { useLocality } from '../../hooks/useLocality';
 import { useLocation } from '../context/LocationContext';
 
 const RecommendedProperties = () => {
-  const { findPropertiesByLocation, loading } = usePropertyDiscovery();
+  const { findPropertiesByLocation, loading: discoveryLoading } = usePropertyDiscovery();
+  const { resolveLocalities, loading: localityLoading } = useLocality();
+  const loading = discoveryLoading || localityLoading;
   const { currentLocation } = useLocation();
   const searchParams = useLocalSearchParams();
   const [properties, setProperties] = useState([]);
@@ -47,12 +50,13 @@ const RecommendedProperties = () => {
 
       const res = await findPropertiesByLocation(params);
       if (res.success) {
-        setProperties(res.data);
+        const enriched = await resolveLocalities(res.data);
+        setProperties(enriched);
       }
     } catch (err) {
       console.error('Match Fetch Error:', err);
     }
-  }, [currentLocation?.city, findPropertiesByLocation, searchParams.city, searchQuery]);
+  }, [currentLocation?.city, findPropertiesByLocation, searchParams.city, searchQuery, resolveLocalities]);
 
   useEffect(() => {
     fetchMatches();
@@ -78,7 +82,7 @@ const RecommendedProperties = () => {
     price: typeof property.price === 'number' ? `₹ ${property.price}` : property.price || property.priceRange || 'View details',
     name: property.title || property.projectName || 'Property',
     developer: property.projectName ? `by ${property.projectName}` : `by ${property.owner?.name || 'Developer'}`,
-    location: [property.locality, property.city].filter(Boolean).join(', ') || 'Location not available',
+    location: [property.localityName, property.city?.name || property.city, property.state?.name || property.state].filter(Boolean).join(', ') || 'Location not available',
     details: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK Flats • ${property.area || 'N/A'} ${property.areaUnit?.name || 'sq.ft.'}`,
     seller: property.owner?.name || property.sellerName || 'Seller',
     images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
@@ -124,43 +128,12 @@ const RecommendedProperties = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
-      {/* Header with Search */}
-      <View className="px-4 py-2 flex-row items-center gap-3">
+      {/* Header */}
+      <View className="px-4 py-4 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center items-center">
-          <ArrowLeft size={28} color="#4A5565" />
+          <ArrowLeft size={28} color="#101828" />
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          className="flex-row items-center border border-[#008E9633] bg-white h-[50px] px-5 rounded-[40px] flex-1"
-          style={{ borderWidth: 1.5, borderColor: '#B2E0E2' }}
-        >
-          <Search size={22} color="#6A7282" />
-          <TextInput
-            placeholder="Locality, Landmark, Project..."
-            placeholderTextColor="#6A7282"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            className="ml-3 flex-1 text-[#101828] text-[16px]"
-            style={{ fontFamily: 'Inter-Regular' }}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* Filter Buttons */}
-      <View className="flex-row px-4 gap-2 ">
-        <TouchableOpacity className="flex-row items-center border border-[#6A7282] rounded-[24px] px-4 py-2 bg-white">
-          <Text className="text-[#101828] text-[16px] mr-2" style={{ fontFamily: 'Inter-Medium' }}>Budget in Rs.</Text>
-          <Svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-            <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </Svg>
-        </TouchableOpacity>
-        
-        <TouchableOpacity className="flex-row items-center border border-[#6A7282] rounded-[24px] px-4 py-2 bg-white">
-          <Text className="text-[#101828] text-[16px] mr-2" style={{ fontFamily: 'Inter-Medium' }}>BHK type</Text>
-          <Svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-            <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </Svg>
-        </TouchableOpacity>
+        <Text className="ml-2 text-[20px] text-[#101828] font-inter-semibold">Recommended Properties</Text>
       </View>
 
       {/* Filter Tabs */}
