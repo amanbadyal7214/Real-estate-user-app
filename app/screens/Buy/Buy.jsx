@@ -679,7 +679,7 @@ const Buy = () => {
                 className="font-inter-bold text-[#101828]"
                 style={{ fontSize: 17, lineHeight: 21 }}
               >
-                High Demand Projects
+                High Demand Properties
               </Text>
               <Text
                 className="font-inter-regular text-[#6A7282]"
@@ -689,7 +689,14 @@ const Buy = () => {
               </Text>
             </View>
             <TouchableOpacity 
-              onPress={() => router.push('/screens/HighDemandProduct')}
+              onPress={() => router.push({
+                pathname: '/screens/HighDemandProduct',
+                params: { 
+                  city: currentLocation?.city, 
+                  pincode: currentLocation?.pincode,
+                  locality: currentLocation?.locality 
+                }
+              })}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text
