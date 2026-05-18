@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from 'react';
 import { router, Stack } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HighestGrowthCard from '../../../components/HighestGrowthCard';
@@ -10,6 +11,10 @@ import PreferenceCard from '../../../components/PreferenceCard';
 import RevisitPropertyCard from '../../../components/RevisitPropertyCard';
 import TopRatedProjectCard from '../../../components/TopRatedProjectCard';
 import UniqueAmenityCard from '../../../components/UniqueAmenityCard';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
+import { useLocality } from '../../../hooks/useLocality';
+import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
+import { useLocation } from '../../context/LocationContext';
 
 
 const mockProperties = [
@@ -157,6 +162,49 @@ const preferencesData = [
 ];
 
 const Insights = () => {
+    const { findPropertiesByLocation, loading: discoveryLoading } = usePropertyDiscovery();
+    const { resolveLocalities, loading: localityLoading } = useLocality();
+    const { fetchAveragePriceByCity, loading: localityPriceLoading } = useLocalityAveragePrice();
+    const { currentLocation } = useLocation();
+    const [nearbyProperties, setNearbyProperties] = useState([]);
+    const [nearbyLocalities, setNearbyLocalities] = useState([]);
+
+    const loading = discoveryLoading || localityLoading || localityPriceLoading;
+
+    useEffect(() => {
+        const fetchNearby = async () => {
+            try {
+                // Determine search parameters
+                const city = currentLocation?.city || 'Mohali';
+                const locality = currentLocation?.locality;
+                const params = { limit: 10, city, lookingFor: 'sell' };
+                if (locality) params.locality = locality;
+                
+                const res = await findPropertiesByLocation(params);
+                if (res.success) {
+                    const enriched = await resolveLocalities(res.data);
+                    setNearbyProperties(enriched);
+                }
+            } catch (err) {
+                console.error("Insights Nearby Fetch Error:", err);
+            }
+        };
+
+        const fetchLocalities = async () => {
+            try {
+                const res = await fetchAveragePriceByCity(currentLocation?.city || 'Mohali');
+                if (res?.success) {
+                    setNearbyLocalities(res.data || []);
+                }
+            } catch (err) {
+                console.error("Insights Locality Fetch Error:", err);
+            }
+        };
+
+        fetchNearby();
+        fetchLocalities();
+    }, [currentLocation]);
+
     return (
         <SafeAreaView className="flex-1 bg-white">
             <Stack.Screen options={{ animation: 'slide_from_bottom', gestureEnabled: true }} />
@@ -182,7 +230,7 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(300)} className="pl-4">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold">New Listings added nearby</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => router.push({ pathname: '/screens/PrefectlyMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
                             <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
                         </TouchableOpacity>
                     </View>
@@ -191,8 +239,23 @@ const Insights = () => {
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingRight: 16 }}
                     >
-                        {mockProperties.map((prop) => (
-                            <InsightPropertyCard key={prop.id} {...prop} />
+                        {loading && nearbyProperties.length === 0 ? (
+                            <View className="flex-row items-center justify-center py-10 w-[200px]">
+                                <ActivityIndicator size="small" color="#008E96" />
+                            </View>
+                        ) : (nearbyProperties.length > 0 ? nearbyProperties : mockProperties).map((prop) => (
+                            <InsightPropertyCard 
+                                key={prop._id || prop.id} 
+                                id={prop._id || prop.id}
+                                image={prop.images?.[0] || prop.image || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=400&auto=format&fit=crop'}
+                                possession={prop.possessionStatus || prop.possession || 'Ready to Move'}
+                                title={prop.title || prop.projectName || 'Premium Residence'}
+                                location={prop.localityName ? `${prop.localityName}, ${prop.city?.name || prop.city || ''}` : prop.location}
+                                price={prop.price ? (typeof prop.price === 'number' ? `₹ ${prop.price}` : prop.price) : 'Price on Request'}
+                                bhk={prop.residential ? `${prop.residential?.bedrooms || 0} BHK Apartment` : prop.bhk}
+                                area={prop.area ? `${prop.area} ${prop.areaUnit?.name || 'sq.ft.'}` : prop.area}
+                                isRera={prop.isRera !== undefined ? prop.isRera : true}
+                            />
                         ))}
                     </ScrollView>
                 </Animated.View>
@@ -220,7 +283,7 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(500)} className="pl-4 mt-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-bold">Explore localities nearby</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')}>
                             <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
                         </TouchableOpacity>
                     </View>
@@ -229,7 +292,17 @@ const Insights = () => {
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingRight: 16 }}
                     >
-                        {localityMockData.map((item, index) => (
+                        {nearbyLocalities.length > 0 ? nearbyLocalities.map((item, index) => (
+                            <View key={`locality-${index}`} className="mr-4">
+                                <LocalityExploreCard 
+                                    title={item.localityName || item.locality}
+                                    rating={item.rating || (4 + Math.random()).toFixed(1)}
+                                    price={item.averagePricePerSqft ? `₹${(item.averagePricePerSqft/1000).toFixed(1)}K/sq.ft.` : 'N/A'}
+                                    properties={item.totalProperties || Math.floor(Math.random() * 50) + 10 + '+'}
+                                    onPress={() => router.push('/screens/ExploreLocalities')}
+                                />
+                            </View>
+                        )) : localityMockData.map((item, index) => (
                             <View key={`locality-${index}`} className="mr-4">
                                 <LocalityExploreCard {...item} />
                             </View>
@@ -253,7 +326,7 @@ const Insights = () => {
                 </Animated.View>
 
                 {/* Highest Growth Projects Section */}
-                <Animated.View entering={FadeInDown.duration(600).delay(700)} className="pl-4 mt-6">
+                {/* <Animated.View entering={FadeInDown.duration(600).delay(700)} className="pl-4 mt-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Highest growth projects</Text>
                         <TouchableOpacity>
@@ -271,7 +344,7 @@ const Insights = () => {
                             </View>
                         ))}
                     </ScrollView>
-                </Animated.View>
+                </Animated.View> */}
 
                 {/* Projects with Unique Amenities Section */}
                 <Animated.View entering={FadeInDown.duration(600).delay(800)} className="pl-4 mt-6 pb-6">
