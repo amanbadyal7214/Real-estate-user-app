@@ -12,7 +12,6 @@ import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
 import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 import HighDemandProjectCard from '../../../components/HighDemandProjectCard';
-import LastSearchedCard from '../../../components/LastSearchedCard';
 import LocalityCard from '../../../components/LocalityCard';
 import NewsCard from '../../../components/NewsCard';
 import ProjectFocusCard from '../../../components/ProjectFocusCard';
@@ -22,8 +21,8 @@ import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
-import { useProject } from '../../../hooks/useProject';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
+import { useProject } from '../../../hooks/useProject';
 import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import { useLocation } from '../../context/LocationContext';
@@ -412,24 +411,6 @@ const Buy = () => {
     location: formatPropertyLocation(property),
   }));
 
-  const lastSearches = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      price: "₹ 2.03 Cr - 6.25 Cr",
-      title: "Wave Estate Group Housing",
-      builder: "by Uppal Chadha Hi Tech De...",
-      location: "Patti Sohana, Mohali"
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
-      price: "₹ 2.03 Cr - 6.25 Cr",
-      title: "Wave Estate Group Housing",
-      builder: "by Uppal Chadha Hi Tech De...",
-      location: "Patti Sohana, Mohali"
-    }
-  ];
 
   const newsArticles = [
     {
@@ -913,6 +894,7 @@ const Buy = () => {
             {recommendedProperties.map((item) => (
               <RecommendedPropertyCard
                 key={item.id}
+                id={item.id || item._id}
                 image={item.image}
                 price={item.price}
                 title={item.title}
@@ -967,6 +949,7 @@ const Buy = () => {
             {betterPricedProperties.map((property, index) => (
               <BetterPricedPropertyCard
                 key={property.id || `better-priced-${index}`}
+                id={property.id || property._id}
                 image={property.image}
                 title={property.title}
                 marketer={property.marketer}

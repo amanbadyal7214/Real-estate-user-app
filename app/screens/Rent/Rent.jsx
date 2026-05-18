@@ -262,6 +262,7 @@ const emiVectors = [
             {recommendedProperties.map((item) => (
               <RecommendedPropertyCard
                 key={item.id}
+                id={item.id || item._id}
                 image={item.image}
                 price={item.price}
                 title={item.title}

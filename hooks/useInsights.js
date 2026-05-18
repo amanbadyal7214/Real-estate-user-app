@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import api from "../app/api";
 
 export const useInsights = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchInsights = async (params = {}) => {
+    const fetchInsights = useCallback(async (params = {}) => {
         setLoading(true);
         setError(null);
         try {
@@ -18,7 +18,7 @@ export const useInsights = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     return {
         fetchInsights,

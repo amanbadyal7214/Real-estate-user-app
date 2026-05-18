@@ -1,10 +1,17 @@
 import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
-const RecommendedPropertyCard = ({ image, price, title, area, location }) => {
+const RecommendedPropertyCard = ({ id, image, price, title, area, location }) => {
   return (
     <TouchableOpacity 
-      onPress={() => router.push('/screens/ProjectDetails')}
+      onPress={() => {
+        const propId = id
+        if (propId) {
+          router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: propId } })
+        } else {
+          router.push('/screens/ProjectDetails')
+        }
+      }}
       activeOpacity={0.9}
       className="bg-white flex-row items-start p-3 mr-3"
       style={{

@@ -312,6 +312,7 @@ const Plot = () => {
             {betterPricedProperties.map((property) => (
               <BetterPricedPropertyCard
                 key={property.id}
+                id={property.id || property._id}
                 image={property.image}
                 title={property.title}
                 marketer={property.marketer}

@@ -1,13 +1,20 @@
 import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
-const BetterPricedPropertyCard = ({ image, title, marketer, details, priceRange }) => {
+const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRange }) => {
   const marketerInitial = marketer ? marketer.charAt(0).toUpperCase() : '';
 
   return (
     <TouchableOpacity 
       activeOpacity={0.9} 
-      onPress={() => router.push('/screens/ProjectDetails')}
+      onPress={() => {
+        const propId = id
+        if (propId) {
+          router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: propId } })
+        } else {
+          router.push('/screens/ProjectDetails')
+        }
+      }}
       className="bg-white mr-3"
       style={{
         width: 300,

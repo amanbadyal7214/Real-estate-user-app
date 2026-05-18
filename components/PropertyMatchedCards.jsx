@@ -25,7 +25,14 @@ const PropertyCard = ({ item }) => {
     <Animated.View entering={FadeInDown.duration(600).springify()}>
       <TouchableOpacity 
         activeOpacity={0.9} 
-        onPress={() => router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.id || item._id } })}
+        onPress={() => {
+          const propId = item._id || item.id || item.propertyId
+          if (propId) {
+            router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: propId } })
+          } else {
+            router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.projectId || item.id || item._id } })
+          }
+        }}
         className="mr-5"
       >
         <View className="w-[310px] h-[280px] rounded-[24px] overflow-hidden bg-gray-200 shadow-lg">

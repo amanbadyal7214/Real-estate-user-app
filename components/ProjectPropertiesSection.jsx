@@ -82,7 +82,7 @@ const ProjectPropertyCard = ({ property }) => {
   );
 };
 
-const ProjectPropertiesSection = ({ projectId }) => {
+const ProjectPropertiesSection = ({ projectId, localityId, cityId, propertyType, title = "Properties in this Project" }) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,25 +91,39 @@ const ProjectPropertiesSection = ({ projectId }) => {
     const fetchProperties = async () => {
       try {
         setLoading(true);
-        // User provided: https://real-back-x9ln.onrender.com/projects/6a044c6009edd035b2ed906c/properties?city=mohali&lookingFor=sell
-        const response = await api.get(`/projects/${projectId}/properties?lookingFor=sell`);
-        if (response.data?.success && response.data?.data) {
-          setProperties(response.data.data);
-        } else if (Array.isArray(response.data)) {
-          setProperties(response.data);
+        // Hitting the general /properties API (property wali api) as requested
+        let endpoint = "/properties";
+        let params = { 
+          lookingFor: 'sell',
+          limit: 6
+        };
+
+        if (projectId) {
+          params.project = projectId;
+        } else if (localityId) {
+          params.locality = localityId;
+        } else if (cityId) {
+          params.city = cityId;
         }
+
+        if (propertyType) {
+          params.propertyType = propertyType;
+        }
+
+        const response = await api.get(endpoint, { params });
+        
+        const data = response.data?.success && response.data?.data ? response.data.data : (Array.isArray(response.data) ? response.data : []);
+        setProperties(data);
       } catch (err) {
-        console.warn("Failed to fetch project properties:", err?.response?.data || err.message);
+        console.warn("Failed to fetch related properties:", err?.response?.data || err.message);
         setError("Failed to load properties.");
       } finally {
         setLoading(false);
       }
     };
     
-    if (projectId) {
-      fetchProperties();
-    }
-  }, [projectId]);
+    fetchProperties();
+  }, [projectId, localityId, cityId, propertyType]);
 
   if (loading) {
     return (
@@ -127,7 +141,7 @@ const ProjectPropertiesSection = ({ projectId }) => {
   return (
     <View className="w-full">
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="font-inter-medium text-[#101828] text-[18px]">Properties in this Project</Text>
+        <Text className="font-inter-medium text-[#101828] text-[18px]">{title}</Text>
         <TouchableOpacity className="border border-[#E5E7EB] rounded-full px-3 py-1 bg-white">
           <Text className="font-inter-medium text-[#0A0A0A] text-[14px]">Top ↑</Text>
         </TouchableOpacity>
