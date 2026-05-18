@@ -1,16 +1,27 @@
-import { router } from 'expo-router';
-import { ArrowLeft , Search } from 'lucide-react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { ArrowLeft } from 'lucide-react-native';
 
-import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import PerfectMatchCard from '../../components/PerfectMatchCard';
 import NoDataFound from '../../components/NoDataFound';
+import PerfectMatchCard from '../../components/PerfectMatchCard';
+import { useLocality } from '../../hooks/useLocality';
+import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import { useLocation } from '../context/LocationContext';
 import Svg, { Path } from 'react-native-svg';
 
 const BestPriceProperty = () => {
+  const router = useRouter();
+  const searchParams = useLocalSearchParams();
+  const { currentLocation } = useLocation();
+  const { fetchBetterPricedProperties, loading: discoveryLoading } = usePropertyDiscovery();
+  const { resolveLocalities, loading: localityLoading } = useLocality();
+  const loading = discoveryLoading || localityLoading;
+
+  const [properties, setProperties] = useState([]);
   const [tabs, setTabs] = useState([
-    { id: 1, label: 'Best Price Property' },
+    { id: 1, label: 'Best Price Properties' },
     { id: 2, label: 'Smart Deals' },
     { id: 3, label: 'Ready to move' },
     { id: 4, label: 'Independent House' },
@@ -20,126 +31,66 @@ const BestPriceProperty = () => {
 
   const [activeTab, setActiveTab] = useState(tabs[0].label);
 
+  const fetchMatches = useCallback(async () => {
+    try {
+      const params = { 
+        limit: 20, 
+        lookingFor: 'sell',
+        PriceAscending: true 
+      };
+      
+      const effectiveCity = searchParams.city || currentLocation?.city;
+      if (effectiveCity) params.city = effectiveCity;
+      if (searchParams.locality) params.locality = searchParams.locality;
+      if (searchParams.pincode) params.pincode = searchParams.pincode;
+
+      const res = await fetchBetterPricedProperties(params);
+      if (res.success) {
+        const enriched = await resolveLocalities(res.data);
+        setProperties(enriched);
+      }
+    } catch (err) {
+      console.error('Best Price Fetch Error:', err);
+    }
+  }, [currentLocation?.city, fetchBetterPricedProperties, searchParams.city, searchParams.locality, searchParams.pincode, resolveLocalities]);
+
+  useEffect(() => {
+    fetchMatches();
+  }, [fetchMatches]);
+
   const handleTabPress = (clickedTab) => {
     setActiveTab(clickedTab.label);
     
-    // Swap selected tab with the one at the first position
     setTabs(prevTabs => {
       const newTabs = [...prevTabs];
       const clickedIndex = newTabs.findIndex(t => t.id === clickedTab.id);
-      
-      // Swap elements at index 0 and clickedIndex
       [newTabs[0], newTabs[clickedIndex]] = [newTabs[clickedIndex], newTabs[0]];
-      
       return newTabs;
     });
   };
 
-  const matchedProperties = [
-    {
-      id: 1,
-      price: '₹ 45.03 L - ₹ 1.11 Cr',
-      name: 'Nirwana The Moksha',
-      developer: 'by Nirwana Group',
-      location: 'Khanpur, Mohali',
-      details: '1, 2, 3 BHK Flats • ₹ 5.7k per sq.ft.',
-      seller: 'Nirwana Group',
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400'
-      ],
-      photoCount: 22,
-      isRera: true,
-      zeroBrokerage: true
-    },
-    {
-      id: 2,
-      price: '₹ 45.03 L - ₹ 1.11 Cr',
-      name: 'Nirwana The Moksha',
-      developer: 'by Nirwana Group',
-      location: 'Khanpur, Mohali',
-      details: '1, 2, 3 BHK Flats • ₹ 5.7k per sq.ft.',
-      seller: 'Nirwana Group',
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400'
-      ],
-      photoCount: 22,
-      isRera: true,
-      zeroBrokerage: true
-    }
-  ];
-
-  const readyToMoveProperties = [
-    {
-      id: 1,
-      price: '₹ 85.00 L - ₹ 1.50 Cr',
-      name: 'Omaxe Cassia',
-      developer: 'by Omaxe Group',
-      location: 'New Chandigarh, Mohali',
-      details: '3, 4 BHK Apartments • ₹ 6.5k per sq.ft.',
-      seller: 'Omaxe Limited',
-      images: [
-        'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400'
-      ],
-      photoCount: 15,
-      isRera: true,
-      zeroBrokerage: false
-    },
-    {
-      id: 2,
-      price: '₹ 1.10 Cr - ₹ 2.25 Cr',
-      name: 'Hero Homes',
-      developer: 'by Hero Realty',
-      location: 'Sector 88, Mohali',
-      details: '2, 3 BHK Flats • ₹ 7.2k per sq.ft.',
-      seller: 'Hero Realty',
-      images: [
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=400'
-      ],
-      photoCount: 18,
-      isRera: true,
-      zeroBrokerage: true
-    }
-  ];
+  const matchedProperties = properties.map((property, index) => ({
+    id: property._id || property.id || `best-${index}`,
+    price: typeof property.price === 'number' ? `₹ ${property.price}` : property.price || property.priceRange || 'View details',
+    name: property.title || property.projectName || 'Property',
+    developer: property.projectName ? `by ${property.projectName}` : `by ${property.owner?.name || 'Developer'}`,
+    location: [property.localityName, property.city?.name || property.city, property.state?.name || property.state].filter(Boolean).join(', ') || 'Location not available',
+    details: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK Flats • ${property.area || 'N/A'} ${property.areaUnit?.name || 'sq.ft.'}`,
+    seller: property.owner?.name || property.sellerName || 'Seller',
+    images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
+    photoCount: property.images?.length || 0,
+    isRera: true,
+    zeroBrokerage: true
+  }));
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
-      {/* Header with Search */}
-      <View className="px-4 py-2 flex-row items-center gap-3">
+      {/* Header */}
+      <View className="px-4 py-4 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center items-center">
-          <ArrowLeft size={28} color="#4A5565" />
+          <ArrowLeft size={28} color="#101828" />
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          onPress={() => router.push('/screens/LocationSelection')}
-          className="flex-row items-center border border-[#008E9633] bg-white h-[50px] px-5 rounded-[40px] flex-1"
-          style={{ borderWidth: 1.5, borderColor: '#B2E0E2' }}
-        >
-          <Search size={22} color="#6A7282" />
-          <Text className="ml-3 flex-1 text-[#6A7282] text-[16px]" style={{ fontFamily: 'Inter-Regular' }}>
-            Locality, Landmark, Project...
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Filter Buttons */}
-      <View className="flex-row px-4 gap-2 ">
-        <TouchableOpacity className="flex-row items-center border border-[#6A7282] rounded-[24px] px-4 py-2 bg-white">
-          <Text className="text-[#101828] text-[16px] mr-2" style={{ fontFamily: 'Inter-Medium' }}>Budget in Rs.</Text>
-          <Svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-            <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </Svg>
-        </TouchableOpacity>
-        
-        <TouchableOpacity className="flex-row items-center border border-[#6A7282] rounded-[24px] px-4 py-2 bg-white">
-          <Text className="text-[#101828] text-[16px] mr-2" style={{ fontFamily: 'Inter-Medium' }}>BHK type</Text>
-          <Svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-            <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </Svg>
-        </TouchableOpacity>
+        <Text className="ml-2 text-[20px] text-[#101828] font-inter-semibold">Better Price Properties</Text>
       </View>
 
       {/* Filter Tabs */}
@@ -210,12 +161,13 @@ const BestPriceProperty = () => {
 
       {/* Property List */}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
-        {activeTab === 'Best Price Property' || activeTab === 'Smart Deals' ? (
+        {loading ? (
+          <View className="py-20 items-center justify-center">
+            <ActivityIndicator size="large" color="#008E96" />
+            <Text className="mt-4 text-[#6A7282] font-inter-medium">Finding best prices...</Text>
+          </View>
+        ) : matchedProperties.length > 0 ? (
           matchedProperties.map((property) => (
-            <PerfectMatchCard key={property.id} property={property} />
-          ))
-        ) : activeTab === 'Ready to move' ? (
-          readyToMoveProperties.map((property) => (
             <PerfectMatchCard key={property.id} property={property} />
           ))
         ) : (
