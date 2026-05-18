@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 const ExploreLocalityCard = ({
   title,
@@ -18,7 +17,8 @@ const ExploreLocalityCard = ({
   const secondaryTextColor = priceRange ? '#4A5565' : '#00A63E';
 
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.9}
       style={{
         width: 185,
         height: 132,
@@ -64,7 +64,7 @@ const ExploreLocalityCard = ({
           </Text>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

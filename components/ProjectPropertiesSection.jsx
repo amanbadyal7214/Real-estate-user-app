@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import api from '../app/api';
 
 const ProjectPropertyCard = ({ property }) => {
@@ -34,7 +35,7 @@ const ProjectPropertyCard = ({ property }) => {
     if (!Number.isFinite(numericValue)) return 'N/A';
 
     if (numericValue >= 10000000) return `₹ ${(numericValue / 10000000).toFixed(2)} Cr`;
-    if (numericValue >= 100000) return `₹ ${(numericValue / 100000).toFixed(2)} L`;
+    if (numericValue >= 1000000) return `₹ ${(numericValue / 100000).toFixed(2)} L`;
     if (numericValue >= 1000) return `₹ ${(numericValue / 1000).toFixed(2)} K`;
     return `₹ ${numericValue}`;
   };
@@ -47,8 +48,10 @@ const ProjectPropertyCard = ({ property }) => {
   const price = formatPrice(property.price);
 
   return (
-    <View 
-      className="bg-white border border-[#E5E7EB] rounded-[14px] p-3 mr-3"
+    <TouchableOpacity 
+      activeOpacity={0.9}
+      onPress={() => router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: property._id } })}
+      className="bg-white border border-[#E5E7EB] rounded-[14px] p-3 mr-3 overflow-hidden shadow-sm"
       style={{ width: 280 }}
     >
       <Image 
@@ -78,7 +81,7 @@ const ProjectPropertyCard = ({ property }) => {
       <TouchableOpacity className="border-2 border-[#008E96] rounded-[10px] h-[40px] items-center justify-center">
         <Text className="text-[#008E96] font-inter-medium text-[14px]">Contact</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

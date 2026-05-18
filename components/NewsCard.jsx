@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 const NewsCard = ({ image, title, meta, description }) => {
   return (
-    <View 
+    <TouchableOpacity 
+      activeOpacity={0.9}
       className="bg-white mr-4 mb-2 mt-1"
       style={{
         width: 338,
@@ -50,7 +51,7 @@ const NewsCard = ({ image, title, meta, description }) => {
           {description}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

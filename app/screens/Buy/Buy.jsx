@@ -715,6 +715,7 @@ const Buy = () => {
                 title={p.title}
                 developer={p.projectName || "Standard"}
                 location={formatPropertyLocation(p)}
+                onPress={() => router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: p._id } })}
               />
             ))}
           </ScrollView>

@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ImageBackground, ScrollView, Text, View } from 'react-native';
+import { ImageBackground, ScrollView, Text, View, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
 const Spotlight = ({ data }) => {
   const spotlightData = data || [];
@@ -22,9 +23,11 @@ const Spotlight = ({ data }) => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row py-1">
           {spotlightData.length > 0 ? spotlightData.map((item, index) => (
             <View key={item.id || index} className="mr-5 ml-1">
-              {/* Developer Info Card Container for Shadow */}
-              <View 
-                className="w-[338px] h-[95.5px] rounded-[20px] bg-white shadow-sm elevation-2 z-[1]"
+              {/* Developer Info Card - Clickable to Developer/Project Details */}
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => item.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.id } })}
+                className="w-[338px] h-[95.5px] rounded-[20px] bg-white shadow-sm elevation-2 z-[1] overflow-hidden"
                 style={{
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 1 },
@@ -37,7 +40,7 @@ const Spotlight = ({ data }) => {
                   start={{ x: 0.3, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   locations={[0.064, 0.5258, 1]}
-                  className="flex-1 rounded-[20px] flex-row items-center px-4 gap-3"
+                  className="flex-1 flex-row items-center px-4 gap-3"
                 >
                   {/* Icon Container */}
                   <View className="w-14 h-14 bg-[#CCEFED] rounded-[14px] items-center justify-center">
@@ -52,7 +55,6 @@ const Spotlight = ({ data }) => {
                   {/* Stats Section */}
                   <View className="w-[238px] h-[63.5px] gap-2">
                     <View className="flex-row gap-6 h-[34.5px] items-center">
-                      {/* Year Estd */}
                       <View className="w-[53px] h-[34.5px]">
                         <Text className="font-inter-bold text-[12px] leading-[18px] text-[#101828]">
                           {item.developer.estd || '2024'}
@@ -61,7 +63,6 @@ const Spotlight = ({ data }) => {
                           Year estd.
                         </Text>
                       </View>
-                      {/* Projects */}
                       <View className="w-[43px] h-[34.5px]">
                         <Text className="font-inter-bold text-[12px] leading-[18px] text-[#101828]">
                           {item.developer.projects || '1'}
@@ -71,16 +72,17 @@ const Spotlight = ({ data }) => {
                         </Text>
                       </View>
                     </View>
-                    {/* Developer Name */}
                     <Text className="font-inter-bold text-[14px] leading-[21px] text-[#101828]">
                       {item.developer.name}
                     </Text>
                   </View>
                 </LinearGradient>
-              </View>
+              </TouchableOpacity>
 
-              {/* Property Card */}
-              <View 
+              {/* Property Card - Clickable to PropertyDetails */}
+              <TouchableOpacity 
+                activeOpacity={0.9}
+                onPress={() => item.property.id && router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: item.property.id } })}
                 className="mt-[12px] rounded-[20px] overflow-hidden bg-white w-[338px] h-[200px] shadow-md elevation-5"
                 style={{ 
                   shadowColor: '#000',
@@ -115,7 +117,7 @@ const Spotlight = ({ data }) => {
                     </Text>
                   </View>
                 </ImageBackground>
-              </View>
+              </TouchableOpacity>
             </View>
           )) : (
             <Text className="font-inter-regular text-[13px] text-[#6A7282] ml-1">
