@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Heart, MessageSquare } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
 const BHKCard = ({ config, area, price }) => {
   return (
@@ -16,10 +17,20 @@ const BHKCard = ({ config, area, price }) => {
 };
 
 const PropertyCard = ({ property }) => {
+  const router = useRouter();
   if (!property) return null;
 
+  const navigateToDetails = () => {
+    router.push({
+      pathname: '/screens/PropertyDetails',
+      params: { propertyId: property._id || property.id }
+    });
+  };
+
   return (
-    <View 
+    <TouchableOpacity 
+      activeOpacity={0.9}
+      onPress={navigateToDetails}
       className="bg-white rounded-2xl p-3.5 mb-5 self-center w-full border-2 border-primary"
       style={{
         shadowColor: '#000',
@@ -109,7 +120,7 @@ const PropertyCard = ({ property }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

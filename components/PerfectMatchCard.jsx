@@ -1,12 +1,22 @@
-import React from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Camera, Heart, CheckCircle2, MessageSquare, Phone } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 import { PRIMARY_COLOR } from "../app/constants/theme.js";
 
 const PerfectMatchCard = ({ property }) => {
+  const router = useRouter();
+
+  const navigateToDetails = () => {
+    router.push({
+      pathname: '/screens/PropertyDetails',
+      params: { propertyId: property.id }
+    });
+  };
   return (
-    <View 
+    <TouchableOpacity 
+      activeOpacity={0.9}
+      onPress={navigateToDetails}
       className="bg-white rounded-[16px] mb-6 p-3"
       style={{ 
         borderWidth: 0.667,
@@ -95,30 +105,7 @@ const PerfectMatchCard = ({ property }) => {
           <Text className="font-inter-regular text-[13px] text-[#6A7282] pb-3">{property.details}</Text>
         </View>
 
-        {/* Seller Info */}
-        <View className="flex-row items-center justify-between mb-4">
-          <View className="flex-row items-center gap-3">
-            <LinearGradient
-              colors={['#008E96', '#1CB2A9']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{
-                width: 40,
-                height: 40,
-                paddingHorizontal: 10,
-                borderRadius: 22369600,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <CheckCircle2 size={20} color="white" />
-            </LinearGradient>
-            <View>
-              <Text className="font-inter-semibold text-[14px] text-[#101828]">{property.seller}</Text>
-              <Text className="font-inter-regular text-[12px] text-[#6A7282]">Seller</Text>
-            </View>
-          </View>
-        </View>
+
 
         {/* Actions */}
         <View className="flex-row gap-2.5">
@@ -151,7 +138,7 @@ const PerfectMatchCard = ({ property }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

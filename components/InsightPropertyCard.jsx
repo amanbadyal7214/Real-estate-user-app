@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Heart, MessageCircle, Check } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
 const InsightPropertyCard = ({ 
+  id,
   image, 
   possession, 
   title, 
@@ -12,10 +14,22 @@ const InsightPropertyCard = ({
   area, 
   isRera 
 }) => {
+  const router = useRouter();
   const [isSaved, setIsSaved] = useState(false);
 
+  const navigateToDetails = () => {
+    if (id) {
+        router.push({
+            pathname: '/screens/PropertyDetails',
+            params: { propertyId: id }
+        });
+    }
+  };
+
   return (
-    <View 
+    <TouchableOpacity 
+      activeOpacity={0.9}
+      onPress={navigateToDetails}
       className="bg-white mr-4 mb-2 rounded-[16px] border-[0.67px] border-[#E4E7EC] pt-[12.67px] px-[12.67px] pb-[0.67px] w-[221px] h-[397px]"
       style={{
         shadowColor: '#000',
@@ -87,7 +101,7 @@ const InsightPropertyCard = ({
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

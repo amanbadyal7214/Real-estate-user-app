@@ -2,9 +2,10 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Animated, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PropertyListingCard from '../../components/PropertyListingCard';
+import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -73,6 +74,24 @@ const LastSearched = () => {
   const availabilityOptions = ['Within a week', 'Within 15 days', 'Within a month'];
   const listedBy = ['Agent', 'Owner', 'Builder', 'Featured Properties'];
 
+
+  const { fetchProperties, loading } = usePropertyDiscovery();
+  const [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    loadProperties();
+  }, []);
+
+  const loadProperties = async () => {
+    try {
+      const response = await fetchProperties({ city: 'Mohali', limit: 10 });
+      if (response?.data) {
+        setProperties(response.data);
+      }
+    } catch (err) {
+      console.error("Error loading properties:", err);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
@@ -150,13 +169,25 @@ const LastSearched = () => {
           </View>
 
           {/* Listings Container (Based on CSS Frame 21) */}
-          <View className="px-[16px] mt-[24px] gap-[23px]">
-            <PropertyListingCard />
-            <PropertyListingCard />
-            <PropertyListingCard />
+          <View className="px-[16px] mt-[24px] gap-[23px] pb-[100px]">
+            {loading ? (
+                <View className="py-10 items-center">
+                    <Text className="text-[#667085] font-inter-medium italic">Loading listings...</Text>
+                </View>
+            ) : properties.length > 0 ? (
+                properties.map((item) => (
+                    <PropertyListingCard key={item._id} data={item} />
+                ))
+            ) : (
+                <View className="py-20 items-center">
+                    <Ionicons name="home-outline" size={48} color="#D0D5DD" />
+                    <Text className="text-[#667085] font-inter-medium mt-4">No listings found for Mohali</Text>
+                </View>
+            )}
           </View>
         </ScrollView>
       </View>
+
 
       {/* Floating Action Buttons */}
       <View 

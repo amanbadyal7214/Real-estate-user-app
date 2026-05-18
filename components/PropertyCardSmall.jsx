@@ -1,6 +1,8 @@
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const PropertyCardSmall = ({
+  id,
   image,
   price,
   title,
@@ -9,8 +11,20 @@ const PropertyCardSmall = ({
   containerStyle,
   imageStyle,
 }) => {
+  const router = useRouter();
+
+  const navigateToDetails = () => {
+    if (id) {
+        router.push({
+            pathname: '/screens/PropertyDetails',
+            params: { propertyId: id }
+        });
+    }
+  };
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={navigateToDetails}
       className="overflow-hidden rounded-2xl border border-[#E4E7EC] bg-white"
       style={{
         width: '100%',
@@ -40,7 +54,7 @@ const PropertyCardSmall = ({
           {location}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
