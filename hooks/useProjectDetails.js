@@ -19,7 +19,7 @@ export const useProjectDetails = (projectId) => {
                 setLoading(true);
                 setError(null);
                 setPriceInsights(null);
-                
+
                 // Try to fetch as project first
                 try {
                     const projectResponse = await api.get(`/projects/${projectId}`);
@@ -61,7 +61,7 @@ export const useProjectDetails = (projectId) => {
                         return;
                     }
                 }
-                
+
                 throw new Error("Invalid API response");
             } catch (err) {
                 const errorMessage = err.response?.data?.error || err.message || "Failed to fetch details";
@@ -94,7 +94,7 @@ export const useProjectDetails = (projectId) => {
             getDisplayValue(projectData.district),
             getDisplayValue(projectData.city),
             getDisplayValue(projectData.state)
-          ].filter(Boolean).join(', ')
+        ].filter(Boolean).join(', ')
         : '';
     const builderName = projectData?.builder?.name || projectData?.developer || projectData?.sellerName || "N/A";
     const possessionDate = formatDate(projectData?.completionDate || projectData?.possessionDate);
