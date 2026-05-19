@@ -1,32 +1,71 @@
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Mic, Search, TrendingUp } from 'lucide-react-native';
-import { useState } from 'react';
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Search, TrendingUp } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import api from '../../api';
 import { useLocation } from '../../context/LocationContext';
 
 const BuySearch = () => {
   const { currentLocation, updateLocation } = useLocation();
-  const [searchText, setSearchText] = useState("");
+  const [city, setCity] = useState(currentLocation?.city || "");
+  const [locality, setLocality] = useState(currentLocation?.locality || "");
+  const [suggestions, setSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (locality.trim().length > 1) {
+        searchLocalities();
+      } else {
+        setSuggestions([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [locality]);
+
+  const searchLocalities = async () => {
+    try {
+      setLoadingSuggestions(true);
+      const response = await api.get(`/localities`, {
+        params: { city: city || currentLocation?.city || 'Mohali' }
+      });
+      
+      if (response.data?.success) {
+        const filtered = response.data.data.filter(item => 
+          item.name.toLowerCase().includes(locality.toLowerCase()) ||
+          item.label.toLowerCase().includes(locality.toLowerCase())
+        );
+        setSuggestions(filtered);
+      }
+    } catch (err) {
+      console.error("Error searching localities:", err);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
 
   const handleLocalitySelect = (localityName) => {
+    const selectedCity = city || currentLocation?.city || "Mohali";
     updateLocation({
-      city: localityName, // Set the selected value as the city
-      locality: "",       // Clear locality
-      display: localityName
+      city: selectedCity,
+      locality: localityName,
+      display: `${localityName}, ${selectedCity}`
     });
     router.back();
   };
 
   const handleSearchSubmit = () => {
-    if (searchText.trim()) {
-      updateLocation({
-        city: searchText.trim(), // Set the searched text as the city
-        locality: "",           // Clear locality
-        display: searchText.trim()
-      });
-      router.back();
-    }
+    const finalCity = city.trim() || currentLocation?.city || "Mohali";
+    const finalLocality = locality.trim();
+    
+    updateLocation({
+      city: finalCity,
+      locality: finalLocality,
+      display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
+    });
+    router.back();
   };
 
   return (
@@ -43,35 +82,85 @@ const BuySearch = () => {
           <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[18px] text-[#101828]">Buy</Text>
         </View>
 
-        <TouchableOpacity 
-          className="flex-row items-center bg-white px-3 py-1.5 rounded-xl border border-gray-100 gap-1.5"
+        <View 
+          className="flex-row items-center bg-gray-50/50 px-3 py-1.5 rounded-xl border border-gray-100 gap-1.5"
         >
-          <MapPin size={16} color="#008E96" />
-          <TextInput
-            style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: '#4A5565', minWidth: 80, paddingVertical: 0 }}
-            value={currentLocation?.city || 'Mohali'}
-            placeholder="City"
-            onChangeText={(text) => updateLocation({ ...currentLocation, city: text, display: text })}
-            returnKeyType="done"
-          />
-          <ChevronRight size={14} color="#6A7282" />
-        </TouchableOpacity>
+          <MapPin size={14} color="#008E96" />
+          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#4A5565]">
+            {currentLocation?.city || 'Mohali'}
+          </Text>
+        </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-        {/* Search Bar */}
-        <View className="mx-4 my-2 px-4 h-11 flex-row items-center bg-white/40 border-2 border-[#008E96]/30 rounded-full">
-          <Search size={18} color="#6A7282" />
-          <TextInput 
-            placeholder="Locality, Landmark, Project..."
-            placeholderTextColor="#6A7282"
-            style={{ fontFamily: 'Inter-Regular' }}
-            className="flex-1 ml-3 text-[14px] text-[#101828]"
-            value={searchText}
-            onChangeText={setSearchText}
-            onSubmitEditing={handleSearchSubmit}
-          />
-          <Mic size={18} color="#008E96" />
+        {/* Search Section */}
+        <View className="mx-4 my-2 p-4 bg-white border border-gray-100 rounded-[24px] shadow-sm">
+          <View className="gap-3">
+            {/* City Input */}
+            <View className="h-12 px-4 flex-row items-center bg-[#F2F4F7] rounded-xl">
+              <MapPin size={18} color="#008E96" />
+              <TextInput 
+                placeholder="Enter City"
+                placeholderTextColor="#6A7282"
+                style={{ fontFamily: 'Inter-Medium' }}
+                className="flex-1 ml-3 text-[14px] text-[#101828]"
+                value={city}
+                onChangeText={setCity}
+              />
+            </View>
+
+            {/* Locality Input */}
+            <View style={{ zIndex: 50 }}>
+              <View className="h-12 px-4 flex-row items-center bg-[#F2F4F7] rounded-xl">
+                <Search size={18} color="#667085" />
+                <TextInput 
+                  placeholder="Enter Locality"
+                  placeholderTextColor="#6A7282"
+                  style={{ fontFamily: 'Inter-Medium' }}
+                  className="flex-1 ml-3 text-[14px] text-[#101828]"
+                  value={locality}
+                  onChangeText={(text) => {
+                    setLocality(text);
+                  }}
+                  onSubmitEditing={handleSearchSubmit}
+                />
+                {loadingSuggestions && <ActivityIndicator size="small" color="#008E96" />}
+              </View>
+
+              {suggestions.length > 0 && (
+                <View className="mt-2 bg-white border border-gray-100 rounded-xl shadow-sm max-h-48 overflow-hidden">
+                  <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+                    {suggestions.map((item) => (
+                      <TouchableOpacity 
+                        key={item._id}
+                        onPress={() => {
+                          setLocality(item.name);
+                          setSuggestions([]);
+                        }}
+                        className="px-4 py-3 border-b border-gray-50 flex-row items-center gap-2"
+                      >
+                        <MapPin size={14} color="#667085" />
+                        <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#101828]">
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+            </View>
+
+            {/* Search Button */}
+            <TouchableOpacity 
+              onPress={handleSearchSubmit}
+              className="h-12 bg-[#008E96] items-center justify-center rounded-xl mt-1 shadow-sm shadow-[#008E96]/20"
+            >
+              <View className="flex-row items-center gap-2">
+                <Search size={18} color="white" />
+                <Text style={{ fontFamily: 'Inter-Bold' }} className="text-white text-[15px]">Search Properties</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Popular Localities Section */}

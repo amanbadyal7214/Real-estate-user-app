@@ -1,6 +1,28 @@
 import { useCallback, useState } from "react";
 import api from "../app/api";
 
+// Ensure we only send primitive params to the server. Nested objects may serialize
+// into query parameters like `foo[$options]=...` which some backends reject.
+const sanitizeParams = (params = {}) => {
+    const out = {};
+    Object.keys(params || {}).forEach((k) => {
+        const v = params[k];
+        if (v === undefined) return;
+        if (v === null) {
+            out[k] = '';
+        } else if (typeof v === 'object') {
+            try {
+                out[k] = JSON.stringify(v);
+            } catch (e) {
+                out[k] = String(v);
+            }
+        } else {
+            out[k] = v;
+        }
+    });
+    return out;
+};
+
 export const usePropertyDiscovery = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -13,7 +35,8 @@ export const usePropertyDiscovery = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/properties/city", { params });
+            const safeParams = sanitizeParams(params);
+            const response = await api.get("/properties/city", { params: safeParams });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || err.response?.data?.message || "Failed to find properties";
@@ -32,7 +55,8 @@ export const usePropertyDiscovery = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/properties", { params });
+            const safeParams = sanitizeParams(params);
+            const response = await api.get("/properties", { params: safeParams });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || err.response?.data?.message || "Failed to fetch properties";
@@ -51,7 +75,8 @@ export const usePropertyDiscovery = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/properties/find/high-demand", { params });
+            const safeParams = sanitizeParams(params);
+            const response = await api.get("/properties/find/high-demand", { params: safeParams });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || err.response?.data?.message || "Failed to fetch high demand properties";
@@ -70,7 +95,8 @@ export const usePropertyDiscovery = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/properties/find/sellers-by-location", { params });
+            const safeParams = sanitizeParams(params);
+            const response = await api.get("/properties/find/sellers-by-location", { params: safeParams });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || err.response?.data?.message || "Failed to fetch sellers";
@@ -89,7 +115,8 @@ export const usePropertyDiscovery = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await api.get("/properties/city", { params });
+            const safeParams = sanitizeParams(params);
+            const response = await api.get("/properties/city", { params: safeParams });
             return response.data;
         } catch (err) {
             const errorMessage = err.response?.data?.error || err.response?.data?.message || "Failed to fetch better priced properties";

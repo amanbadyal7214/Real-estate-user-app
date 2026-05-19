@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, DeviceEventEmitter, Dimensions, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import CalculatorCard from '../../../components/CalculatorCard';
@@ -128,6 +128,10 @@ const Buy = () => {
   const [activeDeveloperId, setActiveDeveloperId] = useState(null);
   const [activeDeveloperProjectsLoading, setActiveDeveloperProjectsLoading] = useState(false);
   const skipFirstRedirect = useRef(true);
+
+  const { width } = Dimensions.get('window');
+  const scale = width / 375; // base design width
+  const s = (n) => Math.round(n * scale);
 
   useEffect(() => {
     setSelectedTab('Buy');
@@ -545,50 +549,51 @@ const Buy = () => {
               elevation: 4
             }}
           >
-            <View className="flex-row justify-around mb-8">
+              <View className="flex-row justify-around mb-8">
               <TouchableOpacity
                 onPress={() => router.push('/screens/Buy/Suggestions')}
-                className="items-center w-[100px]"
+                className="items-center"
+                style={{ width: s(100) }}
               >
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="bulb-outline" size={24} color="#008E96" />
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
+                  <Ionicons name="bulb-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Suggestions</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center w-[100px]">
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="pricetag-outline" size={24} color="#008E96" />
+              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
+                  <Ionicons name="pricetag-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Deals</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center w-[100px]">
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="newspaper-outline" size={24} color="#008E96" />
+              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
+                  <Ionicons name="newspaper-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
               </TouchableOpacity>
             </View>
 
             <View className="flex-row justify-around">
-              <TouchableOpacity className="items-center w-[100px]">
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="calculator-outline" size={24} color="#008E96" />
+              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
+                  <Ionicons name="calculator-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">EMI Calculator</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center w-[100px]">
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="stats-chart-outline" size={24} color="#008E96" />
+              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
+                  <Ionicons name="stats-chart-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Affordability Calculator</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center w-[100px]">
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="checkmark-done-circle-outline" size={24} color="#008E96" />
+              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
+                  <Ionicons name="checkmark-done-circle-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Eligibility Calculator</Text>
               </TouchableOpacity>
@@ -596,13 +601,13 @@ const Buy = () => {
           </View>
 
           {/* Property Owner Banner */}
-          <LinearGradient
+            <LinearGradient
             colors={['#DAEAEB', '#FFFFFF']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             className=" p-4 rounded-2xl overflow-hidden border-[#1CB2A9] flex-row items-center justify-between"
             style={{
-              height: 150.33,
+              height: s(150.33),
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.1,
@@ -611,9 +616,9 @@ const Buy = () => {
             }}
           >
             <View className="flex-1 pr-2" style={{ height: 117, gap: 12 }}>
-              <Text
+                <Text
                 className="font-inter-bold text-[14px] text-[#101828] leading-[21px]"
-                style={{ width: 193, height: 63 }}
+                style={{ width: s(193), height: s(63) }}
               >
                 Are you a property owner looking to rent/sell?
               </Text>
@@ -636,33 +641,33 @@ const Buy = () => {
             </View>
 
             {/* Detailed Grid Pattern Icon */}
-            <View style={{ width: 96, height: 96, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width: s(96), height: s(96), justifyContent: 'center', alignItems: 'center' }}>
               <LinearGradient
                 colors={['#8B5CF6', '#6366F1']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 12,
-                  borderTopLeftRadius: 12,
-                  borderBottomLeftRadius: 12,
-                  borderTopRightRadius: 4,
-                  borderBottomRightRadius: 4,
+                  width: s(80),
+                  height: s(80),
+                  borderRadius: s(12),
+                  borderTopLeftRadius: s(12),
+                  borderBottomLeftRadius: s(12),
+                  borderTopRightRadius: s(4),
+                  borderBottomRightRadius: s(4),
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
               >
-                <View className="flex-row flex-wrap justify-center items-center" style={{ width: 60, height: 60, gap: 4 }}>
+                <View className="flex-row flex-wrap justify-center items-center" style={{ width: s(60), height: s(60), gap: s(4) }}>
                   {[...Array(20)].map((_, i) => (
                     <View
                       key={i}
                       style={{
-                        width: 8,
-                        height: 8,
+                        width: s(8),
+                        height: s(8),
                         backgroundColor: '#FFFFFF',
                         opacity: 0.6,
-                        borderRadius: 1
+                        borderRadius: s(1)
                       }}
                     />
                   ))}
@@ -694,7 +699,7 @@ const Buy = () => {
                 params: { 
                   city: currentLocation?.city, 
                   pincode: currentLocation?.pincode,
-                  locality: currentLocation?.locality 
+                 
                 }
               })}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -796,7 +801,7 @@ const Buy = () => {
           </View>
 
           {localityLoading ? (
-            <View className="h-[127px] items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]">
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: s(127) }}>
               <ActivityIndicator size="small" color="#008E96" />
             </View>
           ) : bestLocalities.length === 0 ? (
@@ -1124,7 +1129,7 @@ const Buy = () => {
           </View>
 
             {localityLoading ? (
-              <View className="h-[132px] items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]">
+              <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: s(132) }}>
                 <ActivityIndicator size="small" color="#008E96" />
               </View>
             ) : localityError ? (
