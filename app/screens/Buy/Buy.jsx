@@ -973,106 +973,145 @@ const Buy = () => {
 
           <View className="flex-row justify-center w-full" style={{ gap: 12 }}>
             {/* Locality Card */}
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: '#EDFBFA',
-                borderWidth: 0.67,
-                borderColor: '#F3F4F6',
-                borderRadius: 16,
-                padding: 12,
-                paddingVertical: 14,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.06,
-                shadowRadius: 3,
-                elevation: 1.5,
-                justifyContent: 'flex-start',
-                gap: 16
-              }}
+            <TouchableOpacity
+              onPress={() => router.push({
+                pathname: '/screens/LastSearched',
+                params: {
+                  city: currentLocation?.city,
+                  locality: currentLocation?.locality
+                }
+              })}
+              activeOpacity={0.7}
+              style={{ flex: 1 }}
             >
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center" style={{ gap: 4 }}>
-                  <MapPin size={12} color="#364153" />
-                  <Text className="font-inter-semibold text-[13px] text-[#101828]">Locality</Text>
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: '#EDFBFA',
+                  borderWidth: 0.67,
+                  borderColor: '#F3F4F6',
+                  borderRadius: 16,
+                  padding: 12,
+                  paddingVertical: 14,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 3,
+                  elevation: 1.5,
+                  justifyContent: 'flex-start',
+                  gap: 16
+                }}
+              >
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-row items-center" style={{ gap: 4 }}>
+                    <MapPin size={12} color="#364153" />
+                    <Text className="font-inter-semibold text-[13px] text-[#101828]">Locality</Text>
+                  </View>
+                  <ChevronRight size={14} color="#4A5565" />
                 </View>
-                <ChevronRight size={14} color="#4A5565" />
+                <View>
+                  <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
+                    {currentLocation?.locality || 'Mohali'}
+                  </Text>
+                  <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
+                </View>
               </View>
-              <View>
-                <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
-                  {currentLocation?.locality || 'Mohali'}
-                </Text>
-                <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
-              </View>
-            </View>
+            </TouchableOpacity>
 
             {/* Price Range Card */}
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: '#EDFBFA',
-                borderWidth: 0.67,
-                borderColor: '#F3F4F6',
-                borderRadius: 16,
-                padding: 12,
-                paddingVertical: 14,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.06,
-                shadowRadius: 3,
-                elevation: 1.5,
-                justifyContent: 'flex-start',
-                gap: 16
-              }}
+            <TouchableOpacity
+              onPress={() => router.push({
+                pathname: '/screens/LastSearched',
+                params: {
+                  city: currentLocation?.city,
+                  minPrice: cityStats?.minPrice,
+                  maxPrice: cityStats?.maxPrice,
+                  lookingFor: 'sell'
+                }
+              })}
+              activeOpacity={0.7}
+              style={{ flex: 1 }}
             >
-              <View className="flex-row items-start justify-between">
-                <View className="flex-row items-start" style={{ gap: 4 }}>
-                  <Home size={12} color="#364153" style={{ marginTop: 2, marginLeft: -2 }} />
-                  <Text className="font-inter-semibold text-[13px] text-[#101828] leading-4" style={{ width: 50 }}>Price range</Text>
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: '#EDFBFA',
+                  borderWidth: 0.67,
+                  borderColor: '#F3F4F6',
+                  borderRadius: 16,
+                  padding: 12,
+                  paddingVertical: 14,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 3,
+                  elevation: 1.5,
+                  justifyContent: 'flex-start',
+                  gap: 16
+                }}
+              >
+                <View className="flex-row items-start justify-between">
+                  <View className="flex-row items-start" style={{ gap: 4 }}>
+                    <Home size={12} color="#364153" style={{ marginTop: 2, marginLeft: -2 }} />
+                    <Text className="font-inter-semibold text-[13px] text-[#101828] leading-4" style={{ width: 50 }}>Price range</Text>
+                  </View>
+                  <ChevronRight size={14} color="#4A5565" style={{ marginTop: 2 }} />
                 </View>
-                <ChevronRight size={14} color="#4A5565" style={{ marginTop: 2 }} />
+                <View>
+                  <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
+                    {cityStats ? `${formatPrice(cityStats.minPrice)} - ${formatPrice(cityStats.maxPrice)}` : '₹ 75 L - ₹ 1 Cr'}
+                  </Text>
+                  <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">
+                    {cityStats ? `${cityStats.totalProperties} Properties` : '738 Properties'}
+                  </Text>
+                </View>
               </View>
-              <View>
-                <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
-                  {cityStats ? `${formatPrice(cityStats.minPrice)} - ${formatPrice(cityStats.maxPrice)}` : '₹ 75 L - ₹ 1 Cr'}
-                </Text>
-                <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">
-                  {cityStats ? `${cityStats.totalProperties} Properties` : '738 Properties'}
-                </Text>
-              </View>
-            </View>
+            </TouchableOpacity>
 
             {/* BHK Card */}
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: '#EDFBFA',
-                borderWidth: 0.67,
-                borderColor: '#F3F4F6',
-                borderRadius: 16,
-                padding: 12,
-                paddingVertical: 14,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.06,
-                shadowRadius: 3,
-                elevation: 1.5,
-                justifyContent: 'flex-start',
-                gap: 16
-              }}
+            <TouchableOpacity
+              onPress={() => router.push({
+                pathname: '/screens/LastSearched',
+                params: {
+                  city: currentLocation?.city,
+                  bhk: '3 BHK',
+                  lookingFor: 'sell'
+                }
+              })}
+              activeOpacity={0.7}
+              style={{ flex: 1 }}
             >
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center" style={{ gap: 4 }}>
-                  <LayoutGrid size={12} color="#364153" />
-                  <Text className="font-inter-semibold text-[13px] text-[#101828]">BHK</Text>
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: '#EDFBFA',
+                  borderWidth: 0.67,
+                  borderColor: '#F3F4F6',
+                  borderRadius: 16,
+                  padding: 12,
+                  paddingVertical: 14,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 3,
+                  elevation: 1.5,
+                  justifyContent: 'flex-start',
+                  gap: 16
+                }}
+              >
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-row items-center" style={{ gap: 4 }}>
+                    <LayoutGrid size={12} color="#364153" />
+                    <Text className="font-inter-semibold text-[13px] text-[#101828]">BHK</Text>
+                  </View>
+                  <ChevronRight size={14} color="#4A5565" />
                 </View>
-                <ChevronRight size={14} color="#4A5565" />
+                <View>
+                  <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">3 BHK</Text>
+                  <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
+                </View>
               </View>
-              <View>
-                <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">3 BHK</Text>
-                <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">1958 Properties</Text>
-              </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
 

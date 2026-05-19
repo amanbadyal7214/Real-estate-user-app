@@ -54,7 +54,7 @@ const ExploreLocalityCard = ({
             {avgLabel || "Avg.\nPrice:"}
           </Text>
           <Text className="font-inter-semibold text-[#101828] text-[13px] leading-[20px]">
-            {displayPrice}/sqft
+            {displayPrice}
           </Text>
         </View>
 

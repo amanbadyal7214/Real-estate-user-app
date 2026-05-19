@@ -1,10 +1,11 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { useRef, useState, useEffect } from 'react';
-import { Animated, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import PropertyListingCard from '../../components/PropertyListingCard';
+import { useLookup } from '../../hooks/useLookup';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -14,7 +15,9 @@ const LastSearched = () => {
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Price: High to Low');
-  const [lookingTo, setLookingTo] = useState('Buy');
+  const params = useLocalSearchParams();
+  // Lock searching to Buy (which maps to API lookingFor: 'sell') and prevent changes
+  const [lookingTo] = useState('sell');
 
   // Animation for Bottom Sheet
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
@@ -68,11 +71,15 @@ const LastSearched = () => {
     'Relevance'
   ];
 
-  const lookOptions = ['Buy', 'Rent', 'Commercial', 'PG/Co-living'];
-  const propertyTypes = ['Apartments', 'Independent House', 'Builder Floor', 'Plot', 'Studio', 'Duplex', 'Penthouse'];
+  // Only show Buy as available and keep it selected (disabled for changes)
+  const lookOptions = ['Buy'];
+  // propertyTypes and structures will be fetched from lookup API
+  const { propertyTypes = [], structures = [], fetchLookups } = useLookup();
+  const [selectedStructure, setSelectedStructure] = useState(null);
+  const [structureInput, setStructureInput] = useState('');
   const bhkTypes = ['1 RK', '1 BHK', '2 BHK', '3 BHK', '4 BHK', '5 BHK', '5+ BHK'];
   const availabilityOptions = ['Within a week', 'Within 15 days', 'Within a month'];
-  const listedBy = ['Agent', 'Owner', 'Builder', 'Featured Properties'];
+  const listedBy = [ 'Owner', 'Builder'];
 
 
   const { fetchProperties, loading } = usePropertyDiscovery();
@@ -80,13 +87,42 @@ const LastSearched = () => {
 
   useEffect(() => {
     loadProperties();
-  }, []);
+    // fetch lookup data for property types and structures
+    fetchLookups();
+  }, [lookingTo, selectedSort, selectedStructure, structureInput]);
 
   const loadProperties = async () => {
     try {
-      const response = await fetchProperties({ city: 'Mohali', limit: 10 });
+      const params = { city: 'Mohali', lookingFor: lookingTo, limit: 10 };
+
+      // include selected structure (from dropdown) or freeform input
+      if (selectedStructure) {
+        params.structure = selectedStructure;
+      } else if (structureInput && structureInput.trim().length > 0) {
+        params.structure = structureInput.trim();
+      }
+
+      // Map selected sort to API params when possible
+      if (selectedSort && selectedSort.toLowerCase().includes('price')) {
+        // Price : Low to High -> PriceAscending: true
+        params.PriceAscending = selectedSort.toLowerCase().includes('low');
+      }
+
+      const response = await fetchProperties(params);
       if (response?.data) {
-        setProperties(response.data);
+        let items = response.data;
+
+        // If sorting by area, perform client-side sort (server may not support it)
+        if (selectedSort && selectedSort.toLowerCase().includes('area')) {
+          const asc = selectedSort.toLowerCase().includes('low');
+          items = items.sort((a, b) => {
+            const aArea = parseFloat(a.area || a.areaValue || a.builtUpArea || 0) || 0;
+            const bArea = parseFloat(b.area || b.areaValue || b.builtUpArea || 0) || 0;
+            return asc ? aArea - bArea : bArea - aArea;
+          });
+        }
+
+        setProperties(items);
       }
     } catch (err) {
       console.error("Error loading properties:", err);
@@ -186,9 +222,9 @@ const LastSearched = () => {
             )}
           </View>
         </ScrollView>
-      </View>
+          </View>
 
-
+         
       {/* Floating Action Buttons */}
       <View 
         className="absolute bottom-[30px] self-center flex-row bg-white rounded-full border border-[#E4E7EC]" 
@@ -296,10 +332,11 @@ const LastSearched = () => {
                     {lookOptions.map(option => (
                       <TouchableOpacity 
                         key={option}
-                        onPress={() => setLookingTo(option)}
-                        className={`px-[16px] py-[10px] rounded-[12px] border ${lookingTo === option ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#D0D5DD]'}`}
+                        // Disabled: keep Buy selected and prevent changes
+                        activeOpacity={1}
+                        className={`px-[16px] py-[10px] rounded-[12px] border ${'bg-[#008E96]/10 border-[#008E96]'}`}
                       >
-                        <Text className={`font-inter-medium text-[14px] ${lookingTo === option ? 'text-[#008E96]' : 'text-[#101828]'}`}>
+                        <Text className={`font-inter-medium text-[14px] text-[#008E96]`}>
                           {option}
                         </Text>
                       </TouchableOpacity>
@@ -334,15 +371,24 @@ const LastSearched = () => {
                 <View className="mt-[32px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Property Type <Ionicons name="information-circle-outline" size={16} color="#6A7282" /></Text>
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
-                    {propertyTypes.map(type => (
-                      <TouchableOpacity 
-                        key={type}
-                        className="flex-row items-center border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
-                      >
-                        <View className="w-[18px] h-[18px] border-[1.5px] border-[#D0D5DD] rounded-[4px] mr-[8px] items-center justify-center" />
-                        <Text className="text-[#101828] font-inter-medium text-[13px]">{type}</Text>
-                      </TouchableOpacity>
-                    ))}
+                    {propertyTypes && propertyTypes.length > 0 ? (
+                      propertyTypes.map((pt) => {
+                        const label = pt.label || pt.name || String(pt);
+                        const key = pt._id || label;
+                        return (
+                          <TouchableOpacity 
+                            key={key}
+                            className="flex-row items-center border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
+                          >
+                            <View className="w-[18px] h-[18px] border-[1.5px] border-[#D0D5DD] rounded-[4px] mr-[8px] items-center justify-center" />
+                            <Text className="text-[#101828] font-inter-medium text-[13px]">{label}</Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      // Fallback to empty state until lookups load
+                      <Text className="text-[#6A7282]">Loading property types...</Text>
+                    )}
                   </View>
                 </View>
 
@@ -376,30 +422,51 @@ const LastSearched = () => {
                   </View>
                 </View>
 
-                {/* BHK Type */}
+                {/* Structure Type (replaces BHK Type) */}
                 <View className="mt-[32px]">
-                  <Text className="text-[#101828] font-inter-semibold text-[16px]">BHK Type</Text>
+                  <Text className="text-[#101828] font-inter-semibold text-[16px]">Structure Type</Text>
+                  <View className="mt-[12px]">
+                    <TextInput
+                      placeholder="Enter structure (numbers only)"
+                      value={structureInput}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setStructureInput(digits);
+                        setSelectedStructure(null);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      maxLength={10}
+                      className="border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
+                      style={{ fontSize: 14 }}
+                    />
+                  </View>
+
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
-                    {bhkTypes.map(type => (
-                      <TouchableOpacity 
-                        key={type}
-                        className="flex-row items-center border border-[#F2F4F7] bg-white px-[12px] py-[12px] rounded-[12px] min-w-[75px] justify-center"
-                        style={{
-                          shadowColor: '#000',
-                          shadowOffset: { width: 0, height: 1 },
-                          shadowOpacity: 0.05,
-                          shadowRadius: 2,
-                          elevation: 1
-                        }}
-                      >
-                        <View className="w-[18px] h-[18px] border-[1.5px] border-[#D0D5DD] rounded-[4px] mr-[8px]" />
-                        <Text className="text-[#101828] font-inter-medium text-[13px] text-center">{type}</Text>
-                      </TouchableOpacity>
-                    ))}
+                    {structures && structures.length > 0 ? (
+                      structures.map((st) => {
+                        const label = st.label || st.name || String(st);
+                        const key = st._id || label;
+                        const isActive = selectedStructure === (st._id || label);
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            onPress={() => { setSelectedStructure(st._id || label); setStructureInput(''); }}
+                            className={`px-[12px] py-[10px] rounded-[12px] border ${isActive ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
+                          >
+                            <Text className={`font-inter-medium text-[13px] ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>
+                              {label}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      <Text className="text-[#6A7282]">Loading structures...</Text>
+                    )}
                   </View>
                 </View>
 
-                {/* Available */}
+                {/*
                 <View className="mt-[32px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Available</Text>
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
@@ -413,6 +480,7 @@ const LastSearched = () => {
                     ))}
                   </View>
                 </View>
+                */}
 
                 {/* Listed By */}
                 <View className="mt-[32px] mb-[40px]">
