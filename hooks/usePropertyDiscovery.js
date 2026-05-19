@@ -154,6 +154,26 @@ export const usePropertyDiscovery = () => {
         }
     }, []);
 
+    /**
+     * Fetch city-wide property statistics (min/max price, counts etc)
+     * @param {Object} params - { city }
+     */
+    const fetchCityStats = useCallback(async (params = {}) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const safeParams = sanitizeParams(params);
+            const response = await api.get("/properties/city/stats", { params: safeParams });
+            return response.data;
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || err.response?.data?.message || "Failed to fetch city stats";
+            setError(errorMessage);
+            throw new Error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     return {
         findPropertiesByLocation,
         fetchHighDemandProperties,
@@ -161,6 +181,7 @@ export const usePropertyDiscovery = () => {
         fetchBetterPricedProperties,
         fetchPropertyById,
         fetchProperties,
+        fetchCityStats,
         loading,
         error
     };

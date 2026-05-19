@@ -7,9 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import NoDataFound from '../../components/NoDataFound';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
-import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
 import { useLocality } from '../../hooks/useLocality';
+import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
 import { useLocation } from '../context/LocationContext';
+import { formatPrice } from '../utils/formatPrice';
 
 const RecommendedProperties = () => {
   const { findPropertiesByLocation, loading: discoveryLoading } = usePropertyDiscovery();
@@ -79,7 +80,18 @@ const RecommendedProperties = () => {
 
   const matchedProperties = properties.slice(0, 20).map((property, index) => ({
     id: property._id || property.id || `matched-${index}`,
-    price: typeof property.price === 'number' ? `₹ ${property.price}` : property.price || property.priceRange || 'View details',
+    price: (() => {
+      const raw = property.price ?? property.priceRange;
+      if (typeof raw === 'number') return formatPrice(raw);
+      if (typeof raw === 'string') {
+        if (raw.trim().startsWith('₹')) return raw;
+        const digits = raw.replace(/[^0-9.]/g, '');
+        const num = Number(digits);
+        if (Number.isFinite(num) && num > 0) return formatPrice(num);
+        return raw;
+      }
+      return 'View details';
+    })(),
     name: property.title || property.projectName || 'Property',
     developer: property.projectName ? `by ${property.projectName}` : `by ${property.owner?.name || 'Developer'}`,
     location: [property.localityName, property.city?.name || property.city, property.state?.name || property.state].filter(Boolean).join(', ') || 'Location not available',

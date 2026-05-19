@@ -51,60 +51,60 @@ const ProjectDetails = () => {
   // If summaries are available, derive configuration cards from summaries.summaries
   const derivedConfigData = (summariesData && summariesData.summaries && summariesData.summaries.length > 0)
     ? summariesData.summaries.map((s) => {
-        const unit = s.areaUnit?.label || s.areaUnit?.name || '';
-        let areaRange = 'N/A';
-        if (s.areaMin && s.areaMax) areaRange = `${s.areaMin} - ${s.areaMax} ${unit}`;
-        else if (s.area) areaRange = `${s.area} ${unit}`;
+      const unit = s.areaUnit?.label || s.areaUnit?.name || '';
+      let areaRange = 'N/A';
+      if (s.areaMin && s.areaMax) areaRange = `${s.areaMin} - ${s.areaMax} ${unit}`;
+      else if (s.area) areaRange = `${s.area} ${unit}`;
 
-        let priceRange = 'N/A';
-        if (s.minPrice && s.maxPrice) priceRange = `₹ ${s.minPrice} - ₹ ${s.maxPrice}`;
-        else if (s.price) priceRange = `₹ ${s.price}`;
+      let priceRange = 'N/A';
+      if (s.minPrice && s.maxPrice) priceRange = `₹ ${s.minPrice} - ₹ ${s.maxPrice}`;
+      else if (s.price) priceRange = `₹ ${s.price}`;
 
-        const structureLabel = s.structure?.value || s.structure?.label || '';
-        const titleBase = s.propertyItem?.label || s.propertyItem?.name || 'Configuration';
-        const title = structureLabel ? `${titleBase} • ${structureLabel}` : titleBase;
+      const structureLabel = s.structure?.value || s.structure?.label || '';
+      const titleBase = s.propertyItem?.label || s.propertyItem?.name || 'Configuration';
+      const title = structureLabel ? `${titleBase} • ${structureLabel}` : titleBase;
 
-        return {
-          title,
-          areaRange,
-          priceRange
-        };
-      })
+      return {
+        title,
+        areaRange,
+        priceRange
+      };
+    })
     : configData;
 
   const dummyTourImage = 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&q=80&w=900';
 
   const propertyTourData = (summariesData && summariesData.summaries && summariesData.summaries.length > 0)
     ? summariesData.summaries.map((s, index) => {
-        const bhkValue = s.structure?.value ? `${s.structure.value} BHK` : 'Flat';
-        const areaUnit = s.areaUnit?.label || s.areaUnit?.name || '';
+      const bhkValue = s.structure?.value ? `${s.structure.value} BHK` : 'Flat';
+      const areaUnit = s.areaUnit?.label || s.areaUnit?.name || '';
 
-        return {
-          id: s._id || index,
-          bhk: bhkValue,
-          info: s.propertyItem?.label || s.propertyItem?.name || 'Flat',
-          area: `${s.area || 'N/A'} ${areaUnit}`.trim(),
-          price: '₹ XX Cr',
-          image: dummyTourImage,
-          quantity: s.quantity,
-          activeTabKey: bhkValue,
-        };
-      })
+      return {
+        id: s._id || index,
+        bhk: bhkValue,
+        info: s.propertyItem?.label || s.propertyItem?.name || 'Flat',
+        area: `${s.area || 'N/A'} ${areaUnit}`.trim(),
+        price: '₹ XX Cr',
+        image: dummyTourImage,
+        quantity: s.quantity,
+        activeTabKey: bhkValue,
+      };
+    })
     : floorPlanData;
 
   const propertyTourTabs = summariesData && summariesData.summaries && summariesData.summaries.length > 0
     ? [
-        { label: 'All', count: propertyTourData.length },
-        ...Array.from(new Map(propertyTourData.map((item) => [item.activeTabKey, item])).values()).map((item) => ({
-          label: item.activeTabKey,
-          count: propertyTourData.filter((tourItem) => tourItem.activeTabKey === item.activeTabKey).length,
-        }))
-      ]
+      { label: 'All', count: propertyTourData.length },
+      ...Array.from(new Map(propertyTourData.map((item) => [item.activeTabKey, item])).values()).map((item) => ({
+        label: item.activeTabKey,
+        count: propertyTourData.filter((tourItem) => tourItem.activeTabKey === item.activeTabKey).length,
+      }))
+    ]
     : [
-        { label: 'All', count: 6 },
-        { label: '3 BHK', count: 4 },
-        { label: '5 BHK', count: 2 }
-      ];
+      { label: 'All', count: 6 },
+      { label: '3 BHK', count: 4 },
+      { label: '5 BHK', count: 2 }
+    ];
 
   const visiblePropertyTourData = activeFloorTab === 'All'
     ? propertyTourData
@@ -518,74 +518,74 @@ const ProjectDetails = () => {
                   </TouchableOpacity>
                 </View> */}
               <ProjectPropertiesSection projectId={projectId} />
-              </View>) : activeTab === 'Property Tour' ? (
-                <View className="p-4 gap-4">
-                  <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">
-                    <View className="flex-row justify-between items-center">
-                      <Text className="text-[#101828] text-[18px] font-inter-bold">Floor plan & pricing</Text>
-                      <Text className="text-[#6A7282] text-[12px] font-inter-regular">*1 Sq.m = 10.76 Sq.ft</Text>
-                    </View>
+            </View>) : activeTab === 'Property Tour' ? (
+              <View className="p-4 gap-4">
+                <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">
+                  <View className="flex-row justify-between items-center">
+                    <Text className="text-[#101828] text-[18px] font-inter-bold">Floor plan & pricing</Text>
+                    <Text className="text-[#6A7282] text-[12px] font-inter-regular">*1 Sq.m = 10.76 Sq.ft</Text>
+                  </View>
 
-                    {/* Floor Tabs */}
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row border border-[#E5E7EB] rounded-[14px] overflow-hidden">
-                      {propertyTourTabs.map((tab, index) => (
-                        <TouchableOpacity
-                          key={tab.label}
-                          onPress={() => setActiveFloorTab(tab.label)}
-                          className={`items-center py-3 px-5 ${activeFloorTab === tab.label ? 'bg-[#E6F7F6]' : 'bg-white'} ${index < propertyTourTabs.length - 1 ? 'border-r border-[#E5E7EB]' : ''}`}
-                          style={{ minWidth: 92 }}
-                        >
-                          <Text className={`text-[14px] font-inter-medium ${activeFloorTab === tab.label ? 'text-[#008E96]' : 'text-[#364153]'}`}>{tab.label}</Text>
-                          <Text className="text-[#6A7282] text-[12px] font-inter-medium">{tab.count} Sizes</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
+                  {/* Floor Tabs */}
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row border border-[#E5E7EB] rounded-[14px] overflow-hidden">
+                    {propertyTourTabs.map((tab, index) => (
+                      <TouchableOpacity
+                        key={tab.label}
+                        onPress={() => setActiveFloorTab(tab.label)}
+                        className={`items-center py-3 px-5 ${activeFloorTab === tab.label ? 'bg-[#E6F7F6]' : 'bg-white'} ${index < propertyTourTabs.length - 1 ? 'border-r border-[#E5E7EB]' : ''}`}
+                        style={{ minWidth: 92 }}
+                      >
+                        <Text className={`text-[14px] font-inter-medium ${activeFloorTab === tab.label ? 'text-[#008E96]' : 'text-[#364153]'}`}>{tab.label}</Text>
+                        <Text className="text-[#6A7282] text-[12px] font-inter-medium">{tab.count} Sizes</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
 
-                    {/* Floor Cards */}
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-4">
-                      {visiblePropertyTourData.map((item, index) => (
-                        <View key={index} className="w-[200px] border border-[#E5E7EB] rounded-[14px] p-2 gap-2 mr-4">
-                          <View className="w-full h-[128px] bg-[#F3F4F6] rounded-[10px] overflow-hidden relative">
-                            <Image source={{ uri: item.image }} className="w-full h-full" resizeMode="cover" />
-                            <TouchableOpacity className="absolute top-2 right-2 w-8 h-8 bg-[#101828] rounded-full items-center justify-center">
-                              <MaterialCommunityIcons name="arrow-expand-all" size={16} color="white" />
-                            </TouchableOpacity>
-                          </View>
-                          <View className="px-1 gap-1">
-                            <Text className="text-[#101828] text-[16px] font-inter-bold">{item.bhk}</Text>
-                            <Text className="text-[#6A7282] text-[12px] font-inter-regular">{item.info}</Text>
-                            <Text className="text-[#101828] text-[14px] font-inter-medium">{item.area}</Text>
-                            <Text className="text-[#101828] text-[16px] font-inter-bold">{item.price}</Text>
-                          </View>
-                          <View className="flex-row gap-2 mt-1">
-                            <TouchableOpacity className="w-10 h-10 border border-[#D1D5DC] rounded-[10px] items-center justify-center">
-                              <FontAwesome name="whatsapp" size={20} color="#00C950" />
-                            </TouchableOpacity>
-                            <TouchableOpacity className="flex-1 h-10 border-2 border-[#008E96] rounded-[10px] items-center justify-center">
-                              <Text className="text-[#008E96] text-[14px] font-inter-medium">Contact</Text>
-                            </TouchableOpacity>
-                          </View>
+                  {/* Floor Cards */}
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-4">
+                    {visiblePropertyTourData.map((item, index) => (
+                      <View key={index} className="w-[200px] border border-[#E5E7EB] rounded-[14px] p-2 gap-2 mr-4">
+                        <View className="w-full h-[128px] bg-[#F3F4F6] rounded-[10px] overflow-hidden relative">
+                          <Image source={{ uri: item.image }} className="w-full h-full" resizeMode="cover" />
+                          <TouchableOpacity className="absolute top-2 right-2 w-8 h-8 bg-[#101828] rounded-full items-center justify-center">
+                            <MaterialCommunityIcons name="arrow-expand-all" size={16} color="white" />
+                          </TouchableOpacity>
                         </View>
-                      ))}
-                    </ScrollView>
-
-                    {/* Feedback Section */}
-                    <View className="flex-row justify-between items-center pt-4 border-t border-[#F3F4F6]">
-                      <Text className="text-[#364153] text-[14px] font-inter-regular">Was this information helpful?</Text>
-                      <View className="flex-row gap-3">
-                        <TouchableOpacity className="flex-row items-center gap-1.5">
-                          <Ionicons name="thumbs-up-outline" size={18} color="#4A5565" />
-                          <Text className="text-[#4A5565] text-[14px] font-inter-medium">Yes</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className="flex-row items-center gap-1.5">
-                          <Ionicons name="thumbs-down-outline" size={18} color="#4A5565" />
-                          <Text className="text-[#4A5565] text-[14px] font-inter-medium">No</Text>
-                        </TouchableOpacity>
+                        <View className="px-1 gap-1">
+                          <Text className="text-[#101828] text-[16px] font-inter-bold">{item.bhk}</Text>
+                          <Text className="text-[#6A7282] text-[12px] font-inter-regular">{item.info}</Text>
+                          <Text className="text-[#101828] text-[14px] font-inter-medium">{item.area}</Text>
+                          <Text className="text-[#101828] text-[16px] font-inter-bold">{item.price}</Text>
+                        </View>
+                        <View className="flex-row gap-2 mt-1">
+                          <TouchableOpacity className="w-10 h-10 border border-[#D1D5DC] rounded-[10px] items-center justify-center">
+                            <FontAwesome name="whatsapp" size={20} color="#00C950" />
+                          </TouchableOpacity>
+                          <TouchableOpacity className="flex-1 h-10 border-2 border-[#008E96] rounded-[10px] items-center justify-center">
+                            <Text className="text-[#008E96] text-[14px] font-inter-medium">Contact</Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
+                    ))}
+                  </ScrollView>
+
+                  {/* Feedback Section */}
+                  <View className="flex-row justify-between items-center pt-4 border-t border-[#F3F4F6]">
+                    <Text className="text-[#364153] text-[14px] font-inter-regular">Was this information helpful?</Text>
+                    <View className="flex-row gap-3">
+                      <TouchableOpacity className="flex-row items-center gap-1.5">
+                        <Ionicons name="thumbs-up-outline" size={18} color="#4A5565" />
+                        <Text className="text-[#4A5565] text-[14px] font-inter-medium">Yes</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity className="flex-row items-center gap-1.5">
+                        <Ionicons name="thumbs-down-outline" size={18} color="#4A5565" />
+                        <Text className="text-[#4A5565] text-[14px] font-inter-medium">No</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-              ) : (
+              </View>
+            ) : (
             <View className="p-20 items-center justify-center">
               <Text className="text-gray-400 font-inter-medium">{activeTab} Content Coming Soon</Text>
             </View>

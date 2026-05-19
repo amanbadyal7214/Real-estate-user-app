@@ -58,10 +58,10 @@ const ExploreLocalities = () => {
   }));
 
   const LocalityCard = ({ item, isHotspot = false }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       activeOpacity={0.9}
       className="bg-white rounded-[16px] overflow-hidden mb-[16px]"
-      style={{ 
+      style={{
         width: isHotspot ? '100%' : 240,
         marginRight: isHotspot ? 0 : 12,
         shadowColor: "#008E96",
@@ -79,12 +79,12 @@ const ExploreLocalities = () => {
         className="h-[64px] justify-center px-[12px] relative overflow-hidden"
       >
         <View style={{ position: 'absolute', right: -10, top: -10, opacity: 0.05 }}>
-            <MaterialCommunityIcons name="city-variant-outline" size={80} color="#008E96" />
+          <MaterialCommunityIcons name="city-variant-outline" size={80} color="#008E96" />
         </View>
         <Text className="text-[#101828] font-inter-bold text-[16px] tracking-tight">{item.name}</Text>
         <Text className="text-[#667085] font-inter-regular text-[11px]">{item.location}</Text>
       </LinearGradient>
-      
+
       {/* Content Section */}
       <View className="px-[12px] py-[12px]">
         <View className="flex-row items-center justify-between">
@@ -98,37 +98,37 @@ const ExploreLocalities = () => {
             </View>
           </View>
         </View>
-        
+
 
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView 
+    <SafeAreaView
       className="flex-1 bg-[#F9FBFC]"
     >
       <StatusBar barStyle="light-content" />
-      
+
       {/* Modern Gradient Header */}
       <LinearGradient
         colors={['#008E96', '#007A82']}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
         className="px-[20px] rounded-b-[24px] justify-center pt-[15px] pb-[20px]"
       >
         <View className="flex-row items-center justify-between">
-            <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => router.back()}
             className="w-[36px] h-[36px] bg-white/20 rounded-full items-center justify-center"
-            >
+          >
             <Ionicons name="chevron-back" size={20} color="white" />
-            </TouchableOpacity>
-            
-            <View className="items-center flex-1 pt-2 pr-[36px]">
-                <Text className="text-white font-inter-bold text-[16px]">Explore Localities</Text>
-                <Text className="text-white/80 font-inter-regular text-[11px]">Premium Investment Zones in {currentLocation?.city || 'Mohali'}</Text>
-            </View>
+          </TouchableOpacity>
+
+          <View className="items-center flex-1 pt-2 pr-[36px]">
+            <Text className="text-white font-inter-bold text-[16px]">Explore Localities</Text>
+            <Text className="text-white/80 font-inter-regular text-[11px]">Premium Investment Zones in {currentLocation?.city || 'Mohali'}</Text>
+          </View>
         </View>
       </LinearGradient>
 
@@ -137,11 +137,11 @@ const ExploreLocalities = () => {
         <View className="pt-[10px]">
           <View className="flex-row items-center justify-between px-[20px] mb-[12px]">
             <View>
-                <Text className="text-[#101828] font-inter-bold text-[18px]">Popular Areas</Text>
-                <View className="h-[2px] w-[24px] bg-[#008E96] mt-[2px] rounded-full" />
+              <Text className="text-[#101828] font-inter-bold text-[18px]">Popular Areas</Text>
+              <View className="h-[2px] w-[24px] bg-[#008E96] mt-[2px] rounded-full" />
             </View>
             <TouchableOpacity>
-                <Text className="text-[#008E96] font-inter-semibold text-[13px]">See all</Text>
+              <Text className="text-[#008E96] font-inter-semibold text-[13px]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -150,10 +150,10 @@ const ExploreLocalities = () => {
               <ActivityIndicator color="#008E96" />
             </View>
           ) : localities.length > 0 ? (
-            <ScrollView 
-              horizontal 
+            <ScrollView
+              horizontal
               contentContainerStyle={{ paddingLeft: 20, paddingRight: 4, paddingBottom: 8 }}
-              showsHorizontalScrollIndicator={false} 
+              showsHorizontalScrollIndicator={false}
             >
               {localities.map((item) => (
                 <LocalityCard key={`popular-${item.id}`} item={item} />
@@ -172,7 +172,7 @@ const ExploreLocalities = () => {
             <Text className="text-[#101828] font-inter-bold text-[18px]">Investment Hotspots</Text>
             <Text className="text-[#667085] font-inter-regular text-[12px] mt-[2px]">Top performing localities this month</Text>
           </View>
-          
+
           {loading ? (
             <View className="py-10">
               <ActivityIndicator color="#008E96" />

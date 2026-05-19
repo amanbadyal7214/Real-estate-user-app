@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import api from '../app/api';
+import { formatPrice } from '../app/utils/formatPrice';
 
 const ProjectPropertyCard = ({ property }) => {
   const [localityName, setLocalityName] = useState('Loading...');
@@ -29,16 +29,7 @@ const ProjectPropertyCard = ({ property }) => {
     }
   }, [property.locality]);
 
-  const formatPrice = (value) => {
-    if (!value) return 'N/A';
-    const numericValue = Number(value);
-    if (!Number.isFinite(numericValue)) return 'N/A';
-
-    if (numericValue >= 10000000) return `₹ ${(numericValue / 10000000).toFixed(2)} Cr`;
-    if (numericValue >= 1000000) return `₹ ${(numericValue / 100000).toFixed(2)} L`;
-    if (numericValue >= 1000) return `₹ ${(numericValue / 1000).toFixed(2)} K`;
-    return `₹ ${numericValue}`;
-  };
+  // using shared formatPrice
 
   const image = property.images && property.images.length > 0 ? property.images[0] : 'https://images.unsplash.com/photo-1512915922686-57c11f9ad6b3?auto=format&fit=crop&q=80&w=400';
   const name = property.title || 'N/A';
@@ -48,14 +39,14 @@ const ProjectPropertyCard = ({ property }) => {
   const price = formatPrice(property.price);
 
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       activeOpacity={0.9}
       onPress={() => router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: property._id } })}
       className="bg-white border border-[#E5E7EB] rounded-[14px] p-3 mr-3 overflow-hidden shadow-sm"
       style={{ width: 280 }}
     >
-      <Image 
-        source={{ uri: typeof image === 'string' ? image : image?.url }} 
+      <Image
+        source={{ uri: typeof image === 'string' ? image : image?.url }}
         className="w-full h-[128px] rounded-[10px] mb-3"
       />
       <Text className="font-inter-medium text-[#0A0A0A] text-[14px] mb-1" numberOfLines={1}>{name}</Text>
@@ -96,7 +87,7 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, propertyType,
         setLoading(true);
         // Hitting the general /properties API (property wali api) as requested
         let endpoint = "/properties";
-        let params = { 
+        let params = {
           lookingFor: 'sell',
           limit: 6
         };
@@ -114,7 +105,7 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, propertyType,
         }
 
         const response = await api.get(endpoint, { params });
-        
+
         const data = response.data?.success && response.data?.data ? response.data.data : (Array.isArray(response.data) ? response.data : []);
         setProperties(data);
       } catch (err) {
@@ -124,7 +115,7 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, propertyType,
         setLoading(false);
       }
     };
-    
+
     fetchProperties();
   }, [projectId, localityId, cityId, propertyType]);
 

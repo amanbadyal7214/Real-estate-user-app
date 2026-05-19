@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { formatPrice } from '../app/utils/formatPrice';
 
 const RecommendedPropertyCard = ({ id, image, price, title, area, location }) => {
   return (
@@ -43,7 +44,27 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
       {/* Details Container */}
       <View className="flex-col pt-3 py-1" style={{ flex: 1, height: 120 }}>
         <Text className="font-inter-bold text-[#101828]" style={{ fontSize: 16, lineHeight: 24 }}>
-          {price}
+          {(() => {
+            const raw = price;
+            if (raw === null || raw === undefined || raw === '') return 'View details';
+            if (typeof raw === 'number') return formatPrice(raw);
+            if (typeof raw === 'string') {
+              if (raw.trim().startsWith('₹')) return raw;
+              if (raw.includes('-')) {
+                const parts = raw.split('-').map(p => p.trim());
+                const formatted = parts.map(p => {
+                  const digits = p.replace(/[^0-9.]/g, '');
+                  const num = Number(digits);
+                  return Number.isFinite(num) && num > 0 ? formatPrice(num) : p;
+                });
+                return formatted.join(' - ');
+              }
+              const digits = raw.replace(/[^0-9.]/g, '');
+              const num = Number(digits);
+              return Number.isFinite(num) && num > 0 ? formatPrice(num) : raw;
+            }
+            return String(raw);
+          })()}
         </Text>
         <Text className="font-inter-semibold text-[#101828] mt-1" style={{ fontSize: 14, lineHeight: 21 }} numberOfLines={1}>
           {title}

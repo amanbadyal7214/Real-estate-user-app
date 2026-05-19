@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { formatPrice } from '../app/utils/formatPrice';
 
 const PropertyCard = ({ item }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -87,7 +88,7 @@ const PropertyCard = ({ item }) => {
               {item.location}
             </Text>
             <Text className="font-inter-bold text-[15px] text-white mt-2 leading-[22px]">
-              ₹{item.priceRange}
+              {formatPrice(item.priceRange)}
             </Text>
           </View>
         </View>

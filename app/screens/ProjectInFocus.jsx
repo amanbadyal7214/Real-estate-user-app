@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, RefreshCcw } from 'lucide-react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { useProject } from '../../hooks/useProject';
+import { formatPrice } from '../utils/formatPrice';
 
 const ProjectInFocus = () => {
   const router = useRouter();
@@ -12,21 +13,7 @@ const ProjectInFocus = () => {
   const { fetchProjects, loading, error } = useProject();
   const [projectsList, setProjectsList] = useState([]);
 
-  const formatPrice = (price) => {
-    if (!price) return 'N/A';
-    // If it's already a string like "45 L - 1.11 Cr"
-    if (typeof price === 'string' && price.includes('-')) return `₹ ${price}`;
-    
-    const num = parseFloat(price);
-    if (isNaN(num)) return `₹ ${price}`;
-
-    if (num >= 10000000) {
-      return `₹ ${(num / 10000000).toFixed(2)} Cr`;
-    } else if (num >= 100000) {
-      return `₹ ${(num / 100000).toFixed(2)} L`;
-    }
-    return `₹ ${num.toLocaleString('en-IN')}`;
-  };
+  // using shared formatPrice
 
   const loadFocusProjects = async () => {
     try {
@@ -40,7 +27,7 @@ const ProjectInFocus = () => {
 
       // API returns array or { data: [...] }
       const data = response?.data || response || [];
-      
+
       if (!Array.isArray(data)) {
         setProjectsList([]);
         return;
@@ -56,8 +43,8 @@ const ProjectInFocus = () => {
         seller: project.builder?.name,
         isRera: project.isReraApproved || true,
         zeroBrokerage: true,
-        images: project.media && project.media.length > 0 
-          ? project.media.map(m => m.fileUrl) 
+        images: project.media && project.media.length > 0
+          ? project.media.map(m => m.fileUrl)
           : ["https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=203&auto=format&fit=crop"]
       }));
       setProjectsList(formattedData);
@@ -74,7 +61,7 @@ const ProjectInFocus = () => {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="px-4 pb-5 flex-row items-center pt-4">
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => router.back()}
           className="p-1"
         >
@@ -86,7 +73,7 @@ const ProjectInFocus = () => {
       </View>
 
       {/* Content */}
-      <ScrollView 
+      <ScrollView
         className="flex-1 px-4"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -99,7 +86,7 @@ const ProjectInFocus = () => {
         ) : error ? (
           <View className="flex-1 items-center justify-center py-20 px-10">
             <Text className="text-red-500 font-inter-semibold text-center mb-4">{error}</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={loadFocusProjects}
               className="flex-row items-center gap-2 bg-[#008E96] px-6 py-3 rounded-xl"
             >
@@ -113,9 +100,9 @@ const ProjectInFocus = () => {
           </View>
         ) : (
           projectsList.map((item) => (
-            <PerfectMatchCard 
-              key={item.id} 
-              property={item} 
+            <PerfectMatchCard
+              key={item.id}
+              property={item}
               onPress={() => router.push({
                 pathname: '/screens/ProjectDetails',
                 params: { projectId: item.id }

@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { useLocality } from '../../hooks/useLocality';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import { formatPrice } from '../utils/formatPrice';
 
 const HighDemandProduct = () => {
   const router = useRouter();
@@ -16,16 +17,7 @@ const HighDemandProduct = () => {
 
   const loading = discoveryLoading || localityLoading;
 
-  const formatPrice = (price) => {
-    if (!price) return 'N/A';
-    const num = parseFloat(price);
-    if (num >= 10000000) {
-      return `₹ ${(num / 10000000).toFixed(2)} Cr`;
-    } else if (num >= 100000) {
-      return `₹ ${(num / 100000).toFixed(2)} L`;
-    }
-    return `₹ ${num.toLocaleString('en-IN')}`;
-  };
+  // using shared formatPrice
 
   const loadHighDemandProperties = async () => {
     try {

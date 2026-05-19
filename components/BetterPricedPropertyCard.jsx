@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { formatPrice } from '../app/utils/formatPrice';
 
 const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRange }) => {
   const marketerInitial = marketer ? marketer.charAt(0).toUpperCase() : '';
@@ -78,7 +79,7 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
             style={{ fontSize: 15, lineHeight: 22 }}
             numberOfLines={1}
           >
-           ₹{priceRange}
+           {formatPrice(priceRange)}
           </Text>
         </View>
       </View>

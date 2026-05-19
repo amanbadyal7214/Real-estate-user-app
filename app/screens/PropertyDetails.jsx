@@ -1,4 +1,4 @@
-import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -6,6 +6,7 @@ import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, Touch
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProjectPropertiesSection from '../../components/ProjectPropertiesSection';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import { formatPrice } from '../utils/formatPrice';
 
 const parseMaybeJson = (value) => {
   if (!value || typeof value !== 'string') return value;
@@ -16,18 +17,7 @@ const parseMaybeJson = (value) => {
   }
 };
 
-const formatPrice = (value) => {
-  if (value === null || value === undefined || value === '') return 'Price on request';
-  const numericValue = Number(value);
-  if (!Number.isFinite(numericValue)) return String(value);
-
-  if (numericValue >= 10000000) {
-    return `₹ ${(numericValue / 10000000).toFixed(2)} Cr`;
-  } else if (numericValue >= 100000) {
-    return `₹ ${(numericValue / 100000).toFixed(2)} Lac`;
-  }
-  return `₹ ${new Intl.NumberFormat('en-IN').format(numericValue)}`;
-};
+// using shared formatPrice
 
 const formatArea = (value, unit = 'sq.ft.') => {
   if (!value) return 'N/A';
@@ -143,7 +133,7 @@ const PropertyDetails = () => {
                 )}
               />
               <LinearGradient colors={['rgba(0,0,0,0.4)', 'transparent', 'rgba(0,0,0,0.6)']} className="absolute inset-0" />
-              
+
               {/* Top Controls */}
               <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center px-4 mt-4">
                 <TouchableOpacity onPress={() => router.back()} className="w-12 h-12 bg-black/40 rounded-full items-center justify-center">
@@ -171,10 +161,10 @@ const PropertyDetails = () => {
                   {normalizedProperty.title || 'Spacious Property'}
                 </Text>
                 <View className="flex-row items-center gap-1">
-                   <Ionicons name="location" size={12} color="white" />
-                   <Text className="text-white text-[13px] font-inter-regular">
-                     {getDisplayValue(normalizedProperty.city)}, {getDisplayValue(normalizedProperty.state)}
-                   </Text>
+                  <Ionicons name="location" size={12} color="white" />
+                  <Text className="text-white text-[13px] font-inter-regular">
+                    {getDisplayValue(normalizedProperty.city)}, {getDisplayValue(normalizedProperty.state)}
+                  </Text>
                 </View>
               </View>
 
@@ -189,9 +179,9 @@ const PropertyDetails = () => {
             {/* Tabs Row */}
             <View className="flex-row gap-2 border-b border-[#E5E7EB] px-4 py-4">
               {['Overview', 'Highlights', 'Property Tour'].map((tab) => (
-                <TouchableOpacity 
-                  key={tab} 
-                  onPress={() => setActiveTab(tab)} 
+                <TouchableOpacity
+                  key={tab}
+                  onPress={() => setActiveTab(tab)}
                   className={`flex-1 py-2 rounded-[14px] items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`}
                 >
                   <Text className={`text-[14px] font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{tab}</Text>
@@ -267,7 +257,7 @@ const PropertyDetails = () => {
                       <Text className="text-[#101828] text-[15px] font-inter-semibold">{projectInfo.projectName}</Text>
                     </View>
                   </View>
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={() => router.push({ pathname: '/screens/ProjectDetails', params: { projectId: projectInfo._id } })}
                     className="p-2"
                   >
@@ -279,9 +269,9 @@ const PropertyDetails = () => {
               {/* Seller Card */}
               <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] shadow-sm flex-row items-center gap-3">
                 <View className="w-12 h-12 bg-[#008E96] rounded-full items-center justify-center">
-                   <Text className="text-white font-inter-bold text-[18px]">
-                     {(sellerInfo.name || 'S').charAt(0).toUpperCase()}
-                   </Text>
+                  <Text className="text-white font-inter-bold text-[18px]">
+                    {(sellerInfo.name || 'S').charAt(0).toUpperCase()}
+                  </Text>
                 </View>
                 <View className="flex-1">
                   <Text className="text-[#101828] text-[15px] font-inter-semibold">{sellerInfo.name || 'Owner'}</Text>
@@ -292,12 +282,12 @@ const PropertyDetails = () => {
                 </TouchableOpacity>
               </View>
 
-              <ProjectPropertiesSection 
-                projectId={projectInfo._id} 
+              <ProjectPropertiesSection
+                projectId={projectInfo._id}
                 localityId={normalizedProperty.locality?._id || normalizedProperty.locality}
                 cityId={normalizedProperty.city?._id || normalizedProperty.city}
                 propertyType={normalizedProperty.propertyType?._id || normalizedProperty.propertyType}
-                title="Similar Properties" 
+                title="Similar Properties"
               />
             </View>
           ) : activeTab === 'Highlights' ? (
@@ -309,10 +299,10 @@ const PropertyDetails = () => {
                   {amenities.length > 0 ? (
                     amenities.map((item, idx) => (
                       <View key={idx} className="w-[31.5%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-1">
-                        <MaterialIcons 
-                          name={item.amenity?.icon || 'check-circle-outline'} 
-                          size={24} 
-                          color="#008E96" 
+                        <MaterialIcons
+                          name={item.amenity?.icon || 'check-circle-outline'}
+                          size={24}
+                          color="#008E96"
                         />
                         <Text className="text-[#101828] text-[11px] text-center font-inter-medium mt-2" numberOfLines={2}>
                           {item.amenity?.label || item.amenity?.name || 'Amenity'}
@@ -330,12 +320,12 @@ const PropertyDetails = () => {
 
               {/* Similar Properties in Highlights */}
               <View className="mt-4">
-                <ProjectPropertiesSection 
-                  projectId={projectInfo._id} 
+                <ProjectPropertiesSection
+                  projectId={projectInfo._id}
                   localityId={normalizedProperty.locality?._id || normalizedProperty.locality}
                   cityId={normalizedProperty.city?._id || normalizedProperty.city}
                   propertyType={normalizedProperty.propertyType?._id || normalizedProperty.propertyType}
-                  title="Related Properties" 
+                  title="Related Properties"
                 />
               </View>
             </View>
@@ -345,41 +335,41 @@ const PropertyDetails = () => {
               <View className="gap-3">
                 <Text className="text-[#101828] text-[18px] font-inter-semibold">Property Facts</Text>
                 <View className="flex-row flex-wrap justify-between">
-                   {[
-                     { label: 'Property Type', value: getDisplayValue(normalizedProperty.propertyType), icon: 'business-outline' },
-                     { label: 'Sub Type', value: getDisplayValue(normalizedProperty.subPropertyType), icon: 'home-outline' },
-                     // Residential specific
-                     ...(normalizedProperty.propertyType?.name === 'residential' ? [
-                       { label: 'Configuration', value: `${residentialInfo.bedrooms || 0} BHK`, icon: 'apps-outline' },
-                       { label: 'Carpet Area', value: formatArea(residentialInfo.carpetArea?.value), icon: 'move-outline' },
-                       { label: 'Furnishing', value: getFurnishingLabel(residentialInfo.furnishingStatus), icon: 'bed-outline' },
-                       { label: 'Total Floors', value: residentialInfo.totalFloors, icon: 'layers-outline' },
-                     ] : []),
-                     // PG specific
-                     ...(normalizedProperty.propertyType?.name === 'pg' ? [
-                       { label: 'Meals', value: normalizedProperty.pg?.mealsAvailable ? 'Yes' : 'No', icon: 'restaurant-outline' },
-                       { label: 'Common Areas', value: (normalizedProperty.pg?.commonAreas || []).length > 0 ? 'Available' : 'None', icon: 'people-outline' },
-                     ] : []),
-                     // Plot specific
-                     ...(normalizedProperty.propertyType?.name === 'plot' ? [
-                       { label: 'Boundary Wall', value: normalizedProperty.plot?.isBoundaryWall ? 'Yes' : 'No', icon: 'shield-checkmark-outline' },
-                       { label: 'Dimensions', value: normalizedProperty.plot?.dimensions || 'N/A', icon: 'resize-outline' },
-                     ] : []),
-                     { label: 'Pincode', value: normalizedProperty.pincode, icon: 'location-outline' },
-                     { label: 'Available From', value: normalizedProperty.availableFrom ? new Date(normalizedProperty.availableFrom).toLocaleDateString('en-IN') : 'Immediately', icon: 'calendar-outline' },
-                   ].map((fact, idx) => (
-                     <View key={idx} className="w-[48%] bg-white rounded-[16px] p-3 border border-[#E5E7EB] mb-3">
-                       <View className="flex-row items-center gap-2 mb-1.5">
-                         <View className="w-8 h-8 rounded-full bg-[#F0F9FA] items-center justify-center">
-                           <Ionicons name={fact.icon} size={16} color="#008E96" />
-                         </View>
-                         <Text className="text-[#667085] text-[10px] font-inter-medium flex-1">{fact.label}</Text>
-                       </View>
-                       <Text className="text-[#101828] text-[13px] font-inter-semibold" numberOfLines={1}>
+                  {[
+                    { label: 'Property Type', value: getDisplayValue(normalizedProperty.propertyType), icon: 'business-outline' },
+                    { label: 'Sub Type', value: getDisplayValue(normalizedProperty.subPropertyType), icon: 'home-outline' },
+                    // Residential specific
+                    ...(normalizedProperty.propertyType?.name === 'residential' ? [
+                      { label: 'Configuration', value: `${residentialInfo.bedrooms || 0} BHK`, icon: 'apps-outline' },
+                      { label: 'Carpet Area', value: formatArea(residentialInfo.carpetArea?.value), icon: 'move-outline' },
+                      { label: 'Furnishing', value: getFurnishingLabel(residentialInfo.furnishingStatus), icon: 'bed-outline' },
+                      { label: 'Total Floors', value: residentialInfo.totalFloors, icon: 'layers-outline' },
+                    ] : []),
+                    // PG specific
+                    ...(normalizedProperty.propertyType?.name === 'pg' ? [
+                      { label: 'Meals', value: normalizedProperty.pg?.mealsAvailable ? 'Yes' : 'No', icon: 'restaurant-outline' },
+                      { label: 'Common Areas', value: (normalizedProperty.pg?.commonAreas || []).length > 0 ? 'Available' : 'None', icon: 'people-outline' },
+                    ] : []),
+                    // Plot specific
+                    ...(normalizedProperty.propertyType?.name === 'plot' ? [
+                      { label: 'Boundary Wall', value: normalizedProperty.plot?.isBoundaryWall ? 'Yes' : 'No', icon: 'shield-checkmark-outline' },
+                      { label: 'Dimensions', value: normalizedProperty.plot?.dimensions || 'N/A', icon: 'resize-outline' },
+                    ] : []),
+                    { label: 'Pincode', value: normalizedProperty.pincode, icon: 'location-outline' },
+                    { label: 'Available From', value: normalizedProperty.availableFrom ? new Date(normalizedProperty.availableFrom).toLocaleDateString('en-IN') : 'Immediately', icon: 'calendar-outline' },
+                  ].map((fact, idx) => (
+                    <View key={idx} className="w-[48%] bg-white rounded-[16px] p-3 border border-[#E5E7EB] mb-3">
+                      <View className="flex-row items-center gap-2 mb-1.5">
+                        <View className="w-8 h-8 rounded-full bg-[#F0F9FA] items-center justify-center">
+                          <Ionicons name={fact.icon} size={16} color="#008E96" />
+                        </View>
+                        <Text className="text-[#667085] text-[10px] font-inter-medium flex-1">{fact.label}</Text>
+                      </View>
+                      <Text className="text-[#101828] text-[13px] font-inter-semibold" numberOfLines={1}>
                         {fact.value || 'N/A'}
-                       </Text>
-                     </View>
-                   ))}
+                      </Text>
+                    </View>
+                  ))}
                 </View>
               </View>
 
@@ -395,9 +385,9 @@ const PropertyDetails = () => {
 
       {/* Sticky Bottom Bar */}
       <View className="bg-white px-4 py-3 border-t border-[#E5E7EB] flex-row gap-2 items-center">
-        <TouchableOpacity 
-           onPress={() => router.push({ pathname: '/screens/Chat', params: { propertyId } })}
-           className="flex-1 h-[48px] border border-[#008E96] rounded-[14px] flex-row items-center justify-center gap-2"
+        <TouchableOpacity
+          onPress={() => router.push({ pathname: '/screens/Chat', params: { propertyId } })}
+          className="flex-1 h-[48px] border border-[#008E96] rounded-[14px] flex-row items-center justify-center gap-2"
         >
           <Ionicons name="chatbubble-outline" size={20} color="#008E96" />
           <Text className="text-[#008E96] font-inter-medium text-[16px]">Chat</Text>
@@ -405,7 +395,7 @@ const PropertyDetails = () => {
         <TouchableOpacity className="flex-1 h-[48px] border border-[#008E96] rounded-[14px] items-center justify-center">
           <Text className="text-[#008E96] font-inter-medium text-[16px]">View phone</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => router.push({ pathname: '/screens/ContactSeller', params: { propertyId } })}
           className="flex-[1.5] h-[48px] bg-[#008E96] rounded-[14px] items-center justify-center"
         >

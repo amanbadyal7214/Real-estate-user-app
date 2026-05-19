@@ -29,42 +29,10 @@ import { useLocation } from '../../context/LocationContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
 
+import { formatPrice, formatPricePerSqft } from '../../utils/formatPrice';
+
 const locationLoadCache = new Map();
 const developerProjectsCache = new Map();
-
-const formatPrice = (value) => {
-  if (value === null || value === undefined || value === '') return 'N/A';
-
-  const numericValue = Number(value);
-  if (!Number.isFinite(numericValue)) return 'N/A';
-
-  if (numericValue >= 10000000) {
-    return `₹ ${(numericValue / 10000000).toFixed(2).replace(/\.00$/, '')} Cr`;
-  }
-
-  if (numericValue >= 100000) {
-    return `₹ ${(numericValue / 100000).toFixed(2).replace(/\.00$/, '')} L`;
-  }
-
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(numericValue).replace('₹', '₹ ');
-};
-
-const formatPricePerSqft = (value) => {
-  if (value === null || value === undefined || value === '') return 'N/A';
-
-  const numericValue = Number(value);
-  if (!Number.isFinite(numericValue)) return 'N/A';
-
-  if (numericValue >= 1000) {
-    return `₹ ${(numericValue / 1000).toFixed(1)}K/ sq.ft.`;
-  }
-
-  return `₹ ${numericValue.toFixed(2)}/ sq.ft.`;
-};
 
 const formatLocalityName = (value, index) => {
   if (!value || typeof value !== 'string') {
@@ -114,13 +82,14 @@ const formatPropertyLocation = (property) => {
 const Buy = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
   const { currentLocation } = useLocation();
-  const { findPropertiesByLocation, fetchHighDemandProperties, fetchSellersByLocation, fetchBetterPricedProperties, loading: discoveryLoading } = usePropertyDiscovery();
+  const { findPropertiesByLocation, fetchHighDemandProperties, fetchSellersByLocation, fetchBetterPricedProperties, fetchCityStats, loading: discoveryLoading } = usePropertyDiscovery();
   const { fetchAveragePriceByCity, loading: localityLoading, error: localityError } = useLocalityAveragePrice();
   const { fetchProjects, fetchDevelopers, fetchDeveloperProjects } = useProject();
   const [properties, setProperties] = useState([]);
   const [highDemandProperties, setHighDemandProperties] = useState([]);
   const [sellers, setSellers] = useState([]);
   const [betterPricedProperties, setBetterPricedProperties] = useState([]);
+  const [cityStats, setCityStats] = useState(null);
   const [exploreLocalities, setExploreLocalities] = useState([]);
   const [focusProjects, setFocusProjects] = useState([]);
   const [topDevelopersList, setTopDevelopersList] = useState([]);
@@ -139,7 +108,7 @@ const Buy = () => {
 
   const fetchData = useCallback(async (locationParams = {}) => {
     try {
-      const res = await findPropertiesByLocation({ 
+      const res = await findPropertiesByLocation({
         lookingFor: 'sell',
         limit: 4,
         ...locationParams
@@ -152,10 +121,10 @@ const Buy = () => {
 
   const loadHighDemand = useCallback(async (locationParams = {}) => {
     try {
-      const res = await fetchHighDemandProperties({ 
+      const res = await fetchHighDemandProperties({
         limit: 4,
         lookingFor: 'sell', // Filtering for Buy/Sell as this is the Buy screen
-        ...locationParams 
+        ...locationParams
       });
       if (res.success) setHighDemandProperties(res.data);
     } catch (err) {
@@ -201,6 +170,15 @@ const Buy = () => {
       setBetterPricedProperties([]);
     }
   }, [fetchBetterPricedProperties, currentLocation?.city]);
+
+  const loadCityStats = useCallback(async (city) => {
+    try {
+      const res = await fetchCityStats({ city: city || 'Mohali' });
+      if (res?.success) setCityStats(res.data);
+    } catch (err) {
+      console.error("City Stats API Error:", err);
+    }
+  }, [fetchCityStats]);
 
   const loadExploreLocalities = useCallback(async (city) => {
     try {
@@ -342,43 +320,18 @@ const Buy = () => {
     loadBoth();
   }, [topDevelopersList, developerProjectsById, loadDeveloperProjects]);
 
-  const loadDataForLocation = useCallback(async (params = {}) => {
-    const locationKey = JSON.stringify(params);
-
-    if (locationLoadCache.has(locationKey)) {
-      return locationLoadCache.get(locationKey);
-    }
-
-    const request = Promise.all([
-      fetchData(params),
-      loadHighDemand(params),
-      loadSellers(params),
-      loadBetterPriced(params),
-      loadExploreLocalities(params.city),
-      loadFocusProjects(params),
-      loadTopDevelopers(params),
-    ]).finally(() => {
-      setTimeout(() => {
-        locationLoadCache.delete(locationKey);
-      }, 1000);
-    });
-
-    locationLoadCache.set(locationKey, request);
-    return request;
-  }, [fetchData, loadHighDemand, loadSellers, loadBetterPriced, loadExploreLocalities, loadFocusProjects, loadTopDevelopers]);
-
   useEffect(() => {
-    const params = {
-      city: currentLocation?.city || "Sahibzada Ajit Singh Nagar",
-      locality: currentLocation?.locality || "",
-      pincode: currentLocation?.pincode || "",
-    };
+    const locationCity = currentLocation?.city || 'Mohali';
 
-    const locationKey = JSON.stringify(params);
-    console.log("📍 Location changed, fetching data for:", locationKey);
-
-    loadDataForLocation(params);
-  }, [currentLocation?.city, currentLocation?.locality, currentLocation?.pincode, loadDataForLocation]);
+    fetchData({ city: locationCity });
+    loadHighDemand({ city: locationCity });
+    loadSellers({ city: locationCity });
+    loadBetterPriced({ city: locationCity });
+    loadExploreLocalities(locationCity);
+    loadFocusProjects({ city: locationCity });
+    loadCityStats(locationCity);
+    loadTopDevelopers({ city: locationCity });
+  }, [currentLocation?.city, fetchData, loadHighDemand, loadSellers, loadBetterPriced, loadExploreLocalities, loadFocusProjects, loadCityStats, loadTopDevelopers]);
 
   const handleLocationUpdate = (loc) => {
     // Location updating is now handled by LocationContext inside SearchBox
@@ -495,13 +448,13 @@ const Buy = () => {
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.push({
                 pathname: '/screens/PrefectlyMatchedHome',
-                params: { 
-                  city: currentLocation?.city, 
+                params: {
+                  city: currentLocation?.city,
                   pincode: currentLocation?.pincode,
-                  locality: currentLocation?.locality 
+                  locality: currentLocation?.locality
                 }
               })}
             >
@@ -513,7 +466,7 @@ const Buy = () => {
           {discoveryLoading ? (
             <ActivityIndicator color="#008E96" />
           ) : (
-            <PropertyMatchedCards 
+            <PropertyMatchedCards
               data={properties.map(p => ({
                 id: p._id,
                 _id: p._id,
@@ -522,7 +475,7 @@ const Buy = () => {
                 title: p.title,
                 location: formatPropertyLocation(p),
                 priceRange: p.price,
-              }))} 
+              }))}
             />
           )}
           <Spotlight data={spotlightData} />
@@ -549,7 +502,7 @@ const Buy = () => {
               elevation: 4
             }}
           >
-              <View className="flex-row justify-around mb-8">
+            <View className="flex-row justify-around mb-8">
               <TouchableOpacity
                 onPress={() => router.push('/screens/Buy/Suggestions')}
                 className="items-center"
@@ -601,7 +554,7 @@ const Buy = () => {
           </View>
 
           {/* Property Owner Banner */}
-            <LinearGradient
+          <LinearGradient
             colors={['#DAEAEB', '#FFFFFF']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -616,7 +569,7 @@ const Buy = () => {
             }}
           >
             <View className="flex-1 pr-2" style={{ height: 117, gap: 12 }}>
-                <Text
+              <Text
                 className="font-inter-bold text-[14px] text-[#101828] leading-[21px]"
                 style={{ width: s(193), height: s(63) }}
               >
@@ -693,10 +646,10 @@ const Buy = () => {
                 Hurry! Only a few units left
               </Text>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.push({
                 pathname: '/screens/HighDemandProduct',
-                params: { 
+                params: {
                   city: currentLocation?.city,
                 }
               })}
@@ -747,13 +700,13 @@ const Buy = () => {
                 Curated projects just for you
               </Text>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.push({
                 pathname: '/screens/ProjectInFocus',
-                params: { 
-                  city: currentLocation?.city, 
+                params: {
+                  city: currentLocation?.city,
                   pincode: currentLocation?.pincode,
-                  locality: currentLocation?.locality 
+                  locality: currentLocation?.locality
                 }
               })}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -1023,18 +976,19 @@ const Buy = () => {
             <View
               style={{
                 flex: 1,
-                height: 166.33,
                 backgroundColor: '#EDFBFA',
                 borderWidth: 0.67,
                 borderColor: '#F3F4F6',
                 borderRadius: 16,
                 padding: 12,
+                paddingVertical: 14,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.06,
                 shadowRadius: 3,
                 elevation: 1.5,
-                justifyContent: 'space-between'
+                justifyContent: 'flex-start',
+                gap: 16
               }}
             >
               <View className="flex-row items-center justify-between">
@@ -1045,8 +999,10 @@ const Buy = () => {
                 <ChevronRight size={14} color="#4A5565" />
               </View>
               <View>
-                <Text className="font-inter-regular text-[13px] text-[#364153] mb-2 leading-5">Sector 91</Text>
-                <Text className="font-inter-bold text-[13px] text-[#101828] leading-5">63{'\n'}Properties</Text>
+                <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
+                  {currentLocation?.locality || 'Mohali'}
+                </Text>
+                <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
               </View>
             </View>
 
@@ -1054,30 +1010,35 @@ const Buy = () => {
             <View
               style={{
                 flex: 1,
-                height: 166.33,
                 backgroundColor: '#EDFBFA',
                 borderWidth: 0.67,
                 borderColor: '#F3F4F6',
                 borderRadius: 16,
                 padding: 12,
+                paddingVertical: 14,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.06,
                 shadowRadius: 3,
                 elevation: 1.5,
-                justifyContent: 'space-between'
+                justifyContent: 'flex-start',
+                gap: 16
               }}
             >
               <View className="flex-row items-start justify-between">
                 <View className="flex-row items-start" style={{ gap: 4 }}>
                   <Home size={12} color="#364153" style={{ marginTop: 2, marginLeft: -2 }} />
-                  <Text className="font-inter-semibold text-[13px] text-[#101828] leading-3" style={{ width: 50 }}>Price{'\n'}range</Text>
+                  <Text className="font-inter-semibold text-[13px] text-[#101828] leading-4" style={{ width: 50 }}>Price range</Text>
                 </View>
                 <ChevronRight size={14} color="#4A5565" style={{ marginTop: 2 }} />
               </View>
               <View>
-                <Text className="font-inter-regular text-[13px] text-[#364153] mb-2 leading-5">₹ 75 L - ₹ 1 Cr</Text>
-                <Text className="font-inter-bold text-[13px] text-[#101828] leading-5">738{'\n'}Properties</Text>
+                <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
+                  {cityStats ? `${formatPrice(cityStats.minPrice)} - ${formatPrice(cityStats.maxPrice)}` : '₹ 75 L - ₹ 1 Cr'}
+                </Text>
+                <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">
+                  {cityStats ? `${cityStats.totalProperties} Properties` : '738 Properties'}
+                </Text>
               </View>
             </View>
 
@@ -1085,18 +1046,19 @@ const Buy = () => {
             <View
               style={{
                 flex: 1,
-                height: 166.33,
                 backgroundColor: '#EDFBFA',
                 borderWidth: 0.67,
                 borderColor: '#F3F4F6',
                 borderRadius: 16,
                 padding: 12,
+                paddingVertical: 14,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.06,
                 shadowRadius: 3,
                 elevation: 1.5,
-                justifyContent: 'space-between'
+                justifyContent: 'flex-start',
+                gap: 16
               }}
             >
               <View className="flex-row items-center justify-between">
@@ -1107,8 +1069,8 @@ const Buy = () => {
                 <ChevronRight size={14} color="#4A5565" />
               </View>
               <View>
-                <Text className="font-inter-regular text-[13px] text-[#364153] mb-2 leading-5">3 BHK</Text>
-                <Text className="font-inter-bold text-[13px] text-[#101828] leading-5">1958{'\n'}Properties</Text>
+                <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">3 BHK</Text>
+                <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">1958 Properties</Text>
               </View>
             </View>
           </View>
@@ -1126,36 +1088,36 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-            {localityLoading ? (
-              <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: s(132) }}>
-                <ActivityIndicator size="small" color="#008E96" />
-              </View>
-            ) : localityError ? (
-              <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
-                <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
-              </View>
-            ) : exploreLocalities.length === 0 ? (
-              <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
-                <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
-              </View>
-            ) : (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
-              >
-                {exploreLocalities.map((item, index) => (
-                  <ExploreLocalityCard
-                    key={`${item.locality || 'locality'}-${index}`}
-                    title={item.localityName || formatLocalityName(item.locality, index)}
-                    avgLabel={"Avg.\nPrice/sq.ft:"}
-                    averagePrice={formatPricePerSqft(item.averagePricePerSqft)}
-                    priceRange={`${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`}
-                    totalProperties={item.totalProperties}
-                  />
-                ))}
-              </ScrollView>
-            )}
+          {localityLoading ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: s(132) }}>
+              <ActivityIndicator size="small" color="#008E96" />
+            </View>
+          ) : localityError ? (
+            <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
+              <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
+            </View>
+          ) : exploreLocalities.length === 0 ? (
+            <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
+            >
+              {exploreLocalities.map((item, index) => (
+                <ExploreLocalityCard
+                  key={`${item.locality || 'locality'}-${index}`}
+                  title={item.localityName || formatLocalityName(item.locality, index)}
+                  avgLabel={"Avg.\nPrice/sq.ft:"}
+                  averagePrice={formatPricePerSqft(item.averagePricePerSqft)}
+                  priceRange={`${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`}
+                  totalProperties={item.totalProperties}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* News For You Section */}
@@ -1206,7 +1168,7 @@ const Buy = () => {
               vectorsConfig={affordabilityVectors}
               onPress={() => router.push('/screens/AffordabilityCalculator')}
             />
-             <CalculatorCard
+            <CalculatorCard
               titlePrefix=" Eligibility Calculator "
               description="Find the best budget for your home"
               vectorsConfig={affordabilityVectors}

@@ -1,7 +1,8 @@
-import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, Text, TouchableOpacity, View, Linking, ScrollView, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Dimensions, Image, Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { formatPrice } from '../app/utils/formatPrice';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -16,15 +17,7 @@ const PropertyListingCard = ({ data }) => {
     });
   };
 
-  const formatPrice = (num) => {
-    if (!num) return "₹0";
-    let x = num.toString();
-    let lastThree = x.substring(x.length - 3);
-    let otherNumbers = x.substring(0, x.length - 3);
-    if (otherNumbers !== '') lastThree = ',' + lastThree;
-    let res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
-    return "₹" + res;
-  };
+  // use shared formatPrice
 
   const formatDate = (dateString) => {
     if (!dateString) return "Immediate";
@@ -63,37 +56,37 @@ const PropertyListingCard = ({ data }) => {
   };
 
   return (
-    <TouchableOpacity 
-        activeOpacity={0.9}
-        onPress={navigateToDetails}
-        className="bg-white rounded-[20px] overflow-hidden mb-[23px] border border-[#EAECF0]"
-        style={{
-            shadowColor: '#101828',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.05,
-            shadowRadius: 10,
-            elevation: 3
-        }}
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={navigateToDetails}
+      className="bg-white rounded-[20px] overflow-hidden mb-[23px] border border-[#EAECF0]"
+      style={{
+        shadowColor: '#101828',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 3
+      }}
     >
       {/* Image Carousel Section */}
       <View className="relative h-[200px]">
-        <ScrollView 
-            horizontal 
-            pagingEnabled 
-            showsHorizontalScrollIndicator={false}
-            className="w-full h-full"
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          className="w-full h-full"
         >
           {images.map((img, index) => (
-            <Image 
+            <Image
               key={index}
-              source={{ uri: img }} 
+              source={{ uri: img }}
               className="h-full"
               style={{ width: SCREEN_WIDTH - 32 }} // Subtracting horizontal padding of container
               resizeMode="cover"
             />
           ))}
         </ScrollView>
-        
+
         {/* Badges Overlay */}
         <View className="absolute top-[12px] left-[12px] flex-row gap-[8px]">
           <View className="bg-black/50 backdrop-blur-md px-[10px] py-[5px] rounded-[8px] flex-row items-center border border-white/20">
@@ -111,61 +104,61 @@ const PropertyListingCard = ({ data }) => {
         </View>
 
         <View className="absolute bottom-[12px] right-[12px] bg-white px-[10px] py-[5px] rounded-[8px] flex-row items-center shadow-sm">
-            <Ionicons name="flash" size={12} color="#F59E0B" />
-            <Text className="text-[#101828] font-inter-bold text-[10px] ml-[4px]">ZERO BROKERAGE</Text>
+          <Ionicons name="flash" size={12} color="#F59E0B" />
+          <Text className="text-[#101828] font-inter-bold text-[10px] ml-[4px]">ZERO BROKERAGE</Text>
         </View>
       </View>
 
       {/* Content Section */}
       <View className="p-[16px]">
         <View className="flex-row justify-between items-start">
-            <View className="flex-1">
-                <Text className="text-[#101828] font-inter-bold text-[22px] tracking-[-0.5px]">
-                    {formatPrice(data.price)}
-                </Text>
-                <Text className="text-[#101828] font-inter-semibold text-[16px] mt-[4px]" numberOfLines={1}>
-                    {data.title}
-                </Text>
-            </View>
-            <View className="bg-[#F9FAFB] px-[10px] py-[6px] rounded-[8px] border border-[#EAECF0]">
-                <Text className="text-[#344054] font-inter-semibold text-[12px] uppercase">
-                    {data.lookingFor?.label || 'Sale'}
-                </Text>
-            </View>
-        </View>
-        
-        <View className="flex-row items-center mt-[8px]">
-            <Ionicons name="location-sharp" size={14} color="#008E96" />
-            <Text className="text-[#667085] font-inter-regular text-[13px] ml-[4px]">
-                {data.projectName}, {data.city?.name}
+          <View className="flex-1">
+            <Text className="text-[#101828] font-inter-bold text-[22px] tracking-[-0.5px]">
+              {formatPrice(data.price)}
             </Text>
+            <Text className="text-[#101828] font-inter-semibold text-[16px] mt-[4px]" numberOfLines={1}>
+              {data.title}
+            </Text>
+          </View>
+          <View className="bg-[#F9FAFB] px-[10px] py-[6px] rounded-[8px] border border-[#EAECF0]">
+            <Text className="text-[#344054] font-inter-semibold text-[12px] uppercase">
+              {data.lookingFor?.label || 'Sale'}
+            </Text>
+          </View>
+        </View>
+
+        <View className="flex-row items-center mt-[8px]">
+          <Ionicons name="location-sharp" size={14} color="#008E96" />
+          <Text className="text-[#667085] font-inter-regular text-[13px] ml-[4px]">
+            {data.projectName}, {data.city?.name}
+          </Text>
         </View>
 
         <View className="flex-row items-center mt-[8px] gap-[12px]">
-            <View className="flex-row items-center">
-                <Ionicons name="calendar-outline" size={14} color="#667085" />
-                <Text className="text-[#667085] font-inter-regular text-[12px] ml-[4px]">
-                    Available From: {formatDate(data.availableFrom)}
-                </Text>
-            </View>
+          <View className="flex-row items-center">
+            <Ionicons name="calendar-outline" size={14} color="#667085" />
+            <Text className="text-[#667085] font-inter-regular text-[12px] ml-[4px]">
+              Available From: {formatDate(data.availableFrom)}
+            </Text>
+          </View>
         </View>
 
         {/* Amenities Row */}
         <View className="flex-row items-center flex-wrap mt-[12px] gap-[12px]">
-            <View className="flex-row items-center bg-[#F2F4F7] px-[8px] py-[4px] rounded-[6px]">
-                <Ionicons name="cube-outline" size={14} color="#475467" />
-                <Text className="text-[#475467] font-inter-medium text-[12px] ml-[4px]">{data.area} sqft</Text>
+          <View className="flex-row items-center bg-[#F2F4F7] px-[8px] py-[4px] rounded-[6px]">
+            <Ionicons name="cube-outline" size={14} color="#475467" />
+            <Text className="text-[#475467] font-inter-medium text-[12px] ml-[4px]">{data.area} sqft</Text>
+          </View>
+          {data.amenities?.slice(0, 3).map((item, idx) => (
+            <View key={idx} className="flex-row items-center bg-[#F2F4F7] px-[8px] py-[4px] rounded-[6px]">
+              {getAmenityIcon(item.amenity?.name)}
+              <Text className="text-[#475467] font-inter-medium text-[12px] ml-[4px]">
+                {item.count > 1 ? item.count : ''} {item.amenity?.name.replace('_', ' ')}
+              </Text>
             </View>
-            {data.amenities?.slice(0, 3).map((item, idx) => (
-                <View key={idx} className="flex-row items-center bg-[#F2F4F7] px-[8px] py-[4px] rounded-[6px]">
-                    {getAmenityIcon(item.amenity?.name)}
-                    <Text className="text-[#475467] font-inter-medium text-[12px] ml-[4px]">
-                        {item.count > 1 ? item.count : ''} {item.amenity?.name.replace('_', ' ')}
-                    </Text>
-                </View>
-            ))}
+          ))}
         </View>
-        
+
         <View className="h-[1px] bg-[#F2F4F7] my-[16px]" />
 
         {/* Footer */}
@@ -177,7 +170,7 @@ const PropertyListingCard = ({ data }) => {
                 className="w-[40px] h-[40px] rounded-full items-center justify-center opacity-90"
               >
                 <Text className="text-white font-inter-bold text-[15px]">
-                    {(data.user?.name || 'A').charAt(0).toUpperCase()}
+                  {(data.user?.name || 'A').charAt(0).toUpperCase()}
                 </Text>
               </LinearGradient>
               <View className="absolute bottom-0 right-0 w-[12px] h-[12px] bg-[#34D399] border-2 border-white rounded-full" />
@@ -187,23 +180,23 @@ const PropertyListingCard = ({ data }) => {
               <Text className="text-[#667085] font-inter-regular text-[11px]">Certified Partner</Text>
             </View>
           </View>
-          
+
           <View className="flex-row items-center gap-[10px]">
-            <TouchableOpacity 
-                onPress={handleWhatsApp}
-                className="w-[42px] h-[42px] bg-[#25D366]/10 rounded-[12px] items-center justify-center border border-[#25D366]/20"
+            <TouchableOpacity
+              onPress={handleWhatsApp}
+              className="w-[42px] h-[42px] bg-[#25D366]/10 rounded-[12px] items-center justify-center border border-[#25D366]/20"
             >
               <Ionicons name="logo-whatsapp" size={22} color="#25D366" />
             </TouchableOpacity>
-            <TouchableOpacity 
-                onPress={handleCall}
-                className="flex-row items-center bg-[#008E96] px-[16px] py-[10px] rounded-[12px] gap-[8px]"
-                style={{
-                    shadowColor: '#008E96',
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.2,
-                    shadowRadius: 8,
-                }}
+            <TouchableOpacity
+              onPress={handleCall}
+              className="flex-row items-center bg-[#008E96] px-[16px] py-[10px] rounded-[12px] gap-[8px]"
+              style={{
+                shadowColor: '#008E96',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 8,
+              }}
             >
               <Ionicons name="call" size={18} color="white" />
               <Text className="text-white font-inter-bold text-[14px]">Call</Text>

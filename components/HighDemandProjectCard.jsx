@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { formatPrice } from '../app/utils/formatPrice';
 
 const HighDemandProjectCard = ({ image, priceRange, title, developer, location, projectId, onPress }) => {
   const handlePress = () => {
@@ -66,11 +67,31 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           {/* Price Range */}
           <View style={{ position: 'absolute', left: 16, top: 16, width: 306, height: 24 }}>
             <Text
-              className="font-inter-bold text-[#101828]"
-              style={{ fontSize: 16, lineHeight: 24 }}
-            >
-              {priceRange}
-            </Text>
+                className="font-inter-bold text-[#101828]"
+                style={{ fontSize: 16, lineHeight: 24 }}
+              >
+                {(() => {
+                  const raw = priceRange;
+                  if (raw === null || raw === undefined || raw === '') return 'View details';
+                  if (typeof raw === 'number') return formatPrice(raw);
+                  if (typeof raw === 'string') {
+                    if (raw.trim().startsWith('₹')) return raw;
+                    if (raw.includes('-')) {
+                      const parts = raw.split('-').map(p => p.trim());
+                      const formatted = parts.map(p => {
+                        const digits = p.replace(/[^0-9.]/g, '');
+                        const num = Number(digits);
+                        return Number.isFinite(num) && num > 0 ? formatPrice(num) : p;
+                      });
+                      return formatted.join(' - ');
+                    }
+                    const digits = raw.replace(/[^0-9.]/g, '');
+                    const num = Number(digits);
+                    return Number.isFinite(num) && num > 0 ? formatPrice(num) : raw;
+                  }
+                  return String(raw);
+                })()}
+              </Text>
           </View>
 
           {/* Title */}
