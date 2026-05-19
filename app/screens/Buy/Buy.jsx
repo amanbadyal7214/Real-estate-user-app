@@ -775,7 +775,7 @@ const Buy = () => {
                 projectId={project._id}
                 images={project.media?.map(m => m.fileUrl) || []}
                 title={project.projectName || project.title}
-                location={`${project.addressLine1 || project.locality || ''}, ${project.district || project.city || ''}`}
+                location={`${project.addressLine1 || project.locality || ''}`}
                 price={project.priceRange || project.price}
                 tag={project.tag || "PREMIUM"}
                 developer={project.builder?.name || project.projectName}
