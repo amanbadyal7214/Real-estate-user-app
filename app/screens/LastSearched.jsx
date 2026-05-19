@@ -3,7 +3,8 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import PropertyListingCard from '../../components/PropertyListingCard';
 import { useLookup } from '../../hooks/useLookup';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
@@ -73,13 +74,19 @@ const LastSearched = () => {
 
   // Only show Buy as available and keep it selected (disabled for changes)
   const lookOptions = ['Buy'];
-  // propertyTypes and structures will be fetched from lookup API
-  const { propertyTypes = [], structures = [], fetchLookups } = useLookup();
+  // propertyTypes, subPropertyTypes, structures and statuses will be fetched from lookup API
+  const { propertyTypes = [], subPropertyTypes = [], structures = [], constructionStatus = [], possessionStatus = [], fetchLookups } = useLookup();
+  const [selectedPropertyType, setSelectedPropertyType] = useState(null);
+  const [selectedSubPropertyType, setSelectedSubPropertyType] = useState(null);
   const [selectedStructure, setSelectedStructure] = useState(null);
   const [structureInput, setStructureInput] = useState('');
-  const bhkTypes = ['1 RK', '1 BHK', '2 BHK', '3 BHK', '4 BHK', '5 BHK', '5+ BHK'];
-  const availabilityOptions = ['Within a week', 'Within 15 days', 'Within a month'];
+  const [selectedConstructionStatus, setSelectedConstructionStatus] = useState(null);
+  const [selectedPossessionStatus, setSelectedPossessionStatus] = useState(null);
   const listedBy = [ 'Owner', 'Builder'];
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
+  const [minArea, setMinArea] = useState(null);
+  const [maxArea, setMaxArea] = useState(null);
 
 
   const { fetchProperties, loading } = usePropertyDiscovery();
@@ -89,11 +96,17 @@ const LastSearched = () => {
     loadProperties();
     // fetch lookup data for property types and structures
     fetchLookups();
-  }, [lookingTo, selectedSort, selectedStructure, structureInput]);
+  }, [lookingTo, selectedSort, selectedStructure, structureInput, selectedPropertyType, selectedSubPropertyType, selectedConstructionStatus, selectedPossessionStatus, minPrice, maxPrice, minArea, maxArea]);
 
   const loadProperties = async () => {
     try {
       const params = { city: 'Mohali', lookingFor: lookingTo, limit: 10 };
+
+      // include selected property/sub-property/structure in params when present
+      if (selectedPropertyType) params.propertyType = selectedPropertyType;
+      if (selectedSubPropertyType) params.subPropertyType = selectedSubPropertyType;
+      if (selectedConstructionStatus) params.constructionStatus = selectedConstructionStatus;
+      if (selectedPossessionStatus) params.possessionStatus = selectedPossessionStatus;
 
       // include selected structure (from dropdown) or freeform input
       if (selectedStructure) {
@@ -107,6 +120,12 @@ const LastSearched = () => {
         // Price : Low to High -> PriceAscending: true
         params.PriceAscending = selectedSort.toLowerCase().includes('low');
       }
+
+      // include price & area ranges when present
+      if (minPrice !== null && minPrice !== undefined && minPrice !== '') params.minPrice = minPrice;
+      if (maxPrice !== null && maxPrice !== undefined && maxPrice !== '') params.maxPrice = maxPrice;
+      if (minArea !== null && minArea !== undefined && minArea !== '') params.minArea = minArea;
+      if (maxArea !== null && maxArea !== undefined && maxArea !== '') params.maxArea = maxArea;
 
       const response = await fetchProperties(params);
       if (response?.data) {
@@ -127,6 +146,21 @@ const LastSearched = () => {
     } catch (err) {
       console.error("Error loading properties:", err);
     }
+  };
+
+  const clearAllFilters = () => {
+    setSelectedPropertyType(null);
+    setSelectedSubPropertyType(null);
+    setSelectedStructure(null);
+    setStructureInput('');
+    setSelectedConstructionStatus(null);
+    setSelectedPossessionStatus(null);
+    setMinPrice(null);
+    setMaxPrice(null);
+    setMinArea(null);
+    setMaxArea(null);
+    // reload properties after clearing
+    loadProperties();
   };
 
   return (
@@ -151,7 +185,7 @@ const LastSearched = () => {
           </View>
 
           {/* Filter Pills */}
-          <ScrollView 
+          {/* <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false} 
             className="mt-[20px] px-[16px]"
@@ -166,10 +200,10 @@ const LastSearched = () => {
                 <Ionicons name="chevron-down" size={16} color="#101828" />
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </ScrollView> */}
 
           {/* Shop Card (Based on CSS) */}
-          <View 
+          {/* <View 
             className="mx-[27px] mt-[24px] bg-white p-[12px] rounded-[12px] border border-[#E4E7EC] flex-row items-start h-[116px]"
             style={{ 
               shadowColor: '#000',
@@ -202,7 +236,7 @@ const LastSearched = () => {
                 <MaterialIcons name="arrow-forward" size={14} color="white" style={{ marginLeft: 4 }} />
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
 
           {/* Listings Container (Based on CSS Frame 21) */}
           <View className="px-[16px] mt-[24px] gap-[23px] pb-[100px]">
@@ -283,7 +317,7 @@ const LastSearched = () => {
               position: 'absolute'
             }}
           >
-            <View className="bg-white rounded-t-[24px] flex-1" style={{ paddingBottom: 20 }}>
+            <SafeAreaView className="bg-white rounded-t-[24px] flex-1" style={{ paddingBottom: 20 }}>
               {/* Handle */}
               <View className="items-center py-[12px]">
                 <View className="w-[40px] h-[4px] bg-[#D0D5DD] rounded-full" />
@@ -292,7 +326,7 @@ const LastSearched = () => {
               {/* Header */}
               <View className="flex-row justify-between items-center px-[20px] pb-[16px]">
                 <Text className="text-[#101828] font-inter-semibold text-[20px]">Filter</Text>
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity onPress={clearAllFilters}>
                   <Text className="text-[#008E96] font-inter-medium text-[14px]">Clear all</Text>
                 </TouchableOpacity>
               </View>
@@ -368,20 +402,21 @@ const LastSearched = () => {
                 </View>
 
                 {/* Property Type */}
-                <View className="mt-[32px]">
+                <View className="mt-[20px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Property Type <Ionicons name="information-circle-outline" size={16} color="#6A7282" /></Text>
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
                     {propertyTypes && propertyTypes.length > 0 ? (
                       propertyTypes.map((pt) => {
                         const label = pt.label || pt.name || String(pt);
                         const key = pt._id || label;
+                        const isActive = selectedPropertyType === key;
                         return (
                           <TouchableOpacity 
                             key={key}
-                            className="flex-row items-center border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
+                            onPress={() => { setSelectedPropertyType(key); setSelectedSubPropertyType(null); }}
+                            className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
                           >
-                            <View className="w-[18px] h-[18px] border-[1.5px] border-[#D0D5DD] rounded-[4px] mr-[8px] items-center justify-center" />
-                            <Text className="text-[#101828] font-inter-medium text-[13px]">{label}</Text>
+                            <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
                           </TouchableOpacity>
                         );
                       })
@@ -392,33 +427,97 @@ const LastSearched = () => {
                   </View>
                 </View>
 
+                {/* Sub Property Type (shown below Property Type) */}
+                <View className="mt-[16px]">
+                  <Text className="text-[#101828] font-inter-semibold text-[16px]">Sub Property Type</Text>
+                  <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
+                    {subPropertyTypes && subPropertyTypes.length > 0 ? (
+                      subPropertyTypes
+                        .filter(s => {
+                          if (!selectedPropertyType) return true;
+                          const ref = s.propertyType || s.property_type || s.parentPropertyType;
+                          if (!ref) return true;
+                          return (ref._id && ref._id === selectedPropertyType) || (ref.label && ref.label === selectedPropertyType) || (ref.name && ref.name === selectedPropertyType);
+                        })
+                        .map((s) => {
+                          const label = s.label || s.name || String(s);
+                          const key = s._id || label;
+                          const isActive = selectedSubPropertyType === key;
+                          return (
+                            <TouchableOpacity
+                              key={key}
+                              onPress={() => setSelectedSubPropertyType(key)}
+                              className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+                            >
+                              <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
+                            </TouchableOpacity>
+                          );
+                        })
+                    ) : (
+                      <Text className="text-[#6A7282]">Loading sub property types...</Text>
+                    )}
+                  </View>
+                </View>
+
                 {/* Budget */}
                 <View className="mt-[32px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Budget</Text>
-                  <View className="flex-row justify-between mt-[12px]">
-                    <Text className="text-[#008E96] font-inter-medium text-[13px]">Min : ₹ 0.0 K</Text>
-                    <Text className="text-[#008E96] font-inter-medium text-[13px]">Max : ₹ 200.0 L+</Text>
-                  </View>
-                  <View className="h-[24px] justify-center mt-[8px]">
-                    <View className="h-[4px] bg-[#008E96] rounded-full flex-row justify-between items-center px-[0px]">
-                      <View className="w-[20px] h-[20px] bg-[#008E96] rounded-full border-[2px] border-white" />
-                      <View className="w-[20px] h-[20px] bg-[#008E96] rounded-full border-[2px] border-white" />
-                    </View>
+                  <View className="flex-row items-center gap-[12px] mt-[12px]">
+                    <TextInput
+                      placeholder="Min (₹)"
+                      value={minPrice !== null && minPrice !== undefined ? String(minPrice) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMinPrice(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
+                      style={{ fontSize: 14 }}
+                    />
+                    <TextInput
+                      placeholder="Max (₹)"
+                      value={maxPrice !== null && maxPrice !== undefined ? String(maxPrice) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMaxPrice(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
+                      style={{ fontSize: 14 }}
+                    />
                   </View>
                 </View>
 
                 {/* Built-up Area */}
                 <View className="mt-[32px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Built-up Area</Text>
-                  <View className="flex-row justify-between mt-[12px]">
-                    <Text className="text-[#008E96] font-inter-medium text-[13px]">Min : 0 Sqft</Text>
-                    <Text className="text-[#008E96] font-inter-medium text-[13px]">Max : 5000 Sqft+</Text>
-                  </View>
-                  <View className="h-[24px] justify-center mt-[8px]">
-                    <View className="h-[4px] bg-[#008E96] rounded-full flex-row justify-between items-center px-[0px]">
-                      <View className="w-[20px] h-[20px] bg-[#008E96] rounded-full border-[2px] border-white" />
-                      <View className="w-[20px] h-[20px] bg-[#008E96] rounded-full border-[2px] border-white" />
-                    </View>
+                  <View className="flex-row items-center gap-[12px] mt-[12px]">
+                    <TextInput
+                      placeholder="Min Area (Sqft)"
+                      value={minArea !== null && minArea !== undefined ? String(minArea) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMinArea(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
+                      style={{ fontSize: 14 }}
+                    />
+                    <TextInput
+                      placeholder="Max Area (Sqft)"
+                      value={maxArea !== null && maxArea !== undefined ? String(maxArea) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMaxArea(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white px-[12px] py-[10px] rounded-[12px]"
+                      style={{ fontSize: 14 }}
+                    />
                   </View>
                 </View>
 
@@ -452,7 +551,7 @@ const LastSearched = () => {
                           <TouchableOpacity
                             key={key}
                             onPress={() => { setSelectedStructure(st._id || label); setStructureInput(''); }}
-                            className={`px-[12px] py-[10px] rounded-[12px] border ${isActive ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
+                            className={`px-[12px] py-[10px] rounded-[12px] border min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
                           >
                             <Text className={`font-inter-medium text-[13px] ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>
                               {label}
@@ -462,6 +561,56 @@ const LastSearched = () => {
                       })
                     ) : (
                       <Text className="text-[#6A7282]">Loading structures...</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Construction Status */}
+                <View className="mt-[20px]">
+                  <Text className="text-[#101828] font-inter-semibold text-[16px]">Construction Status</Text>
+                  <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
+                    {constructionStatus && constructionStatus.length > 0 ? (
+                      constructionStatus.map((cs) => {
+                        const label = cs.label || cs.name || String(cs);
+                        const key = cs._id || label;
+                        const isActive = selectedConstructionStatus === key;
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            onPress={() => setSelectedConstructionStatus(key)}
+                            className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+                          >
+                            <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      <Text className="text-[#6A7282]">Loading construction statuses...</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Possession Status */}
+                <View className="mt-[20px]">
+                  <Text className="text-[#101828] font-inter-semibold text-[16px]">Possession Status</Text>
+                  <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
+                    {possessionStatus && possessionStatus.length > 0 ? (
+                      possessionStatus.map((ps) => {
+                        const label = ps.label || ps.name || String(ps);
+                        const key = ps._id || label;
+                        const isActive = selectedPossessionStatus === key;
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            onPress={() => setSelectedPossessionStatus(key)}
+                            className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+                          >
+                            <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      <Text className="text-[#6A7282]">Loading possession statuses...</Text>
                     )}
                   </View>
                 </View>
@@ -483,7 +632,7 @@ const LastSearched = () => {
                 */}
 
                 {/* Listed By */}
-                <View className="mt-[32px] mb-[40px]">
+                {/* <View className="mt-[32px] mb-[40px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Listed By</Text>
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
                     {listedBy.map(option => (
@@ -496,7 +645,7 @@ const LastSearched = () => {
                       </TouchableOpacity>
                     ))}
                   </View>
-                </View>
+                </View> */}
               </ScrollView>
 
               {/* Bottom Fixed Apply Button Container */}
@@ -519,10 +668,10 @@ const LastSearched = () => {
                     end={{ x: 1, y: 0 }}
                     style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: 12 }}
                   />
-                  <Text className="text-white font-inter-bold text-[16px]">View 540 Properties</Text>
+                  <Text className="text-white font-inter-bold text-[16px]">View Properties</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
           </Animated.View>
         </View>
       </Modal>
