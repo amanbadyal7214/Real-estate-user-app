@@ -76,6 +76,8 @@ export const usePropertyDiscovery = () => {
         setError(null);
         try {
             const safeParams = sanitizeParams(params);
+            // Do not send `locality` for this endpoint per UI requirement
+            if ('locality' in safeParams) delete safeParams.locality;
             const response = await api.get("/properties/find/high-demand", { params: safeParams });
             return response.data;
         } catch (err) {
@@ -96,6 +98,8 @@ export const usePropertyDiscovery = () => {
         setError(null);
         try {
             const safeParams = sanitizeParams(params);
+            // Do not send `locality` for this endpoint per UI requirement
+            if ('locality' in safeParams) delete safeParams.locality;
             const response = await api.get("/properties/find/sellers-by-location", { params: safeParams });
             return response.data;
         } catch (err) {

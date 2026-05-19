@@ -697,9 +697,7 @@ const Buy = () => {
               onPress={() => router.push({
                 pathname: '/screens/HighDemandProduct',
                 params: { 
-                  city: currentLocation?.city, 
-                  pincode: currentLocation?.pincode,
-                 
+                  city: currentLocation?.city,
                 }
               })}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
