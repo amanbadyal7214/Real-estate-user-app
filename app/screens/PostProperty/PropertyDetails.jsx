@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useLookup } from '../../../hooks/useLookup';
 import { useProperty } from '../../../hooks/useProperty';
+import { useProject } from '../../../hooks/useProject';
 import api from '../../api';
 import { usePostProperty } from '../../context/PostPropertyContext';
 import AdvancedDetailsStep from './AdvancedDetailsStep';
@@ -88,7 +89,10 @@ const PropertyDetails = () => {
     loading: lookupLoading 
   } = useLookup();
   const { saveProperty, loading: isSaving } = useProperty();
+  const { fetchProjects, loading: projectsLoading } = useProject();
   const [currentStep, setCurrentStep] = useState(1);
+  const [projectSuggestions, setProjectSuggestions] = useState([]);
+  const [loadingProjectSuggestions, setLoadingProjectSuggestions] = useState(false);
   const [showUnitDropdown, setShowUnitDropdown] = useState(false);
   const [showStructureDropdown, setShowStructureDropdown] = useState(false);
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
@@ -102,6 +106,83 @@ const PropertyDetails = () => {
   const [statesList, setStatesList] = useState([]);
   const [citiesList, setCitiesList] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [localitySuggestions, setLocalitySuggestions] = useState([]);
+  const [loadingLocalitySuggestions, setLoadingLocalitySuggestions] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const currentLocality = postData.propertyDetails.locality;
+      if (currentLocality && currentLocality.trim().length > 1) {
+        searchLocalities();
+      } else {
+        setLocalitySuggestions([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [postData.propertyDetails.locality]);
+
+  const searchLocalities = async () => {
+    try {
+      setLoadingLocalitySuggestions(true);
+      const cityParam = (typeof postData.propertyDetails.city === 'string' && postData.propertyDetails.city.trim())
+        ? postData.propertyDetails.city.trim().toLowerCase()
+        : 'mohali';
+
+      const response = await api.get(`/localities`, {
+        params: { city: cityParam }
+      });
+      
+      if (response.data?.success) {
+        const query = postData.propertyDetails.locality.toLowerCase();
+        const filtered = response.data.data.filter(item => 
+          item.name.toLowerCase().includes(query) ||
+          item.label.toLowerCase().includes(query)
+        );
+        setLocalitySuggestions(filtered);
+      }
+    } catch (err) {
+      console.error("Error searching localities:", err);
+    } finally {
+      setLoadingLocalitySuggestions(false);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const currentBuilding = postData.propertyDetails.buildingName;
+      if (currentBuilding && currentBuilding.trim().length > 1) {
+        searchProjects();
+      } else {
+        setProjectSuggestions([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [postData.propertyDetails.buildingName]);
+
+  const searchProjects = async () => {
+    try {
+      setLoadingProjectSuggestions(true);
+      const cityParam = (typeof postData.propertyDetails.city === 'string' && postData.propertyDetails.city.trim())
+        ? postData.propertyDetails.city.trim().toLowerCase()
+        : 'mohali';
+
+      const response = await fetchProjects({ city: cityParam });
+      
+      if (response?.success) {
+        const query = postData.propertyDetails.buildingName.toLowerCase();
+        const filtered = response.data.filter(item => 
+          (item.projectName || item.name || '').toLowerCase().includes(query)
+        );
+        setProjectSuggestions(filtered);
+      }
+    } catch (err) {
+      console.error("Error searching projects:", err);
+    } finally {
+      setLoadingProjectSuggestions(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -260,7 +341,7 @@ const PropertyDetails = () => {
         country: postData.propertyDetails.countryId || postData.propertyDetails.country,
         state: postData.propertyDetails.stateId || postData.propertyDetails.state,
         city: postData.propertyDetails.cityId || postData.propertyDetails.city,
-        locality: postData.propertyDetails.locality,
+        locality: postData.propertyDetails.localityId || postData.propertyDetails.locality,
         pincode: postData.propertyDetails.pincode,
         address: postData.propertyDetails.address || postData.propertyDetails.locality,
         propertyType: apiPropertyTypes.find(t => (t.label || t.name) === postData.propertyDetails.type)?._id,
@@ -285,7 +366,7 @@ const PropertyDetails = () => {
               count: count
             })).filter(a => a.amenity)
         ],
-        projectSociety: postData.propertyDetails.buildingName,
+        projectSociety: postData.propertyDetails.projectId || postData.propertyDetails.buildingName,
         images: postData.photos.map(photo => photo.base64 || photo.uri).filter(Boolean),
         description: postData.propertyDetails.description,
         carpetArea: postData.propertyDetails.builtUpArea, // reused builtUpArea as carpet area if carpet not available
@@ -450,31 +531,8 @@ const PropertyDetails = () => {
                   />
                 </View>
 
-                <View className="border-b border-[#D1D5DC] pb-2 mb-6">
-                  <TextInput 
-                    placeholder="Building/ Project/ Society (Optional)" 
-                    placeholderTextColor="#A0A0A0"
-                    className="text-base py-1"
-                    style={{ fontFamily: 'Inter-Regular' }}
-                    value={postData.propertyDetails.buildingName}
-                    onChangeText={(val) => updatePropertyDetails({ buildingName: val })}
-                  />
-                </View>
-
                 <View className="flex-row items-center justify-between mb-4">
                   <Text className="text-[#6A7282] text-sm" style={{ fontFamily: 'Inter-Medium' }}>Location Details</Text>
-                  {/* Use Current Location button and handler commented out per request
-                  <TouchableOpacity 
-                    onPress={getCurrentLocation}
-                    disabled={isLocating}
-                    className="flex-row items-center bg-[#F0F9F9] px-3 py-1.5 rounded-full border border-[#008E96]"
-                  >
-                    <Ionicons name={isLocating ? "refresh" : "location-sharp"} size={14} color="#008E96" />
-                    <Text className="text-[#008E96] text-[12px] ml-1" style={{ fontFamily: 'Inter-Bold' }}>
-                      {isLocating ? "Locating..." : "Use Current Location"}
-                    </Text>
-                  </TouchableOpacity>
-                  */}
                 </View>
                 {/* Country and Pincode Section (swapped with City) */}
                 <View className="flex-row gap-4 mb-6">
@@ -590,15 +648,89 @@ const PropertyDetails = () => {
                   </View>
                 </View>
 
-                  <View className="border-b border-[#D1D5DC] pb-2 mb-6">
+                <View className="mb-6" style={{ zIndex: 110 }}>
+                  <View className="border-b border-[#D1D5DC] pb-2 flex-row items-center">
                     <TextInput 
-                      placeholder="Enter Locality" 
+                      placeholder="Building/ Project/ Society (Optional)" 
                       placeholderTextColor="#A0A0A0"
-                      className="text-base py-1"
+                      className="text-base py-1 flex-1"
                       style={{ fontFamily: 'Inter-Regular' }}
-                      value={postData.propertyDetails.locality}
-                      onChangeText={(val) => updatePropertyDetails({ locality: val })}
+                      value={postData.propertyDetails.buildingName}
+                      onChangeText={(val) => updatePropertyDetails({ buildingName: val, projectId: '' })}
                     />
+                    {loadingProjectSuggestions && <ActivityIndicator size="small" color="#008E96" />}
+                  </View>
+
+                  {projectSuggestions.length > 0 && (
+                    <View className="absolute top-[40px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[120] max-h-48 overflow-hidden">
+                      <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+                        {projectSuggestions.map((item) => (
+                          <TouchableOpacity 
+                            key={item._id}
+                            onPress={() => {
+                              updatePropertyDetails({ 
+                                buildingName: item.projectName || item.name,
+                                projectId: item._id 
+                              });
+                              setProjectSuggestions([]);
+                            }}
+                            className="px-4 py-3 border-b border-[#F3F4F6] flex-row items-center gap-2"
+                          >
+                            <Ionicons name="business-outline" size={16} color="#6A7282" />
+                            <View className="flex-1">
+                              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-sm text-[#364153]">
+                                {item.projectName || item.name}
+                              </Text>
+                              {item.locality && (
+                                <Text className="text-[11px] text-[#6A7282]" style={{ fontFamily: 'Inter-Regular' }}>
+                                  {item.locality?.name || item.locality}
+                                </Text>
+                              )}
+                            </View>
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                    </View>
+                  )}
+                </View>
+
+                  <View className="mb-6" style={{ zIndex: 100 }}>
+                    <View className="border-b border-[#D1D5DC] pb-2 flex-row items-center">
+                      <TextInput 
+                        placeholder="Enter Locality" 
+                        placeholderTextColor="#A0A0A0"
+                        className="text-base py-1 flex-1"
+                        style={{ fontFamily: 'Inter-Regular' }}
+                        value={postData.propertyDetails.locality}
+                        onChangeText={(val) => updatePropertyDetails({ locality: val, localityId: '' })}
+                      />
+                      {loadingLocalitySuggestions && <ActivityIndicator size="small" color="#008E96" />}
+                    </View>
+
+                    {localitySuggestions.length > 0 && (
+                      <View className="absolute top-[40px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[110] max-h-48 overflow-hidden">
+                        <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+                          {localitySuggestions.map((item) => (
+                            <TouchableOpacity 
+                              key={item._id}
+                              onPress={() => {
+                                updatePropertyDetails({ 
+                                  locality: item.name,
+                                  localityId: item._id 
+                                });
+                                setLocalitySuggestions([]);
+                              }}
+                              className="px-4 py-3 border-b border-[#F3F4F6] flex-row items-center gap-2"
+                            >
+                              <Ionicons name="location-outline" size={16} color="#6A7282" />
+                              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-sm text-[#364153]">
+                                {item.name}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </ScrollView>
+                      </View>
+                    )}
                   </View>
 
                 {selectedPropertyType === 'Residential' ? (
