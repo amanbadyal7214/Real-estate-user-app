@@ -327,7 +327,7 @@ const PropertyDetails = () => {
             (sub.label || sub.name).toLowerCase().includes('apartment') ? 'business-outline' : 'layers-outline'
     }));
 
-  const bhkOptions = ['1 RK', '1 BHK', '1.5 BHK', '2 BHK', '3 BHK', '4 BHK', '5 BHK'];
+
 
   const isFormValid = postData.propertyDetails.category && postData.propertyDetails.type && postData.propertyDetails.locality && expectedPrice?.toString().trim().length > 0;
 
