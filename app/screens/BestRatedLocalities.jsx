@@ -1,10 +1,15 @@
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useState } from 'react'
+import { useRouter } from 'expo-router'
+import { useEffect, useMemo, useState } from 'react'
 import { Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import LocalityReviewCard from '../../components/LocalityReviewCard'
 import ProjectReviewCard from '../../components/ProjectReviewCard'
+import { useLocalityAveragePrice } from '../../hooks/useLocalityAveragePrice'
+import { useProject } from '../../hooks/useProject'
+import { useLocation } from '../context/LocationContext'
+import { formatPricePerSqft } from '../utils/formatPrice'
 
 const BestRatedLocalities = () => {
   const [activeTab, setActiveTab] = useState('localities');
@@ -12,22 +17,85 @@ const BestRatedLocalities = () => {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Top Rated');
   const [selectedPropertyType, setSelectedPropertyType] = useState('Apartments');
+  const [searchText, setSearchText] = useState('');
 
   const sortOptions = ['Recommended', 'Top Rated', 'Mostly searched'];
   const propertyTypes = ['Apartments', 'Independent Floor', 'Independent House', 'Villa'];
 
-  const localitiesData = [
-    { name: "Kurali, Mohali", location: "Mohali, Sahibzada Ajit ...", price: "₹6,723/ sq.ft.", rating: "5.0", reviewsCount: 2, propertiesCount: "100+" },
-    { name: "Khanpur, Mohali", location: "Mohali, Sahibzada Ajit ...", price: "₹5,107/ sq.ft.", rating: "5.0", reviewsCount: 2, propertiesCount: "90+" },
-    { name: "Aujala, Mohali", location: "Mohali, Sahibzada Ajit ...", price: "₹4,850/ sq.ft.", rating: "5.0", reviewsCount: 3, propertiesCount: "80+" },
-    { name: "Sector 67, Mohali", location: "Mohali, Sahibzada Ajit ...", price: "₹7,200/ sq.ft.", rating: "4.8", reviewsCount: 5, propertiesCount: "120+" },
-  ];
+  const [localitiesData, setLocalitiesData] = useState([]);
+  const { fetchAveragePriceByCity, loading: localityLoading } = useLocalityAveragePrice();
+  const { currentLocation } = useLocation();
+  const router = useRouter();
 
-  const projectsData = [
-    { name: "Homeland Heights", location: "Sector 70, Mohali", price: "₹15,903/ sq.ft.", rating: "4.9", reviewsCount: 5, image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop" },
-    { name: "Emaar The Views", location: "Sector 105, Mohali", price: "₹5,792/ sq.ft.", rating: "4.7", reviewsCount: 5, image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1000&auto=format&fit=crop" },
-    { name: "Hero Homes", location: "Sector 88, Mohali", price: "₹6,200/ sq.ft.", rating: "4.8", reviewsCount: 12, image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1000&auto=format&fit=crop" },
-  ];
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        const res = await fetchAveragePriceByCity(currentLocation?.city || 'Mohali');
+        if (!mounted) return;
+        if (res?.success) {
+          setLocalitiesData(Array.isArray(res.data) ? res.data : []);
+        } else {
+          setLocalitiesData([]);
+        }
+      } catch (err) {
+        console.error('Error loading localities average price:', err);
+        if (mounted) setLocalitiesData([]);
+      }
+    };
+
+    load();
+    return () => { mounted = false; };
+  }, [currentLocation?.city, fetchAveragePriceByCity]);
+
+  const { fetchProjects, loading: projectsLoading } = useProject();
+  const [projectsData, setProjectsData] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadProjects = async () => {
+      try {
+        const res = await fetchProjects({ city: currentLocation?.city || 'Mohali' });
+        if (!mounted) return;
+        const data = Array.isArray(res) ? res : (res?.data || []);
+        const formatted = data.map((project) => ({
+          name: project.projectName || project.title || project.projectName || 'Project',
+          location: `${project.locality || ''}${project.locality ? ', ' : ''}${project.city?.name || project.city || ''}`,
+          price: project.priceRange || (project.avgPriceRate ? `₹ ${project.avgPriceRate} / ${project.avgPriceUnit?.label || 'sq.ft.'}` : 'Price on Request'),
+          rating: project.avgRating || project.rating || '—',
+          reviewsCount: project.reviewsCount || project.totalReviews || 0,
+          image: project.media && project.media.length > 0 ? project.media[0].fileUrl : "https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=203&auto=format&fit=crop",
+        }));
+        setProjectsData(formatted);
+      } catch (err) {
+        console.error('Error loading projects:', err);
+        if (mounted) setProjectsData([]);
+      }
+    };
+
+    if (activeTab === 'projects') loadProjects();
+    return () => { mounted = false; };
+  }, [currentLocation?.city, fetchProjects, activeTab]);
+
+  const localitiesDataFiltered = useMemo(() => {
+    const q = (searchText || '').trim().toLowerCase();
+    if (!q) return localitiesData;
+    return localitiesData.filter((item) => {
+      const name = (item.localityName || item.locality || '').toString().toLowerCase();
+      const city = (item.city?.name || item.city || '').toString().toLowerCase();
+      return name.includes(q) || city.includes(q);
+    });
+  }, [searchText, localitiesData]);
+
+  const projectsDataFiltered = useMemo(() => {
+    const q = (searchText || '').trim().toLowerCase();
+    if (!q) return projectsData;
+    return projectsData.filter((item) => {
+      const name = (item.name || '').toString().toLowerCase();
+      const location = (item.location || '').toString().toLowerCase();
+      return name.includes(q) || location.includes(q);
+    });
+  }, [searchText, projectsData]);
 
   return (
     <View className="flex-1 bg-white">
@@ -42,7 +110,7 @@ const BestRatedLocalities = () => {
         
         {/* Nav Bar */}
         <View className="flex-row justify-between items-center px-[16px] mt-[16px] h-[72px]">
-          <TouchableOpacity className="w-[40px] h-[40px] items-center justify-center">
+          <TouchableOpacity onPress={() => router.back()} className="w-[40px] h-[40px] items-center justify-center">
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
           
@@ -62,16 +130,19 @@ const BestRatedLocalities = () => {
 
         {/* Search Bar */}
         <View className="px-[16px] mt-[24px]">
-          <View className="flex-row items-center bg-white rounded-[12px] px-[16px] h-[48px] shadow-sm">
-            <TextInput 
-              placeholder="Enter a locality, society to read review..." 
-              placeholderTextColor="rgba(16, 24, 40, 0.5)"
-              className="flex-1 font-inter-regular text-[14px]"
-            />
-            <TouchableOpacity className="w-[36px] h-[36px] bg-[#008E96] rounded-[8px] items-center justify-center">
-              <Feather name="search" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
+            <View className="flex-row items-center bg-white rounded-[12px] px-[16px] h-[48px] shadow-sm">
+              <TextInput 
+                placeholder="Enter a locality, society or project to search..." 
+                placeholderTextColor="rgba(16, 24, 40, 0.5)"
+                className="flex-1 font-inter-regular text-[14px]"
+                value={searchText}
+                onChangeText={(text) => setSearchText(text)}
+                returnKeyType="search"
+              />
+              <TouchableOpacity onPress={() => { /* no-op: instant filtering on change */ }} className="w-[36px] h-[36px] bg-[#008E96] rounded-[8px] items-center justify-center">
+                <Feather name="search" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
         </View>
       </View>
 
@@ -114,7 +185,7 @@ const BestRatedLocalities = () => {
 
           <View className="flex-row justify-between items-center mt-[16px]">
             <Text className="text-[#6A7282] font-inter-regular text-[13px]">
-              Showing top {activeTab === 'localities' ? localitiesData.length : projectsData.length} results
+              Showing top {activeTab === 'localities' ? (localitiesDataFiltered.length) : (projectsDataFiltered.length)} results
             </Text>
             <TouchableOpacity 
               onPress={() => setIsSortModalVisible(true)}
@@ -129,30 +200,42 @@ const BestRatedLocalities = () => {
         {/* Results List */}
         <ScrollView className="flex-1 px-[16px] mt-[16px]" contentContainerStyle={{ gap: 16, paddingBottom: 20 }}>
           {activeTab === 'localities' ? (
-            localitiesData.map((item, index) => (
-              <LocalityReviewCard 
-                key={index}
-                name={item.name}
-                location={item.location}
-                price={item.price}
-                rating={item.rating}
-                reviewsCount={item.reviewsCount}
-                propertiesCount={item.propertiesCount}
-              />
-            ))
+            localitiesDataFiltered.length > 0 ? (
+              localitiesDataFiltered.map((item, index) => (
+                <LocalityReviewCard 
+                  key={index}
+                  name={item.localityName || item.locality}
+                  location={currentLocation?.city || item.city || ''}
+                  price={formatPricePerSqft(item.averagePrice || item.avgPrice || item.price)}
+                  rating={item.rating || '—'}
+                  reviewsCount={item.totalProperties || 0}
+                  propertiesCount={item.totalProperties ? `${item.totalProperties}` : 'N/A'}
+                />
+              ))
+            ) : (
+              <View className="items-center py-8">
+                <Text className="text-[#6A7282]">No localities match "{searchText}"</Text>
+              </View>
+            )
           ) : (
-            projectsData.map((item, index) => (
-              <ProjectReviewCard 
-                key={index}
-                name={item.name}
-                location={item.location}
-                price={item.price}
-                rating={item.rating}
-                reviewsCount={item.reviewsCount}
-                image={item.image}
-                isProject={true}
-              />
-            ))
+            projectsDataFiltered.length > 0 ? (
+              projectsDataFiltered.map((item, index) => (
+                <ProjectReviewCard 
+                  key={index}
+                  name={item.name}
+                  location={item.location}
+                  price={item.price}
+                  rating={item.rating}
+                  reviewsCount={item.reviewsCount}
+                  image={item.image}
+                  isProject={true}
+                />
+              ))
+            ) : (
+              <View className="items-center py-8">
+                <Text className="text-[#6A7282]">No projects match "{searchText}"</Text>
+              </View>
+            )
           )}
         </ScrollView>
       </View>

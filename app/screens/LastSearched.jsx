@@ -62,7 +62,6 @@ const LastSearched = () => {
     }
   };
 
-  const filters = ['Area Sqft.', 'Availability', 'Listed By', 'Any Price', 'Property type'];
   
   const sortOptions = [
     'Price : Low to High',

@@ -284,7 +284,7 @@ const PropertyDetails = () => {
 
               <ProjectPropertiesSection
                 projectId={projectInfo._id}
-                localityId={normalizedProperty.locality?._id || normalizedProperty.locality}
+                
                 cityId={normalizedProperty.city?._id || normalizedProperty.city}
                 propertyType={normalizedProperty.propertyType?._id || normalizedProperty.propertyType}
                 title="Similar Properties"
@@ -322,7 +322,7 @@ const PropertyDetails = () => {
               <View className="mt-4">
                 <ProjectPropertiesSection
                   projectId={projectInfo._id}
-                  localityId={normalizedProperty.locality?._id || normalizedProperty.locality}
+                 
                   cityId={normalizedProperty.city?._id || normalizedProperty.city}
                   propertyType={normalizedProperty.propertyType?._id || normalizedProperty.propertyType}
                   title="Related Properties"
