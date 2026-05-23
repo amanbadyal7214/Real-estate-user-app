@@ -60,7 +60,9 @@ const ProjectDetails = () => {
       if (s.minPrice && s.maxPrice) priceRange = `₹ ${s.minPrice} - ₹ ${s.maxPrice}`;
       else if (s.price) priceRange = `₹ ${s.price}`;
 
-      const structureLabel = s.structure?.value || s.structure?.label || '';
+      const structureValue = s.structure?.value;
+      const structureName = s.structure?.id?.name || s.structure?.label || s.structure?.name || '';
+      const structureLabel = [structureValue, structureName].filter(Boolean).join(' ');
       const titleBase = s.propertyItem?.label || s.propertyItem?.name || 'Configuration';
       const title = structureLabel ? `${titleBase} • ${structureLabel}` : titleBase;
 

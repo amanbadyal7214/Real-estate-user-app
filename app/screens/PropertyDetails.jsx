@@ -6,6 +6,7 @@ import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, Touch
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProjectPropertiesSection from '../../components/ProjectPropertiesSection';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import api from '../api';
 import { formatPrice } from '../utils/formatPrice';
 
 const parseMaybeJson = (value) => {
@@ -37,9 +38,10 @@ const PropertyDetails = () => {
   const [propertyData, setPropertyData] = useState(initialProperty);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('Overview');
+  const [resolvedFacing, setResolvedFacing] = useState('');
   const flatListRef = useRef(null);
 
-  const { fetchPropertyById, loading: fetching, error } = usePropertyDiscovery();
+  const { fetchPropertyById, loading: fetching } = usePropertyDiscovery();
 
   useEffect(() => {
     let mounted = true;
@@ -73,6 +75,49 @@ const PropertyDetails = () => {
   const heroImages = images.length > 0 ? images : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80'];
 
   const amenities = normalizedProperty.amenities || [];
+
+  useEffect(() => {
+    let active = true;
+
+    const facingValue = normalizedProperty.facing;
+    if (!facingValue) {
+      setResolvedFacing('');
+      return undefined;
+    }
+
+    const facingText = typeof facingValue === 'string' || typeof facingValue === 'number'
+      ? String(facingValue)
+      : getDisplayValue(facingValue);
+
+    const looksLikeId = /^[0-9a-fA-F]{24}$/.test(facingText);
+
+    if (!looksLikeId) {
+      setResolvedFacing(facingText);
+      return undefined;
+    }
+
+    const loadFacingLabel = async () => {
+      try {
+        const response = await api.get(`/facing-directions/${facingText}`);
+        const facingData = response.data?.data || response.data;
+        const label = facingData?.label || facingData?.name || facingText;
+        if (active) {
+          setResolvedFacing(label);
+        }
+      } catch (error) {
+        if (active) {
+          setResolvedFacing(facingText);
+        }
+        console.error('Error resolving facing direction:', error);
+      }
+    };
+
+    loadFacingLabel();
+
+    return () => {
+      active = false;
+    };
+  }, [normalizedProperty.facing]);
 
   const handleScroll = (event) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width);
@@ -223,7 +268,7 @@ const PropertyDetails = () => {
                   { label: 'Bedrooms', value: `${residentialInfo.bedrooms || 0} BHK`, icon: 'bed-outline' },
                   { label: 'Bathrooms', value: residentialInfo.bathrooms || 'N/A', icon: 'water-outline' },
                   { label: 'Floor', value: `${residentialInfo.floor || 'N/A'} of ${residentialInfo.totalFloors || 'N/A'}`, icon: 'layers-outline' },
-                  { label: 'Facing', value: getDisplayValue(normalizedProperty.facing) || 'N/A', icon: 'compass-outline' },
+                  { label: 'Facing', value: resolvedFacing || getDisplayValue(normalizedProperty.facing) || 'N/A', icon: 'compass-outline' },
                 ].map((item, idx) => (
                   <View key={idx} className="w-[48%] bg-white rounded-[16px] p-3 border border-[#E5E7EB]">
                     <View className="flex-row items-center gap-2 mb-1.5">
