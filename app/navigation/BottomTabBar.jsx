@@ -27,23 +27,26 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: 0,
+          bottom: 35,
           left: 0,
           right: 0,
-          height: Platform.OS === 'ios' ? 90 : 81,
+          height: Platform.OS === 'ios' ? 70 : 65,
           backgroundColor: '#FFFFFF',
           borderWidth: 2,
           borderColor: '#008E96',
-          borderBottomWidth: 0,
+          borderBottomWidth: 1,
           borderTopWidth: 1,
           borderTopLeftRadius: 35,
           borderTopRightRadius: 35,
+          borderBottomLeftRadius: 35,
+          borderBottomRightRadius: 35,
           flexDirection: 'row',
           justifyContent: 'space-around',
+          marginHorizontal: 5,
           alignItems: 'flex-start',
-          paddingTop: 12,
-          paddingHorizontal: 8,
-          paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+          paddingTop: 4,
+          paddingHorizontal: 4,
+          paddingBottom: 0,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -4 },
           shadowOpacity: 0.1,
@@ -53,17 +56,17 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       >
         <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Search</Text>
+          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Search</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Saved</Text>
+          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Saved</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Profile</Text>
+          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Profile</Text>
         </TouchableOpacity>
       </View>
     );
@@ -74,23 +77,26 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: 0,
+          bottom: 35,
           left: 0,
           right: 0,
-          height: Platform.OS === 'ios' ? 90 : 81,
+          height: Platform.OS === 'ios' ? 70 : 65,
           backgroundColor: '#FFFFFF',
-          borderWidth: 2,
+          borderWidth: 1,
           borderColor: '#008E96',
-          borderBottomWidth: 0,
+          borderBottomWidth: 1,
           borderTopWidth: 1,
           borderTopLeftRadius: 35,
           borderTopRightRadius: 35,
+          borderBottomLeftRadius: 35,
+          borderBottomRightRadius: 35,
           flexDirection: 'row',
           justifyContent: 'space-around', // Using space-around for 4 items
           alignItems: 'flex-start',
-          paddingTop: 12,
-          paddingHorizontal: 8,
-          paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+          marginHorizontal: 5,
+          paddingTop: 6,
+          paddingHorizontal: 4,
+          paddingBottom: 0,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -4 },
           shadowOpacity: 0.1,
@@ -100,22 +106,22 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       >
         <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Search</Text>
+          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Search</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push('/screens/Rent/services')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <MaterialCommunityIcons name="room-service-outline" color={activeTab === 'Services' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Services' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>services</Text>
+          <Text style={{ color: activeTab === 'Services' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>services</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Saved</Text>
+          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Saved</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Profile</Text>
+          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Profile</Text>
         </TouchableOpacity>
       </View>
     );
@@ -126,23 +132,26 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
     <View
       style={{
         position: 'absolute',
-        bottom: 0,
+        bottom: 35,
         left: 0,
         right: 0,
-        height: Platform.OS === 'ios' ? 90 : 81,
+        height: Platform.OS === 'ios' ? 70 : 65,
         backgroundColor: '#FFFFFF',
-        borderWidth: 2,
+        marginHorizontal: 5,
+        borderWidth: 1,
         borderColor: '#008E96',
-        borderBottomWidth: 0,
+        borderBottomWidth: 1,
         borderTopWidth: 1,
         borderTopLeftRadius: 35,
         borderTopRightRadius: 35,
+        borderBottomLeftRadius: 35,
+        borderBottomRightRadius: 35,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        paddingTop: 12,
-        paddingHorizontal: 16,
-        paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+        paddingTop: 6,
+        paddingHorizontal: 8,
+        paddingBottom: 0,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.1,
@@ -152,27 +161,27 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
     >
       <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Search</Text>
+        <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Search</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/screens/Buy/Insights')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <MaterialCommunityIcons name="google-analytics" color={activeTab === 'Insights' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Insights' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Insights</Text>
+        <Text style={{ color: activeTab === 'Insights' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Insights</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/screens/Buy/Suggestions')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <Search color={activeTab === 'Suggestions' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Suggestions' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Suggestions</Text>
+        <Text style={{ color: activeTab === 'Suggestions' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Suggestions</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/screens/Saved')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Saved</Text>
+        <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Saved</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center', marginTop: 4 }}>Profile</Text>
+        <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Profile</Text>
       </TouchableOpacity>
     </View>
   );

@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, DeviceEventEmitter, Dimensions, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, DeviceEventEmitter, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import CalculatorCard from '../../../components/CalculatorCard';
@@ -428,6 +428,7 @@ const Buy = () => {
         onScroll={(e) => {
           DeviceEventEmitter.emit('onBuyScroll', e.nativeEvent.contentOffset.y);
         }}
+        contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 100 : 80 }}
       >
         {/* Main Category Blue Container */}
         <View className="mx-4 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
@@ -683,7 +684,7 @@ const Buy = () => {
             ))}
           </ScrollView>
         </View>
-        {/* Projects in Focus Section */}
+
         <View className="px-4 mb-6" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
