@@ -36,7 +36,7 @@ const PropertyCard = ({ item }) => {
         }}
         className="mr-5"
       >
-        <View className="w-[310px] h-[280px] rounded-[24px] overflow-hidden bg-gray-200 shadow-lg">
+        <View className="w-[260px] h-[220px] rounded-[20px] overflow-hidden bg-gray-200 shadow-lg">
           <Image
             source={images[currentImageIndex]}
             style={StyleSheet.absoluteFill}
@@ -69,25 +69,25 @@ const PropertyCard = ({ item }) => {
           </View>
 
           {/* Top Section */}
-          <View className="flex-row justify-between items-start pt-5 px-4">
+          <View className="flex-row justify-between items-start pt-4 px-3">
             <View className="bg-[#155DFC] px-2 py-1 rounded-[4px]">
-              <Text className="font-inter-bold text-[10px] text-white">RERA</Text>
+              <Text className="font-inter-bold text-[9px] text-white">RERA</Text>
             </View>
             <View className="items-end">
-              <Text className="font-inter-bold text-[12px] text-white tracking-widest text-right">TALLEST LANDMARK</Text>
-              <Text className="font-inter-regular text-[10px] text-white text-right uppercase">BY {item.developer || item.builder || ''}</Text>
+              <Text className="font-inter-bold text-[11px] text-white tracking-widest text-right">TALLEST LANDMARK</Text>
+              <Text className="font-inter-regular text-[9px] text-white text-right uppercase">BY {item.developer || item.builder || ''}</Text>
             </View>
           </View>
 
           {/* Bottom Section */}
-          <View className="absolute bottom-5 left-4 right-4">
-            <Text className="font-inter-bold text-[17px] text-white leading-[26px]">
+          <View className="absolute bottom-4 left-3 right-3">
+            <Text className="font-inter-bold text-[15px] text-white leading-[22px]">
               {item.title}
             </Text>
-            <Text className="font-inter-regular text-[12px] text-white/90 leading-[18px]">
+            <Text className="font-inter-regular text-[11px] text-white/90 leading-[16px]">
               {item.location}
             </Text>
-            <Text className="font-inter-bold text-[15px] text-white mt-2 leading-[22px]">
+            <Text className="font-inter-bold text-[13px] text-white mt-2 leading-[18px]">
               {formatPrice(item.priceRange)}
             </Text>
           </View>

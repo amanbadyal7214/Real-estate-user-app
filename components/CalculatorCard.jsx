@@ -5,19 +5,19 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig, onPress }) =>
   return (
     <View 
       style={{
-        width: 233.33,
-        height: 269.33,
+        width: 186,
+        height: 215,
         backgroundColor: '#FFFFFF',
         borderWidth: 0.67,
         borderColor: '#D4A574',
-        borderRadius: 20,
+        borderRadius: 16,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-        elevation: 2,
-        marginRight: 12,
-        marginBottom: 8,
+        shadowOpacity: 0.08,
+        shadowRadius: 2,
+        elevation: 1,
+        marginRight: 10,
+        marginBottom: 6,
         marginTop: 2
       }}
     >
@@ -25,10 +25,10 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig, onPress }) =>
         className="font-inter-bold"
         style={{
           position: 'absolute',
-          left: 16.67,
-          top: 16.67,
-          fontSize: 16,
-          lineHeight: 24,
+          left: 13,
+          top: 13,
+          fontSize: 14,
+          lineHeight: 20,
           color: '#8B6F47'
         }}
       >
@@ -39,10 +39,10 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig, onPress }) =>
         className="font-inter-bold"
         style={{
           position: 'absolute',
-          left: 16.67,
-          top: 44.67,
-          fontSize: 16,
-          lineHeight: 24,
+          left: 13,
+          top: 36,
+          fontSize: 14,
+          lineHeight: 20,
           color: '#8B6F47'
         }}
       >

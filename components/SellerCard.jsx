@@ -13,29 +13,29 @@ const SellerCard = ({
       className="bg-white border border-[#E4E7EC] rounded-2xl"
       style={{
         width: '100%',
-        minHeight: 171.33,
-        paddingTop: 16.6667,
-        paddingHorizontal: 16.6667,
-        paddingBottom: 12,
-        gap: 12,
+        minHeight: 145,
+        paddingTop: 13,
+        paddingHorizontal: 13,
+        paddingBottom: 10,
+        gap: 10,
       }}
     >
-      <View className="flex-row items-start" style={{ gap: 12 }}>
+      <View className="flex-row items-start" style={{ gap: 10 }}>
         <Image
           source={{
             uri:
               avatar ||
               'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
           }}
-          className="w-12 h-12 rounded-full"
+          className="w-10 h-10 rounded-full"
           resizeMode="cover"
         />
 
         <View className="flex-1" style={{ gap: 2 }}>
-          <Text className="font-inter-semibold text-[16px] leading-6 text-[#101828]">
+          <Text className="font-inter-semibold text-[14px] leading-5 text-[#101828]">
             {name}
           </Text>
-          <Text className="font-inter-regular text-[13px] leading-5 text-[#6A7282]">
+          <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
             {experienceYears} years exp • {propertiesCount} properties
           </Text>
         </View>

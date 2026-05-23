@@ -1,26 +1,25 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 const LocalityExploreCard = ({ title, rating, price, properties, onPress }) => {
   return (
     <View
       style={{
-        width: 313,
-        height: 139,
+        width: 250,
+        height: 112,
         backgroundColor: '#FFFFFF',
         borderWidth: 0.67,
         borderColor: '#E4E7EC',
-        borderRadius: 16,
-        padding: 16.67,
+        borderRadius: 14,
+        padding: 13,
         flexDirection: 'row',
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.06,
-        shadowRadius: 12,
-        elevation: 3,
+        shadowRadius: 8,
+        elevation: 2,
       }}
     >
       {/* Icon Area */}
@@ -29,9 +28,9 @@ const LocalityExploreCard = ({ title, rating, price, properties, onPress }) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
-          width: 100,
-          height: 100,
-          borderRadius: 14,
+          width: 80,
+          height: 80,
+          borderRadius: 12,
           justifyContent: 'center',
           alignItems: 'center',
           position: 'relative',
@@ -63,8 +62,8 @@ const LocalityExploreCard = ({ title, rating, price, properties, onPress }) => {
         />
         
         {/* Map Pin Icon */}
-        <View style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }}>
-            <Ionicons name="location" size={36} color="#008E96" />
+        <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
+          <Ionicons name="location" size={30} color="#008E96" />
         </View>
       </LinearGradient>
 
@@ -73,10 +72,12 @@ const LocalityExploreCard = ({ title, rating, price, properties, onPress }) => {
         <Text
           style={{
             fontFamily: 'Inter-SemiBold',
-            fontSize: 17,
+            fontSize: 15,
             color: '#101828',
             marginBottom: 4,
           }}
+          numberOfLines={2}
+          ellipsizeMode="tail"
         >
           {title}
         </Text>

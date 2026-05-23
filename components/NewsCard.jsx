@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const NewsCard = ({ image, title, meta, description }) => {
   return (
@@ -7,19 +6,19 @@ const NewsCard = ({ image, title, meta, description }) => {
       activeOpacity={0.9}
       className="bg-white mr-4 mb-2 mt-1"
       style={{
-        width: 338,
-        height: 304,
-        borderRadius: 20,
+        width: 272,
+        height: 240,
+        borderRadius: 16,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 4,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 3,
         overflow: 'hidden'
       }}
     >
-      <View style={{ width: '100%', height: 167 }}>
+      <View style={{ width: '100%', height: 128 }}>
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }}
@@ -27,10 +26,10 @@ const NewsCard = ({ image, title, meta, description }) => {
         />
       </View>
       
-      <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 16 }}>
+      <View style={{ paddingHorizontal: 14, paddingTop: 12, paddingBottom: 12 }}>
         <Text 
           className="font-inter-bold text-[#101828] mb-2" 
-          style={{ fontSize: 15, lineHeight: 19 }}
+          style={{ fontSize: 14, lineHeight: 18 }}
           numberOfLines={2}
         >
           {title}
@@ -38,14 +37,14 @@ const NewsCard = ({ image, title, meta, description }) => {
         
         <Text 
           className="font-inter-regular text-[#6A7282] mb-2" 
-          style={{ fontSize: 12, lineHeight: 18 }}
+          style={{ fontSize: 11, lineHeight: 16 }}
         >
           {meta}
         </Text>
         
         <Text 
           className="font-inter-regular text-[#4A5565]" 
-          style={{ fontSize: 12, lineHeight: 20 }}
+          style={{ fontSize: 11, lineHeight: 18 }}
           numberOfLines={2}
         >
           {description}

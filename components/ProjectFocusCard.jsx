@@ -23,13 +23,13 @@ const ProjectFocusCard = ({ image, images: propImages, title, location, price, t
       entering={FadeInRight.duration(600).delay(200)}
       className="overflow-hidden bg-white shadow-sm"
       style={{
-        width: 300,
-        height: 220,
-        borderRadius: 24,
+        width: 260,
+        height: 180,
+        borderRadius: 20,
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
+        shadowOpacity: 0.09,
         shadowRadius: 4,
       }}
     >
@@ -48,7 +48,7 @@ const ProjectFocusCard = ({ image, images: propImages, title, location, price, t
         <LinearGradient
           colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.85)']}
           locations={[0, 0.4, 1]}
-          className="w-full h-full p-4 justify-between"
+          className="w-full h-full p-3 justify-between"
         >
           {/* Top Row: RERA Tag and Landmark Info */}
           <View className="flex-row justify-between items-start">
@@ -56,22 +56,22 @@ const ProjectFocusCard = ({ image, images: propImages, title, location, price, t
               className="px-2 py-1 rounded"
               style={{ backgroundColor: badgeColor || '#155DFC' }}
             >
-              <Text className="text-white font-inter-bold text-[10px] tracking-wider">{badgeType || 'RERA'}</Text>
+              <Text className="text-white font-inter-bold text-[9px] tracking-wider">{badgeType || 'RERA'}</Text>
             </View>
             <View className="items-end bg-black/20 px-2 py-1 rounded-lg">
-              <Text className="text-white font-inter-bold text-[10px] uppercase tracking-wide">{tag}</Text>
-              <Text className="text-white/90 font-inter-medium text-[8px] uppercase">BY {developer}</Text>
+              <Text className="text-white font-inter-bold text-[9px] uppercase tracking-wide">{tag}</Text>
+              <Text className="text-white/90 font-inter-medium text-[7px] uppercase">BY {developer}</Text>
             </View>
           </View>
 
           {/* Bottom Row: Project Details */}
           <View>
-            <Text className="text-white font-inter-bold text-[18px] mb-0.5 leading-6" numberOfLines={1}>{title}</Text>
+            <Text className="text-white font-inter-bold text-[16px] mb-0.5 leading-5" numberOfLines={2}>{title}</Text>
             <View className="flex-row items-center mb-2">
-              <Ionicons name="location-sharp" size={10} color="rgba(255,255,255,0.8)" />
-              <Text className="text-white/80 font-inter-regular text-[12px] ml-1" numberOfLines={1}>{location}</Text>
+              <Ionicons name="location-sharp" size={9} color="rgba(255,255,255,0.8)" />
+              <Text className="text-white/80 font-inter-regular text-[11px] ml-1" numberOfLines={1}>{location}</Text>
             </View>
-            <Text className="text-white font-inter-bold text-[16px] tracking-tight">{price}</Text>
+            <Text className="text-white font-inter-bold text-[14px] tracking-tight">{price}</Text>
           </View>
         </LinearGradient>
       </TouchableOpacity>

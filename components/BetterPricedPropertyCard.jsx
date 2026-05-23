@@ -16,27 +16,27 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
           router.push('/screens/ProjectDetails')
         }
       }}
-      className="bg-white mr-3"
+      className="bg-white  mr-3"
       style={{
-        width: 300,
-        height: 344,
-        borderRadius: 20,
+        width: 240,
+        height: 275,
+        borderRadius: 16,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 4,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 3,
       }}
     >
-      <View style={{ borderRadius: 20, overflow: 'hidden', width: '100%', height: '100%' }}>
+      <View style={{ borderRadius: 16, overflow: 'hidden', width: '100%', height: '100%' }}>
         <Image 
           source={{ uri: image }} 
-          style={{ width: '100%', height: 200 }}
+          style={{ width: '100%', height: 160 }}
           resizeMode="cover"
         />
         
-        <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 16, gap: 8 }}>
+        <View style={{ paddingHorizontal: 12, paddingTop: 12, paddingBottom: 12, gap: 6 }}>
           <Text 
             className="font-inter-bold text-[#101828]" 
             style={{ fontSize: 16, lineHeight: 24 }}
@@ -75,7 +75,7 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
           </Text>
 
           <Text 
-            className="font-inter-bold text-[#101828]" 
+            className="font-inter-bold  text-[#101828]" 
             style={{ fontSize: 15, lineHeight: 22 }}
             numberOfLines={1}
           >

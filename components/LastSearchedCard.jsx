@@ -1,22 +1,21 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { Image, Text, View } from 'react-native';
 
 const LastSearchedCard = ({ image, price, title, builder, location }) => {
   return (
     <View 
       className="bg-white mr-3 pb-2 mb-2 mt-1"
       style={{
-        width: 209,
-        borderRadius: 20,
+        width: 168,
+        borderRadius: 16,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 4,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 3,
       }}
     >
-      <View style={{ width: '100%', height: 165, borderRadius: 24, overflow: 'hidden' }}>
+      <View style={{ width: '100%', height: 132, borderRadius: 20, overflow: 'hidden' }}>
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }}
@@ -24,18 +23,18 @@ const LastSearchedCard = ({ image, price, title, builder, location }) => {
         />
       </View>
       
-      <View style={{ paddingTop: 16, paddingLeft: 16, paddingRight: 16, flex: 1, justifyContent: 'flex-start' }}>
+      <View style={{ paddingTop: 12, paddingLeft: 12, paddingRight: 12, flex: 1, justifyContent: 'flex-start' }}>
         <Text 
           className="font-inter-bold text-[#101828] mb-1" 
-          style={{ fontSize: 15, lineHeight: 22 }}
+          style={{ fontSize: 14, lineHeight: 20 }}
           numberOfLines={1}
         >
           {price}
         </Text>
         
         <Text 
-          className="font-inter-semibold text-[#101828] mb-2" 
-          style={{ fontSize: 15, lineHeight: 22 }}
+          className="font-inter-semibold text-[#101828] mb-1.5" 
+          style={{ fontSize: 14, lineHeight: 20 }}
           numberOfLines={1}
         >
           {title}

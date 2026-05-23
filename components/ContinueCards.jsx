@@ -20,7 +20,7 @@ const ContinueCards = ({ data = [] }) => {
           <TouchableOpacity 
             key={index} 
             onPress={() => router.push('/screens/ProjectDetails')}
-            className="bg-white border border-[#EAECF0] p-4 rounded-2xl w-[280px] mr-3 flex-row items-center justify-between"
+            className="bg-white border border-[#EAECF0] p-3 rounded-2xl w-[224px] mr-3 flex-row items-center justify-between"
           >
             <View className="flex-1 mr-2">
               <Text 

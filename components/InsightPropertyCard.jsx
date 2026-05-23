@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { Heart, MessageCircle, Check } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { Check, Heart, MessageCircle } from 'lucide-react-native';
+import { useState } from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const InsightPropertyCard = ({ 
   id,
@@ -30,16 +30,16 @@ const InsightPropertyCard = ({
     <TouchableOpacity 
       activeOpacity={0.9}
       onPress={navigateToDetails}
-      className="bg-white mr-4 mb-2 rounded-[16px] border-[0.67px] border-[#E4E7EC] pt-[12.67px] px-[12.67px] pb-[0.67px] w-[221px] h-[397px]"
+      className="bg-white mr-4 mb-2 rounded-[14px] border-[0.67px] border-[#E4E7EC] pt-[10px] px-[10px] pb-[0.67px] w-[180px] h-[330px]"
       style={{
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-        elevation: 4,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+        elevation: 3,
       }}
     >
-      <View className="w-[195.67px] h-[160px] rounded-[14px] overflow-hidden relative">
+      <View className="w-[158px] h-[128px] rounded-[12px] overflow-hidden relative">
         <Image 
           source={{ uri: image }} 
           className="w-full h-full"

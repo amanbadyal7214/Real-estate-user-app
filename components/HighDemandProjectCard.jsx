@@ -18,15 +18,15 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
   return (
     <Animated.View
       entering={FadeInDown.duration(600).springify().damping(12)}
-      className="bg-white rounded-[20px] mb-2 overflow-hidden"
+      className="bg-white rounded-[16px] mb-2 overflow-hidden"
       style={{
-        width: 338,
-        height: 284.5,
+        width: 270,
+        height: 227,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 4,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 2,
       }}
     >
       <TouchableOpacity 
@@ -39,12 +39,12 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           colors={['#FFFBEB', '#FFF7ED']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className="flex-row items-center justify-center px-4"
-          style={{ height: 160 }}
+          className="flex-row items-center justify-center px-3"
+          style={{ height: 128 }}
         >
           <View
-            className="rounded-xl overflow-hidden"
-            style={{ width: 306, height: 128 }}
+            className="rounded-lg overflow-hidden"
+            style={{ width: 244, height: 102 }}
           >
             {image ? (
               <Image
@@ -65,10 +65,10 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
         {/* Content Container */}
         <View className="relative bg-white" style={{ height: 124.5 }}>
           {/* Price Range */}
-          <View style={{ position: 'absolute', left: 16, top: 16, width: 306, height: 24 }}>
+          <View style={{ position: 'absolute', left: 16, top: 16, width: 236, height: 22 }}>
             <Text
                 className="font-inter-bold text-[#101828]"
-                style={{ fontSize: 16, lineHeight: 24 }}
+                style={{ fontSize: 14, lineHeight: 20 }}
               >
                 {(() => {
                   const raw = priceRange;
@@ -95,34 +95,40 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           </View>
 
           {/* Title */}
-          <View style={{ position: 'absolute', left: 16, top: 44, width: 306, height: 22.5 }}>
-            <Text
-              className="font-inter-semibold text-[#101828]"
-              style={{ fontSize: 15, lineHeight: 22.5 }}
-            >
-              {title}
-            </Text>
-          </View>
+            <View style={{ position: 'absolute', left: 16, top: 34, width: 236, height: 22.5 }}>
+              <Text
+                className="font-inter-semibold text-[#101828]"
+                style={{ fontSize: 13, lineHeight: 20 }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {title}
+              </Text>
+            </View>
 
           {/* Developer */}
-          <View style={{ position: 'absolute', left: 16, top: 70.5, width: 306, height: 18 }}>
-            <Text
-              className="font-inter-regular text-[#4A5565]"
-              style={{ fontSize: 12, lineHeight: 18 }}
-            >
-              by <Text className="font-inter-medium">{developer}</Text>
-            </Text>
-          </View>
+            <View style={{ position: 'absolute', left: 16, top: 56, width: 236 }}>
+              <Text
+                className="font-inter-regular text-[#4A5565]"
+                style={{ fontSize: 11, lineHeight: 16 }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                by <Text className="font-inter-medium">{developer}</Text>
+              </Text>
+            </View>
 
-          {/* Location */}
-          <View style={{ position: 'absolute', left: 16, top: 90.5, width: 306, height: 18 }}>
-            <Text
-              className="font-inter-regular text-[#4A5565]"
-              style={{ fontSize: 12, lineHeight: 18 }}
-            >
-              {location}
-            </Text>
-          </View>
+          {/* Location (allow wrapping, up to 2 lines) */}
+            <View style={{ position: 'absolute', left: 16, top: 76, width: 236 }}>
+              <Text
+                className="font-inter-regular text-[#4A5565]"
+                style={{ fontSize: 11, lineHeight: 16, flexWrap: 'wrap' }}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {location}
+              </Text>
+            </View>
         </View>
       </TouchableOpacity>
     </Animated.View>

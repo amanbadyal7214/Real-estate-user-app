@@ -19,26 +19,26 @@ const DeveloperProjectCard = ({
     <TouchableOpacity 
       activeOpacity={0.9} 
       onPress={() => router.push({ pathname: '/screens/ProjectDetails', params: { projectId } })}
-      className="bg-white rounded-[20px] mb-2 overflow-hidden "
+      className="bg-white rounded-[16px] mb-2 overflow-hidden "
       style={{
-        width: 292.5,
-        height: 308.5,
+        width: 234,
+        height: 247,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 3,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 2,
       }}
     >
       {/* Property Image */}
       <Image 
         source={{ uri: image }} 
-        style={{ width: '100%', height: 160 }}
+        style={{ width: '100%', height: 128 }}
         resizeMode="cover"
       />
 
       {/* Content Container */}
-      <View className="p-4 flex-1 justify-between">
+      <View className="p-3 flex-1 justify-between">
         {/* Header: Logo, Title, Rating */}
         <View className="flex-row items-start gap-2">
           {/* Developer Logo */}

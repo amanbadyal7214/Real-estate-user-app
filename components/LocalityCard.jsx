@@ -5,11 +5,11 @@ import { Text, View } from 'react-native';
 const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) => {
   return (
     <View 
-      className="bg-white rounded-[20px] mb-2 relative overflow-hidden shadow-sm"
+      className="bg-white rounded-[16px] mb-2 relative overflow-hidden shadow-sm"
       style={{
-        width: 260,
-        height: 127,
-        elevation: 2,
+        width: 208,
+        height: 102,
+        elevation: 1,
       }}
     >
       <LinearGradient
@@ -20,11 +20,13 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       />
 
-      <View className="flex-row justify-between items-start p-4 z-10">
+      <View className="flex-row justify-between items-start p-3 z-10">
         <View className="flex-1">
           <Text
-            className="font-inter-semibold text-[15px] text-[#101828] leading-[22px] mb-1"
-            style={{ marginTop: -2.33 }}
+            className="font-inter-semibold text-[14px] text-[#101828] leading-[20px] mb-1"
+            style={{ marginTop: -4 }}
+            numberOfLines={2}
+            ellipsizeMode="tail"
           >
             {title}
           </Text>
@@ -39,13 +41,13 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
         </View>
 
         <View
-          className="w-[63px] h-[64px] rounded-[14px] items-center justify-center bg-[#DFFFFD]"
+          className="w-[50px] h-[50px] rounded-[12px] items-center justify-center bg-[#DFFFFD]"
         >
-          <Ionicons name="cube-outline" size={32} color={iconColor} style={{ opacity: 0.6 }} />
+          <Ionicons name="cube-outline" size={24} color={iconColor} style={{ opacity: 0.6 }} />
         </View>
       </View>
 
-      <View className="flex-row items-center p-4 absolute bottom-0 left-0 z-10">
+      <View className="flex-row items-center p-3 absolute bottom-0 left-0 z-10">
         <Text className="font-inter-medium text-[12px] text-[#2B7571] leading-[18px]">Read all reviews</Text>
         <Ionicons name="chevron-forward" size={14} color="#2B7571" className="ml-1" />
       </View>

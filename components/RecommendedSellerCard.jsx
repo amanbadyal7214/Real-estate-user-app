@@ -1,22 +1,21 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight, Phone } from 'lucide-react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, location }) => {
   return (
     <View 
       style={{
-        width: 340,
-        height: 216,
-        borderRadius: 20,
+        width: 272,
+        height: 180,
+        borderRadius: 16,
         marginRight: 12,
         backgroundColor: 'white',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 4,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 3,
       }}
     >
       <LinearGradient
@@ -55,49 +54,49 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
         <View className="flex-row items-center">
           <View 
             style={{ 
-              width: 56, 
-              height: 56, 
+              width: 48, 
+              height: 48, 
               backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-              borderRadius: 14,
+              borderRadius: 12,
               alignItems: 'center',
               justifyContent: 'center'
             }}
           >
-            <Text style={{ fontSize: 24 }}>👤</Text>
+            <Text style={{ fontSize: 20 }}>👤</Text>
           </View>
           
           <View className="flex-row items-center ml-3">
-            <Text className="font-inter-bold text-white text-[16px]">{name}</Text>
+            <Text className="font-inter-bold text-white text-[15px]">{name}</Text>
             <ChevronRight size={16} color="white" className="ml-1" />
           </View>
         </View>
 
         {/* Info Section */}
         <View style={{ gap: 8, marginTop: 4 }}>
-          <View className="flex-row items-center" style={{ gap: 12 }}>
-            <Text className="text-white text-[13px]">
-              <Text className="font-inter-bold">{experienceYears} years </Text>
+          <View className="flex-row items-center" style={{ gap: 10 }}>
+            <Text className="text-white text-[12px]">
+              <Text className="font-inter-bold">{experienceYears} yrs </Text>
               <Text className="font-inter-regular">Experience</Text>
             </Text>
             
             <View style={{ width: 1, height: 16, backgroundColor: 'rgba(255, 255, 255, 0.3)' }} />
             
-            <Text className="text-white text-[13px]">
+            <Text className="text-white text-[12px]">
               <Text className="font-inter-bold">{propertiesCount} </Text>
               <Text className="font-inter-regular">Properties</Text>
             </Text>
           </View>
           
-          <Text className="font-inter-regular text-white text-[13px]">{location}</Text>
+          <Text className="font-inter-regular text-white text-[12px]">{location}</Text>
         </View>
 
         {/* Button */}
         <TouchableOpacity 
           className="bg-white flex-row items-center justify-center mt-2"
-          style={{ width: '100%', height: 45, borderRadius: 9999, gap: 8 }}
+          style={{ width: '100%', height: 38, borderRadius: 9999, gap: 8 }}
         >
           <Phone size={16} color="#008E96" />
-          <Text className="font-inter-medium text-[#008E96] text-[14px]">
+          <Text className="font-inter-medium text-[#008E96] text-[13px]">
             Show Contact
           </Text>
         </TouchableOpacity>

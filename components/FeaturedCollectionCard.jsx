@@ -38,9 +38,9 @@ const FeaturedCollectionCard = ({
         {collections.map((item) => (
           <View
             key={item.id}
-            style={{ width: 165, height: 155, borderRadius: 16, overflow: 'hidden' }}
+            style={{ width: 132, height: 124, borderRadius: 14, overflow: 'hidden' }}
           >
-            <Image source={item.image} style={{ width: 165, height: 155 }} resizeMode="cover" />
+            <Image source={item.image} style={{ width: 132, height: 124 }} resizeMode="cover" />
             <LinearGradient
               colors={['rgba(229, 167, 22, 0.55)', 'rgba(127, 92, 12, 0.55)']}
               start={{ x: 0, y: 0 }}

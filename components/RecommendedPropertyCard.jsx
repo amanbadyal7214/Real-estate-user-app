@@ -14,11 +14,11 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
         }
       }}
       activeOpacity={0.9}
-      className="bg-white flex-row items-start p-3 mr-3"
+      className="bg-white flex-row items-start p-2 mr-3"
       style={{
-        width: 340,
-        height: 145.33,
-        borderRadius: 20,
+        width: 272,
+        height: 116,
+        borderRadius: 16,
         borderWidth: 0.67,
         borderColor: '#F3F4F6',
         shadowColor: '#000',
@@ -26,14 +26,14 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
           width: 0,
           height: 1,
         },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-        elevation: 2,
-        gap: 12
+        shadowOpacity: 0.08,
+        shadowRadius: 2,
+        elevation: 1,
+        gap: 10
       }}
     >
       {/* Image Container */}
-      <View style={{ width: 140, height: 120, borderRadius: 16, overflow: 'hidden' }}>
+      <View style={{ width: 112, height: 96, borderRadius: 12, overflow: 'hidden' }}>
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }}

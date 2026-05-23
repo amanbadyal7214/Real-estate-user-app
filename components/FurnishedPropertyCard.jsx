@@ -1,5 +1,4 @@
-import React from 'react';
-import { Image, Text, View, StyleSheet } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 const FurnishedPropertyCard = ({ image, price, title, location, furnishedStatus, area }) => {
   return (
@@ -31,24 +30,24 @@ const FurnishedPropertyCard = ({ image, price, title, location, furnishedStatus,
 
 const styles = StyleSheet.create({
   card: {
-    width: 226,
-    height: 377,
+    width: 180,
+    height: 301,
     backgroundColor: '#FFFFFF',
     borderWidth: 0.67,
     borderColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 16,
+    borderRadius: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-    marginRight: 12,
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 1,
+    marginRight: 10,
   },
   imageContainer: {
-    width: 182,
-    height: 180,
-    marginTop: 21,
-    marginLeft: 17,
+    width: 145,
+    height: 144,
+    marginTop: 16,
+    marginLeft: 13,
     borderRadius: 8,
     overflow: 'hidden',
   },

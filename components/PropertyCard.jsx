@@ -1,7 +1,6 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { Heart, MessageSquare } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { Heart, MessageSquare } from 'lucide-react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 const BHKCard = ({ config, area, price }) => {
   return (
@@ -31,17 +30,17 @@ const PropertyCard = ({ property }) => {
     <TouchableOpacity 
       activeOpacity={0.9}
       onPress={navigateToDetails}
-      className="bg-white rounded-2xl p-3.5 mb-5 self-center w-full border-2 border-primary"
+      className="bg-white rounded-2xl p-2.5 mb-4 self-center w-full border-2 border-primary"
       style={{
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.1,
-        shadowRadius: 20,
-        elevation: 10,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        elevation: 6,
       }}
     >
       {/* Image Section */}
-      <View className="relative h-[190px] rounded-[14px] overflow-hidden">
+      <View className="relative h-[150px] rounded-[14px] overflow-hidden">
         <Image 
           source={{ uri: property.image }} 
           className="w-full h-full"
