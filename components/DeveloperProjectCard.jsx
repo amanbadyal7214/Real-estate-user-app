@@ -19,7 +19,7 @@ const DeveloperProjectCard = ({
     <TouchableOpacity 
       activeOpacity={0.9} 
       onPress={() => router.push({ pathname: '/screens/ProjectDetails', params: { projectId } })}
-      className="bg-white rounded-[20px] mb-2 overflow-hidden mr-4"
+      className="bg-white rounded-[20px] mb-2 overflow-hidden "
       style={{
         width: 292.5,
         height: 308.5,
