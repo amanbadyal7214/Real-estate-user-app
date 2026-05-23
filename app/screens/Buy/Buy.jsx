@@ -431,7 +431,7 @@ const Buy = () => {
         contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 100 : 80 }}
       >
         {/* Main Category Blue Container */}
-        <View className="mx-4 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
+        <View className="mx-2 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
           <CategoryTabs
             activeTab={selectedTab}
             onTabPress={setSelectedTab}

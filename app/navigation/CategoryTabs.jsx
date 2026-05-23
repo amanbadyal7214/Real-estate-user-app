@@ -70,15 +70,15 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
         const isActive = activeTab === tab.id;
 
         return (
-          <View key={tab.id} style={{ width: 85, marginRight: 12 }} className="relative">
+          <View key={tab.id} style={{ width: 75, marginRight: 12 }} className="relative">
             <TouchableOpacity
               onPress={() => onTabPress?.(tab.id)}
-              style={{ height: 88, justifyContent: 'center' }}
+              style={{ height: 78, justifyContent: 'center' }}
               className={`items-center bg-white px-2 rounded-2xl border-2 ${
                 isActive ? 'border-[#008E96]' : 'border-transparent'
               }`}
             >
-              <Icon size={28} color={isActive ? '#008E96' : '#101828'} />
+              <Icon size={20} color={isActive ? '#008E96' : '#101828'} />
               <Text
                 style={{ fontFamily: 'Inter-Medium' }}
                 className={`mt-2 text-[13px] text-center ${
