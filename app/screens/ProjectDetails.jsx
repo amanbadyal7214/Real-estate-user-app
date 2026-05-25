@@ -15,7 +15,7 @@ import { useProjectDetails } from '../../hooks/useProjectDetails';
 
 const ProjectDetails = () => {
   const router = useRouter();
-  const { projectId } = useLocalSearchParams();
+  const { projectId, source } = useLocalSearchParams();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeFloorTab, setActiveFloorTab] = useState('All');
@@ -34,6 +34,7 @@ const ProjectDetails = () => {
     summaries
   } = useProjectDetails(projectId);
   const projectData = Array.isArray(rawProjectData) ? rawProjectData[0] || {} : rawProjectData || {};
+  const lookingFor = source === 'rent' ? 'rent' : 'sell';
 
   const summariesArray = Array.isArray(summaries) ? summaries : (summaries ? [summaries] : []);
   const summariesData = summariesArray[0] || null;
@@ -396,6 +397,7 @@ const ProjectDetails = () => {
               <ProjectPropertiesSection
                 projectId={projectId}
                 cityName={getDisplayValue(projectData?.city) || 'mohali'}
+                lookingFor={lookingFor}
               />
 
               <ProjectFinancialServicesCard />
@@ -525,6 +527,7 @@ const ProjectDetails = () => {
               <ProjectPropertiesSection
                 projectId={projectId}
                 cityName={getDisplayValue(projectData?.city) || 'mohali'}
+                lookingFor={lookingFor}
               />
             </View>) : activeTab === 'Property Tour' ? (
               <View className="p-4 gap-4">

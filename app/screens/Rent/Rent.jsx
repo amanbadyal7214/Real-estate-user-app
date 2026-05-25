@@ -17,8 +17,10 @@ import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabConte
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
 import { useProject } from '../../../hooks/useProject';
+import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import { useLocation } from '../../context/LocationContext';
-import { formatPrice } from '../../utils/formatPrice';
+import { formatPrice, formatPricePerSqft } from '../../utils/formatPrice';
 
 const fallbackSuggestions = [
   {
@@ -69,6 +71,32 @@ const normalizeSuggestionText = (value, fallback = '') => {
   if (value === null || value === undefined) return fallback;
   const text = String(value).trim();
   return text || fallback;
+};
+
+const getLocationLabel = (value) => {
+  if (!value) return '';
+  if (typeof value === 'string') {
+    const trimmedValue = value.trim();
+    if (!trimmedValue || /^[a-f0-9]{24}$/i.test(trimmedValue)) return '';
+    return trimmedValue;
+  }
+
+  if (typeof value === 'object') {
+    return value.name || value.label || value.title || '';
+  }
+
+  return '';
+};
+
+const formatPropertyLocation = (property) => {
+  const directAddress = typeof property?.address === 'string' ? property.address.trim() : '';
+  if (directAddress) return directAddress;
+
+  const locality = getLocationLabel(property?.localityName || property?.locality);
+  const city = getLocationLabel(property?.city);
+  const state = getLocationLabel(property?.state);
+
+  return [locality, city, state].filter(Boolean).join(', ') || 'Location not available';
 };
 
 const normalizeProjectSuggestions = (responseData, defaultCity = 'Mohali') => {
@@ -155,7 +183,12 @@ const Rent = () => {
     ];
 
     const [suggestions, setSuggestions] = useState(fallbackSuggestions);
+    const [recommendedProperties, setRecommendedProperties] = useState([]);
+    const [sellers, setSellers] = useState([]);
+    const [exploreLocalities, setExploreLocalities] = useState([]);
     const { fetchProjects } = useProject();
+    const { fetchProperties, fetchSellersByLocation } = usePropertyDiscovery();
+    const { fetchAveragePriceByCity, loading: localityLoading, error: localityError } = useLocalityAveragePrice();
     const { currentLocation } = useLocation();
 
     useEffect(() => {
@@ -176,27 +209,46 @@ const Rent = () => {
       loadProjects();
 
       return () => { isMounted = false; };
-    }, [fetchProjects, currentLocation]);
-    
+    }, [fetchProjects, fetchProperties, currentLocation]);
 
-  const recommendedProperties = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=400',
-      price: '₹ 4.25 Cr',
-      title: '5 BHK Independent House',
-      area: '2000 sq.ft.',
-      location: 'Janta Sector 90 A, Mohali',
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400',
-      price: '₹ 2.10 Cr',
-      title: '3 BHK Modern Villa',
-      area: '1800 sq.ft.',
-      location: 'Sector 82, Mohali',
-    }
-  ]; 
+    useEffect(() => {
+      let isMounted = true;
+      const city = currentLocation?.city || 'Mohali';
+
+      const loadRecommendedProperties = async () => {
+        try {
+          const res = await fetchProperties({ city, limit: 4, lookingFor: 'rent', PriceAscending: true });
+          if (!isMounted) return;
+
+          const projects = Array.isArray(res)
+            ? res
+            : Array.isArray(res?.data)
+              ? res.data
+              : Array.isArray(res?.projects)
+                ? res.projects
+                : Array.isArray(res?.results)
+                  ? res.results
+                  : [];
+
+          const mapped = projects.map((property, index) => ({
+            id: property._id || property.id || property.projectId || `recommended-${index}`,
+            image: property.media?.[0]?.fileUrl || property.images?.[0] || property.coverImage || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+            price: property.priceRange || property.priceText || (property.avgPriceRate ? `${formatPrice(property.avgPriceRate)}${property.avgPriceUnit?.label ? ` / ${property.avgPriceUnit.label}` : ''}` : (typeof property.price === 'number' ? formatPrice(property.price) : property.price || 'View details')),
+            title: property.title || property.projectName || 'Property',
+            area: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK • ${property.area || 'N/A'} ${property.areaUnit?.name || property.areaUnit?.label || 'sq.ft.'}`,
+            location: formatPropertyLocation(property),
+          }));
+
+          setRecommendedProperties(mapped);
+        } catch (_err) {
+          if (isMounted) setRecommendedProperties([]);
+        }
+      };
+
+      loadRecommendedProperties();
+
+      return () => { isMounted = false; };
+    }, [fetchProperties, currentLocation]);
   
 const emiVectors = [
     { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
@@ -232,22 +284,7 @@ const emiVectors = [
       description: "Discover the emerging trends in the real estate market, from sustainable building to AI-driven virtual tours."
     }
   ];
-    const recommendedSellers = [
-    {
-      id: 1,
-      name: 'Priya Sharma',
-      experienceYears: '29',
-      propertiesCount: '15',
-      location: 'Nabha',
-    },
-    {
-      id: 2,
-      name: 'Rahul Verma',
-      experienceYears: '12',
-      propertiesCount: '8',
-      location: 'Sector 66, Mohali',
-    }
-  ];
+    // sellers will be loaded from API
 
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollRef = useRef(null);
@@ -261,6 +298,76 @@ const emiVectors = [
 
         return () => clearInterval(interval);
     }, [activeIndex, suggestions.length]);
+
+    useEffect(() => {
+      let isMounted = true;
+      const city = currentLocation?.city || 'Mohali';
+
+      const loadSellers = async () => {
+        try {
+          const res = await fetchSellersByLocation({ city, limit: 6 });
+          if (!isMounted) return;
+
+          const items = Array.isArray(res)
+            ? res
+            : Array.isArray(res?.data)
+              ? res.data
+              : Array.isArray(res?.results)
+                ? res.results
+                : [];
+
+          const mapped = items.map((s, i) => ({
+            id: s._id || s.id || `seller-${i}`,
+            name: s.name || s.user?.name || s.sellerName || 'Seller',
+            experienceYears: String(s.experienceYears || s.yearsExperience || s.experience || '5'),
+            propertiesCount: String(s.propertiesCount || s.totalProperties || (s.properties && s.properties.length) || '0'),
+            locality: s.locality?.name || s.localityName || s.city || 'Mohali',
+          }));
+
+          setSellers(mapped);
+        } catch (_err) {
+          if (isMounted) setSellers([]);
+        }
+      };
+
+      loadSellers();
+
+      return () => { isMounted = false; };
+    }, [fetchSellersByLocation, currentLocation]);
+
+    useEffect(() => {
+      let isMounted = true;
+      const city = currentLocation?.city || 'Mohali';
+
+      const loadExploreLocalities = async () => {
+        try {
+          const res = await fetchAveragePriceByCity(city);
+          if (!isMounted) return;
+
+          const items = Array.isArray(res?.data) ? res.data : [];
+
+          const mapped = items
+            .filter((item) => item?.localityName || item?.locality)
+            .map((item) => ({
+              locality: item.locality,
+              localityName: item.localityName || item.locality,
+              avgLabel: 'Avg.\nPrice/sq.ft:',
+              averagePrice: formatPricePerSqft(item.averagePricePerSqft),
+              priceRange: `${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`,
+              totalProperties: item.totalProperties,
+            }))
+            .slice(0, 4);
+
+          setExploreLocalities(mapped);
+        } catch (_err) {
+          if (isMounted) setExploreLocalities([]);
+        }
+      };
+
+      loadExploreLocalities();
+
+      return () => { isMounted = false; };
+    }, [fetchAveragePriceByCity, currentLocation]);
 
     const handleScroll = (event) => {
         const scrollPosition = event.nativeEvent.contentOffset.x;
@@ -328,18 +435,22 @@ const emiVectors = [
                         decelerationRate="fast"
                     >
                         {suggestions.map((item) => (
-                            <PropertySuggestionCard key={item.id} {...item} />
+                          <PropertySuggestionCard
+                            key={item.id}
+                            {...item}
+                            onPress={() => item.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.id, source: 'rent' } })}
+                          />
                         ))}
                     </ScrollView>
                 </View>
                 {/* Recommended Properties Section */}
-        <View className="px-4 pt-6">
+        <View className="px-4 py-6">
           <View className="flex-row justify-between items-center mb-4">
             <View>
-              <Text className="font-inter-bold text-[18px] text-[#101828]">Recommended Properties</Text>
-              <Text className="font-inter-regular text-[14px] text-[#667085]">Properties matching your requirements</Text>
+              <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
+              <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/RecommendedProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -422,13 +533,13 @@ const emiVectors = [
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
           >
-            {recommendedSellers.map((seller) => (
+            {sellers.map((seller) => (
               <RecommendedSellerCard
                 key={seller.id}
-                name={seller.name}
-                experienceYears={seller.experienceYears}
-                propertiesCount={seller.propertiesCount}
-                location={seller.location}
+                name={seller.name || 'Seller'}
+                experienceYears={seller.experienceYears || '5'}
+                propertiesCount={seller.propertiesCount || '0'}
+                location={seller.locality || seller.location || 'Mohali'}
               />
             ))}
           </ScrollView>
@@ -446,36 +557,36 @@ const emiVectors = [
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
-          >
-            <ExploreLocalityCard
-              title="Kharar"
-              avgPrice="Avg. Price:"
-              priceSqft="₹6.2K/ sq.ft."
-              growth="+12.68% ▲"
-            />
-            <ExploreLocalityCard
-              title="Sector 115"
-              avgPrice="Avg. Price:"
-              priceSqft="₹5.1K/ sq.ft."
-              growth="+7.25% ▲"
-            />
-            <ExploreLocalityCard
-              title="Zirakpur"
-              avgPrice="Avg. Price:"
-              priceSqft="₹4.8K/ sq.ft."
-              growth="+5.12% ▲"
-            />
-            <ExploreLocalityCard
-              title="Aerocity"
-              avgPrice="Avg. Price:"
-              priceSqft="₹8.5K/ sq.ft."
-              growth="+15.30% ▲"
-            />
-          </ScrollView>
+          {localityLoading ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: 132 }}>
+              <Text className="font-inter-medium text-[13px] text-[#6A7282]">Loading localities...</Text>
+            </View>
+          ) : localityError ? (
+            <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
+              <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
+            </View>
+          ) : exploreLocalities.length === 0 ? (
+            <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
+            >
+              {exploreLocalities.map((item, index) => (
+                <ExploreLocalityCard
+                  key={`${item.locality || 'locality'}-${index}`}
+                  title={item.localityName || item.locality}
+                  avgLabel={item.avgLabel}
+                  averagePrice={item.averagePrice}
+                  priceRange={item.priceRange}
+                  totalProperties={item.totalProperties}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* News For You Section */}

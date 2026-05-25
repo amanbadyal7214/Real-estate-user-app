@@ -1,54 +1,112 @@
-import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import FurnishedPropertyCard from './FurnishedPropertyCard';
+import { usePropertyDiscovery } from '../hooks/usePropertyDiscovery';
+import { useLocation } from '../app/context/LocationContext';
+import { formatPrice } from '../app/utils/formatPrice';
 
 const FurnishedPropertiesSection = () => {
-  const data = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-      price: '₹ 25,000 / Month',
-      title: '2 BHK Fully Furnished Flat',
-      location: 'Savitry Towers, Sector 91, Mohali',
-      furnishedStatus: 'Fully Furnished',
-      area: '2300 sq.ft.'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=400',
-      price: '₹ 32,000 / Month',
-      title: '3 BHK Modern Flat',
-      location: 'Hero Homes, Sector 88, Mohali',
-      furnishedStatus: 'Fully Furnished',
-      area: '1850 sq.ft.'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400',
-      price: '₹ 28,500 / Month',
-      title: '2 BHK Luxury Apartment',
-      location: 'JLPL Falcon View, Sector 66, Mohali',
-      furnishedStatus: 'Fully Furnished',
-      area: '1550 sq.ft.'
-    }
-  ];
+  const [properties, setProperties] = useState([]);
+  const { fetchProperties, findPropertiesByLocation } = usePropertyDiscovery();
+  const { currentLocation } = useLocation();
+
+  useEffect(() => {
+    let isMounted = true;
+    const city = currentLocation?.city || 'Mohali';
+
+    const isLikelyId = (v) => typeof v === 'string' && /^[a-f0-9]{24}$/i.test(v);
+    const humanize = (v) => {
+      if (v === null || v === undefined) return '';
+      if (typeof v === 'string') return isLikelyId(v) ? '' : v.trim();
+      if (typeof v === 'number') return String(v);
+      if (typeof v === 'object') return v.name || v.label || v.title || v.value || '';
+      return String(v);
+    };
+
+    const loadProperties = async () => {
+      try {
+        // Use city-specific endpoint to fetch properties for this section
+        const response = await findPropertiesByLocation({
+          city,
+          limit: 4,
+          lookingFor: 'rent',
+        });
+
+        if (!isMounted) return;
+
+        const items = Array.isArray(response)
+          ? response
+          : Array.isArray(response?.data)
+            ? response.data
+            : Array.isArray(response?.properties)
+              ? response.properties
+              : Array.isArray(response?.results)
+                ? response.results
+                : [];
+
+        const mapped = items.map((property, index) => {
+          const bedroomsRaw = property?.residential?.bedrooms ?? property?.bhk ?? property?.bedrooms ?? property?.configuration?.bhk;
+          const bedrooms = humanize(bedroomsRaw);
+
+          let areaRaw = property?.area ?? property?.areaValue ?? property?.size ?? property?.builtUpArea ?? property?.carpetArea ?? property?.residential?.area ?? property?.unit?.area;
+          if (typeof areaRaw === 'object') areaRaw = areaRaw.value || areaRaw.size || areaRaw.area || '';
+          areaRaw = humanize(areaRaw);
+
+          const areaUnitRaw = property?.areaUnit?.name || property?.areaUnit?.label || property?.areaUnit || property?.unit?.areaUnit || '';
+          const areaUnit = humanize(areaUnitRaw) || 'sq.ft.';
+
+          const furnishedStatus = humanize(property?.furnishing) || humanize(property?.furnishedStatus) || humanize(property?.furnishingStatus) || 'Fully Furnished';
+          const priceValue = property?.priceRange ?? property?.priceText ?? property?.monthlyRent ?? property?.rent ?? property?.price ?? property?.amount;
+
+          const localityPart = humanize(property?.locality?.name) || humanize(property?.localityName) || humanize(property?.locality);
+          const cityPart = humanize(property?.city?.name) || humanize(property?.city) || humanize(city);
+          const addressPart = humanize(property?.address) || humanize(property?.location);
+
+          const locationStr = [addressPart, localityPart, cityPart].filter(Boolean).join(', ') || city;
+
+          return {
+            id: property?._id || property?.id || property?.propertyId || `furnished-${index}`,
+            image: property?.media?.[0]?.fileUrl || property?.images?.[0] || property?.coverImage || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
+            price: typeof priceValue === 'number' ? `${formatPrice(priceValue)} / Month` : (priceValue ? String(priceValue) : 'View details'),
+            title: humanize(property?.title) || humanize(property?.name) || humanize(property?.propertyName) || `${bedrooms || 'Property'} BHK Property`,
+            location: locationStr,
+            furnishedStatus,
+            area: `${bedrooms ? `${bedrooms} BHK • ` : ''}${areaRaw ? `${areaRaw} ${areaUnit}` : 'Area not available'}`,
+          };
+        });
+
+        setProperties(mapped);
+      } catch (_error) {
+        if (isMounted) setProperties([]);
+      }
+    };
+
+    loadProperties();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentLocation, fetchProperties, findPropertiesByLocation]);
+
+  const data = properties;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View className="mt-5 mx-4 h-[549px] rounded-[24px] bg-[#F5F5F5] pt-8 pb-8">
+      <View className="mb-10 flex-row items-start justify-between px-[25px]">
         <View>
-          <Text style={styles.title}>Fully Furnished Properties</Text>
-          <Text style={styles.subtitle}>Most sought-after rental properties</Text>
+          <Text className="font-inter-bold text-[17px] leading-8 text-[#101828]">Fully Furnished Properties</Text>
+          <Text className="mt-[-4px] font-inter-regular text-[13px] leading-6 text-[#6A7282]">Most sought-after rental properties</Text>
         </View>
-        <TouchableOpacity style={styles.seeAllButton}>
-          <Text style={styles.seeAllText}>See all</Text>
+        <TouchableOpacity className="pt-[5px]">
+          <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
         </TouchableOpacity>
       </View>
 
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        className="flex-1"
+        contentContainerClassName="px-[25px]"
       >
         {data.map(item => (
           <FurnishedPropertyCard key={item.id} {...item} />
@@ -57,48 +115,5 @@ const FurnishedPropertiesSection = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 24,
-    marginTop: 20,
-    marginHorizontal: 16,
-    paddingTop: 32,
-    paddingBottom: 32,
-    height: 549,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingHorizontal: 25,
-    marginBottom: 40,
-  },
-  title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 17,
-    lineHeight: 32,
-    color: '#101828',
-  },
-  subtitle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 13,
-    lineHeight: 24,
-    color: '#6A7282',
-    marginTop: -4,
-  },
-  seeAllButton: {
-    paddingTop: 5,
-  },
-  seeAllText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#008E96',
-  },
-  scrollContent: {
-    paddingHorizontal: 25,
-  }
-});
 
 export default FurnishedPropertiesSection;

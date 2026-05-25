@@ -76,10 +76,9 @@ const ProjectPropertyCard = ({ property }) => {
   );
 };
 
-const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, propertyType, title = "Properties in this Project" }) => {
+const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, propertyType, lookingFor = 'sell', title = "Properties in this Project" }) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -87,7 +86,7 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, pro
         setLoading(true);
         const endpoint = projectId ? `/projects/${projectId}/properties` : "/properties";
         const params = {
-          lookingFor: 'sell',
+          lookingFor,
           city: (cityName || cityId || 'mohali'),
           limit: 6
         };
@@ -110,14 +109,13 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, pro
         setProperties(data);
       } catch (err) {
         console.warn("Failed to fetch related properties:", err?.response?.data || err.message);
-        setError("Failed to load properties.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchProperties();
-  }, [projectId, localityId, cityId, propertyType]);
+  }, [projectId, localityId, cityId, propertyType, cityName, lookingFor]);
 
   if (loading) {
     return (

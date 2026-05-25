@@ -1,4 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
+import { formatPrice, formatPricePerSqft } from '../app/utils/formatPrice';
 
 const ExploreLocalityCard = ({
   title,
@@ -10,7 +11,23 @@ const ExploreLocalityCard = ({
   priceRange,
   totalProperties,
 }) => {
-  const displayPrice = averagePrice || priceSqft || avgPrice || 'N/A';
+  let displayPrice = 'N/A';
+
+  if (averagePrice !== undefined && averagePrice !== null && averagePrice !== '') {
+    displayPrice = formatPrice(averagePrice);
+  } else if (priceSqft !== undefined && priceSqft !== null && priceSqft !== '') {
+    displayPrice = formatPricePerSqft(priceSqft);
+  } else if (avgPrice !== undefined && avgPrice !== null && avgPrice !== '') {
+    // avgPrice can be a per-sqft value or a total value depending on source
+    const raw = String(avgPrice).toLowerCase();
+    if (raw.includes('sq') || raw.includes('/sq') || raw.includes('per')) {
+      displayPrice = typeof avgPrice === 'number' ? formatPricePerSqft(avgPrice) : avgPrice;
+    } else {
+      displayPrice = formatPrice(avgPrice);
+    }
+  } else if (avgLabel) {
+    displayPrice = avgLabel;
+  }
   const secondaryText = priceRange || growth || (typeof totalProperties === 'number'
     ? `${totalProperties} ${totalProperties === 1 ? 'Property' : 'Properties'}`
     : '');
@@ -52,12 +69,23 @@ const ExploreLocalityCard = ({
         style={{ paddingHorizontal: 14, paddingTop: 10, paddingBottom: 12, flex: 1, justifyContent: 'space-between' }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <Text className="font-inter-regular text-[#6A7282] text-[12px] leading-[18px]" style={{ flex: 0.6 }} numberOfLines={2} ellipsizeMode="tail">
-            {avgLabel || 'Avg. Price'}
+          <Text className="font-inter-regular text-[#6A7282] text-[12px] leading-[18px]" style={{ flex: 0.4 }} numberOfLines={1} ellipsizeMode="tail">
+             Avg. Price
           </Text>
-          <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: 14, lineHeight: 20, flex: 0.4, textAlign: 'right' }} numberOfLines={1} ellipsizeMode="tail">
-            {displayPrice}
-          </Text>
+          {String(displayPrice).includes('/') ? (
+            <View style={{ flex: 0.6, alignItems: 'flex-end' }}>
+              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: 14, lineHeight: 20 }} numberOfLines={1} ellipsizeMode="tail">
+                {displayPrice.split('/')[0]}
+              </Text>
+              <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 11, lineHeight: 14 }} numberOfLines={1} ellipsizeMode="tail">
+                /{displayPrice.split('/').slice(1).join('/')}
+              </Text>
+            </View>
+          ) : (
+            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: 14, lineHeight: 20, flex: 0.6, textAlign: 'right' }} numberOfLines={1} ellipsizeMode="tail">
+              {displayPrice}
+            </Text>
+          )}
         </View>
 
         {!!secondaryText && (
