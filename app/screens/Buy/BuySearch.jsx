@@ -74,7 +74,7 @@ const BuySearch = () => {
       <View className="flex-row items-center px-4 py-3 justify-between">
         <View className="flex-row items-center gap-3">
           <TouchableOpacity 
-            onPress={() => router.back()}
+            onPress={() => router.push('/screens/Buy/Buy')}
             className="w-10 h-10 items-center justify-center rounded-full border border-gray-100"
           >
             <ArrowLeft size={20} color="#101828" />

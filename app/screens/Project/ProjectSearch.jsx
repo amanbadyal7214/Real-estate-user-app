@@ -20,7 +20,7 @@ const ProjectSearch = () => {
       <View className="flex-row justify-between items-center px-4 py-3 h-[60px]">
         <View className="flex-row items-center gap-3">
           <TouchableOpacity 
-            onPress={() => router.back()} 
+            onPress={() => router.push('/screens/Project/Project')} 
             className="w-9 h-9 rounded-full justify-center items-center"
           >
             <ArrowLeft size={20} color="#101828" />

@@ -17,7 +17,7 @@ const PGSearch = () => {
       {/* Header */}
       <View className="px-4 pt-2">
         <TouchableOpacity 
-          onPress={() => router.back()} 
+          onPress={() => router.push('/screens/PG/PG')} 
           className="w-10 h-10 rounded-full justify-center items-start"
         >
           <ArrowLeft size={24} color="#101828" />
