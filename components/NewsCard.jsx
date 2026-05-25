@@ -26,9 +26,9 @@ const NewsCard = ({ image, title, meta, description }) => {
         />
       </View>
       
-      <View style={{ paddingHorizontal: 14, paddingTop: 12, paddingBottom: 12 }}>
+      <View style={{ paddingHorizontal: 14, paddingTop: 8, paddingBottom: 12 }}>
         <Text 
-          className="font-inter-bold text-[#101828] mb-2" 
+          className="font-inter-bold text-[#101828] mb-1" 
           style={{ fontSize: 14, lineHeight: 18 }}
           numberOfLines={2}
         >
@@ -36,7 +36,7 @@ const NewsCard = ({ image, title, meta, description }) => {
         </Text>
         
         <Text 
-          className="font-inter-regular text-[#6A7282] mb-2" 
+          className="font-inter-regular text-[#6A7282] mb-1" 
           style={{ fontSize: 11, lineHeight: 16 }}
         >
           {meta}

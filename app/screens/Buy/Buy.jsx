@@ -1200,7 +1200,7 @@ const Buy = () => {
         </View>
 
         {/* Calculators Section */}
-        <View className="px-4 mb-24 mt-4">
+        <View className="px-4  mt-4">
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}

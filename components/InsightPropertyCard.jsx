@@ -30,7 +30,7 @@ const InsightPropertyCard = ({
     <TouchableOpacity 
       activeOpacity={0.9}
       onPress={navigateToDetails}
-      className="bg-white mr-4 mb-2 rounded-[14px] border-[0.67px] border-[#E4E7EC] pt-[10px] px-[10px] pb-[0.67px] w-[180px] h-[330px]"
+      className="bg-white mr-4 mb-2 rounded-[14px] border-[0.67px] border-[#E4E7EC] pt-[10px] px-[10px] pb-[10px] w-[180px] h-[330px]"
       style={{
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 3 },
@@ -39,7 +39,7 @@ const InsightPropertyCard = ({
         elevation: 3,
       }}
     >
-      <View className="w-[158px] h-[128px] rounded-[12px] overflow-hidden relative">
+      <View className="w-full h-[128px] rounded-[12px] overflow-hidden relative">
         <Image 
           source={{ uri: image }} 
           className="w-full h-full"
@@ -66,34 +66,34 @@ const InsightPropertyCard = ({
         </TouchableOpacity>
       </View>
 
-      <View className="mt-3">
+      <View className="mt-1.5">
         <Text className="font-inter-regular text-[12px] leading-[18px] text-[#6A7282] mb-1">
           {possession}
         </Text>
-        <Text className="font-inter-semibold text-[16px] leading-[24px] text-[#101828] mb-1" numberOfLines={1}>
+        <Text className="font-inter-semibold text-[16px] leading-[24px] text-[#101828] mb-0.5" numberOfLines={1}>
           {title}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-1.5">
+        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-1">
           {location}
         </Text>
-        <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828] mb-1">
+        <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828] mb-0.5">
           {price}
         </Text>
         <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-0.5">
           {bhk}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-3">
+        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-2">
           {area}
         </Text>
 
-        <View className="flex-row items-center gap-2 w-[195.67px] h-10">
+        <View className="flex-row items-center gap-2 w-full h-10">
           <TouchableOpacity 
             className="w-10 h-10 bg-[#25D366]/10 rounded-full items-center justify-center"
           >
             <MessageCircle size={20} color="#25D366" fill="#25D366" />
           </TouchableOpacity>
           <TouchableOpacity 
-            className="w-[147.67px] h-10 bg-[#008E96]/10 rounded-[14px] items-center justify-center"
+            className="flex-1 h-10 bg-[#008E96]/10 rounded-[14px] items-center justify-center"
           >
             <Text className="font-inter-medium text-[14px] leading-[21px] text-[#008E96] text-center">
               View Phone

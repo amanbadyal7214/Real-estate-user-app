@@ -1,119 +1,97 @@
 import { ChevronRight } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-const CalculatorCard = ({ titlePrefix, description, vectorsConfig, onPress }) => {
+const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress }) => {
   return (
-    <View 
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.95}
       style={{
         width: 186,
-        height: 215,
+        height: 240,
         backgroundColor: '#FFFFFF',
-        borderWidth: 0.67,
+        borderWidth: 0.8,
         borderColor: '#D4A574',
-        borderRadius: 16,
+        borderRadius: 18,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
+        shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.08,
-        shadowRadius: 2,
-        elevation: 1,
-        marginRight: 10,
-        marginBottom: 6,
-        marginTop: 2
+        shadowRadius: 12,
+        elevation: 3,
+        marginRight: 12,
+        padding: 16,
+        paddingBottom: 20,
+        overflow: 'visible'
       }}
     >
-      <Text 
-        className="font-inter-bold"
-        style={{
-          position: 'absolute',
-          left: 13,
-          top: 13,
-          fontSize: 14,
-          lineHeight: 20,
-          color: '#8B6F47'
-        }}
-      >
-        {titlePrefix}
-      </Text>
-      
-      <Text 
-        className="font-inter-bold"
-        style={{
-          position: 'absolute',
-          left: 13,
-          top: 36,
-          fontSize: 14,
-          lineHeight: 20,
-          color: '#8B6F47'
-        }}
-      >
-        Calculator
-      </Text>
-      
-      <Text 
-        className="font-inter-regular"
-        style={{
-          position: 'absolute',
-          left: 16.67,
-          top: 76.67,
-          fontSize: 12,
-          lineHeight: 18,
-          color: '#6A7282',
-          width: 200,
-          height: 36
-        }}
-        numberOfLines={2}
-      >
+      <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: 16, color: '#8B6F47', lineHeight: 20 }}>{titlePrefix}</Text>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: 14, color: '#8B6F47', marginTop: 2 }}>Calculator</Text>
+      </View>
+
+      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6A7282', marginTop: 12, minHeight: 34 }}>
         {description}
       </Text>
 
-      {/* Illustration Container */}
-      <View 
-        style={{
-          position: 'absolute',
-          width: 200,
-          height: 80,
-          left: 16.67,
-          top: 124.67
-        }}
-      >
-        {/* Render dynamic vectors passed via config */}
-        {vectorsConfig.map((v, i) => (
-          <View 
-            key={i}
-            style={{
-              position: 'absolute',
-              left: `${v.left}%`,
-              right: `${v.right}%`,
-              top: `${v.top}%`,
-              bottom: `${v.bottom}%`,
-              backgroundColor: v.background || 'transparent',
-              borderWidth: v.borderWidth || 0,
-              borderColor: v.borderColor || 'transparent',
-              borderTopLeftRadius: v.roundedTop ? 100 : 0,
-              borderTopRightRadius: v.roundedTop ? 100 : 0
-            }}
-          />
-        ))}
-      </View>
+      <View style={{ height: 86, marginTop: 8, position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+        {/* Oval background */}
+        <View
+          style={{
+            position: 'absolute',
+            width: 150,
+            height: 64,
+            borderRadius: 40,
+            backgroundColor: '#FCEFE2',
+            bottom: 2,
+            alignSelf: 'center'
+          }}
+        />
+          {vectorsConfig.map((v, i) => {
+          const left = v.left !== undefined ? (typeof v.left === 'number' ? `${v.left}%` : v.left) : undefined;
+          const top = v.top !== undefined ? (typeof v.top === 'number' ? `${v.top}%` : v.top) : undefined;
+          const right = v.right !== undefined ? (typeof v.right === 'number' ? `${v.right}%` : v.right) : undefined;
+          const bottom = v.bottom !== undefined ? (typeof v.bottom === 'number' ? `${v.bottom}%` : v.bottom) : undefined;
 
-      {/* Button */}
-      <TouchableOpacity 
-        onPress={onPress}
-        style={{
-          position: 'absolute',
-          width: 36,
-          height: 36,
-          left: 180.67,
-          top: 216.67,
-          backgroundColor: '#D4A574',
-          borderRadius: 18,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <ChevronRight size={20} color="#FFFFFF" strokeWidth={1.5} />
-      </TouchableOpacity>
-    </View>
+          return (
+            <View
+              key={i}
+              style={{
+                position: 'absolute',
+                left,
+                top,
+                right,
+                bottom,
+                backgroundColor: v.background || 'transparent',
+                borderWidth: v.borderWidth || 0,
+                borderColor: v.borderColor || 'transparent',
+                borderRadius: v.rounded ? 8 : 0,
+                width: v.width || undefined,
+                height: v.height || undefined,
+              }}
+            />
+          );
+        })}
+      </View>
+      <View style={{ position: 'absolute', right: 12, bottom: 12 }}>
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: '#D4A574',
+            justifyContent: 'center',
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.1,
+            shadowRadius: 6,
+            elevation: 3
+          }}
+        >
+          <ChevronRight size={16} color="#FFFFFF" strokeWidth={1.5} />
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 

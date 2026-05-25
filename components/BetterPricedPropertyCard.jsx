@@ -36,7 +36,7 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
           resizeMode="cover"
         />
         
-        <View style={{ paddingHorizontal: 12, paddingTop: 12, paddingBottom: 12, gap: 6 }}>
+        <View style={{ paddingHorizontal: 12, paddingTop: 8, paddingBottom: 12, gap: 4 }}>
           <Text 
             className="font-inter-bold text-[#101828]" 
             style={{ fontSize: 16, lineHeight: 24 }}
