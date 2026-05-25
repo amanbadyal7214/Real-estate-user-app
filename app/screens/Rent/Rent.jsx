@@ -16,6 +16,115 @@ import UserHeader from '../../../components/UserHeader';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
+import { useProject } from '../../../hooks/useProject';
+import { useLocation } from '../../context/LocationContext';
+import { formatPrice } from '../../utils/formatPrice';
+
+const fallbackSuggestions = [
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
+    developerName: 'Nirwana Group',
+    developerInitial: 'N',
+    price: '₹ 45.03 L - 1.11 Cr',
+    title: 'Nirwana The Moksha',
+    location: 'Khanpur, Mohali',
+    config: '1, 2, 3 BHK Flats',
+  },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
+    developerName: 'Vatika Group',
+    developerInitial: 'V',
+    price: '₹ 51.9 L - 89.3 L',
+    title: 'Vatika Seven Lamps',
+    location: 'Sector 82, Mohali',
+    config: '2 BHK Flats',
+  },
+  {
+    id: 3,
+    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600',
+    developerName: 'DLF Limited',
+    developerInitial: 'D',
+    price: '₹ 62.5 L - 1.25 Cr',
+    title: 'DLF Garden City',
+    location: 'Sector 91, Mohali',
+    config: '2, 3, 4 BHK Flats',
+  },
+  {
+    id: 4,
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
+    developerName: 'Emaar India',
+    developerInitial: 'E',
+    price: '₹ 75.2 L - 1.45 Cr',
+    title: 'Emaar Palm Heights',
+    location: 'Sector 77, Mohali',
+    config: '2, 3 BHK Flats',
+  },
+];
+
+const SUGGESTION_CARD_INTERVAL = 272;
+
+const normalizeSuggestionText = (value, fallback = '') => {
+  if (value === null || value === undefined) return fallback;
+  const text = String(value).trim();
+  return text || fallback;
+};
+
+const normalizeProjectSuggestions = (responseData, defaultCity = 'Mohali') => {
+  const projects = Array.isArray(responseData)
+    ? responseData
+    : Array.isArray(responseData?.data)
+      ? responseData.data
+      : Array.isArray(responseData?.projects)
+        ? responseData.projects
+        : Array.isArray(responseData?.results)
+          ? responseData.results
+          : [];
+
+  return projects.map((item) => {
+    const developerName = normalizeSuggestionText(
+      item?.builder?.name || item?.developerName || item?.developer?.name || item?.builderName || item?.promoterName,
+      'Developer'
+    );
+    const locationParts = [
+      item?.addressLine1,
+      item?.state?.name,
+    ]
+      .map((part) => normalizeSuggestionText(part, ''))
+      .filter(Boolean);
+    const location = locationParts.join(', ') || normalizeSuggestionText(item?.location || item?.address, defaultCity);
+    const avgPriceRate = item?.avgPriceRate ?? item?.averagePriceRate;
+    const avgPriceUnit = item?.avgPriceUnit?.label || item?.avgPriceUnit?.name || item?.priceUnit?.label || item?.priceUnit?.name;
+    const minPrice = item?.minPrice ?? item?.priceFrom ?? item?.startingPrice;
+    const maxPrice = item?.maxPrice ?? item?.priceTo ?? item?.endingPrice;
+    const price = item?.priceRange
+      || item?.priceText
+      || (avgPriceRate !== undefined
+        ? `${formatPrice(avgPriceRate)}${avgPriceUnit ? ` / ${avgPriceUnit}` : ''}`
+        : '')
+      || (minPrice !== undefined && maxPrice !== undefined
+        ? `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`
+        : formatPrice(item?.price ?? item?.amount ?? item?.budget));
+
+    return {
+      id: item?.id || item?._id || item?.projectId,
+      image:
+        item?.media?.[0]?.fileUrl
+        || item?.image
+        || item?.coverImage
+        || item?.thumbnail
+        || item?.images?.[0]
+        || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
+      developerName,
+      developerInitial: developerName.charAt(0).toUpperCase() || 'D',
+      price: normalizeSuggestionText(price, 'View details'),
+      title: normalizeSuggestionText(item?.title || item?.name || item?.projectName, 'Project'),
+      location,
+      config: normalizeSuggestionText(item?.config || item?.configuration || item?.unitConfig || item?.bhk, ''),
+    };
+  });
+};
 
 const Rent = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
@@ -45,48 +154,29 @@ const Rent = () => {
         { title: 'Independent House, Rent, Zirakpur', subtitle: '3 BHK' },
     ];
 
-    const suggestions = [
-        {
-            id: 1,
-            image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Nirwana Group',
-            developerInitial: 'N',
-            price: '₹ 45.03 L - 1.11 Cr',
-            title: 'Nirwana The Moksha',
-            location: 'Khanpur, Mohali',
-            config: '1, 2, 3 BHK Flats'
-        },
-        {
-            id: 2,
-            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Vatika Group',
-            developerInitial: 'V',
-            price: '₹ 51.9 L - 89.3 L',
-            title: 'Vatika Seven Lamps',
-            location: 'Sector 82, Mohali',
-            config: '2 BHK Flats'
-        },
-        {
-            id: 3,
-            image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600',
-            developerName: 'DLF Limited',
-            developerInitial: 'D',
-            price: '₹ 62.5 L - 1.25 Cr',
-            title: 'DLF Garden City',
-            location: 'Sector 91, Mohali',
-            config: '2, 3, 4 BHK Flats'
-        },
-        {
-            id: 4,
-            image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-            developerName: 'Emaar India',
-            developerInitial: 'E',
-            price: '₹ 75.2 L - 1.45 Cr',
-            title: 'Emaar Palm Heights',
-            location: 'Sector 77, Mohali',
-            config: '2, 3 BHK Flats'
+    const [suggestions, setSuggestions] = useState(fallbackSuggestions);
+    const { fetchProjects } = useProject();
+    const { currentLocation } = useLocation();
+
+    useEffect(() => {
+      let isMounted = true;
+      const city = currentLocation?.city || 'Mohali';
+
+      const loadProjects = async () => {
+        try {
+          const res = await fetchProjects({ city, limit: 5 });
+          if (!isMounted) return;
+          const normalized = normalizeProjectSuggestions(res, city);
+          setSuggestions(normalized.length > 0 ? normalized : fallbackSuggestions);
+        } catch (_err) {
+          if (isMounted) setSuggestions(fallbackSuggestions);
         }
-    ];
+      };
+
+      loadProjects();
+
+      return () => { isMounted = false; };
+    }, [fetchProjects, currentLocation]);
     
 
   const recommendedProperties = [
@@ -164,9 +254,9 @@ const emiVectors = [
 
     useEffect(() => {
         const interval = setInterval(() => {
-            let nextIndex = (activeIndex + 1) % suggestions.length;
+          let nextIndex = (activeIndex + 1) % suggestions.length;
             setActiveIndex(nextIndex);
-            scrollRef.current?.scrollTo({ x: nextIndex * 296, animated: true });
+          scrollRef.current?.scrollTo({ x: nextIndex * SUGGESTION_CARD_INTERVAL, animated: true });
         }, 3000);
 
         return () => clearInterval(interval);
@@ -174,7 +264,7 @@ const emiVectors = [
 
     const handleScroll = (event) => {
         const scrollPosition = event.nativeEvent.contentOffset.x;
-        const index = Math.round(scrollPosition / 296);
+        const index = Math.round(scrollPosition / SUGGESTION_CARD_INTERVAL);
         if (index !== activeIndex) {
             setActiveIndex(index);
         }
@@ -215,7 +305,7 @@ const emiVectors = [
                             </TouchableOpacity>
                         </View>
                         <Text className="font-inter-regular text-[14px] text-[#6A7282] mt-1">
-                            Based on your last search in Khanpur
+                          Based on your last search in {currentLocation?.city || 'Khanpur'}
                         </Text>
                     </View>
 
@@ -234,7 +324,7 @@ const emiVectors = [
                         onMomentumScrollEnd={handleScroll}
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
-                        snapToInterval={296}
+                        snapToInterval={SUGGESTION_CARD_INTERVAL}
                         decelerationRate="fast"
                     >
                         {suggestions.map((item) => (

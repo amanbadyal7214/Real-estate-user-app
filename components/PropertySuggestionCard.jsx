@@ -23,7 +23,7 @@ const PropertySuggestionCard = ({
       >
         <View style={styles.imageBackground}>
           <Image
-            source={image}
+            source={typeof image === 'string' ? { uri: image } : image}
             style={[StyleSheet.absoluteFill, { borderRadius: 20 }]}
             contentFit="cover"
             transition={800}
@@ -78,11 +78,11 @@ const PropertySuggestionCard = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: 280,
-    height: 420,
+    width: 260,
+    height: 390,
     borderRadius: 20,
     overflow: 'hidden',
-    marginRight: 16,
+    marginRight: 12,
   },
   imageBackground: {
     flex: 1,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 16,
     top: 16,
-    width: 164.1,
+    width: 150,
     height: 40,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 20,
@@ -139,8 +139,8 @@ const styles = StyleSheet.create({
   priceContainer: {
     position: 'absolute',
     left: 20,
-    top: 292.5,
-    width: 240,
+    top: 265,
+    width: 220,
   },
   priceLabel: {
     color: '#FFFFFF',
@@ -154,8 +154,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     position: 'absolute',
     left: 20,
-    top: 328.5,
-    width: 240,
+    top: 300,
+    width: 220,
   },
   titleLabel: {
     color: '#FFFFFF',
@@ -169,8 +169,8 @@ const styles = StyleSheet.create({
   detailsContainer: {
     position: 'absolute',
     left: 20,
-    top: 358,
-    width: 240,
+    top: 328,
+    width: 220,
   },
   detailText: {
     color: 'rgba(255, 255, 255, 0.9)',

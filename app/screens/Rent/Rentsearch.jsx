@@ -55,7 +55,8 @@ const RentSearch = () => {
       locality: finalLocality,
       display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
     });
-    router.back();
+    // Use replace to avoid GO_BACK errors when there's no history
+    router.replace('/screens/Rent/Rent');
   };
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -63,7 +64,7 @@ const RentSearch = () => {
       <View className="flex-row items-center px-4 py-3 justify-between">
         <View className="flex-row items-center gap-3">
           <TouchableOpacity 
-            onPress={() => router.push('/screens/Rent/Rent')}
+            onPress={() => router.replace('/screens/Rent/Rent')}
             className="w-10 h-10 items-center justify-center rounded-full border border-gray-100"
           >
             <ArrowLeft size={20} color="#101828" />

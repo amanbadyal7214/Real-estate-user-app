@@ -53,7 +53,8 @@ const BuySearch = () => {
       locality: localityName,
       display: `${localityName}, ${selectedCity}`
     });
-    router.back();
+    // Navigate to Buy listing screen after selecting locality
+    router.replace('/screens/Buy/Buy');
   };
 
   const handleSearchSubmit = () => {
@@ -65,7 +66,8 @@ const BuySearch = () => {
       locality: finalLocality,
       display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
     });
-    router.back();
+    // Navigate to Buy listing screen after submitting search
+    router.replace('/screens/Buy/Buy');
   };
 
   return (
