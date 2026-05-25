@@ -10,10 +10,10 @@ const Spotlight = ({ data }) => {
       {/* Header Section */}
       <View>
         <Text className="font-inter-bold text-[17px] text-[#101828]">
-          Spotlight
+          Featured Builder
         </Text>
         <Text className="font-inter-regular text-[13px] text-[#6A7282]">
-          Projects from the best developers in Mohali
+          Highly rated builders in your area
         </Text>
       </View>
 

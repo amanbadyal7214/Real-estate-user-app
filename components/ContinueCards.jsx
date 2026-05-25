@@ -11,7 +11,7 @@ const ContinueCards = ({ data = [] }) => {
       <View className="flex-row items-center gap-2 mb-4">
         <History size={20} color="#667085" />
         <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#4A5565]">
-          Continue where you left
+          Pick up where you left off
         </Text>
       </View>
 

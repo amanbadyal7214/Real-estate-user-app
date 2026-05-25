@@ -67,7 +67,7 @@ const SearchBox = ({
         className="flex-row items-center mb-4"
       >
         <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">
-          Searching in <Text className="font-inter-bold">{currentLocation?.display || currentLocation?.city || location}</Text>
+          Currently looking in <Text className="font-inter-bold">{currentLocation?.display || currentLocation?.city || location}</Text>
         </Text>
         <ChevronDown size={20} color="#101828" style={{ marginLeft: 4 }} />
       </TouchableOpacity>

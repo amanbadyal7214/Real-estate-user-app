@@ -353,7 +353,7 @@ const Buy = () => {
   }, [selectedTab]);
 
   const recentSearches = [
-    { title: 'Commercial, Buy, Mohali,', subtitle: 'Any price, Any area' },
+    { title: 'Commercial, Buy, Mohali,', subtitle: 'All budgets · All areas' },
     { title: 'Buy, Sector 62', subtitle: 'Any price' },
     { title: 'Apartment, Rent, Zirakpur', subtitle: 'Min ₹15K, 2+ BHK' },
     { title: 'Plot, Buy, Kharar', subtitle: '100-150 sq.yd' },
@@ -448,7 +448,7 @@ const Buy = () => {
         {/* Matches Section */}
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
-            <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
+            <Text className="font-inter-bold text-[18px] text-[#101828]">Top picks for you</Text>
             <TouchableOpacity
               onPress={() => router.push({
                 pathname: '/screens/PrefectlyMatchedHome',
@@ -462,7 +462,7 @@ const Buy = () => {
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
-          <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[14px] text-[#667085] mb-4">Projects from the best developers</Text>
+          <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[14px] text-[#667085] mb-4">Homes built by people you can trust</Text>
 
           {discoveryLoading ? (
             <ActivityIndicator color="#008E96" />
@@ -512,21 +512,21 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="bulb-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Suggestions</Text>
+                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Top Picks</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="pricetag-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Deals</Text>
+                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Best Offers</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="newspaper-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
+                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Market Updates</Text>
               </TouchableOpacity>
             </View>
 
@@ -535,14 +535,14 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="calculator-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">EMI Calculator</Text>
+                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Payment Plan</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="stats-chart-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Affordability Calculator</Text>
+                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">What's my budget?</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: s(100) }}>
@@ -574,7 +574,7 @@ const Buy = () => {
                 className="font-inter-bold text-[14px] text-[#101828] leading-[21px]"
                 style={{ width: s(193), height: s(63) }}
               >
-                Are you a property owner looking to rent/sell?
+                Want to sell or rent out your place?
               </Text>
 
               <View style={{ gap: 6 }}>
@@ -582,14 +582,14 @@ const Buy = () => {
                   <View className="w-4 h-4 bg-[#008E96] rounded-full items-center justify-center">
                     <MaterialCommunityIcons name="check" size={10} color="white" />
                   </View>
-                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Free Brokerage</Text>
+                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Pay zero fees</Text>
                 </View>
 
                 <View className="flex-row items-center" style={{ gap: 8 }}>
                   <View className="w-4 h-4 bg-[#008E96] rounded-full items-center justify-center">
                     <MaterialCommunityIcons name="check" size={10} color="white" />
                   </View>
-                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Genuine, verified leads</Text>
+                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Talk to real, verified buyers</Text>
                 </View>
               </View>
             </View>
@@ -638,13 +638,13 @@ const Buy = () => {
                 className="font-inter-bold text-[#101828]"
                 style={{ fontSize: 17, lineHeight: 21 }}
               >
-                High Demand Properties
+                Most popular right now
               </Text>
               <Text
                 className="font-inter-regular text-[#6A7282]"
                 style={{ fontSize: 13, lineHeight: 20 }}
               >
-                Hurry! Only a few units left
+                Limited homes available — don't miss out
               </Text>
             </View>
             <TouchableOpacity
@@ -692,13 +692,13 @@ const Buy = () => {
                 className="font-inter-bold text-[#101828]"
                 style={{ fontSize: 17, lineHeight: 21 }}
               >
-                Projects in Focus
+                Expert's choice
               </Text>
               <Text
                 className="font-inter-regular text-[#6A7282]"
                 style={{ fontSize: 13, lineHeight: 20 }}
               >
-                Curated projects just for you
+                The best places to live for you and your family
               </Text>
             </View>
             <TouchableOpacity
@@ -746,7 +746,7 @@ const Buy = () => {
         {/* Best Rated Localities Section */}
         <View className="px-4 mb-4 " >
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in {currentLocation?.city || 'Mohali'}</Text>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Top-rated neighborhoods</Text>
             <TouchableOpacity onPress={() => router.push('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
@@ -786,8 +786,8 @@ const Buy = () => {
         <View className="px-4 ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-bold text-[17px] text-[#101828]">Top rated developers</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282]">Projects from the best developers</Text>
+              <Text className="font-inter-bold text-[17px] text-[#101828]">Trusted Home Builders</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282]">Builders with the best track record</Text>
             </View>
             <TouchableOpacity onPress={() => router.push('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
@@ -853,8 +853,8 @@ const Buy = () => {
         <View className="px-4 py-6">
           <View className="flex-row justify-between items-center mb-4">
             <View>
-              <Text className="font-inter-bold text-[18px] text-[#101828]">Recommended Properties</Text>
-              <Text className="font-inter-regular text-[14px] text-[#667085]">Properties matching your requirements</Text>
+              <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
+              <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
             <TouchableOpacity onPress={() => router.push('/screens/RecommendedProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>

@@ -339,7 +339,7 @@ const LastSearched = () => {
                 {/* Searching In */}
                 <View className="flex-row justify-between items-center mt-[12px]">
                   <Text className="text-[#6A7282] font-inter-regular text-[14px]">
-                    You are searching in <Text className="font-inter-semibold text-[#101828]">Mohali</Text>
+                    You are currently looking in <Text className="font-inter-semibold text-[#101828]">Mohali</Text>
                   </Text>
                   <TouchableOpacity className="flex-row items-center">
                     <Text className="text-[#008E96] font-inter-medium text-[16px]">Change Location</Text>

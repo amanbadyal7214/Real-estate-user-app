@@ -40,7 +40,7 @@ const UserHeader = ({ userName = "Guest!" }) => {
         onPress={handlePostProperty}
         className="flex-row items-center bg-[#F2F4F7] px-4 py-2 rounded-full h-10"
       >
-        <Text className="font-inter-medium text-[13px] text-[#101828] mr-2">Post Property</Text>
+        <Text className="font-inter-medium text-[13px] text-[#101828] mr-2">List your place</Text>
         <View className="bg-primary px-1.5 py-0.5 rounded-md">
           <Text className="font-inter-bold text-[9px] text-white">FREE</Text>
         </View>
