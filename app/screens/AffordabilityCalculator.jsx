@@ -14,6 +14,101 @@ const AffordabilityCalculator = () => {
   const [interestRate, setInterestRate] = useState(6.75);
   const [otherEMIs, setOtherEMIs] = useState(0);
   const [showInfo, setShowInfo] = useState(true);
+  const [showAffordabilityResult, setShowAffordabilityResult] = useState(false);
+  const [affordabilityResult, setAffordabilityResult] = useState(null);
+
+  const formatINR = (value) => `₹${Math.round(value || 0).toLocaleString('en-IN')}`;
+
+  const getFoir = (monthlyIncome) => {
+    if (monthlyIncome < 50000) return 0.5;
+    if (monthlyIncome < 100000) return 0.55;
+    return 0.6;
+  };
+
+  const getLtvr = (loanAmount, dp) => {
+    if (loanAmount > 7500000 || dp > 1500000) return 0.75;
+    if (loanAmount > 3000000 || dp > 300000) return 0.8;
+    return 0.9;
+  };
+
+  const calculateAffordability = () => {
+    const monthlyIncome = Number(grossIncome) || 0;
+    const dp = Number(downPayment) || 0;
+    const existingEmi = Number(otherEMIs) || 0;
+    const years = Number(tenure) || 0;
+    const annualRate = Number(interestRate) || 0;
+    const months = years * 12;
+
+    if (monthlyIncome <= 0 || months <= 0) {
+      setAffordabilityResult({
+        foir: 0,
+        eligibleLoanAmount: 0,
+        adjustedLoanAmount: 0,
+        affordablePropertyCost: dp,
+        minimumDownPaymentRequired: 0,
+      });
+      setShowAffordabilityResult(true);
+      return;
+    }
+
+    const foir = getFoir(monthlyIncome);
+    const availableEmiCapacity = Math.max((foir * monthlyIncome) - existingEmi, 0);
+    const monthlyRate = annualRate / (12 * 100);
+
+    let emiPerLakhFactor = 0;
+    if (monthlyRate === 0) {
+      emiPerLakhFactor = 1 / months;
+    } else {
+      const growth = (1 + monthlyRate) ** months;
+      emiPerLakhFactor = (monthlyRate * growth) / (growth - 1);
+    }
+
+    const eligibleLoanAmount = emiPerLakhFactor > 0 ? (availableEmiCapacity / emiPerLakhFactor) : 0;
+    const initialLtvr = getLtvr(eligibleLoanAmount, dp);
+    const minimumDownPaymentRequired = initialLtvr > 0
+      ? (eligibleLoanAmount * (1 - initialLtvr)) / initialLtvr
+      : 0;
+
+    const adjustedLoanAmount = dp < minimumDownPaymentRequired && (1 - initialLtvr) > 0
+      ? (dp * initialLtvr) / (1 - initialLtvr)
+      : eligibleLoanAmount;
+
+    const affordablePropertyCost = Math.max(adjustedLoanAmount, 0) + dp;
+
+    setAffordabilityResult({
+      foir,
+      eligibleLoanAmount: Math.max(eligibleLoanAmount, 0),
+      adjustedLoanAmount: Math.max(adjustedLoanAmount, 0),
+      affordablePropertyCost: Math.max(affordablePropertyCost, 0),
+      minimumDownPaymentRequired: Math.max(minimumDownPaymentRequired, 0),
+    });
+    setShowAffordabilityResult(true);
+  };
+
+  const handleDownPaymentChange = (value) => {
+    setDownPayment(value);
+    setShowAffordabilityResult(false);
+  };
+
+  const handleGrossIncomeChange = (value) => {
+    setGrossIncome(value);
+    setShowAffordabilityResult(false);
+  };
+
+  const handleTenureChange = (value) => {
+    setTenure(value);
+    setShowAffordabilityResult(false);
+  };
+
+  const handleInterestRateChange = (value) => {
+    setInterestRate(value);
+    setShowAffordabilityResult(false);
+  };
+
+  const handleOtherEmisChange = (value) => {
+    setOtherEMIs(value);
+    setShowAffordabilityResult(false);
+  };
 
   return (
     <View className="flex-1 bg-[#F9FAFB]">
@@ -25,7 +120,7 @@ const AffordabilityCalculator = () => {
               <Ionicons name="arrow-back" size={24} color="#101828" />
             </TouchableOpacity>
             
-            <TouchableOpacity className="bg-[#008E96] flex-row items-center px-[16px] py-[8px] rounded-[14px]">
+            <TouchableOpacity onPress={() => router.push('/ComingSoon')} className="bg-[#008E96] flex-row items-center px-[16px] py-[8px] rounded-[14px]">
               <Ionicons name="home-outline" size={16} color="#FFFFFF" />
               <Text className="text-white font-inter-medium text-[14px] ml-[8px]">Home Loans</Text>
             </TouchableOpacity>
@@ -47,7 +142,7 @@ const AffordabilityCalculator = () => {
                       value={downPayment.toString()}
                       onChangeText={(text) => {
                         const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                        setDownPayment(val);
+                        handleDownPaymentChange(val);
                       }}
                       keyboardType="numeric"
                     />
@@ -59,7 +154,7 @@ const AffordabilityCalculator = () => {
                   maximumValue={10000000}
                   step={10000}
                   value={downPayment}
-                  onValueChange={(value) => setDownPayment(value)}
+                  onValueChange={(value) => handleDownPaymentChange(value)}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -81,7 +176,7 @@ const AffordabilityCalculator = () => {
                       value={grossIncome.toString()}
                       onChangeText={(text) => {
                         const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                        setGrossIncome(val);
+                        handleGrossIncomeChange(val);
                       }}
                       keyboardType="numeric"
                     />
@@ -93,7 +188,7 @@ const AffordabilityCalculator = () => {
                   maximumValue={5000000}
                   step={5000}
                   value={grossIncome}
-                  onValueChange={(value) => setGrossIncome(value)}
+                  onValueChange={(value) => handleGrossIncomeChange(value)}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -114,7 +209,7 @@ const AffordabilityCalculator = () => {
                       value={tenure.toString()}
                       onChangeText={(text) => {
                         const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                        setTenure(val);
+                        handleTenureChange(val);
                       }}
                       keyboardType="numeric"
                     />
@@ -126,7 +221,7 @@ const AffordabilityCalculator = () => {
                   maximumValue={30}
                   step={1}
                   value={tenure}
-                  onValueChange={(value) => setTenure(value)}
+                  onValueChange={(value) => handleTenureChange(value)}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -147,7 +242,7 @@ const AffordabilityCalculator = () => {
                       value={interestRate.toString()}
                       onChangeText={(text) => {
                         const val = parseFloat(text) || 0;
-                        setInterestRate(val);
+                        handleInterestRateChange(val);
                       }}
                       keyboardType="numeric"
                     />
@@ -160,7 +255,7 @@ const AffordabilityCalculator = () => {
                   maximumValue={15}
                   step={0.05}
                   value={interestRate}
-                  onValueChange={(value) => setInterestRate(parseFloat(value.toFixed(2)))}
+                  onValueChange={(value) => handleInterestRateChange(parseFloat(value.toFixed(2)))}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -182,7 +277,7 @@ const AffordabilityCalculator = () => {
                       value={otherEMIs.toString()}
                       onChangeText={(text) => {
                         const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                        setOtherEMIs(val);
+                        handleOtherEmisChange(val);
                       }}
                       keyboardType="numeric"
                     />
@@ -194,7 +289,7 @@ const AffordabilityCalculator = () => {
                   maximumValue={5000000}
                   step={5000}
                   value={otherEMIs}
-                  onValueChange={(value) => setOtherEMIs(value)}
+                  onValueChange={(value) => handleOtherEmisChange(value)}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -206,9 +301,37 @@ const AffordabilityCalculator = () => {
               </View>
 
               {/* Calculate Button */}
-              <TouchableOpacity className="bg-[#008E96] h-[52px] rounded-[14px] items-center justify-center">
+              <TouchableOpacity
+                onPress={calculateAffordability}
+                className="bg-[#008E96] h-[52px] rounded-[14px] items-center justify-center"
+              >
                 <Text className="text-white font-inter-medium text-[16px]">Calculate Affordability</Text>
               </TouchableOpacity>
+
+              {showAffordabilityResult && affordabilityResult && (
+                <View className="mt-[16px] rounded-[12px] border border-[#E5E7EB] bg-[#F9FAFB] p-[12px]">
+                  <View className="flex-row justify-between mb-[8px]">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Affordable Property Cost</Text>
+                    <Text className="text-[#008E96] font-inter-semibold text-[14px]">{formatINR(affordabilityResult.affordablePropertyCost)}</Text>
+                  </View>
+                  <View className="flex-row justify-between mb-[8px]">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Loan Amount</Text>
+                    <Text className="text-[#101828] font-inter-semibold text-[14px]">{formatINR(affordabilityResult.adjustedLoanAmount)}</Text>
+                  </View>
+                  <View className="flex-row justify-between mb-[8px]">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Eligible Loan Amount</Text>
+                    <Text className="text-[#101828] font-inter-semibold text-[14px]">{formatINR(affordabilityResult.eligibleLoanAmount)}</Text>
+                  </View>
+                  <View className="flex-row justify-between mb-[8px]">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Minimum Down Payment</Text>
+                    <Text className="text-[#101828] font-inter-semibold text-[14px]">{formatINR(affordabilityResult.minimumDownPaymentRequired)}</Text>
+                  </View>
+                  <View className="flex-row justify-between">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">FOIR Used</Text>
+                    <Text className="text-[#101828] font-inter-semibold text-[14px]">{`${Math.round((affordabilityResult.foir || 0) * 100)}%`}</Text>
+                  </View>
+                </View>
+              )}
             </View>
 
             {/* Home Loans Promo Card */}

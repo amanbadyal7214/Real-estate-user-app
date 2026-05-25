@@ -19,10 +19,17 @@ const PropertyCard = ({ property }) => {
   const router = useRouter();
   if (!property) return null;
 
+  const projectId =
+    property.projectId ||
+    property.project?._id ||
+    property.project?.id ||
+    property._id ||
+    property.id;
+
   const navigateToDetails = () => {
     router.push({
-      pathname: '/screens/PropertyDetails',
-      params: { propertyId: property._id || property.id }
+      pathname: '/screens/ProjectDetails',
+      params: { projectId }
     });
   };
 

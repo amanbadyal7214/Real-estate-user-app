@@ -12,6 +12,59 @@ const EMICalculator = () => {
   const [tenure, setTenure] = useState(30);
   const [interestRate, setInterestRate] = useState(7.25);
   const [showInfo, setShowInfo] = useState(true);
+  const [emiResult, setEmiResult] = useState(null);
+  const [showEmiResult, setShowEmiResult] = useState(false);
+
+  const calculateEmi = () => {
+    const principal = Number(loanAmount) || 0;
+    const monthlyRate = (Number(interestRate) || 0) / (12 * 100);
+    const totalMonths = (Number(tenure) || 0) * 12;
+
+    if (principal <= 0 || totalMonths <= 0) {
+      setEmiResult({
+        monthlyEmi: 0,
+        totalAmount: 0,
+        totalInterest: 0,
+      });
+      setShowEmiResult(true);
+      return;
+    }
+
+    let monthlyEmi = 0;
+    if (monthlyRate === 0) {
+      monthlyEmi = principal / totalMonths;
+    } else {
+      const growth = (1 + monthlyRate) ** totalMonths;
+      monthlyEmi = (principal * monthlyRate * growth) / (growth - 1);
+    }
+
+    const totalAmount = monthlyEmi * totalMonths;
+    const totalInterest = totalAmount - principal;
+
+    setEmiResult({
+      monthlyEmi,
+      totalAmount,
+      totalInterest,
+    });
+    setShowEmiResult(true);
+  };
+
+  const formatINR = (value) => `₹${Math.round(value || 0).toLocaleString('en-IN')}`;
+
+  const handleLoanAmountChange = (value) => {
+    setLoanAmount(value);
+    setShowEmiResult(false);
+  };
+
+  const handleTenureChange = (value) => {
+    setTenure(value);
+    setShowEmiResult(false);
+  };
+
+  const handleInterestRateChange = (value) => {
+    setInterestRate(value);
+    setShowEmiResult(false);
+  };
 
   return (
     <View className="flex-1 bg-[#F9FAFB]">
@@ -23,7 +76,7 @@ const EMICalculator = () => {
             <Ionicons name="arrow-back" size={24} color="#101828" />
           </TouchableOpacity>
           
-          <TouchableOpacity className="bg-[#008E96] flex-row items-center px-[16px] py-[8px] rounded-[14px]">
+          <TouchableOpacity onPress={() => router.push('/screens/ComingSoon')} className="bg-[#008E96] flex-row items-center px-[16px] py-[8px] rounded-[14px]">
             <Ionicons name="home-outline" size={16} color="#FFFFFF" />
             <Text className="text-white font-inter-medium text-[14px] ml-[8px]">Home Loans</Text>
           </TouchableOpacity>
@@ -45,7 +98,7 @@ const EMICalculator = () => {
                     value={loanAmount.toString()}
                     onChangeText={(text) => {
                       const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                      setLoanAmount(val);
+                      handleLoanAmountChange(val);
                     }}
                     keyboardType="numeric"
                   />
@@ -58,7 +111,7 @@ const EMICalculator = () => {
                 maximumValue={50000000}
                 step={100000}
                 value={loanAmount}
-                onValueChange={(value) => setLoanAmount(value)}
+                onValueChange={(value) => handleLoanAmountChange(value)}
                 minimumTrackTintColor="#008E96"
                 maximumTrackTintColor="#E5E7EB"
                 thumbTintColor="#008E96"
@@ -85,7 +138,7 @@ const EMICalculator = () => {
                     value={tenure.toString()}
                     onChangeText={(text) => {
                       const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                      setTenure(val);
+                      handleTenureChange(val);
                     }}
                     keyboardType="numeric"
                   />
@@ -97,7 +150,7 @@ const EMICalculator = () => {
                 maximumValue={30}
                 step={1}
                 value={tenure}
-                onValueChange={(value) => setTenure(value)}
+                onValueChange={(value) => handleTenureChange(value)}
                 minimumTrackTintColor="#008E96"
                 maximumTrackTintColor="#E5E7EB"
                 thumbTintColor="#008E96"
@@ -118,7 +171,7 @@ const EMICalculator = () => {
                     value={interestRate.toString()}
                     onChangeText={(text) => {
                       const val = parseFloat(text) || 0;
-                      setInterestRate(val);
+                      handleInterestRateChange(val);
                     }}
                     keyboardType="numeric"
                   />
@@ -131,7 +184,7 @@ const EMICalculator = () => {
                 maximumValue={15}
                 step={0.05}
                 value={interestRate}
-                onValueChange={(value) => setInterestRate(parseFloat(value.toFixed(2)))}
+                onValueChange={(value) => handleInterestRateChange(parseFloat(value.toFixed(2)))}
                 minimumTrackTintColor="#008E96"
                 maximumTrackTintColor="#E5E7EB"
                 thumbTintColor="#008E96"
@@ -151,9 +204,29 @@ const EMICalculator = () => {
             </TouchableOpacity>
 
             {/* Calculate Button */}
-            <TouchableOpacity className="bg-[#008E96] h-[52px] rounded-[14px] items-center justify-center">
+            <TouchableOpacity
+              onPress={calculateEmi}
+              className="bg-[#008E96] h-[52px] rounded-[14px] items-center justify-center"
+            >
               <Text className="text-white font-inter-medium text-[16px]">Calculate EMI</Text>
             </TouchableOpacity>
+
+            {showEmiResult && emiResult && (
+              <View className="mt-[16px] rounded-[12px] border border-[#E5E7EB] bg-[#F9FAFB] p-[12px]">
+                <View className="flex-row justify-between mb-[8px]">
+                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Monthly EMI</Text>
+                  <Text className="text-[#101828] font-inter-semibold text-[14px]">{formatINR(emiResult.monthlyEmi)}</Text>
+                </View>
+                <View className="flex-row justify-between mb-[8px]">
+                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Total Interest</Text>
+                  <Text className="text-[#101828] font-inter-semibold text-[14px]">{formatINR(emiResult.totalInterest)}</Text>
+                </View>
+                <View className="flex-row justify-between">
+                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Total Amount</Text>
+                  <Text className="text-[#008E96] font-inter-semibold text-[14px]">{formatINR(emiResult.totalAmount)}</Text>
+                </View>
+              </View>
+            )}
           </View>
 
           {/* Home Loans Promo Card */}

@@ -515,14 +515,18 @@ const Buy = () => {
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Top Picks</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+              <TouchableOpacity
+              onPress={() => router.push('/screens/BestPriceProperty')}
+              className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="pricetag-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Best Offers</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+              <TouchableOpacity
+              onPress={() => router.push('/screens/NewsForYou')}
+              className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="newspaper-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
@@ -531,21 +535,27 @@ const Buy = () => {
             </View>
 
             <View className="flex-row justify-around">
-              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+              <TouchableOpacity
+              onPress={() => router.push('/screens/EMICalculator')}
+              className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="calculator-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Payment Plan</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+              <TouchableOpacity
+              onPress={() => router.push('/screens/AffordabilityCalculator')}
+              className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="stats-chart-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">What's my budget?</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center" style={{ width: s(100) }}>
+              <TouchableOpacity
+              onPress={() => router.push('/screens/ECalculator')}
+              className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="checkmark-done-circle-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>

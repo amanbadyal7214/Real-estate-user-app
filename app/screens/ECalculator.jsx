@@ -12,6 +12,8 @@ const ECalculator = () => {
   const [tenure, setTenure] = useState(30);
   const [interestRate, setInterestRate] = useState(7.25);
   const [otherEmi, setOtherEmi] = useState(0);
+  const [showEligibilityResult, setShowEligibilityResult] = useState(false);
+  const [eligibilityResult, setEligibilityResult] = useState(null);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-IN', {
@@ -19,6 +21,77 @@ const ECalculator = () => {
       currency: 'INR',
       maximumFractionDigits: 0,
     }).format(value).replace('₹', '₹ ');
+  };
+
+  const getFoir = (monthlyIncome) => {
+    if (monthlyIncome < 50000) return 0.5;
+    if (monthlyIncome < 100000) return 0.55;
+    return 0.6;
+  };
+
+  const calculateEligibility = () => {
+    const monthlyIncome = Number(salary) || 0;
+    const existingEmi = Number(otherEmi) || 0;
+    const totalMonths = (Number(tenure) || 0) * 12;
+    const monthlyRate = (Number(interestRate) || 0) / (12 * 100);
+
+    if (monthlyIncome <= 0 || totalMonths <= 0) {
+      setEligibilityResult({
+        eligibleLoanAmount: 0,
+        availableEmiCapacity: 0,
+        estimatedPropertyCost: 0,
+        estimatedDownPayment: 0,
+        foir: 0,
+      });
+      setShowEligibilityResult(true);
+      return;
+    }
+
+    const foir = getFoir(monthlyIncome);
+    const availableEmiCapacity = Math.max((foir * monthlyIncome) - existingEmi, 0);
+
+    let emiFactor = 0;
+    if (monthlyRate === 0) {
+      emiFactor = 1 / totalMonths;
+    } else {
+      const growth = (1 + monthlyRate) ** totalMonths;
+      emiFactor = (monthlyRate * growth) / (growth - 1);
+    }
+
+    const eligibleLoanAmount = emiFactor > 0 ? (availableEmiCapacity / emiFactor) : 0;
+
+    // Approximation with 80% LTV to give a practical property budget estimate.
+    const estimatedPropertyCost = eligibleLoanAmount > 0 ? (eligibleLoanAmount / 0.8) : 0;
+    const estimatedDownPayment = Math.max(estimatedPropertyCost - eligibleLoanAmount, 0);
+
+    setEligibilityResult({
+      eligibleLoanAmount: Math.max(eligibleLoanAmount, 0),
+      availableEmiCapacity,
+      estimatedPropertyCost: Math.max(estimatedPropertyCost, 0),
+      estimatedDownPayment,
+      foir,
+    });
+    setShowEligibilityResult(true);
+  };
+
+  const handleSalaryChange = (value) => {
+    setSalary(value);
+    setShowEligibilityResult(false);
+  };
+
+  const handleTenureChange = (value) => {
+    setTenure(value);
+    setShowEligibilityResult(false);
+  };
+
+  const handleInterestRateChange = (value) => {
+    setInterestRate(value);
+    setShowEligibilityResult(false);
+  };
+
+  const handleOtherEmiChange = (value) => {
+    setOtherEmi(value);
+    setShowEligibilityResult(false);
   };
 
   return (
@@ -29,7 +102,7 @@ const ECalculator = () => {
           <Ionicons name="arrow-back" size={24} color="#101828" />
         </TouchableOpacity>
         
-        <TouchableOpacity className="flex-row items-center bg-[#008E96] px-4 py-2 rounded-xl">
+          <TouchableOpacity onPress={() => router.push('/ComingSoon')} className="flex-row items-center bg-[#008E96] px-4 py-2 rounded-xl">
           <Ionicons name="home-outline" size={16} color="white" />
           <Text style={{ fontFamily: 'Inter-Medium' }} className="text-white font-medium ml-2">Home Loans</Text>
         </TouchableOpacity>
@@ -59,7 +132,7 @@ const ECalculator = () => {
                   maximumValue={10000000}
                   step={5000}
                   value={salary}
-                  onValueChange={setSalary}
+                  onValueChange={handleSalaryChange}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -84,7 +157,7 @@ const ECalculator = () => {
                   maximumValue={30}
                   step={1}
                   value={tenure}
-                  onValueChange={setTenure}
+                  onValueChange={handleTenureChange}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -109,7 +182,7 @@ const ECalculator = () => {
                   maximumValue={30}
                   step={0.25}
                   value={interestRate}
-                  onValueChange={setInterestRate}
+                  onValueChange={handleInterestRateChange}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -123,7 +196,7 @@ const ECalculator = () => {
               {/* Other EMIs */}
               <View>
                 <View className="flex-row justify-between items-center mb-4">
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-base text-[#101828]">Other monthly EMI's (INR)</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-base text-[#101828]">Other monthly EMI&apos;s (INR)</Text>
                   <View className="bg-white border border-gray-200 px-3 py-2 rounded-lg min-w-[60px] items-center">
                     <Text style={{ fontFamily: 'Inter-Regular' }} className="text-base text-[#101828]">{formatCurrency(otherEmi)}</Text>
                   </View>
@@ -134,7 +207,7 @@ const ECalculator = () => {
                   maximumValue={10000000}
                   step={1000}
                   value={otherEmi}
-                  onValueChange={setOtherEmi}
+                  onValueChange={handleOtherEmiChange}
                   minimumTrackTintColor="#008E96"
                   maximumTrackTintColor="#E5E7EB"
                   thumbTintColor="#008E96"
@@ -146,9 +219,47 @@ const ECalculator = () => {
               </View>
 
               {/* Calculate Button */}
-              <TouchableOpacity className="bg-[#008E96] w-full py-4 rounded-2xl items-center mt-4">
+              <TouchableOpacity
+                onPress={calculateEligibility}
+                className="bg-[#008E96] w-full py-4 rounded-2xl items-center mt-4"
+              >
                 <Text style={{ fontFamily: 'Inter-Bold' }} className="text-white text-lg font-semibold">Calculate Eligibility</Text>
               </TouchableOpacity>
+
+              {showEligibilityResult && eligibilityResult && (
+                <View className="mt-4 rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] p-3">
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-sm">Eligible Loan Amount</Text>
+                    <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#008E96] text-sm">
+                      {formatCurrency(eligibilityResult.eligibleLoanAmount)}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-sm">Available EMI Capacity</Text>
+                    <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#101828] text-sm">
+                      {formatCurrency(eligibilityResult.availableEmiCapacity)}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-sm">Estimated Property Budget</Text>
+                    <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#101828] text-sm">
+                      {formatCurrency(eligibilityResult.estimatedPropertyCost)}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-sm">Estimated Down Payment</Text>
+                    <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#101828] text-sm">
+                      {formatCurrency(eligibilityResult.estimatedDownPayment)}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-sm">FOIR Used</Text>
+                    <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#101828] text-sm">
+                      {`${Math.round((eligibilityResult.foir || 0) * 100)}%`}
+                    </Text>
+                  </View>
+                </View>
+              )}
             </View>
           </View>
 
@@ -180,7 +291,7 @@ const ECalculator = () => {
               What is Home Loan Eligibility?
             </Text>
             <Text style={{ fontFamily: 'Inter-Regular' }} className="text-sm text-[#4A5565] leading-relaxed">
-              Home loan eligibility is defined as a set of criteria based on which a financial institution assesses the creditworthiness of a customer to understand their capacity of repaying the loan. It depends on various factors such as age, income, existing debts, and the property's value.
+              Home loan eligibility is defined as a set of criteria based on which a financial institution assesses the creditworthiness of a customer to understand their capacity of repaying the loan. It depends on various factors such as age, income, existing debts, and the property&apos;s value.
             </Text>
           </View>
 
