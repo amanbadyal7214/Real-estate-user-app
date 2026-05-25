@@ -91,11 +91,11 @@ const FurnishedPropertiesSection = () => {
   const data = properties;
 
   return (
-    <View className="mt-5 mx-4 h-[549px] rounded-[24px] bg-[#F5F5F5] pt-8 pb-8">
-      <View className="mb-10 flex-row items-start justify-between px-[25px]">
+    <View className=" mx-4  rounded-[24px] bg-[#F5F5F5] py-2 ">
+      <View className="mb-4 flex-row items-start justify-between px-[25px]">
         <View>
           <Text className="font-inter-bold text-[17px] leading-8 text-[#101828]">Fully Furnished Properties</Text>
-          <Text className="mt-[-4px] font-inter-regular text-[13px] leading-6 text-[#6A7282]">Most sought-after rental properties</Text>
+          <Text className="mt-[-2px] font-inter-regular text-[13px] leading-6 text-[#6A7282]">Most sought-after rental properties</Text>
         </View>
         <TouchableOpacity className="pt-[5px]">
           <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>

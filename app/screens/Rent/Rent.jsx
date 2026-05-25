@@ -176,6 +176,12 @@ const Rent = () => {
     }
   }, [selectedTab]);
 
+  const handleLocationUpdate = (loc) => {
+    // Location updating is handled by LocationContext inside SearchBox;
+    // keep a lightweight handler to avoid runtime errors when SearchBox calls it.
+    console.log('📍 Rent screen notified of location change:', loc);
+  };
+
     const recentSearches = [
         { title: 'Apartment, Rent, Mohali,', subtitle: 'Min ₹15K, 2+ BHK' },
         { title: 'Rent, Sector 66', subtitle: 'Max ₹40K' },
@@ -388,32 +394,30 @@ const emiVectors = [
                 className="flex-1"
             >
                 {/* Main Category Blue Container */}
-                <View className="mx-4 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
-                    <CategoryTabs
-                    activeTab={selectedTab}
-                    onTabPress={setSelectedTab}
-                    />
+                <View className="mx-2 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
+          <CategoryTabs
+            activeTab={selectedTab}
+            onTabPress={setSelectedTab}
+          />
 
-                    <SearchBox
-                        placeholder="Search city, locality, landmark for rent ..."
-                        onPress={() => router.push('/screens/Buy/BuySearch')} // Using BuySearch as common search screen
-                    />
-                </View>
+          <SearchBox onLocationUpdate={handleLocationUpdate} />
+        </View>
 
-                <ContinueCards data={recentSearches} />
+        {/* Continue where you left Section */}
+        <ContinueCards data={recentSearches} />
 
                 {/* Smart Suggestions Section */}
-                <View className="mt-8">
+                <View>
                     <View className="px-4 mb-4">
-                        <View className="flex-row justify-between items-center">
-                            <Text className="font-inter-bold text-[22px] text-[#101828]">Smart Suggestions</Text>
-                            <TouchableOpacity>
-                                <Text className="font-inter-semibold text-[15px] text-[#008E96]">See all</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Text className="font-inter-regular text-[14px] text-[#6A7282] mt-1">
-                          Based on your last search in {currentLocation?.city || 'Khanpur'}
-                        </Text>
+                      <View className="flex-row justify-between items-center">
+                        <Text className="font-inter-semibold text-[17px] text-[#101828]">Smart Suggestions</Text>
+                        <TouchableOpacity>
+                          <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">
+                        Based on your last search in {currentLocation?.city || 'Khanpur'}
+                      </Text>
                     </View>
 
                     <View className="flex-row gap-2 px-4 mb-6">
@@ -444,7 +448,7 @@ const emiVectors = [
                     </ScrollView>
                 </View>
                 {/* Recommended Properties Section */}
-        <View className="px-4 py-6">
+        <View className="px-4 py-2">
           <View className="flex-row justify-between items-center mb-4">
             <View>
               <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
@@ -477,7 +481,7 @@ const emiVectors = [
         <FurnishedPropertiesSection />
 
         {/* Popular on Propertize Section */}
-        <View className="px-4 pt-12 mb-6 items-center">
+        <View className="px-4 pt-6 mb-6 items-center">
           <View
             style={{
               width: 320,
