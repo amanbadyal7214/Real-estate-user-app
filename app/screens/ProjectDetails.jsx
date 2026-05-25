@@ -393,7 +393,10 @@ const ProjectDetails = () => {
               /> */}
               <ProjectMapCard />
               <ProjectContactFormCard sellerName={builderName} sellerPhone={projectData.builder?.phone || '1800XXXXXX'} />
-              <ProjectPropertiesSection projectId={projectId} />
+              <ProjectPropertiesSection
+                projectId={projectId}
+                cityName={getDisplayValue(projectData?.city) || 'mohali'}
+              />
 
               <ProjectFinancialServicesCard />
               <ProjectDisclaimerCard />
@@ -519,7 +522,10 @@ const ProjectDetails = () => {
                     <Text className="text-[#008E96] text-[18px] font-inter-medium border-b border-[#008E96] self-start">Show full details →</Text>
                   </TouchableOpacity>
                 </View> */}
-              <ProjectPropertiesSection projectId={projectId} />
+              <ProjectPropertiesSection
+                projectId={projectId}
+                cityName={getDisplayValue(projectData?.city) || 'mohali'}
+              />
             </View>) : activeTab === 'Property Tour' ? (
               <View className="p-4 gap-4">
                 <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">

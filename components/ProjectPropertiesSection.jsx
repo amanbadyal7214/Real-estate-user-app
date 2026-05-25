@@ -76,7 +76,7 @@ const ProjectPropertyCard = ({ property }) => {
   );
 };
 
-const ProjectPropertiesSection = ({ projectId, localityId, cityId, propertyType, title = "Properties in this Project" }) => {
+const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, propertyType, title = "Properties in this Project" }) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -85,19 +85,19 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, propertyType,
     const fetchProperties = async () => {
       try {
         setLoading(true);
-        // Hitting the general /properties API (property wali api) as requested
-        let endpoint = "/properties";
-        let params = {
+        const endpoint = projectId ? `/projects/${projectId}/properties` : "/properties";
+        const params = {
           lookingFor: 'sell',
+          city: (cityName || cityId || 'mohali'),
           limit: 6
         };
 
-        if (projectId) {
-          params.project = projectId;
-        } else if (localityId) {
-          params.locality = localityId;
-        } else if (cityId) {
-          params.city = cityId;
+        if (!projectId) {
+          if (localityId) {
+            params.locality = localityId;
+          } else if (cityId) {
+            params.city = cityId;
+          }
         }
 
         if (propertyType) {
