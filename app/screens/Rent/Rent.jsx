@@ -193,7 +193,7 @@ const Rent = () => {
     const [sellers, setSellers] = useState([]);
     const [exploreLocalities, setExploreLocalities] = useState([]);
     const { fetchProjects } = useProject();
-    const { fetchProperties, fetchSellersByLocation } = usePropertyDiscovery();
+    const { findPropertiesByLocation, fetchSellersByLocation } = usePropertyDiscovery();
     const { fetchAveragePriceByCity, loading: localityLoading, error: localityError } = useLocalityAveragePrice();
     const { currentLocation } = useLocation();
 
@@ -215,7 +215,7 @@ const Rent = () => {
       loadProjects();
 
       return () => { isMounted = false; };
-    }, [fetchProjects, fetchProperties, currentLocation]);
+    }, [fetchProjects, findPropertiesByLocation, currentLocation]);
 
     useEffect(() => {
       let isMounted = true;
@@ -223,7 +223,7 @@ const Rent = () => {
 
       const loadRecommendedProperties = async () => {
         try {
-          const res = await fetchProperties({ city, limit: 4, lookingFor: 'rent', PriceAscending: true });
+          const res = await findPropertiesByLocation({ city, limit: 4, lookingFor: 'rent', PriceAscending: true });
           if (!isMounted) return;
 
           const projects = Array.isArray(res)
@@ -254,7 +254,7 @@ const Rent = () => {
       loadRecommendedProperties();
 
       return () => { isMounted = false; };
-    }, [fetchProperties, currentLocation]);
+    }, [findPropertiesByLocation, currentLocation]);
   
 const emiVectors = [
     { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
@@ -454,7 +454,7 @@ const emiVectors = [
               <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
               <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/RecommendedProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+             <TouchableOpacity onPress={() => router.push({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>

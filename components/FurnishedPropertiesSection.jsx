@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import FurnishedPropertyCard from './FurnishedPropertyCard';
-import { usePropertyDiscovery } from '../hooks/usePropertyDiscovery';
 import { useLocation } from '../app/context/LocationContext';
 import { formatPrice } from '../app/utils/formatPrice';
+import { usePropertyDiscovery } from '../hooks/usePropertyDiscovery';
+import FurnishedPropertyCard from './FurnishedPropertyCard';
 
 const FurnishedPropertiesSection = () => {
   const [properties, setProperties] = useState([]);
@@ -30,6 +30,7 @@ const FurnishedPropertiesSection = () => {
           city,
           limit: 4,
           lookingFor: 'rent',
+          furnishingStatus: 'fully_furnished',
         });
 
         if (!isMounted) return;

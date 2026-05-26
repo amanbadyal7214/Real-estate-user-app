@@ -33,7 +33,7 @@ const RecommendedProperties = () => {
 
   const fetchMatches = useCallback(async () => {
     try {
-      const params = { limit: 20, lookingFor: 'sell' };
+      const params = { limit: 20, lookingFor: searchParams.lookingFor || 'sell' };
       const effectiveCity = searchParams.city || currentLocation?.city;
 
       if (effectiveCity) {
@@ -57,7 +57,7 @@ const RecommendedProperties = () => {
     } catch (err) {
       console.error('Match Fetch Error:', err);
     }
-  }, [currentLocation?.city, findPropertiesByLocation, searchParams.city, searchQuery, resolveLocalities]);
+  }, [currentLocation?.city, findPropertiesByLocation, searchParams.city, searchParams.lookingFor, searchQuery, resolveLocalities]);
 
   useEffect(() => {
     fetchMatches();
