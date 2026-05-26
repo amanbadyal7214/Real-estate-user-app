@@ -93,7 +93,7 @@ const FurnishedPropertiesSection = () => {
 
   return (
     <View className=" mx-4  rounded-[24px] bg-[#F5F5F5] py-2 ">
-      <View className="mb-4 flex-row items-start justify-between px-[25px]">
+      <View className="mb-4 flex-row items-start justify-between px-4">
         <View>
           <Text className="font-inter-bold text-[17px] leading-8 text-[#101828]">Fully Furnished Properties</Text>
           <Text className="mt-[-2px] font-inter-regular text-[13px] leading-6 text-[#6A7282]">Most sought-after rental properties</Text>
@@ -107,7 +107,7 @@ const FurnishedPropertiesSection = () => {
         horizontal 
         showsHorizontalScrollIndicator={false}
         className="flex-1"
-        contentContainerClassName="px-[25px]"
+        contentContainerClassName="px-4"
       >
         {data.map(item => (
           <FurnishedPropertyCard key={item.id} {...item} />

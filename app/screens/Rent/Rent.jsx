@@ -300,14 +300,18 @@ const emiVectors = [
     const scrollRef = useRef(null);
 
     useEffect(() => {
+        if (!suggestions || suggestions.length <= 1) return;
+
         const interval = setInterval(() => {
-          let nextIndex = (activeIndex + 1) % suggestions.length;
-            setActiveIndex(nextIndex);
-          scrollRef.current?.scrollTo({ x: nextIndex * SUGGESTION_CARD_INTERVAL, animated: true });
+          setActiveIndex((prev) => {
+            const next = (prev + 1) % suggestions.length;
+            scrollRef.current?.scrollTo({ x: next * SUGGESTION_CARD_INTERVAL, animated: true });
+            return next;
+          });
         }, 3000);
 
         return () => clearInterval(interval);
-    }, [activeIndex, suggestions.length]);
+    }, [suggestions.length]);
 
     useEffect(() => {
       let isMounted = true;
@@ -412,7 +416,7 @@ const emiVectors = [
 
                 {/* Smart Suggestions Section */}
                 <View>
-                    <View className="px-4 mb-4">
+                    <View className="px-4 my-4">
                       <View className="flex-row justify-between items-center">
                         <Text className="font-inter-semibold text-[17px] text-[#101828]">Smart Suggestions</Text>
                         <TouchableOpacity onPress={() => router.push('/screens/Buy/Suggestions')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>

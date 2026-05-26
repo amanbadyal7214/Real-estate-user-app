@@ -4,14 +4,14 @@ import { formatPrice } from '../app/utils/formatPrice';
 
 const OwnerPropertyCardAlt = ({ id, image, price, title, area, location, onContact }) => {
   return (
-    <View  className="mr-3">
+    <View  className="">
       <TouchableOpacity
         activeOpacity={0.95}
         onPress={() => id ? router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: id } }) : router.push('/screens/PropertyDetails')}
       >
         <ImageBackground
           source={{ uri: image }}
-          style={{ width: 200, height: 160, borderRadius: 14, overflow: 'hidden', justifyContent: 'flex-end' }}
+          style={{ width: 220, height: 160, borderRadius: 14, overflow: 'hidden', justifyContent: 'flex-end' }}
           imageStyle={{ borderRadius: 14 }}
         >
           <View style={{ backgroundColor: 'rgba(0,0,0,0.36)', padding: 8 }}>
