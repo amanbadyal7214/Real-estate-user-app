@@ -8,18 +8,19 @@ import ContinueCards from '../../../components/ContinueCards';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 import FurnishedPropertiesSection from '../../../components/FurnishedPropertiesSection';
 import NewsCard from '../../../components/NewsCard';
+import OwnerPropertyCardAlt from '../../../components/OwnerPropertyCardAlt';
 import PropertySuggestionCard from '../../../components/PropertySuggestionCard';
 import RecommendedPropertyCard from '../../../components/RecommendedPropertyCard';
 import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import SearchBox from '../../../components/SearchBox';
 import UserHeader from '../../../components/UserHeader';
+import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
+import { useProject } from '../../../hooks/useProject';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
+import { useLocation } from '../../context/LocationContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
-import { useProject } from '../../../hooks/useProject';
-import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
-import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
-import { useLocation } from '../../context/LocationContext';
 import { formatPrice, formatPricePerSqft } from '../../utils/formatPrice';
 
 const fallbackSuggestions = [
@@ -190,6 +191,7 @@ const Rent = () => {
 
     const [suggestions, setSuggestions] = useState(fallbackSuggestions);
     const [recommendedProperties, setRecommendedProperties] = useState([]);
+    const [ownerProperties, setOwnerProperties] = useState([]);
     const [sellers, setSellers] = useState([]);
     const [exploreLocalities, setExploreLocalities] = useState([]);
     const { fetchProjects } = useProject();
@@ -246,6 +248,8 @@ const Rent = () => {
           }));
 
           setRecommendedProperties(mapped);
+          // Populate a short list for owner-listed properties (fallback to recommended list)
+          setOwnerProperties(mapped.slice(0, 4));
         } catch (_err) {
           if (isMounted) setRecommendedProperties([]);
         }
@@ -411,7 +415,7 @@ const emiVectors = [
                     <View className="px-4 mb-4">
                       <View className="flex-row justify-between items-center">
                         <Text className="font-inter-semibold text-[17px] text-[#101828]">Smart Suggestions</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => router.push('/screens/Buy/Suggestions')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
                           <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
                         </TouchableOpacity>
                       </View>
@@ -447,14 +451,15 @@ const emiVectors = [
                         ))}
                     </ScrollView>
                 </View>
-                {/* Recommended Properties Section */}
-        <View className="px-4 py-2">
-          <View className="flex-row justify-between items-center mb-4">
+
+                {/* Owner Properties Section */}
+        <View className="px-4 my-6">
+          <View className="mb-4 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
-              <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Owner Properties</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Properties listed directly by owners</Text>
             </View>
-             <TouchableOpacity onPress={() => router.push({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => router.push('/screens/OwnerProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -464,8 +469,8 @@ const emiVectors = [
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
           >
-            {recommendedProperties.map((item) => (
-              <RecommendedPropertyCard
+            {ownerProperties.length > 0 ? ownerProperties.map((item) => (
+              <OwnerPropertyCardAlt
                 key={item.id}
                 id={item.id || item._id}
                 image={item.image}
@@ -474,9 +479,15 @@ const emiVectors = [
                 area={item.area}
                 location={item.location}
               />
-            ))}
+            )) : (
+              <View className="rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6">
+                <Text className="font-inter-medium text-[13px] text-[#6A7282]">No owner-listed properties available right now.</Text>
+              </View>
+            )}
           </ScrollView>
         </View>
+
+
        
         <FurnishedPropertiesSection />
 
@@ -549,14 +560,47 @@ const emiVectors = [
           </ScrollView>
         </View>
 
+                        {/* Recommended Properties Section */}
+        <View className="px-4 py-2">
+          <View className="flex-row justify-between items-center mb-4">
+            <View>
+              <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
+              <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
+            </View>
+             <TouchableOpacity onPress={() => router.push({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
+          >
+            {recommendedProperties.map((item) => (
+              <RecommendedPropertyCard
+                key={item.id}
+                id={item.id || item._id}
+                image={item.image}
+                price={item.price}
+                title={item.title}
+                area={item.area}
+                location={item.location}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+      
+
             {/* Explore Localities Section */}
-        <View className="px-4  mt-6">
+        <View className="px-4  ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
             </View>
-            <TouchableOpacity>
+           <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -600,7 +644,7 @@ const emiVectors = [
               <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -623,7 +667,7 @@ const emiVectors = [
         </View>
 
         {/* Calculators Section */}
-        <View className="px-4 mb-24 mt-4">
+           <View className="px-4  mt-4">
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -633,11 +677,19 @@ const emiVectors = [
               titlePrefix="EMI"
               description="EMI starts at ₹10.60K"
               vectorsConfig={emiVectors}
+              onPress={() => router.push('/screens/EMICalculator')}
             />
             <CalculatorCard
               titlePrefix="Affordability"
               description="Find the best budget for your home"
               vectorsConfig={affordabilityVectors}
+              onPress={() => router.push('/screens/AffordabilityCalculator')}
+            />
+            <CalculatorCard
+              titlePrefix=" Eligibility Calculator "
+              description="Find the best budget for your home"
+              vectorsConfig={affordabilityVectors}
+              onPress={() => router.push('/screens/ECalculator')}
             />
           </ScrollView>
         </View>
