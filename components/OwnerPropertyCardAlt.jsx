@@ -24,7 +24,7 @@ const OwnerPropertyCardAlt = ({ id, image, price, title, area, location, onConta
 
       </TouchableOpacity>
 
-      <View className="mt-2 bg-white px-3 pt-2 rounded-[12px]" style={{ borderWidth: 0.67, borderColor: '#F3F4F6' }}>
+      <View className="mt-2 bg-white px-3 py-2 w-64 rounded-[12px]" style={{ borderWidth: 0.67, borderColor: '#F3F4F6' }}>
         <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 12 }}>{area}</Text>
         <Text className="font-inter-regular text-[#6A7282] mt-1" style={{ fontSize: 12 }} numberOfLines={1}>{location}</Text>
 
