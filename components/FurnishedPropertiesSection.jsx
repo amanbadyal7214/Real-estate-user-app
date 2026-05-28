@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useLocation } from '../app/context/LocationContext';
@@ -98,7 +99,10 @@ const FurnishedPropertiesSection = () => {
           <Text className="font-inter-bold text-[17px] leading-8 text-[#101828]">Fully Furnished Properties</Text>
           <Text className="mt-[-2px] font-inter-regular text-[13px] leading-6 text-[#6A7282]">Most sought-after rental properties</Text>
         </View>
-        <TouchableOpacity className="pt-[5px]">
+        <TouchableOpacity
+          className="pt-[5px]"
+          onPress={() => router.push('/screens/FullyFurnishedProperties')}
+        >
           <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
         </TouchableOpacity>
       </View>
