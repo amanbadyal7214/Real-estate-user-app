@@ -1,7 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
@@ -18,17 +18,112 @@ import NewsCard from '../../../components/NewsCard';
 import ProjectFocusCard from '../../../components/ProjectFocusCard';
 import PropertyMatchedCards from '../../../components/PropertyMatchedCards';
 import PropertySuggestionCard from '../../../components/PropertySuggestionCard';
-import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
+import { useProject } from '../../../hooks/useProject';
+import api from '../../api';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
+import { useLocation } from '../../context/LocationContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
 
+const fallbackMatchedHomes = [
+  {
+    images: [
+      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400'
+    ],
+    tag: 'TALLEST LANDMARK',
+    developer: 'NIRWANA GROUP',
+    title: 'D-Xperanza',
+    location: 'Sector 82, Mohali',
+    priceRange: '1.24 Cr. - 1.55 Cr',
+  },
+  {
+    images: [
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
+      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+      'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=400'
+    ],
+    tag: 'LUXURY LIVING',
+    developer: 'SKY HEIGHTS',
+    title: 'Sky Terrace',
+    location: 'Sector 66, Mohali',
+    priceRange: '2.5 Cr. - 4.2 Cr',
+  },
+];
+
+const formatLocation = (value) => {
+  if (!value) return '';
+
+  if (typeof value === 'string') {
+    const trimmedValue = value.trim();
+    if (!trimmedValue || /^[a-f0-9]{24}$/i.test(trimmedValue)) return '';
+    return trimmedValue;
+  }
+
+  if (typeof value === 'object') {
+    return value.name || value.label || value.title || '';
+  }
+
+  return '';
+};
+
+const normalizeMatchedProjects = (responseData, defaultCity = 'Mohali') => {
+  const projects = Array.isArray(responseData)
+    ? responseData
+    : Array.isArray(responseData?.data)
+      ? responseData.data
+      : Array.isArray(responseData?.projects)
+        ? responseData.projects
+        : Array.isArray(responseData?.results)
+          ? responseData.results
+          : [];
+
+  return projects.map((item, index) => {
+    const locality = formatLocation(item?.localityName || item?.locality);
+    const city = formatLocation(item?.city) || defaultCity;
+    const state = formatLocation(item?.state);
+    const location = [locality, city, state].filter(Boolean).join(', ') || defaultCity;
+
+    // Extract images from multiple possible sources
+    let images = [];
+    if (item?.images?.length) {
+      images = item.images;
+    } else if (item?.image) {
+      images = [item.image];
+    } else if (item?.media?.length) {
+      // Handle API response with media array containing fileUrl
+      images = item.media
+        .filter((m) => m?.fileUrl)
+        .map((m) => m.fileUrl);
+    }
+
+    return {
+      id: item?._id || item?.id || item?.projectId || index,
+      images,
+      tag: item?.tag || item?.category || 'PROJECT',
+      developer: item?.developer?.name || item?.builder?.name || item?.developerName || item?.builderName || 'Developer',
+      title: item?.title || item?.name || item?.projectName || 'Untitled Project',
+      location,
+      priceRange: item?.priceRange || item?.price || item?.priceText || item?.budget || '',
+    };
+  });
+};
+
 const Project = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
+  const { currentLocation } = useLocation();
+  const { fetchDevelopers, fetchDeveloperProjects } = useProject();
   const skipFirstRedirect = useRef(true);
+  const [matchedHomes, setMatchedHomes] = useState(fallbackMatchedHomes);
+  const [matchedHomesLoading, setMatchedHomesLoading] = useState(false);
+  const [matchedHomesError, setMatchedHomesError] = useState(null);
+  const [topDevelopersList, setTopDevelopersList] = useState([]);
+  const [developerProjectsById, setDeveloperProjectsById] = useState({});
+  const [activeDeveloperId, setActiveDeveloperId] = useState(null);
 
   useEffect(() => {
     setSelectedTab('Project');
@@ -48,38 +143,86 @@ const Project = () => {
     }
   }, [selectedTab]);
 
+  const fetchProjects = useCallback(async (params = {}) => {
+    setMatchedHomesLoading(true);
+    setMatchedHomesError(null);
+    try {
+      const response = await api.get('/projects/city', { params });
+      const normalizedProjects = normalizeMatchedProjects(response.data, params.city || currentLocation?.city || 'Mohali');
+
+      if (normalizedProjects.length > 0) {
+        setMatchedHomes(normalizedProjects);
+      } else {
+        setMatchedHomes(fallbackMatchedHomes);
+      }
+
+      return response.data;
+    } catch (err) {
+      const errorMessage = err.response?.data?.error || 'Failed to fetch projects';
+      setMatchedHomesError(errorMessage);
+      setMatchedHomes(fallbackMatchedHomes);
+    } finally {
+      setMatchedHomesLoading(false);
+    }
+  }, [currentLocation?.city]);
+
+  const loadTopDevelopers = useCallback(async (locationParams = {}) => {
+    try {
+      const res = await fetchDevelopers({
+        ...locationParams
+      });
+
+      if (res.success) {
+        setTopDevelopersList(res.data);
+        if (!activeDeveloperId && res.data.length > 0) {
+          setActiveDeveloperId(res.data[0]._id);
+        }
+      }
+    } catch (err) {
+      console.error("Developers API Error:", err);
+    }
+  }, [fetchDevelopers, activeDeveloperId]);
+
+  const loadDeveloperProjects = useCallback(async (developerId) => {
+    if (!developerId) return;
+    if (developerProjectsById[developerId]) {
+      setActiveDeveloperId(developerId);
+      return;
+    }
+
+    try {
+      const res = await fetchDeveloperProjects({ developerId });
+      if (res.success) {
+        setDeveloperProjectsById((prev) => ({
+          ...prev,
+          [developerId]: res.data || []
+        }));
+        setActiveDeveloperId(developerId);
+      }
+    } catch (err) {
+      console.error("Developer Projects API Error:", err);
+    }
+  }, [fetchDeveloperProjects, developerProjectsById]);
+
+  useEffect(() => {
+    fetchProjects({
+      city: currentLocation?.city || 'Mohali',
+      limit: 6,
+    }).catch(() => {
+      // Fallback data already applied above.
+    });
+    
+    loadTopDevelopers({
+      city: currentLocation?.city || 'Mohali',
+      limit: 10
+    });
+  }, [currentLocation, fetchProjects, loadTopDevelopers]);
+
   const recentSearches = [
     { title: 'Commercial, Buy, Mohali,', subtitle: 'Any price, Any area' },
     { title: 'Buy, Sector 62', subtitle: 'Any price' },
     { title: 'Apartment, Rent, Zirakpur', subtitle: 'Min ₹15K, 2+ BHK' },
     { title: 'Plot, Buy, Kharar', subtitle: '100-150 sq.yd' },
-  ];
-
-  const matchedHomes = [
-    {
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400'
-      ],
-      tag: 'TALLEST LANDMARK',
-      developer: 'NIRWANA GROUP',
-      title: 'D-Xperanza',
-      location: 'Sector 82, Mohali',
-      priceRange: '1.24 Cr. - 1.55 Cr',
-    },
-    {
-      images: [
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=400'
-      ],
-      tag: 'LUXURY LIVING',
-      developer: 'SKY HEIGHTS',
-      title: 'Sky Terrace',
-      location: 'Sector 66, Mohali',
-      priceRange: '2.5 Cr. - 4.2 Cr',
-    },
   ];
 
 
@@ -243,87 +386,6 @@ const Project = () => {
     { title: 'Sector 71', rating: '4.7', reviews: '5', price: '₹9K/sqft.' },
   ];
 
-  const topDevelopers = {
-    summary: [
-      {
-        id: 'nirwana',
-        name: 'Nirwana Group',
-        logoText: 'NIRWANA',
-        logoColor: '#E7000B',
-        yearEstd: '2012',
-        projectCount: '15'
-      },
-      {
-        id: 'vara',
-        name: 'Vara Developers',
-        logoText: 'VARA',
-        logoColor: '#008E96',
-        yearEstd: '2016',
-        projectCount: '10'
-      },
-      {
-        id: 'hero',
-        name: 'Hero Realty',
-        logoText: 'HERO',
-        logoColor: '#D92D20',
-        yearEstd: '2004',
-        projectCount: '45'
-      },
-    ],
-    projects: {
-      nirwana: [
-        {
-          image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-          logoText: 'N',
-          logoColor: '#E7000B',
-          title: 'D-Xperanza',
-          developerName: 'NIRWANA GROUP',
-          rating: '4.8',
-          config: '3, 4 BHK Apartment',
-          location: 'Sector 82, Mohali',
-          priceRange: '₹1.24 Cr - 1.55 Cr',
-        },
-        {
-          image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400',
-          logoText: 'N',
-          logoColor: '#E7000B',
-          title: 'Nirwana The Moksha',
-          developerName: 'NIRWANA GROUP',
-          rating: '4.7',
-          config: '2, 3 BHK Apartment',
-          location: 'Kharar, Mohali',
-          priceRange: '₹45.03 L - 1.11 Cr',
-        }
-      ],
-      vara: [
-        {
-          image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400',
-          logoText: 'V',
-          logoColor: '#008E96',
-          title: 'Lok Awas',
-          developerName: 'Vara Developers',
-          rating: '4.6',
-          config: '2, 3 BHK Apartment',
-          location: 'Sector 74 A, Mohali',
-          priceRange: '₹51.9 L - 68.9 L',
-        }
-      ],
-      hero: [
-        {
-          image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=400',
-          logoText: 'H',
-          logoColor: '#D92D20',
-          title: 'Hero Homes',
-          developerName: 'HERO REALTY',
-          rating: '4.9',
-          config: '2, 3 BHK Apartment',
-          location: 'Sector 88, Mohali',
-          priceRange: '₹85.0 L - 1.25 Cr',
-        }
-      ]
-    }
-  };
-
   const suggestions = [
     {
       id: 1,
@@ -367,7 +429,6 @@ const Project = () => {
     }
   ];
 
-  const [activeDeveloperId, setActiveDeveloperId] = useState('nirwana');
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
 
@@ -392,7 +453,7 @@ const Project = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [suggestions.length]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -435,8 +496,14 @@ const Project = () => {
           </View>
           <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[14px] text-[#667085] mb-4">Projects from the best developers</Text>
 
-          <PropertyMatchedCards data={matchedHomes} />
-          <Spotlight />
+          {matchedHomesLoading ? (
+            <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[14px] text-[#667085] mb-4">Loading projects...</Text>
+          ) : matchedHomesError ? (
+            <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[14px] text-[#667085] mb-4">Showing available projects for now.</Text>
+          ) : null}
+
+          <PropertyMatchedCards data={matchedHomes} destination="project" />
+          
         </View>
 
         {/* Smart Suggestions Section */}
@@ -750,12 +817,17 @@ const Project = () => {
 
           {/* Developer Summary Cards */}
           <View className="flex-row items-center ml-4 justify-between gap-4 mb-6">
-            {topDevelopers.summary.slice(0, 2).map((dev, index) => (
+            {topDevelopersList.slice(0, 2).map((dev, index) => (
               <View key={`dev-summary-${index}`} style={{ flex: 1 }}>
                 <DeveloperSummaryCard
-                  {...dev}
-                  isActive={activeDeveloperId === dev.id}
-                  onPress={() => setActiveDeveloperId(dev.id)}
+                  id={dev._id}
+                  name={dev.name || dev.developerName}
+                  logoText={dev.name?.split(' ')[0] || 'D'}
+                  logoColor={dev.logoColor || '#008E96'}
+                  yearEstd={dev.yearEstablished || dev.establishedYear || 'N/A'}
+                  projectCount={dev.projectCount || dev.totalProjects || '0'}
+                  isActive={activeDeveloperId === dev._id}
+                  onPress={() => loadDeveloperProjects(dev._id)}
                 />
               </View>
             ))}
@@ -767,34 +839,18 @@ const Project = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 16 }}
           >
-            {topDevelopers.projects[activeDeveloperId]?.map((project, index) => (
-              <DeveloperProjectCard key={`dev-project-${activeDeveloperId}-${index}`} {...project} />
-            ))}
-          </ScrollView>
-        </View>
-
-
-
-
-        {/* Recommended Sellers Section */}
-        <View className="px-4 mb-3">
-          <View className="mb-4">
-            <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
-            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
-          </View>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
-          >
-            {recommendedSellers.map((seller) => (
-              <RecommendedSellerCard
-                key={seller.id}
-                name={seller.name}
-                experienceYears={seller.experienceYears}
-                propertiesCount={seller.propertiesCount}
-                location={seller.location}
+            {(developerProjectsById[activeDeveloperId] || []).map((project, index) => (
+              <DeveloperProjectCard 
+                key={`dev-project-${activeDeveloperId}-${index}`} 
+                image={project.image || project.images?.[0]}
+                logoText={project.logoText || 'D'}
+                logoColor={project.logoColor || '#008E96'}
+                title={project.title || project.name}
+                developerName={project.developerName || project.developer?.name || 'Developer'}
+                rating={project.rating || '4.5'}
+                config={project.config || project.configurations || 'N/A'}
+                location={project.location}
+                priceRange={project.priceRange || project.price}
               />
             ))}
           </ScrollView>

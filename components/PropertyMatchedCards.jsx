@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { formatPrice } from '../app/utils/formatPrice';
 
-const PropertyCard = ({ item }) => {
+const PropertyCard = ({ item, destination = 'property' }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Handle both single 'image' and 'images' array
@@ -27,12 +27,18 @@ const PropertyCard = ({ item }) => {
       <TouchableOpacity 
         activeOpacity={0.9} 
         onPress={() => {
-          const propId = item._id || item.id || item.propertyId
-          if (propId) {
-            router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: propId } })
-          } else {
-            router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.projectId || item.id || item._id } })
+          const entityId = item._id || item.id || item.propertyId || item.projectId
+
+          if (!entityId) {
+            return
           }
+
+          if (destination === 'project') {
+            router.push({ pathname: '/screens/ProjectDetails', params: { projectId: entityId } })
+            return
+          }
+
+          router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: entityId } })
         }}
         className="mr-5"
       >
@@ -97,13 +103,13 @@ const PropertyCard = ({ item }) => {
   );
 };
 
-const PropertyMatchedCards = ({ data = [] }) => {
+const PropertyMatchedCards = ({ data = [], destination = 'property' }) => {
   if (!data || !Array.isArray(data)) return null;
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
       {data.map((item, index) => (
-        <PropertyCard key={item.id || index} item={item} />
+        <PropertyCard key={item.id || index} item={item} destination={destination} />
       ))}
     </ScrollView>
   );
