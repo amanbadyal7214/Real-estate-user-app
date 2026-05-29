@@ -412,7 +412,7 @@ const Project = () => {
   const visibleLocalities = bestLocalities.slice(0, 4);
 
   const suggestions = matchedHomes.map((item) => ({
-    id: item.id,
+    id: item.id || item._id || `${item.title || item.name || 'project'}-${item.location || 'location'}`,
     image: item.images?.[0] || item.image,
     developerName: item.developer || 'Developer',
     developerInitial: (item.developer || 'D').charAt(0).toUpperCase(),
@@ -481,7 +481,7 @@ const Project = () => {
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push({ pathname: '/screens/Project/ProjectMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
@@ -503,7 +503,7 @@ const Project = () => {
           <View className="px-4 mb-4">
             <View className="flex-row justify-between items-center">
               <Text className="font-inter-bold text-[22px] text-[#101828]">Smart Suggestions</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push({ pathname: '/screens/Project/Suggestions', params: { city: currentLocation?.city || 'Mohali' } })}>
                 <Text className="font-inter-semibold text-[15px] text-[#008E96]">See all</Text>
               </TouchableOpacity>
             </View>
@@ -530,8 +530,8 @@ const Project = () => {
             snapToInterval={296}
             decelerationRate="fast"
           >
-            {suggestions.map((item) => (
-              <PropertySuggestionCard key={item.id} {...item} />
+            {suggestions.map((item, index) => (
+              <PropertySuggestionCard key={item.id || `${item.title || 'suggestion'}-${index}`} {...item} />
             ))}
           </ScrollView>
         </View>
@@ -553,7 +553,7 @@ const Project = () => {
                 Curated projects just for you
               </Text>
             </View>
-            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => router.push({ pathname: '/screens/HighDemandProduct', params: { city: currentLocation?.city || 'Mohali' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text
                 className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
