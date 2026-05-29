@@ -415,6 +415,8 @@ const Buy = () => {
       price: formatPricePerSqft(item.averagePricePerSqft),
     }));
 
+  const visibleLocalities = bestLocalities.slice(0, 4);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Top Header */}
@@ -766,7 +768,7 @@ const Buy = () => {
             <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: s(127) }}>
               <ActivityIndicator size="small" color="#008E96" />
             </View>
-          ) : bestLocalities.length === 0 ? (
+          ) : visibleLocalities.length === 0 ? (
             <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
               <Text className="font-inter-medium text-[13px] text-[#6A7282]">No best-rated locality data available right now.</Text>
             </View>
@@ -778,12 +780,12 @@ const Buy = () => {
                 contentContainerStyle={{ gap: 27, paddingRight: 20 }}
               >
                 <View className="flex-col gap-3">
-                  {bestLocalities.slice(0, Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
+                  {visibleLocalities.slice(0, Math.ceil(visibleLocalities.length / 2)).map((locality, index) => (
                     <LocalityCard key={`top-${index}`} {...locality} />
                   ))}
                 </View>
                 <View className="flex-col gap-3">
-                  {bestLocalities.slice(Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
+                  {visibleLocalities.slice(Math.ceil(visibleLocalities.length / 2)).map((locality, index) => (
                     <LocalityCard key={`bottom-${index}`} {...locality} />
                   ))}
                 </View>

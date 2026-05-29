@@ -1,10 +1,9 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import CalculatorCard from '../../../components/CalculatorCard';
 import ContinueCards from '../../../components/ContinueCards';
 import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
@@ -12,21 +11,21 @@ import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 
 import HighDemandProjectCard from '../../../components/HighDemandProjectCard';
-import LastSearchedCard from '../../../components/LastSearchedCard';
 import LocalityCard from '../../../components/LocalityCard';
 import NewsCard from '../../../components/NewsCard';
-import ProjectFocusCard from '../../../components/ProjectFocusCard';
 import PropertyMatchedCards from '../../../components/PropertyMatchedCards';
 import PropertySuggestionCard from '../../../components/PropertySuggestionCard';
 import SearchBox from '../../../components/SearchBox';
-import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
+import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { useProject } from '../../../hooks/useProject';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import api from '../../api';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import { useLocation } from '../../context/LocationContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
+import { formatPrice, formatPricePerSqft } from '../../utils/formatPrice';
 
 const fallbackMatchedHomes = [
   {
@@ -71,6 +70,27 @@ const formatLocation = (value) => {
   return '';
 };
 
+const formatDisplayValue = (value, fallback = '') => {
+  if (value === null || value === undefined || value === '') {
+    return fallback;
+  }
+
+  if (typeof value === 'string') {
+    const trimmedValue = value.trim();
+    return trimmedValue || fallback;
+  }
+
+  if (typeof value === 'number') {
+    return String(value);
+  }
+
+  if (typeof value === 'object') {
+    return value.name || value.label || value.title || fallback;
+  }
+
+  return fallback;
+};
+
 const normalizeMatchedProjects = (responseData, defaultCity = 'Mohali') => {
   const projects = Array.isArray(responseData)
     ? responseData
@@ -113,19 +133,59 @@ const normalizeMatchedProjects = (responseData, defaultCity = 'Mohali') => {
   });
 };
 
+const developerProjectsCache = new Map();
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+
+  componentDidCatch(error, info) {
+    console.error('ErrorBoundary caught error in Project screen:', error, info);
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <SafeAreaView className="flex-1 bg-white">
+          <View className="p-4">
+            <Text className="font-inter-bold text-[16px] text-[#101828]">Something went wrong</Text>
+            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-2">{String(this.state.error)}</Text>
+          </View>
+        </SafeAreaView>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 const Project = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
   const { currentLocation } = useLocation();
+  const { fetchHighDemandProperties } = usePropertyDiscovery();
+  const { fetchAveragePriceByCity, loading: localityLoading, error: localityError } = useLocalityAveragePrice();
   const { fetchDevelopers, fetchDeveloperProjects } = useProject();
   const skipFirstRedirect = useRef(true);
   const [matchedHomes, setMatchedHomes] = useState(fallbackMatchedHomes);
   const [matchedHomesLoading, setMatchedHomesLoading] = useState(false);
   const [matchedHomesError, setMatchedHomesError] = useState(null);
+  const [exploreLocalities, setExploreLocalities] = useState([]);
+  const [highDemandProjects, setHighDemandProjects] = useState([]);
   const [topDevelopersList, setTopDevelopersList] = useState([]);
   const [developerProjectsById, setDeveloperProjectsById] = useState({});
   const [activeDeveloperId, setActiveDeveloperId] = useState(null);
+  const [activeDeveloperProjectsLoading, setActiveDeveloperProjectsLoading] = useState(false);
+  const [highDemandLoading, setHighDemandLoading] = useState(false);
+  const [highDemandError, setHighDemandError] = useState(null);
 
   useEffect(() => {
+    console.log('Project screen mounted');
     setSelectedTab('Project');
   }, [setSelectedTab]);
 
@@ -166,6 +226,46 @@ const Project = () => {
     }
   }, [currentLocation?.city]);
 
+  const loadExploreLocalities = useCallback(async (city) => {
+    try {
+      const res = await fetchAveragePriceByCity(city || 'Mohali');
+      if (res?.success) {
+        setExploreLocalities(Array.isArray(res.data) ? res.data : []);
+      } else {
+        setExploreLocalities([]);
+      }
+    } catch (err) {
+      console.error('Average price API Error:', err);
+      setExploreLocalities([]);
+    }
+  }, [fetchAveragePriceByCity]);
+
+  const loadHighDemandProjects = useCallback(async (locationParams = {}) => {
+    setHighDemandLoading(true);
+    setHighDemandError(null);
+    try {
+      const res = await fetchHighDemandProperties({
+        limit: 4,
+        lookingFor: 'sell',
+        ...locationParams,
+      });
+
+      const projects = Array.isArray(res?.data)
+        ? res.data
+        : Array.isArray(res)
+          ? res
+          : [];
+
+      setHighDemandProjects(projects);
+    } catch (err) {
+      console.error('High Demand API Error:', err);
+      setHighDemandError(err?.message || 'Failed to fetch high demand projects');
+      setHighDemandProjects([]);
+    } finally {
+      setHighDemandLoading(false);
+    }
+  }, [fetchHighDemandProperties]);
+
   const loadTopDevelopers = useCallback(async (locationParams = {}) => {
     try {
       const res = await fetchDevelopers({
@@ -175,32 +275,67 @@ const Project = () => {
       if (res.success) {
         setTopDevelopersList(res.data);
         if (!activeDeveloperId && res.data.length > 0) {
-          setActiveDeveloperId(res.data[0]._id);
+          const firstDevId = res.data[0]._id;
+          setActiveDeveloperId(firstDevId);
+          try {
+            await loadDeveloperProjects(firstDevId);
+          } catch (e) {
+            // ignore - individual load will surface errors elsewhere
+            console.error('Failed to preload developer projects:', e);
+          }
         }
       }
     } catch (err) {
       console.error("Developers API Error:", err);
     }
-  }, [fetchDevelopers, activeDeveloperId]);
+  }, [fetchDevelopers, activeDeveloperId, loadDeveloperProjects]);
+
+  useEffect(() => {
+    if (activeDeveloperId && !developerProjectsById[activeDeveloperId]) {
+      loadDeveloperProjects(activeDeveloperId).catch((e) => {
+        console.error('Error loading developer projects on active change:', e);
+      });
+    }
+  }, [activeDeveloperId, developerProjectsById, loadDeveloperProjects]);
 
   const loadDeveloperProjects = useCallback(async (developerId) => {
-    if (!developerId) return;
+    if (!developerId) {
+      return;
+    }
+
     if (developerProjectsById[developerId]) {
       setActiveDeveloperId(developerId);
       return;
     }
 
+    if (developerProjectsCache.has(developerId)) {
+      setDeveloperProjectsById((current) => ({
+        ...current,
+        [developerId]: developerProjectsCache.get(developerId),
+      }));
+      setActiveDeveloperId(developerId);
+      return;
+    }
+
+    setActiveDeveloperProjectsLoading(true);
     try {
-      const res = await fetchDeveloperProjects({ developerId });
-      if (res.success) {
-        setDeveloperProjectsById((prev) => ({
-          ...prev,
-          [developerId]: res.data || []
-        }));
-        setActiveDeveloperId(developerId);
-      }
+      const res = await fetchDeveloperProjects(developerId);
+      const projects = res?.data || [];
+
+      developerProjectsCache.set(developerId, projects);
+      setDeveloperProjectsById((prev) => ({
+        ...prev,
+        [developerId]: projects
+      }));
+      setActiveDeveloperId(developerId);
     } catch (err) {
       console.error("Developer Projects API Error:", err);
+      setDeveloperProjectsById((current) => ({
+        ...current,
+        [developerId]: [],
+      }));
+    } finally {
+      setActiveDeveloperProjectsLoading(false);
     }
   }, [fetchDeveloperProjects, developerProjectsById]);
 
@@ -211,74 +346,21 @@ const Project = () => {
     }).catch(() => {
       // Fallback data already applied above.
     });
+
+    loadExploreLocalities(currentLocation?.city || 'Mohali');
+    loadHighDemandProjects({ city: currentLocation?.city || 'Mohali' });
     
     loadTopDevelopers({
       city: currentLocation?.city || 'Mohali',
       limit: 10
     });
-  }, [currentLocation, fetchProjects, loadTopDevelopers]);
+  }, [currentLocation, fetchProjects, loadExploreLocalities, loadHighDemandProjects, loadTopDevelopers]);
 
   const recentSearches = [
     { title: 'Commercial, Buy, Mohali,', subtitle: 'Any price, Any area' },
     { title: 'Buy, Sector 62', subtitle: 'Any price' },
     { title: 'Apartment, Rent, Zirakpur', subtitle: 'Min ₹15K, 2+ BHK' },
     { title: 'Plot, Buy, Kharar', subtitle: '100-150 sq.yd' },
-  ];
-
-
-  const recommendedSellers = [
-    {
-      id: 1,
-      name: 'Priya Sharma',
-      experienceYears: '29',
-      propertiesCount: '15',
-      location: 'Nabha',
-    },
-    {
-      id: 2,
-      name: 'Rahul Verma',
-      experienceYears: '12',
-      propertiesCount: '8',
-      location: 'Sector 66, Mohali',
-    }
-  ];
-
-  const betterPricedProperties = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      title: "Ubber Mews Gate",
-      marketer: "rising star builtec",
-      details: "2, 3, 4 BHK ... • Aujala, Mohali",
-      priceRange: "₹ 69.43 L - 1.22 Cr"
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
-      title: "Green Valley Estate",
-      marketer: "Green Developers",
-      details: "3, 4 BHK ... • Sector 88, Mohali",
-      priceRange: "₹ 85.50 L - 1.45 Cr"
-    }
-  ];
-
-  const lastSearches = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      price: "₹ 2.03 Cr - 6.25 Cr",
-      title: "Wave Estate Group Housing",
-      builder: "by Uppal Chadha Hi Tech De...",
-      location: "Patti Sohana, Mohali"
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
-      price: "₹ 2.03 Cr - 6.25 Cr",
-      title: "Wave Estate Group Housing",
-      builder: "by Uppal Chadha Hi Tech De...",
-      location: "Patti Sohana, Mohali"
-    }
   ];
 
   const newsArticles = [
@@ -317,117 +399,28 @@ const Project = () => {
     { left: 37.5, right: 52.5, top: 57.5, bottom: 37.5, background: '#8B6F47' }
   ];
 
-  const highDemandProjects = [
-    {
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400",
-      priceRange: "₹51.9 L - 68.9 L",
-      title: "Lok Awas",
-      developer: "Vara Developers",
-      location: "Sector 74 A, Mohali"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
-      priceRange: "₹85.0 L - 1.2 Cr",
-      title: "Hero Homes",
-      developer: "Hero Realty",
-      location: "Sector 88, Mohali"
-    }
-  ];
+  const bestLocalities = [...exploreLocalities]
+    .sort((a, b) => (Number(b.averagePricePerSqft) || 0) - (Number(a.averagePricePerSqft) || 0))
+    .slice(0, 6)
+    .map((item, index) => ({
+      title: item.localityName || item.locality || `Locality ${index + 1}`,
+      rating: '4.5',
+      reviews: String(item.totalProperties || 0),
+      price: formatPricePerSqft(item.averagePricePerSqft),
+    }));
 
-  const focusProjects = [
-    {
-      images: [
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600'
-      ],
-      title: 'Nirwana The Moksha',
-      location: 'Kharar, Mohali',
-      price: '₹45.03 L - 1.11 Cr',
-      tag: 'TALLEST LANDMARK',
-      developer: 'NIRWANA GROUP',
-      badgeType: 'RERA',
-      badgeColor: '#155DFC'
-    },
-    {
-      images: [
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=600'
-      ],
-      title: 'Premium Heights',
-      location: 'Sector 66, Mohali',
-      price: '₹62.50 L - 1.35 Cr',
-      tag: 'LUXURY LIVING',
-      developer: 'PREET DEVELOPERS',
-      badgeType: 'READY',
-      badgeColor: '#00A63E'
-    },
-    {
-      images: [
-        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'
-      ],
-      title: 'Royal Residences',
-      location: 'Sector 71, Mohali',
-      price: '₹71.20 L - 1.58 Cr',
-      tag: 'PREMIUM LIVING',
-      developer: 'ROYAL GROUP',
-      badgeType: 'RERA',
-      badgeColor: '#155DFC'
-    }
-  ];
+  const visibleLocalities = bestLocalities.slice(0, 4);
 
-  const bestLocalities = [
-    { title: 'Sector 115', rating: '4.8', reviews: '3', price: '₹5K/sqft.' },
-    { title: 'Sector 82', rating: '4.6', reviews: '12', price: '₹7K/sqft.' },
-    { title: 'Sector 66', rating: '4.9', reviews: '8', price: '₹12K/sqft.' },
-    { title: 'Sector 71', rating: '4.7', reviews: '5', price: '₹9K/sqft.' },
-  ];
-
-  const suggestions = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600',
-      developerName: 'Nirwana Group',
-      developerInitial: 'N',
-      price: '₹ 45.03 L - 1.11 Cr',
-      title: 'Nirwana The Moksha',
-      location: 'Khanpur, Mohali',
-      config: '1, 2, 3 BHK Flats'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-      developerName: 'Vatika Group',
-      developerInitial: 'V',
-      price: '₹ 51.9 L - 89.3 L',
-      title: 'Vatika Seven Lamps',
-      location: 'Sector 82, Mohali',
-      config: '2 BHK Flats'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600',
-      developerName: 'DLF Limited',
-      developerInitial: 'D',
-      price: '₹ 62.5 L - 1.25 Cr',
-      title: 'DLF Garden City',
-      location: 'Sector 91, Mohali',
-      config: '2, 3, 4 BHK Flats'
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600',
-      developerName: 'Emaar India',
-      developerInitial: 'E',
-      price: '₹ 75.2 L - 1.45 Cr',
-      title: 'Emaar Palm Heights',
-      location: 'Sector 77, Mohali',
-      config: '2, 3 BHK Flats'
-    }
-  ];
+  const suggestions = matchedHomes.map((item) => ({
+    id: item.id,
+    image: item.images?.[0] || item.image,
+    developerName: item.developer || 'Developer',
+    developerInitial: (item.developer || 'D').charAt(0).toUpperCase(),
+    price: item.priceRange || '',
+    title: item.title || 'Untitled Project',
+    location: item.location || '',
+    config: item.tag || 'PROJECT'
+  }));
 
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
@@ -484,8 +477,6 @@ const Project = () => {
         {/* Continue where you left Section */}
         <ContinueCards data={recentSearches} />
 
-
-
         {/* Matches Section */}
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
@@ -503,8 +494,9 @@ const Project = () => {
           ) : null}
 
           <PropertyMatchedCards data={matchedHomes} destination="project" />
-          
         </View>
+
+        
 
         {/* Smart Suggestions Section */}
         <View className=" mb-6">
@@ -545,7 +537,7 @@ const Project = () => {
         </View>
 
         {/* Projects in Focus Section */}
-        <View className="px-4 mb-6" style={{ gap: 16 }}>
+        {/* <View className="px-4 mb-6" style={{ gap: 16 }}>
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
               <Text
@@ -580,7 +572,7 @@ const Project = () => {
               <ProjectFocusCard key={index} {...project} />
             ))}
           </ScrollView>
-        </View>
+        </View> */}
 
         {/* Popular on Propertize Section */}
         <View className="px-4 mb-6">
@@ -729,32 +721,46 @@ const Project = () => {
         </View>
 
         {/* Best Rated Localities Section */}
-        <View className="px-4 mb-4 " >
+        <View className="px-4 mb-4">
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Best rated localities in Mohali</Text>
-            <TouchableOpacity>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Top-rated neighborhoods</Text>
+            <TouchableOpacity onPress={() => router.push('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
-          <View className="relative">
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 27, paddingRight: 20 }}
-            >
-              <View className="flex-col gap-3">
-                {bestLocalities.slice(0, Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
-                  <LocalityCard key={`top-${index}`} {...locality} />
-                ))}
-              </View>
-              <View className="flex-col gap-3">
-                {bestLocalities.slice(Math.ceil(bestLocalities.length / 2)).map((locality, index) => (
-                  <LocalityCard key={`bottom-${index}`} {...locality} />
-                ))}
-              </View>
-            </ScrollView>
-          </View>
+          {localityLoading ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: 127 }}>
+              <ActivityIndicator size="small" color="#008E96" />
+            </View>
+          ) : localityError ? (
+            <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
+              <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
+            </View>
+          ) : visibleLocalities.length === 0 ? (
+            <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No best-rated locality data available right now.</Text>
+            </View>
+          ) : (
+            <View className="relative">
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 27, paddingRight: 20 }}
+              >
+                <View className="flex-col gap-3">
+                  {visibleLocalities.slice(0, Math.ceil(visibleLocalities.length / 2)).map((locality, index) => (
+                    <LocalityCard key={`top-${index}`} {...locality} />
+                  ))}
+                </View>
+                <View className="flex-col gap-3">
+                  {visibleLocalities.slice(Math.ceil(visibleLocalities.length / 2)).map((locality, index) => (
+                    <LocalityCard key={`bottom-${index}`} {...locality} />
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
+          )}
         </View>
         {/* High Demand Projects Section */}
         <View className="px-4 mb-6" style={{ gap: 16 }}>
@@ -783,81 +789,108 @@ const Project = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
-          >
-            {highDemandProjects.map((project, index) => (
-              <HighDemandProjectCard
-                key={index}
-                image={project.image}
-                priceRange={project.priceRange}
-                title={project.title}
-                developer={project.developer}
-                location={project.location}
-              />
-            ))}
-          </ScrollView>
+          {highDemandLoading ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: 227 }}>
+              <ActivityIndicator size="small" color="#008E96" />
+            </View>
+          ) : highDemandError ? (
+            <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
+              <Text className="font-inter-medium text-[13px] text-[#B42318]">{highDemandError}</Text>
+            </View>
+          ) : highDemandProjects.length === 0 ? (
+            <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No high demand projects available right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 16 }}
+            >
+              {highDemandProjects.map((project, index) => (
+                <HighDemandProjectCard
+                  key={project._id || project.id || `high-demand-${index}`}
+                  projectId={project._id || project.id}
+                  image={project.images?.[0] || project.image || project.media?.[0]?.fileUrl || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400'}
+                  priceRange={formatDisplayValue(project.priceRange || project.price, 'View details')}
+                  title={formatDisplayValue(project.title || project.name || project.projectName, 'Project')}
+                  developer={formatDisplayValue(project.developer?.name || project.builder?.name || project.developerName || project.builderName, 'Developer')}
+                  location={formatDisplayValue(project.localityName || project.locality || project.city, 'Mohali')}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
 
 
-        {/* Top Rated Developers Section */}
+       {/* Top Rated Developers Section */}
         <View className="px-4 mb-4 ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-bold text-[17px] text-[#101828]">Top rated developers</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282]">Projects from the best developers</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Developer Summary Cards */}
-          <View className="flex-row items-center ml-4 justify-between gap-4 mb-6">
-            {topDevelopersList.slice(0, 2).map((dev, index) => (
-              <View key={`dev-summary-${index}`} style={{ flex: 1 }}>
-                <DeveloperSummaryCard
-                  id={dev._id}
-                  name={dev.name || dev.developerName}
-                  logoText={dev.name?.split(' ')[0] || 'D'}
-                  logoColor={dev.logoColor || '#008E96'}
-                  yearEstd={dev.yearEstablished || dev.establishedYear || 'N/A'}
-                  projectCount={dev.projectCount || dev.totalProjects || '0'}
-                  isActive={activeDeveloperId === dev._id}
-                  onPress={() => loadDeveloperProjects(dev._id)}
-                />
-              </View>
-            ))}
+          <View className="flex-row items-stretch gap-4 mb-6">
+            {topDevelopersList.length > 0 ? (
+              topDevelopersList.slice(0, 2).map((dev, index) => (
+                <View key={dev._id} style={{ flex: 1 }}>
+                  <DeveloperSummaryCard
+                    name={dev.builderInfo?.name || 'Developer'}
+                    logoText={dev.builderInfo?.name?.substring(0, 2).toUpperCase() || 'DEV'}
+                    logoColor={index === 0 ? '#E7000B' : '#008E96'}
+                    yearEstd="2012"
+                    projectCount={String(dev.projectCount || 0)}
+                    isActive={activeDeveloperId === dev._id}
+                    onPress={() => loadDeveloperProjects(dev._id)}
+                  />
+                </View>
+              ))
+            ) : (
+              <Text className="font-inter-regular text-[13px] text-[#6A7282]">No top developers available right now.</Text>
+            )}
           </View>
 
-          {/* Developer Project Cards */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
-          >
-            {(developerProjectsById[activeDeveloperId] || []).map((project, index) => (
-              <DeveloperProjectCard 
-                key={`dev-project-${activeDeveloperId}-${index}`} 
-                image={project.image || project.images?.[0]}
-                logoText={project.logoText || 'D'}
-                logoColor={project.logoColor || '#008E96'}
-                title={project.title || project.name}
-                developerName={project.developerName || project.developer?.name || 'Developer'}
-                rating={project.rating || '4.5'}
-                config={project.config || project.configurations || 'N/A'}
-                location={project.location}
-                priceRange={project.priceRange || project.price}
-              />
-            ))}
-          </ScrollView>
+          <View className="mt-1">
+            {activeDeveloperProjectsLoading ? (
+              <ActivityIndicator color="#008E96" />
+            ) : (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 16, paddingBottom: 8 }}
+              >
+                {(developerProjectsById[activeDeveloperId] || []).length > 0 ? (
+                  developerProjectsById[activeDeveloperId].slice(0, 2).map((project, index) => (
+                    <DeveloperProjectCard
+                      key={project._id || `dev-project-${activeDeveloperId}-${index}`}
+                      projectId={project._id}
+                      image={project.media?.[0]?.fileUrl || project.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'}
+                      logoText={(topDevelopersList.find((dev) => dev._id === activeDeveloperId)?.builderInfo?.name || 'D').substring(0, 1).toUpperCase()}
+                      logoColor="#008E96"
+                      title={project.projectName || project.title || 'Project'}
+                      developerName={topDevelopersList.find((dev) => dev._id === activeDeveloperId)?.builderInfo?.name || 'Developer'}
+                      rating={project.rating || '4.8'}
+                      config={project.config || project.possessionStatus?.label || 'Project'}
+                      location={`${project.addressLine1 || project.locality || ''}, ${project.district || project.city || ''}`}
+                      priceRange={project.priceRange || project.price || 'View details'}
+                    />
+                  ))
+                ) : (
+                  <Text className="font-inter-regular text-[13px] text-[#6A7282]">No projects found for this developer.</Text>
+                )}
+              </ScrollView>
+            )}
+          </View>
         </View>
 
         {/* Better Priced Properties Section */}
-        <View className="px-4 mb-3">
+        {/* <View className="px-4 mb-3">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Better Priced Properties</Text>
@@ -885,10 +918,10 @@ const Project = () => {
               />
             ))}
           </ScrollView>
-        </View>
+        </View> */}
 
         {/* Last Searched Section */}
-        <View className="px-4 mb-1">
+        {/* <View className="px-4 mb-1">
           <View className="flex-row items-center justify-between mb-4">
             <View className="flex-1 mr-4">
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Last Searched</Text>
@@ -915,51 +948,51 @@ const Project = () => {
               />
             ))}
           </ScrollView>
-        </View>
+        </View> */}
 
 
         {/* Explore Localities Section */}
         <View className="px-4  mt-6">
-          <View className="flex-row items-center justify-between mb-4">
-            <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
+            <View className="flex-row items-center justify-between mb-4">
+              <View>
+                <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
+                <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in {currentLocation?.city || 'Mohali'}</Text>
+              </View>
+              <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
-            </TouchableOpacity>
-          </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
-          >
-            <ExploreLocalityCard
-              title="Kharar"
-              avgPrice="Avg. Price:"
-              priceSqft="₹6.2K/ sq.ft."
-              growth="+12.68% ▲"
-            />
-            <ExploreLocalityCard
-              title="Sector 115"
-              avgPrice="Avg. Price:"
-              priceSqft="₹5.1K/ sq.ft."
-              growth="+7.25% ▲"
-            />
-            <ExploreLocalityCard
-              title="Zirakpur"
-              avgPrice="Avg. Price:"
-              priceSqft="₹4.8K/ sq.ft."
-              growth="+5.12% ▲"
-            />
-            <ExploreLocalityCard
-              title="Aerocity"
-              avgPrice="Avg. Price:"
-              priceSqft="₹8.5K/ sq.ft."
-              growth="+15.30% ▲"
-            />
-          </ScrollView>
+            {localityLoading ? (
+              <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: 127 }}>
+                <ActivityIndicator size="small" color="#008E96" />
+              </View>
+            ) : localityError ? (
+              <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
+                <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
+              </View>
+            ) : exploreLocalities.length === 0 ? (
+              <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+                <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
+              </View>
+            ) : (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
+              >
+                {exploreLocalities.map((item, index) => (
+                  <ExploreLocalityCard
+                    key={`${item.locality || 'locality'}-${index}`}
+                    title={item.localityName || item.locality}
+                    avgLabel={"Avg.\nPrice/sq.ft:"}
+                    averagePrice={formatPricePerSqft(item.averagePricePerSqft)}
+                    priceRange={`${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`}
+                    totalProperties={item.totalProperties}
+                  />
+                ))}
+              </ScrollView>
+            )}
         </View>
 
         {/* News For You Section */}
@@ -993,7 +1026,7 @@ const Project = () => {
 
         {/* Calculators Section */}
         <View className="px-4 mb-24 mt-4">
-          <ScrollView
+           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8 }}
@@ -1002,12 +1035,15 @@ const Project = () => {
               titlePrefix="EMI"
               description="EMI starts at ₹10.60K"
               vectorsConfig={emiVectors}
+              onPress={() => router.push('/screens/EMICalculator')}
             />
             <CalculatorCard
               titlePrefix="Affordability"
               description="Find the best budget for your home"
               vectorsConfig={affordabilityVectors}
+              onPress={() => router.push('/screens/AffordabilityCalculator')}
             />
+            
           </ScrollView>
         </View>
 
@@ -1017,4 +1053,10 @@ const Project = () => {
   );
 };
 
-export default Project;
+const ProjectWithBoundary = () => (
+  <ErrorBoundary>
+    <Project />
+  </ErrorBoundary>
+);
+
+export default ProjectWithBoundary;
