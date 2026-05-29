@@ -31,7 +31,6 @@ import CategoryTabs from '../../navigation/CategoryTabs';
 
 import { formatPrice, formatPricePerSqft } from '../../utils/formatPrice';
 
-const locationLoadCache = new Map();
 const developerProjectsCache = new Map();
 
 const formatLocalityName = (value, index) => {
@@ -552,7 +551,7 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="stats-chart-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">What's my budget?</Text>
+                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">What&apos;s my budget?</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -652,11 +651,11 @@ const Buy = () => {
               >
                 Most popular right now
               </Text>
-              <Text
+                <Text
                 className="font-inter-regular text-[#6A7282]"
                 style={{ fontSize: 13, lineHeight: 20 }}
               >
-                Limited homes available — don't miss out
+                Limited homes available — don&apos;t miss out
               </Text>
             </View>
             <TouchableOpacity
@@ -704,7 +703,7 @@ const Buy = () => {
                 className="font-inter-bold text-[#101828]"
                 style={{ fontSize: 17, lineHeight: 21 }}
               >
-                Expert's choice
+                Expert&apos;s choice
               </Text>
               <Text
                 className="font-inter-regular text-[#6A7282]"
