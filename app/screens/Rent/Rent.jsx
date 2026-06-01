@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -181,6 +182,21 @@ const Rent = () => {
     // Location updating is handled by LocationContext inside SearchBox;
     // keep a lightweight handler to avoid runtime errors when SearchBox calls it.
     console.log('📍 Rent screen notified of location change:', loc);
+  };
+
+  const handleProtectedViewMore = async (destination) => {
+    const token = await SecureStore.getItemAsync('token');
+    const redirectTo = encodeURIComponent(JSON.stringify(destination));
+
+    if (!token) {
+      router.replace({
+        pathname: '/(auth)/Login',
+        params: { redirectTo },
+      });
+      return;
+    }
+
+    router.push(destination);
   };
 
     const recentSearches = [
@@ -419,7 +435,7 @@ const emiVectors = [
                     <View className="px-4 my-4">
                       <View className="flex-row justify-between items-center">
                         <Text className="font-inter-semibold text-[17px] text-[#101828]">Smart Suggestions</Text>
-                        <TouchableOpacity onPress={() => router.push('/screens/Buy/Suggestions')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
                           <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
                         </TouchableOpacity>
                       </View>
@@ -450,7 +466,7 @@ const emiVectors = [
                           <PropertySuggestionCard
                             key={item.id}
                             {...item}
-                            onPress={() => item.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.id, source: 'rent' } })}
+                            onPress={() => item.id && handleProtectedViewMore({ pathname: '/screens/ProjectDetails', params: { projectId: item.id, source: 'rent' } })}
                           />
                         ))}
                     </ScrollView>
@@ -463,7 +479,7 @@ const emiVectors = [
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Owner Properties</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Properties listed directly by owners</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/OwnerProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/OwnerProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -520,7 +536,7 @@ const emiVectors = [
             <View className="flex-row justify-around">
               {/* Suggestions */}
               <TouchableOpacity
-                onPress={() => router.push('/screens/Buy/Suggestions')}
+                onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')}
                 className="items-center"
               >
                 <View className="w-10 h-10 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
@@ -571,7 +587,7 @@ const emiVectors = [
               <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
               <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
-             <TouchableOpacity onPress={() => router.push({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+             <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -604,7 +620,7 @@ const emiVectors = [
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
             </View>
-           <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+           <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -648,7 +664,7 @@ const emiVectors = [
               <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>

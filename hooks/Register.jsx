@@ -55,7 +55,9 @@ export const useRegister = () => {
     };
 
     // Step 2: Account Registration (Backend OTP)
-    const handleRegister = async () => {
+    const handleRegister = async (options = {}) => {
+        const { onSuccess } = options;
+
         if (formData.password !== formData.confirmPassword) {
             Alert.alert("Error", "Passwords do not match.");
             return;
@@ -82,7 +84,11 @@ export const useRegister = () => {
 
             if (response.data.success) {
                 Alert.alert("Success", response.data.message);
-                setStep(3); // Proceed to Email OTP verification
+                if (typeof onSuccess === "function") {
+                    onSuccess(response.data);
+                } else {
+                    setStep(3); // Proceed to Email OTP verification
+                }
             } else {
                 // If success is false but no error thrown
                 Alert.alert("Warning", response.data.error || "Something went wrong.");
@@ -155,7 +161,9 @@ export const useRegister = () => {
         }
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async (options = {}) => {
+        const { onSuccess } = options;
+
         if (!formData.email || !formData.password) {
             Alert.alert("Error", "Please enter both Email/Number and Password");
             return;
@@ -181,7 +189,11 @@ export const useRegister = () => {
                 ]);
 
                 Alert.alert("Success", "Logged in successfully!");
-                router.replace("/screens/PostProperty/PropertyDetails"); // Redirect to post property flow
+                if (typeof onSuccess === "function") {
+                    onSuccess(response.data);
+                } else {
+                    router.replace("/screens/PostProperty/PropertyDetails"); // Redirect to post property flow
+                }
             } else {
                 Alert.alert("Login Failed", response.data.message || "Invalid credentials");
             }

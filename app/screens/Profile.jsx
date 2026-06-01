@@ -2,30 +2,30 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import {
-  ArrowLeft,
-  Building,
-  ChevronDown,
-  ChevronRight,
-  CircleHelp,
-  CreditCard,
-  Crown,
-  Eye,
-  FileText,
-  Folder,
-  Gem,
-  HandCoins,
-  Heart,
-  History,
-  Home,
-  LogOut,
-  Newspaper,
-  Phone,
-  Puzzle,
-  Search,
-  Settings,
-  Star,
-  TriangleAlert,
-  Zap
+    ArrowLeft,
+    Building,
+    ChevronDown,
+    ChevronRight,
+    CircleHelp,
+    CreditCard,
+    Crown,
+    Eye,
+    FileText,
+    Folder,
+    Gem,
+    HandCoins,
+    Heart,
+    History,
+    Home,
+    LogOut,
+    Newspaper,
+    Phone,
+    Puzzle,
+    Search,
+    Settings,
+    Star,
+    TriangleAlert,
+    Zap
 } from 'lucide-react-native';
 import React from 'react';
 import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -346,8 +346,6 @@ const Profile = () => {
 
       Alert.alert("Success", "Logged out successfully!");
       setIsLoggedIn(false);
-      // Redirect to login/register page
-      router.replace('/screens/PostProperty/Register');
     } catch (error) {
       console.error("Logout Error:", error);
       Alert.alert("Error", "Failed to logout. Please try again.");

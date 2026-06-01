@@ -1,6 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -202,6 +203,21 @@ const Project = () => {
       }
     }
   }, [selectedTab]);
+
+  const handleProtectedViewMore = useCallback(async (destination) => {
+    const token = await SecureStore.getItemAsync('token');
+    const redirectTo = encodeURIComponent(JSON.stringify(destination));
+
+    if (!token) {
+      router.replace({
+        pathname: '/(auth)/Login',
+        params: { redirectTo },
+      });
+      return;
+    }
+
+    router.push(destination);
+  }, []);
 
   const fetchProjects = useCallback(async (params = {}) => {
     setMatchedHomesLoading(true);
@@ -481,7 +497,7 @@ const Project = () => {
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Perfectly matched home...</Text>
-            <TouchableOpacity onPress={() => router.push({ pathname: '/screens/Project/ProjectMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/Project/ProjectMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
@@ -503,7 +519,7 @@ const Project = () => {
           <View className="px-4 mb-4">
             <View className="flex-row justify-between items-center">
               <Text className="font-inter-bold text-[22px] text-[#101828]">Smart Suggestions</Text>
-              <TouchableOpacity onPress={() => router.push({ pathname: '/screens/Project/Suggestions', params: { city: currentLocation?.city || 'Mohali' } })}>
+              <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/Project/Suggestions', params: { city: currentLocation?.city || 'Mohali' } })}>
                 <Text className="font-inter-semibold text-[15px] text-[#008E96]">See all</Text>
               </TouchableOpacity>
             </View>
@@ -595,7 +611,7 @@ const Project = () => {
           >
             <View className="flex-row justify-around mb-8">
               <TouchableOpacity
-                onPress={() => router.push('/screens/Buy/Suggestions')}
+                onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')}
                 className="items-center w-[100px]"
               >
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
@@ -724,7 +740,7 @@ const Project = () => {
         <View className="px-4 mb-4">
           <View className="flex-row items-center justify-between mb-4">
             <Text className="font-inter-bold text-[17px] text-[#101828]">Top-rated neighborhoods</Text>
-            <TouchableOpacity onPress={() => router.push('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -779,7 +795,7 @@ const Project = () => {
                 Hurry! Only a few units left
               </Text>
             </View>
-            <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/HighDemandProduct', params: { city: currentLocation?.city || 'Mohali' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text
                 className="font-inter-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
@@ -831,7 +847,7 @@ const Project = () => {
               <Text className="font-inter-bold text-[17px] text-[#101828]">Top rated developers</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282]">Projects from the best developers</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
@@ -958,7 +974,7 @@ const Project = () => {
                 <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
                 <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in {currentLocation?.city || 'Mohali'}</Text>
               </View>
-              <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
                 <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
               </TouchableOpacity>
             </View>

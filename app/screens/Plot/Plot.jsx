@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import { useEffect, useRef, } from 'react';
 import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,6 +36,21 @@ const Plot = () => {
       }
     }
   }, [selectedTab]);
+
+  const handleProtectedViewMore = async (destination) => {
+    const token = await SecureStore.getItemAsync('token');
+    const redirectTo = encodeURIComponent(JSON.stringify(destination));
+
+    if (!token) {
+      router.replace({
+        pathname: '/(auth)/Login',
+        params: { redirectTo },
+      });
+      return;
+    }
+
+    router.push(destination);
+  };
 
 
 
@@ -202,7 +218,7 @@ const Plot = () => {
           >
             <View className="flex-row justify-around mb-8">
               <TouchableOpacity
-                onPress={() => router.push('/screens/Buy/Suggestions')}
+                onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')}
                 className="items-center w-[100px]"
               >
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
@@ -260,7 +276,7 @@ const Plot = () => {
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/RecommendedSellers')}>
               <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -299,7 +315,7 @@ const Plot = () => {
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Most Popular</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Handpicked for you</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/MostPopularPlots')}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -330,7 +346,7 @@ const Plot = () => {
               <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/NewsForYou')}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>

@@ -1,5 +1,5 @@
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   SafeAreaView,
@@ -9,16 +9,44 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
 
 const Login = () => {
   const router = useRouter();
+  const { redirectTo } = useLocalSearchParams();
   const [showPassword, setShowPassword] = useState(false);
+  const { formData, updateFormData, loading, handleLogin } = useRegister();
+
+  const resolveRedirectTarget = () => {
+    if (!redirectTo || typeof redirectTo !== "string") {
+      return "/screens/PostProperty/PropertyDetails";
+    }
+
+    try {
+      return JSON.parse(decodeURIComponent(redirectTo));
+    } catch (error) {
+      console.warn("Unable to parse login redirect target", error?.message);
+      return "/screens/PostProperty/PropertyDetails";
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    router.replace(resolveRedirectTarget());
+  };
+
+  const handleSafeBack = () => {
+    try {
+      router.back();
+    } catch {
+      router.replace("/(auth)/onboard");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="px-4 pt-2">
-        <TouchableOpacity onPress={() => router.back()} className="p-2 self-start">
+        <TouchableOpacity onPress={handleSafeBack} className="p-2 self-start">
           <Ionicons name="chevron-back" size={32} color="black" />
         </TouchableOpacity>
       </View>
@@ -43,6 +71,8 @@ const Login = () => {
                 keyboardType="email-address"
                 className="flex-1 ml-3 text-gray-800"
                 placeholderTextColor="#9CA3AF"
+                value={formData.email}
+                onChangeText={(value) => updateFormData("email", value)}
               />
             </View>
 
@@ -53,6 +83,8 @@ const Login = () => {
                 secureTextEntry={!showPassword}
                 className="flex-1 ml-3 text-gray-800"
                 placeholderTextColor="#9CA3AF"
+                value={formData.password}
+                onChangeText={(value) => updateFormData("password", value)}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                 <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#9CA3AF" />
@@ -67,8 +99,12 @@ const Login = () => {
           <TouchableOpacity 
             className="mt-8 p-5 rounded-2xl items-center shadow-lg"
             style={{ backgroundColor: PRIMARY_COLOR }}
+            onPress={() => handleLogin({ onSuccess: handleLoginSuccess })}
+            disabled={loading}
           >
-            <Text className="text-white font-inter-bold text-lg">Login</Text>
+            <Text className="text-white font-inter-bold text-lg">
+              {loading ? "Logging in..." : "Login"}
+            </Text>
           </TouchableOpacity>
 
           {/* Social Login */}

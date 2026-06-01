@@ -9,12 +9,14 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
 
 const Register = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { formData, updateFormData, loading, handleRegister } = useRegister();
 
   return (
     <SafeAreaView className="flex-1 pt-12 bg-white">
@@ -47,6 +49,8 @@ const Register = () => {
               placeholder="Your Full Name"
               className="flex-1 ml-3 font-inter-regular text-gray-800"
               placeholderTextColor="#9CA3AF"
+              value={formData.name}
+              onChangeText={(value) => updateFormData("name", value)}
             />
           </View>
 
@@ -57,6 +61,8 @@ const Register = () => {
               keyboardType="email-address"
               className="flex-1 ml-3 font-inter-regular text-gray-800"
               placeholderTextColor="#9CA3AF"
+              value={formData.email}
+              onChangeText={(value) => updateFormData("email", value)}
             />
           </View>
 
@@ -67,6 +73,8 @@ const Register = () => {
               keyboardType="phone-pad"
               className="flex-1 ml-3 font-inter-regular text-gray-800"
               placeholderTextColor="#9CA3AF"
+              value={formData.phone}
+              onChangeText={(value) => updateFormData("phone", value)}
             />
           </View>
 
@@ -77,6 +85,8 @@ const Register = () => {
               secureTextEntry={!showPassword}
               className="flex-1 ml-3 font-inter-regular text-gray-800"
               placeholderTextColor="#9CA3AF"
+              value={formData.password}
+              onChangeText={(value) => updateFormData("password", value)}
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
               <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
@@ -90,6 +100,8 @@ const Register = () => {
               secureTextEntry={!showConfirmPassword}
               className="flex-1 ml-3 font-inter-regular text-gray-800"
               placeholderTextColor="#9CA3AF"
+              value={formData.confirmPassword}
+              onChangeText={(value) => updateFormData("confirmPassword", value)}
             />
             <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
               <Ionicons name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
@@ -117,9 +129,12 @@ const Register = () => {
               shadowRadius: 6,
               elevation: 4
             }}
-            onPress={() => router.push("/screens/Buy/Buy")}
+            onPress={() => handleRegister({ onSuccess: () => router.replace("/(auth)/Login") })}
+            disabled={loading}
           >
-            <Text className="text-white font-inter-bold text-lg">Register and Create Account</Text>
+            <Text className="text-white font-inter-bold text-lg">
+              {loading ? "Registering..." : "Register and Create Account"}
+            </Text>
           </TouchableOpacity>
         </View>
 

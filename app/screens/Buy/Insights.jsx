@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
 import { router, Stack } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import { ArrowLeft } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HighestGrowthCard from '../../../components/HighestGrowthCard';
 import InsightPropertyCard from '../../../components/InsightPropertyCard';
 import LocalityExploreCard from '../../../components/LocalityExploreCard';
 import PreferenceCard from '../../../components/PreferenceCard';
 import RevisitPropertyCard from '../../../components/RevisitPropertyCard';
 import TopRatedProjectCard from '../../../components/TopRatedProjectCard';
 import UniqueAmenityCard from '../../../components/UniqueAmenityCard';
-import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import { useLocality } from '../../../hooks/useLocality';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
 import { useLocation } from '../../context/LocationContext';
 
 
@@ -169,6 +169,21 @@ const Insights = () => {
     const [nearbyProperties, setNearbyProperties] = useState([]);
     const [nearbyLocalities, setNearbyLocalities] = useState([]);
 
+    const handleProtectedViewMore = async (destination) => {
+      const token = await SecureStore.getItemAsync('token');
+      const redirectTo = encodeURIComponent(JSON.stringify(destination));
+
+      if (!token) {
+        router.replace({
+          pathname: '/(auth)/Login',
+          params: { redirectTo },
+        });
+        return;
+      }
+
+      router.push(destination);
+    };
+
     const loading = discoveryLoading || localityLoading || localityPriceLoading;
 
     useEffect(() => {
@@ -230,7 +245,7 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(300)} className="pl-4">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold">New Listings added nearby</Text>
-                        <TouchableOpacity onPress={() => router.push({ pathname: '/screens/PrefectlyMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
+                        <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/PrefectlyMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
                             <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
                         </TouchableOpacity>
                     </View>
@@ -264,7 +279,7 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(400)} className="pl-4 mt-8">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold">Revisit properties seen by you</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/RevisitProperty')}>
                             <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
                         </TouchableOpacity>
                     </View>
@@ -283,7 +298,7 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(500)} className="pl-4 mt-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-bold">Explore localities nearby</Text>
-                        <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')}>
+                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')}>
                             <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
                         </TouchableOpacity>
                     </View>
@@ -299,7 +314,7 @@ const Insights = () => {
                                     rating={item.rating || (4 + Math.random()).toFixed(1)}
                                     price={item.averagePricePerSqft ? `₹${(item.averagePricePerSqft/1000).toFixed(1)}K/sq.ft.` : 'N/A'}
                                     properties={item.totalProperties || Math.floor(Math.random() * 50) + 10 + '+'}
-                                    onPress={() => router.push('/screens/ExploreLocalities')}
+                                    onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')}
                                 />
                             </View>
                         )) : localityMockData.map((item, index) => (
@@ -314,7 +329,7 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(600)} className="px-4 mt-6">
                     <View className="flex-row items-center justify-between mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Top rated projects</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedProject')}>
                             <Text className="text-[#008E96] text-[14px] font-inter-medium">See all</Text>
                         </TouchableOpacity>
                     </View>
@@ -350,7 +365,7 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(800)} className="pl-4 mt-6 pb-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Projects with unique amenities</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/UniqueAmenities')}>
                             <Text className="text-[#008E96] text-[14px] font-inter-medium">See all</Text>
                         </TouchableOpacity>
                     </View>

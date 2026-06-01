@@ -1,6 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, DeviceEventEmitter, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -100,6 +101,21 @@ const Buy = () => {
   const { width } = Dimensions.get('window');
   const scale = width / 375; // base design width
   const s = (n) => Math.round(n * scale);
+
+  const handleProtectedViewMore = useCallback(async (destination) => {
+    const token = await SecureStore.getItemAsync('token');
+    const redirectTo = encodeURIComponent(JSON.stringify(destination));
+
+    if (!token) {
+      router.replace({
+        pathname: '/(auth)/Login',
+        params: { redirectTo },
+      });
+      return;
+    }
+
+    router.push(destination);
+  }, []);
 
   useEffect(() => {
     setSelectedTab('Buy');
@@ -451,7 +467,7 @@ const Buy = () => {
           <View className="flex-row items-center justify-between mb-2">
             <Text className="font-inter-bold text-[18px] text-[#101828]">Top picks for you</Text>
             <TouchableOpacity
-              onPress={() => router.push({
+              onPress={() => handleProtectedViewMore({
                 pathname: '/screens/PrefectlyMatchedHome',
                 params: {
                   city: currentLocation?.city,
@@ -506,7 +522,7 @@ const Buy = () => {
           >
             <View className="flex-row justify-around mb-8">
               <TouchableOpacity
-                onPress={() => router.push('/screens/Buy/Suggestions')}
+                onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')}
                 className="items-center"
                 style={{ width: s(100) }}
               >
@@ -517,7 +533,7 @@ const Buy = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
-              onPress={() => router.push('/screens/BestPriceProperty')}
+              onPress={() => handleProtectedViewMore('/screens/BestPriceProperty')}
               className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="pricetag-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
@@ -526,7 +542,7 @@ const Buy = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
-              onPress={() => router.push('/screens/NewsForYou')}
+              onPress={() => handleProtectedViewMore('/screens/NewsForYou')}
               className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="newspaper-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
@@ -659,7 +675,7 @@ const Buy = () => {
               </Text>
             </View>
             <TouchableOpacity
-              onPress={() => router.push({
+              onPress={() => handleProtectedViewMore({
                 pathname: '/screens/HighDemandProduct',
                 params: {
                   city: currentLocation?.city,
@@ -713,7 +729,7 @@ const Buy = () => {
               </Text>
             </View>
             <TouchableOpacity
-              onPress={() => router.push({
+              onPress={() => handleProtectedViewMore({
                 pathname: '/screens/ProjectInFocus',
                 params: {
                   city: currentLocation?.city,
@@ -758,7 +774,7 @@ const Buy = () => {
         <View className="px-4 mb-4 " >
           <View className="flex-row items-center justify-between mb-4">
             <Text className="font-inter-bold text-[17px] text-[#101828]">Top-rated neighborhoods</Text>
-            <TouchableOpacity onPress={() => router.push('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -800,7 +816,7 @@ const Buy = () => {
               <Text className="font-inter-bold text-[17px] text-[#101828]">Trusted Home Builders</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282]">Builders with the best track record</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
@@ -867,7 +883,7 @@ const Buy = () => {
               <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
               <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'sell' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'sell' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -922,7 +938,7 @@ const Buy = () => {
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Better Priced Properties</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on properties you viewed</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/BestPriceProperty')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestPriceProperty')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -1134,7 +1150,7 @@ const Buy = () => {
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See insights and videos in {currentLocation?.city || 'Mohali'}</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -1178,7 +1194,7 @@ const Buy = () => {
               <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
