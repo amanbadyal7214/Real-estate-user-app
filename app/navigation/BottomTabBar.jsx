@@ -1,9 +1,25 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import { Heart, Search, User } from 'lucide-react-native';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 
 const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
+  const handleProtectedNavigation = async (destination) => {
+    const token = await SecureStore.getItemAsync('token');
+    const redirectTo = encodeURIComponent(JSON.stringify(destination));
+
+    if (!token) {
+      router.replace({
+        pathname: '/(auth)/Login',
+        params: { redirectTo },
+      });
+      return;
+    }
+
+    router.push(destination);
+  };
+
   const getSearchRoute = () => {
     switch (mode) {
       case 'Rent':
@@ -59,7 +75,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
           <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Explore</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
           <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Favorites</Text>
         </TouchableOpacity>
@@ -109,12 +125,12 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
           <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Explore</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/screens/Rent/services')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Rent/services')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <MaterialCommunityIcons name="room-service-outline" color={activeTab === 'Services' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
           <Text style={{ color: activeTab === 'Services' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>services</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
           <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
           <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Favorites</Text>
         </TouchableOpacity>
@@ -164,17 +180,17 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
         <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Explore</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push('/screens/Buy/Insights')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Buy/Insights')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <MaterialCommunityIcons name="google-analytics" color={activeTab === 'Insights' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
         <Text style={{ color: activeTab === 'Insights' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Trends</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push('/screens/Buy/Suggestions')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Buy/Suggestions')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <Search color={activeTab === 'Suggestions' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
         <Text style={{ color: activeTab === 'Suggestions' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>For You</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push('/screens/Saved')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
+      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
         <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
         <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Favorites</Text>
       </TouchableOpacity>

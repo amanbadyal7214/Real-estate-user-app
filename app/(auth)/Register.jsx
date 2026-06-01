@@ -1,13 +1,16 @@
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-    SafeAreaView,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
@@ -16,7 +19,111 @@ const Register = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { formData, updateFormData, loading, handleRegister } = useRegister();
+  
+  const {
+    step,
+    setStep,
+    formData,
+    updateFormData,
+    loading,
+    setEnteredMockOtp,
+    setEmailOtp,
+    handlePhoneValidation,
+    verifyMockOtp,
+    handleRegister,
+    handleVerifyEmailOtp,
+  } = useRegister();
+
+  // OTP State
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const otpInputs = useRef([]);
+
+  const isFormValid = 
+    formData.phone.length === 10 && 
+    formData.name.trim().length > 0 && 
+    formData.email.includes('@') &&
+    formData.password.length >= 6;
+
+  const handleNext = async () => {
+    if (isFormValid) {
+      setOtp(['', '', '', '', '', '']);
+      setShowOTPModal(true);
+      setTimeout(() => {
+        handlePhoneValidation();
+      }, 500);
+    }
+  };
+
+  const handleOtpChange = (value, index) => {
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Auto focus next input
+    if (value && index < 5) {
+      otpInputs.current[index + 1].focus();
+    }
+    
+    // Update hook state based on current step
+    const fullOtp = newOtp.join('');
+    console.log("OTP Change:", { step, fullOtp });
+    if (step === 1) {
+      setEnteredMockOtp(fullOtp);
+    } else if (step === 2 || step === 3) {
+      setEmailOtp(fullOtp);
+    }
+  };
+
+  const handleKeyPress = (e, index) => {
+    if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
+      otpInputs.current[index - 1].focus();
+    }
+  };
+
+  const verifyOTP = async () => {
+    const otpValue = otp.join('');
+    console.log("verifyOTP Clicked:", { step, otpValueLength: otpValue.length });
+    if (otpValue.length === 6) {
+      if (step === 1) {
+        console.log("Calling verifyMockOtp");
+        verifyMockOtp();
+      } else if (step === 2 || step === 3) {
+        console.log("Calling handleVerifyEmailOtp as fallback for step", step);
+        await handleVerifyEmailOtp({
+          onSuccess: () => {
+            setShowOTPModal(false);
+            router.replace("/screens/Buy/Buy");
+          }
+        });
+      }
+    } else {
+      console.log("OTP length is not 6");
+    }
+  };
+
+  // Effect to handle automatic transitions after successful actions
+  useEffect(() => {
+    const registerAndNext = async () => {
+      if (step === 2 && showOTPModal && !loading) {
+        // Mock OTP verified, now register
+        await handleRegister();
+      }
+    };
+    registerAndNext();
+  }, [step, showOTPModal]);
+
+  // Effect to clear OTP when moving to email verification or step 2
+  useEffect(() => {
+    if (step === 2 || step === 3) {
+      setOtp(['', '', '', '', '', '']);
+    }
+  }, [step]);
+
+  const handleCloseModal = () => {
+    setShowOTPModal(false);
+    setStep(1);
+  };
 
   return (
     <SafeAreaView className="flex-1 pt-12 bg-white">
@@ -33,7 +140,7 @@ const Register = () => {
         </View>
 
         {/* Role Selector - More Compact */}
-        <View 
+        <View
           className="flex-row items-center justify-center p-4 rounded-2xl mb-6 shadow-sm"
           style={{ backgroundColor: PRIMARY_COLOR }}
         >
@@ -122,17 +229,17 @@ const Register = () => {
             className="p-4 mt-4 items-center"
             style={{ 
               borderRadius: 14,
-              backgroundColor: '#008E96',
+              backgroundColor: isFormValid && !loading ? '#008E96' : '#E5E7EB',
               shadowColor: '#9ADDD9',
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 1,
               shadowRadius: 6,
               elevation: 4
             }}
-            onPress={() => handleRegister({ onSuccess: () => router.replace("/(auth)/Login") })}
-            disabled={loading}
+            onPress={handleNext}
+            disabled={loading || !isFormValid}
           >
-            <Text className="text-white font-inter-bold text-lg">
+            <Text className={`${isFormValid && !loading ? 'text-white' : 'text-[#99A1AF]'} font-inter-bold text-lg`}>
               {loading ? "Registering..." : "Register and Create Account"}
             </Text>
           </TouchableOpacity>
@@ -145,9 +252,9 @@ const Register = () => {
             <Text className="mx-4 text-gray-500 font-inter-medium">Or sign up with social</Text>
             <View className="flex-1 h-[1px] bg-gray-200" />
           </View>
-          
+
           <View className="flex-row justify-center">
-            <TouchableOpacity 
+            <TouchableOpacity
               activeOpacity={0.7}
               className="flex-row items-center justify-center p-2 bg-white border border-gray-200 rounded-2xl shadow-sm w-full h-14"
             >
@@ -157,7 +264,7 @@ const Register = () => {
           </View>
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           className="mt-6 mb-4"
           onPress={() => router.push("/(auth)/Login")}
         >
@@ -166,6 +273,66 @@ const Register = () => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* OTP Modal */}
+      <Modal
+        visible={showOTPModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={handleCloseModal}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className="flex-1 justify-end bg-black/50"
+        >
+          <View className="bg-white rounded-t-3xl p-6">
+            <View className="flex-row justify-between items-center mb-6">
+              <Text className="text-xl" style={{ fontFamily: 'Inter-Bold' }}>
+                {step === 1 ? 'Verify Phone' : 'Verify Email'}
+              </Text>
+              <TouchableOpacity onPress={handleCloseModal}>
+                <Ionicons name="close" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            
+            <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
+              {step === 1 
+                ? `Enter the 6-digit code sent to +91 ${formData.phone}`
+                : `Enter the 6-digit code sent to ${formData.email}`
+              }
+            </Text>
+
+            <View className="flex-row justify-between mb-8">
+              {otp.map((digit, index) => (
+                <TextInput
+                  key={index}
+                  ref={(ref) => (otpInputs.current[index] = ref)}
+                  className="w-11 h-14 border-2 border-gray-200 rounded-lg text-center text-xl"
+                  style={{ fontFamily: 'Inter-Bold' }}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  value={digit}
+                  onChangeText={(value) => handleOtpChange(value, index)}
+                  onKeyPress={(e) => handleKeyPress(e, index)}
+                />
+              ))}
+            </View>
+
+            <TouchableOpacity 
+              onPress={verifyOTP}
+              className={`w-full py-4 rounded-xl items-center ${otp.join('').length === 6 ? 'bg-[#008E96]' : 'bg-gray-200'}`}
+            >
+              <Text className="text-white text-base" style={{ fontFamily: 'Inter-Medium' }}>
+                Verify & Continue
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity className="mt-4 items-center">
+              <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Resend Code</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 };

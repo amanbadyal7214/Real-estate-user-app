@@ -29,28 +29,59 @@ export const useRegister = () => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    // Step 1: Phone Validation (Mock)
-    const handlePhoneValidation = () => {
+    // Step 1: Phone Validation
+    const handlePhoneValidation = async () => {
         if (formData.phone.length !== 10) {
             Alert.alert("Error", "Please enter a valid 10-digit phone number.");
             return;
         }
-        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-        setMockOtp(generatedOtp);
-        
-        // Show alert AFTER moving to step or with a small delay to ensure it doesn't block UI logic
-        setTimeout(() => {
-            Alert.alert("Phone Verification", `Your verification code is: ${generatedOtp}`);
-        }, 100);
-        
-        // setStep(1) is redundant but ensures we are explicitly starting phone verification
+        setLoading(true);
+        try {
+            const payload = { phone: formData.phone };
+            console.log("API Request: POST /auth/send-phone-otp (Send)", payload);
+            const response = await api.post("/auth/send-phone-otp", payload);
+            console.log("API Response: /auth/send-phone-otp (Send)", response.data);
+
+            if (response.data.success) {
+                Alert.alert("Success", "Verification OTP sent to your phone.");
+            } else {
+                Alert.alert("Error", response.data.message || "Failed to send verification code.");
+            }
+        } catch (error) {
+            console.error("API Error: /auth/send-phone-otp (Send)", error.response?.data || error.message);
+            const message = error.response?.data?.message || error.response?.data?.error || "Failed to send verification code.";
+            Alert.alert("Error", message);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const verifyMockOtp = () => {
-        if (enteredMockOtp === mockOtp) {
-            setStep(2); // Proceed to registration details
-        } else {
-            Alert.alert("Error", "Incorrect verification code.");
+    const verifyMockOtp = async () => {
+        if (enteredMockOtp.length !== 6) {
+            Alert.alert("Error", "Please enter a 6-digit OTP code.");
+            return;
+        }
+        setLoading(true);
+        try {
+            const payload = {
+                phone: formData.phone,
+                otp: enteredMockOtp.trim(),
+            };
+            console.log("API Request: POST /auth/verify-phone-otp (Verify)", payload);
+            const response = await api.post("/auth/verify-phone-otp", payload);
+            console.log("API Response: /auth/verify-phone-otp (Verify)", response.data);
+
+            if (response.data.success) {
+                setStep(2); // Proceed to registration details
+            } else {
+                Alert.alert("Verification Failed", response.data.message || "Incorrect verification code.");
+            }
+        } catch (error) {
+            console.error("API Error: /auth/verify-phone-otp (Verify)", error.response?.data || error.message);
+            const message = error.response?.data?.message || error.response?.data?.error || "Verification failed. Please try again.";
+            Alert.alert("Error", message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -98,7 +129,7 @@ export const useRegister = () => {
             console.error("API Error: /auth/register", error.response?.data || error.message);
             const message = error.response?.data?.error || error.response?.data?.message || "Registration failed. Please try again.";
             Alert.alert("Backend Error", message);
-            
+
             // Temporary Workaround: Agar email fail ho raha hai but user create ho gaya ho (backend check)
             // Ya sirf debugging ke liye allow karna chahte hain to step 3 par bhej sakte hain
             if (message.includes("Email could not be sent")) {
@@ -146,7 +177,7 @@ export const useRegister = () => {
                     SecureStore.setItemAsync("userRole", role),
                     SecureStore.setItemAsync("userData", JSON.stringify(user))
                 ]);
-                
+
                 Alert.alert("Success", "Account created successfully!");
                 router.replace("/screens/PostProperty/PropertyDetails"); // Redirect to post property flow
             } else {
@@ -199,7 +230,7 @@ export const useRegister = () => {
             }
         } catch (error) {
             console.error("API Error: /screens/PostProperty/Register", error.response?.data || error.message);
-            
+
             const message = error.response?.data?.error || error.response?.data?.message || "Login failed. Please try again.";
             Alert.alert("Error", message);
         } finally {
