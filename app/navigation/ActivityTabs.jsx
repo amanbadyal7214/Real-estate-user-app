@@ -2,35 +2,35 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Heart, Eye, Phone, Search } from 'lucide-react-native';
 
-const ActivityTabs = ({ activeTab = 'saved', onTabPress }) => {
+const ActivityTabs = ({ activeTab = 'saved', onTabPress, counts = {} }) => {
   const tabs = [
     { 
       id: 'saved', 
       label1: 'Saved', 
       label2: 'Properties', 
       icon: Heart, 
-      count: '00' 
+      count: String(counts.wishlistCount ?? 0).padStart(2, '0')
     },
     { 
       id: 'seen', 
       label1: 'Seen', 
       label2: 'Properties', 
       icon: Eye, 
-      count: '03' 
+      count: String(counts.viewedPropertiesCount ?? 0).padStart(2, '0')
     },
     { 
       id: 'contacted', 
       label1: 'Contacted', 
       label2: 'Properties', 
       icon: Phone, 
-      count: '00' 
+      count: String(counts.contactedPropertiesCount ?? 0).padStart(2, '0')
     },
     { 
       id: 'recent', 
       label1: 'Recent', 
       label2: 'Searches', 
       icon: Search, 
-      count: '10' 
+      count: String(counts.recentSearchesCount ?? 0).padStart(2, '0')
     },
   ];
 

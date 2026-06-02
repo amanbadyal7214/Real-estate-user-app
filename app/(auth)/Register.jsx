@@ -19,7 +19,7 @@ const Register = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const {
     step,
     setStep,
@@ -34,14 +34,18 @@ const Register = () => {
     handleVerifyEmailOtp,
   } = useRegister();
 
+  useEffect(() => {
+    updateFormData("role", "user");
+  }, []);
+
   // OTP State
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const otpInputs = useRef([]);
 
-  const isFormValid = 
-    formData.phone.length === 10 && 
-    formData.name.trim().length > 0 && 
+  const isFormValid =
+    formData.phone.length === 10 &&
+    formData.name.trim().length > 0 &&
     formData.email.includes('@') &&
     formData.password.length >= 6;
 
@@ -64,7 +68,7 @@ const Register = () => {
     if (value && index < 5) {
       otpInputs.current[index + 1].focus();
     }
-    
+
     // Update hook state based on current step
     const fullOtp = newOtp.join('');
     console.log("OTP Change:", { step, fullOtp });
@@ -225,9 +229,9 @@ const Register = () => {
             elevation: 10,
           }}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             className="p-4 mt-4 items-center"
-            style={{ 
+            style={{
               borderRadius: 14,
               backgroundColor: isFormValid && !loading ? '#008E96' : '#E5E7EB',
               shadowColor: '#9ADDD9',
@@ -281,7 +285,7 @@ const Register = () => {
         animationType="slide"
         onRequestClose={handleCloseModal}
       >
-        <KeyboardAvoidingView 
+        <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           className="flex-1 justify-end bg-black/50"
         >
@@ -294,9 +298,9 @@ const Register = () => {
                 <Ionicons name="close" size={24} color="black" />
               </TouchableOpacity>
             </View>
-            
+
             <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
-              {step === 1 
+              {step === 1
                 ? `Enter the 6-digit code sent to +91 ${formData.phone}`
                 : `Enter the 6-digit code sent to ${formData.email}`
               }
@@ -318,7 +322,7 @@ const Register = () => {
               ))}
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={verifyOTP}
               className={`w-full py-4 rounded-xl items-center ${otp.join('').length === 6 ? 'bg-[#008E96]' : 'bg-gray-200'}`}
             >
