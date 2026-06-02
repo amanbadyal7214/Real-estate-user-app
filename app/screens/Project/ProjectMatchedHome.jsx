@@ -149,6 +149,7 @@ const ProjectMatchedHome = () => {
             return (
             <PerfectMatchCard
               key={property._id || property.id || `project-${index}`}
+              showWishlist={false}
               property={{
                 id: property._id || property.id || `project-${index}`,
                 price: priceText,

@@ -103,6 +103,7 @@ const ProjectInFocus = () => {
             <PerfectMatchCard
               key={item.id}
               property={item}
+              showWishlist={false}
               onPress={() => router.push({
                 pathname: '/screens/ProjectDetails',
                 params: { projectId: item.id }

@@ -252,7 +252,8 @@ const PrefectlyMatchedHome = () => {
                 images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
                 photoCount: property.images?.length || 0,
                 isRera: true,
-                zeroBrokerage: true
+                zeroBrokerage: true,
+                isWishlisted: property.isWishlisted || false
               }} 
             />
           ))

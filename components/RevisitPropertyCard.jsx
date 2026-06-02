@@ -1,7 +1,8 @@
 import { Check, Heart, MessageCircle } from 'lucide-react-native';
 import { useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import api from '../app/api';
 
 const RevisitPropertyCard = ({
   id,
@@ -12,10 +13,38 @@ const RevisitPropertyCard = ({
   price,
   bhk,
   area,
-  isRera
+  isRera,
+  isWishlisted = false
 }) => {
   const router = useRouter();
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(!!isWishlisted);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message) => {
+    setToast(message);
+    setTimeout(() => {
+      setToast(null);
+    }, 2000);
+  };
+
+  const toggleWishlist = async () => {
+    if (!id) {
+      showToast("Property ID is missing");
+      return;
+    }
+    try {
+      const nextState = !isSaved;
+      setIsSaved(nextState);
+      const res = await api.post(`/properties/wishlist/${id}`);
+      if (res.data?.success) {
+        showToast(res.data.message || (nextState ? "Property added to wishlist" : "Property removed from wishlist"));
+      }
+    } catch (err) {
+      console.error("Error toggling wishlist in RevisitPropertyCard:", err);
+      setIsSaved(prev => !prev);
+      showToast(err.response?.data?.message || err.response?.data?.error || "Failed to update wishlist");
+    }
+  };
 
   const navigateToDetails = () => {
     if (id) {
@@ -52,9 +81,8 @@ const RevisitPropertyCard = ({
             <Text className="font-inter-medium text-[11px] leading-[16px] text-white">RERA</Text>
           </View>
         )}
-        {/* Heart Icon */}
         <TouchableOpacity
-          onPress={() => setIsSaved(!isSaved)}
+          onPress={toggleWishlist}
           className="absolute right-2 top-2 w-8 h-8 bg-white/90 rounded-full items-center justify-center"
         >
           <Heart
@@ -101,6 +129,32 @@ const RevisitPropertyCard = ({
           </TouchableOpacity>
         </View>
       </View>
+      {toast && (
+        <View 
+          style={{
+            position: 'absolute',
+            bottom: 60,
+            left: 10,
+            right: 10,
+            backgroundColor: '#1E293B',
+            paddingVertical: 10,
+            paddingHorizontal: 12,
+            borderRadius: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 999,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: 12, textAlign: 'center' }}>
+            {toast}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

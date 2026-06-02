@@ -2,7 +2,7 @@ import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-ic
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProjectPropertiesSection from '../../components/ProjectPropertiesSection';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
@@ -40,6 +40,59 @@ const PropertyDetails = () => {
   const [activeTab, setActiveTab] = useState('Overview');
   const [resolvedFacing, setResolvedFacing] = useState('');
   const flatListRef = useRef(null);
+  
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const recordedViewsRef = useRef(new Set());
+
+  useEffect(() => {
+    const targetId = propertyId || propertyData?._id || propertyData?.id;
+    if (targetId && !recordedViewsRef.current.has(targetId)) {
+      recordedViewsRef.current.add(targetId);
+      const recordView = async () => {
+        try {
+          await api.post(`/properties/view/${targetId}`);
+        } catch (err) {
+          console.error("Error logging property view:", err.response?.data || err.message);
+        }
+      };
+      recordView();
+    }
+  }, [propertyId, propertyData?._id, propertyData?.id]);
+
+  const showToast = (message) => {
+    setToast(message);
+    setTimeout(() => {
+      setToast(null);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    if (propertyData) {
+      setIsWishlisted(!!propertyData.isWishlisted);
+    }
+  }, [propertyData]);
+
+  const toggleWishlist = async () => {
+    const targetId = propertyId || propertyData?._id || propertyData?.id;
+    if (!targetId) {
+      showToast("Property ID is missing");
+      return;
+    }
+    try {
+      const nextState = !isWishlisted;
+      setIsWishlisted(nextState);
+      const res = await api.post(`/properties/wishlist/${targetId}`);
+      if (res.data?.success) {
+        showToast(res.data.message || (nextState ? "Property added to wishlist" : "Property removed from wishlist"));
+      }
+    } catch (err) {
+      console.error("Error toggling wishlist:", err);
+      setIsWishlisted(prev => !prev);
+      showToast(err.response?.data?.message || err.response?.data?.error || "Failed to update wishlist");
+    }
+  };
 
   const { fetchPropertyById, loading: fetching } = usePropertyDiscovery();
 
@@ -188,8 +241,8 @@ const PropertyDetails = () => {
                   <TouchableOpacity className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
                     <Ionicons name="share-social-outline" size={20} color="white" />
                   </TouchableOpacity>
-                  <TouchableOpacity className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
-                    <Ionicons name="heart-outline" size={20} color="white" />
+                  <TouchableOpacity onPress={toggleWishlist} className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
+                    <Ionicons name={isWishlisted ? "heart" : "heart-outline"} size={20} color={isWishlisted ? "#F04438" : "white"} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -447,6 +500,32 @@ const PropertyDetails = () => {
           <Text className="text-white font-inter-medium text-[16px]">Contact Seller</Text>
         </TouchableOpacity>
       </View>
+      {toast && (
+        <View 
+          style={{
+            position: 'absolute',
+            bottom: 140,
+            left: 20,
+            right: 20,
+            backgroundColor: '#1E293B',
+            paddingVertical: 12,
+            paddingHorizontal: 20,
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4.65,
+            elevation: 8,
+          }}
+        >
+          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: 13, textAlign: 'center' }}>
+            {toast}
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

@@ -270,6 +270,7 @@ const Insights = () => {
                                 bhk={prop.residential ? `${prop.residential?.bedrooms || 0} BHK Apartment` : prop.bhk}
                                 area={prop.area ? `${prop.area} ${prop.areaUnit?.name || 'sq.ft.'}` : prop.area}
                                 isRera={prop.isRera !== undefined ? prop.isRera : true}
+                                isWishlisted={prop.isWishlisted}
                             />
                         ))}
                     </ScrollView>
