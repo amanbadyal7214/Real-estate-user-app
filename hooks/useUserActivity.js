@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import api from "../app/api";
 
 export const useUserActivity = () => {
@@ -10,7 +10,7 @@ export const useUserActivity = () => {
     const [wishlistProperties, setWishlistProperties] = useState([]);
     const [recentSearches, setRecentSearches] = useState([]);
 
-    const fetchActivitySummary = async () => {
+    const fetchActivitySummary = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -26,9 +26,9 @@ export const useUserActivity = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchRecentlyViewed = async () => {
+    const fetchRecentlyViewed = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -44,9 +44,9 @@ export const useUserActivity = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchContactedProperties = async () => {
+    const fetchContactedProperties = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -62,9 +62,9 @@ export const useUserActivity = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchWishlistProperties = async () => {
+    const fetchWishlistProperties = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -80,9 +80,9 @@ export const useUserActivity = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchRecentSearches = async () => {
+    const fetchRecentSearches = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -98,9 +98,9 @@ export const useUserActivity = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchSavedSearches = async () => {
+    const fetchSavedSearches = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -113,9 +113,9 @@ export const useUserActivity = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const saveSearch = async (payload) => {
+    const saveSearch = useCallback(async (payload) => {
         setLoading(true);
         setError(null);
         try {
@@ -128,7 +128,7 @@ export const useUserActivity = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     return {
         fetchActivitySummary,
@@ -147,3 +147,4 @@ export const useUserActivity = () => {
         error
     };
 };
+

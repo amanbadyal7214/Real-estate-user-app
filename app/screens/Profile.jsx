@@ -340,12 +340,17 @@ const Profile = () => {
     loading
   } = useUserActivity();
 
+  const checkLoginStatus = React.useCallback(async () => {
+    const token = await SecureStore.getItemAsync('token');
+    setIsLoggedIn(!!token);
+  }, []);
+
   React.useEffect(() => {
     checkLoginStatus();
     fetchActivitySummary().catch((err) => {
       console.error("Error fetching activity summary in Profile screen:", err);
     });
-  }, []);
+  }, [checkLoginStatus, fetchActivitySummary]);
 
   React.useEffect(() => {
     if (activeTab === 'saved') {
@@ -365,7 +370,7 @@ const Profile = () => {
         console.error("Error fetching recent searches in Profile:", err);
       });
     }
-  }, [activeTab]);
+  }, [activeTab, fetchWishlistProperties, fetchRecentlyViewed, fetchContactedProperties, fetchRecentSearches]);
 
   const formatPrice = (value) => {
     if (!value) return "Price on Request";
@@ -375,11 +380,6 @@ const Profile = () => {
       return `₹ ${(value / 100000).toFixed(1)} L`;
     }
     return `₹ ${value.toLocaleString('en-IN')}`;
-  };
-
-  const checkLoginStatus = async () => {
-    const token = await SecureStore.getItemAsync('token');
-    setIsLoggedIn(!!token);
   };
 
   const handleLogout = async () => {
@@ -440,6 +440,11 @@ const Profile = () => {
                   title={title}
                   area={area}
                   location={location}
+                  isWishlisted={true}
+                  onWishlistToggle={() => {
+                    fetchWishlistProperties().catch(err => console.error(err));
+                    fetchActivitySummary().catch(err => console.error(err));
+                  }}
                 />
               </View>
             );
@@ -473,6 +478,14 @@ const Profile = () => {
                   title={title}
                   area={area}
                   location={location}
+                  isWishlisted={wishlistProperties?.some(w => {
+                    const wp = w.property || w;
+                    return (wp._id || wp.id) === id;
+                  })}
+                  onWishlistToggle={() => {
+                    fetchWishlistProperties().catch(err => console.error(err));
+                    fetchActivitySummary().catch(err => console.error(err));
+                  }}
                 />
               </View>
             );
@@ -506,6 +519,14 @@ const Profile = () => {
                   title={title}
                   area={area}
                   location={location}
+                  isWishlisted={wishlistProperties?.some(w => {
+                    const wp = w.property || w;
+                    return (wp._id || wp.id) === id;
+                  })}
+                  onWishlistToggle={() => {
+                    fetchWishlistProperties().catch(err => console.error(err));
+                    fetchActivitySummary().catch(err => console.error(err));
+                  }}
                 />
               </View>
             );

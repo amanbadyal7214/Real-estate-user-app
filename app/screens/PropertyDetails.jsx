@@ -83,7 +83,9 @@ const PropertyDetails = () => {
     try {
       const nextState = !isWishlisted;
       setIsWishlisted(nextState);
-      const res = await api.post(`/properties/wishlist/${targetId}`);
+      const res = nextState 
+        ? await api.post(`/properties/wishlist/${targetId}`)
+        : await api.delete(`/properties/wishlist/${targetId}`);
       if (res.data?.success) {
         showToast(res.data.message || (nextState ? "Property added to wishlist" : "Property removed from wishlist"));
       }

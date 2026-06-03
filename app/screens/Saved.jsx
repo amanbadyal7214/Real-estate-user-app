@@ -28,7 +28,7 @@ const Saved = () => {
     fetchActivitySummary().catch((err) => {
       console.error("Error fetching activity summary in Saved screen:", err);
     });
-  }, []);
+  }, [fetchActivitySummary]);
 
   useEffect(() => {
     if (activeTab === 'saved') {
@@ -48,7 +48,7 @@ const Saved = () => {
         console.error("Error fetching recent searches:", err);
       });
     }
-  }, [activeTab]);
+  }, [activeTab, fetchWishlistProperties, fetchRecentlyViewed, fetchContactedProperties, fetchRecentSearches]);
 
   const formatPrice = (value) => {
     if (!value) return "Price on Request";
@@ -94,6 +94,11 @@ const Saved = () => {
                   title={title}
                   area={area}
                   location={location}
+                  isWishlisted={true}
+                  onWishlistToggle={() => {
+                    fetchWishlistProperties().catch(err => console.error(err));
+                    fetchActivitySummary().catch(err => console.error(err));
+                  }}
                 />
               </View>
             );
@@ -127,6 +132,14 @@ const Saved = () => {
                   title={title}
                   area={area}
                   location={location}
+                  isWishlisted={wishlistProperties?.some(w => {
+                    const wp = w.property || w;
+                    return (wp._id || wp.id) === id;
+                  })}
+                  onWishlistToggle={() => {
+                    fetchWishlistProperties().catch(err => console.error(err));
+                    fetchActivitySummary().catch(err => console.error(err));
+                  }}
                 />
               </View>
             );
@@ -160,6 +173,14 @@ const Saved = () => {
                   title={title}
                   area={area}
                   location={location}
+                  isWishlisted={wishlistProperties?.some(w => {
+                    const wp = w.property || w;
+                    return (wp._id || wp.id) === id;
+                  })}
+                  onWishlistToggle={() => {
+                    fetchWishlistProperties().catch(err => console.error(err));
+                    fetchActivitySummary().catch(err => console.error(err));
+                  }}
                 />
               </View>
             );

@@ -35,7 +35,9 @@ const InsightPropertyCard = ({
     try {
       const nextState = !isSaved;
       setIsSaved(nextState);
-      const res = await api.post(`/properties/wishlist/${id}`);
+      const res = nextState 
+        ? await api.post(`/properties/wishlist/${id}`)
+        : await api.delete(`/properties/wishlist/${id}`);
       if (res.data?.success) {
         showToast(res.data.message || (nextState ? "Property added to wishlist" : "Property removed from wishlist"));
       }
