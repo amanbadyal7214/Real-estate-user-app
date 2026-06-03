@@ -4,18 +4,39 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
 
-const UserHeader = ({ userName = "Guest!" }) => {
+const UserHeader = ({ userName: propUserName }) => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
+  const [userName, setUserName] = useState("Guest!");
 
   const checkLoginStatus = async () => {
     const token = await SecureStore.getItemAsync("token");
     setIsLoggedIn(!!token);
+    if (token) {
+      const userStr = await SecureStore.getItemAsync("userData");
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          setUserName(user.name || "User!");
+        } catch (e) {
+          console.error("Error parsing userData in UserHeader:", e);
+          setUserName("User!");
+        }
+      } else {
+        setUserName("User!");
+      }
+    } else {
+      setUserName("Guest!");
+    }
   };
+
+  useEffect(() => {
+    if (propUserName) {
+      setUserName(propUserName);
+    } else {
+      checkLoginStatus();
+    }
+  }, [propUserName]);
 
   const handlePostProperty = () => {
     if (isLoggedIn) {

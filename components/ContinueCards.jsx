@@ -19,7 +19,16 @@ const ContinueCards = ({ data = [] }) => {
         {data.map((item, index) => (
           <TouchableOpacity 
             key={index} 
-            onPress={() => router.push('/screens/ProjectDetails')}
+            onPress={() => {
+              if (item.id) {
+                router.push({
+                  pathname: '/screens/PropertyDetails',
+                  params: { propertyId: item.id }
+                });
+              } else {
+                router.push('/screens/PropertyDetails');
+              }
+            }}
             className="bg-white border border-[#EAECF0] p-3 rounded-2xl w-[224px] mr-3 flex-row items-center justify-between"
           >
             <View className="flex-1 mr-2">
@@ -31,6 +40,8 @@ const ContinueCards = ({ data = [] }) => {
                 {item.title}
               </Text>
               <Text 
+                numberOfLines={1}
+                ellipsizeMode="tail"
                 style={{ fontFamily: 'Inter-Regular' }} 
                 className="text-[13px] text-[#667085] mt-1"
               >

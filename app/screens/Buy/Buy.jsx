@@ -2,6 +2,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+import { useIsFocused } from '@react-navigation/native';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, DeviceEventEmitter, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -22,6 +23,8 @@ import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
+import LastSearchedCard from '../../../components/LastSearchedCard';
+import { useUserActivity } from '../../../hooks/useUserActivity';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { useProject } from '../../../hooks/useProject';
 import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
@@ -80,6 +83,23 @@ const formatPropertyLocation = (property) => {
 };
 
 const Buy = () => {
+  const isFocused = useIsFocused();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { fetchRecentlyViewed, recentlyViewed } = useUserActivity();
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = await SecureStore.getItemAsync('token');
+      setIsLoggedIn(!!token);
+      if (token) {
+        fetchRecentlyViewed().catch(err => console.error("Error fetching recently viewed in Buy screen:", err));
+      }
+    };
+    if (isFocused) {
+      checkLogin();
+    }
+  }, [isFocused, fetchRecentlyViewed]);
+
   const { selectedTab, setSelectedTab } = useCategoryTab();
   const { currentLocation } = useLocation();
   const { findPropertiesByLocation, fetchHighDemandProperties, fetchSellersByLocation, fetchBetterPricedProperties, fetchCityStats, loading: discoveryLoading } = usePropertyDiscovery();
@@ -367,12 +387,47 @@ const Buy = () => {
     }
   }, [selectedTab]);
 
-  const recentSearches = [
-    { title: 'Commercial, Buy, Mohali,', subtitle: 'All budgets · All areas' },
-    { title: 'Buy, Sector 62', subtitle: 'Any price' },
-    { title: 'Apartment, Rent, Zirakpur', subtitle: 'Min ₹15K, 2+ BHK' },
-    { title: 'Plot, Buy, Kharar', subtitle: '100-150 sq.yd' },
+
+
+  const continueData = recentlyViewed.slice(0, 4).map((item) => {
+    const property = item.property || item;
+    return {
+      id: property._id || property.id,
+      title: property.title || property.projectName || 'Property',
+      subtitle: formatPropertyLocation(property) || 'Mohali',
+    };
+  });
+
+  const lastSearches = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400",
+      price: "₹ 2.03 Cr - 6.25 Cr",
+      title: "Wave Estate Group Housing",
+      builder: "by Uppal Chadha Hi Tech De...",
+      location: "Patti Sohana, Mohali"
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400",
+      price: "₹ 2.03 Cr - 6.25 Cr",
+      title: "Wave Estate Group Housing",
+      builder: "by Uppal Chadha Hi Tech De...",
+      location: "Patti Sohana, Mohali"
+    }
   ];
+
+  const lastSearchedData = recentlyViewed.length > 0 ? recentlyViewed.slice(0, 4).map((item) => {
+    const property = item.property || item;
+    return {
+      id: property._id || property.id,
+      image: property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=400&auto=format&fit=crop&q=80&w=400',
+      price: typeof property.price === 'number' ? formatPrice(property.price) : (property.priceRange || property.price || 'Price on Request'),
+      title: property.title || property.projectName || 'Property',
+      builder: property.sellerName || property.projectName || 'Developer',
+      location: formatPropertyLocation(property) || 'Mohali',
+    };
+  }) : lastSearches;
 
   const recommendedProperties = properties.slice(0, 4).map((property, index) => ({
     id: property._id || property.id || `recommended-${index}`,
@@ -458,7 +513,7 @@ const Buy = () => {
         </View>
 
         {/* Continue where you left Section */}
-        <ContinueCards data={recentSearches} />
+        {isLoggedIn && <ContinueCards data={continueData} />}
 
 
 
@@ -533,8 +588,8 @@ const Buy = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
-              onPress={() => handleProtectedViewMore('/screens/BestPriceProperty')}
-              className="items-center" style={{ width: s(100) }}>
+                onPress={() => handleProtectedViewMore('/screens/BestPriceProperty')}
+                className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="pricetag-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
@@ -542,8 +597,8 @@ const Buy = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
-              onPress={() => handleProtectedViewMore('/screens/NewsForYou')}
-              className="items-center" style={{ width: s(100) }}>
+                onPress={() => handleProtectedViewMore('/screens/NewsForYou')}
+                className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="newspaper-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
@@ -553,8 +608,8 @@ const Buy = () => {
 
             <View className="flex-row justify-around">
               <TouchableOpacity
-              onPress={() => router.push('/screens/EMICalculator')}
-              className="items-center" style={{ width: s(100) }}>
+                onPress={() => router.push('/screens/EMICalculator')}
+                className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="calculator-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
@@ -562,8 +617,8 @@ const Buy = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
-              onPress={() => router.push('/screens/AffordabilityCalculator')}
-              className="items-center" style={{ width: s(100) }}>
+                onPress={() => router.push('/screens/AffordabilityCalculator')}
+                className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="stats-chart-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
@@ -571,8 +626,8 @@ const Buy = () => {
               </TouchableOpacity>
 
               <TouchableOpacity
-              onPress={() => router.push('/screens/ECalculator')}
-              className="items-center" style={{ width: s(100) }}>
+                onPress={() => router.push('/screens/ECalculator')}
+                className="items-center" style={{ width: s(100) }}>
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
                   <Ionicons name="checkmark-done-circle-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
                 </View>
@@ -667,7 +722,7 @@ const Buy = () => {
               >
                 Most popular right now
               </Text>
-                <Text
+              <Text
                 className="font-inter-regular text-[#6A7282]"
                 style={{ fontSize: 13, lineHeight: 20 }}
               >
@@ -963,34 +1018,36 @@ const Buy = () => {
         </View>
 
         {/* Last Searched Section */}
-        {/* <View className="px-4 mb-1">
-          <View className="flex-row items-center justify-between mb-4">
-            <View className="flex-1 mr-4">
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Last Searched</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Collection for Ready to Move-In, Buy, Mohali, ...</Text>
+        {isLoggedIn && (
+          <View className="px-4 mb-1">
+            <View className="flex-row items-center justify-between mb-4">
+              <View className="flex-1 mr-4">
+                <Text className="font-inter-semibold text-[17px] text-[#101828]">Last Searched</Text>
+                <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Collection for Ready to Move-In, Buy, Mohali, ...</Text>
+              </View>
+              <TouchableOpacity onPress={() => router.push('/screens/LastSearched')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
+                <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => router.push('/screens/LastSearched')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
-            </TouchableOpacity>
-          </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 8 }}
-          >
-            {lastSearches.map((item) => (
-              <LastSearchedCard
-                key={item.id}
-                image={item.image}
-                price={item.price}
-                title={item.title}
-                builder={item.builder}
-                location={item.location}
-              />
-            ))}
-          </ScrollView>
-        </View> */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 8 }}
+            >
+              {lastSearchedData.map((item) => (
+                <LastSearchedCard
+                  key={item.id}
+                  image={item.image}
+                  price={item.price}
+                  title={item.title}
+                  builder={item.builder}
+                  location={item.location}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
 
         {/* Recommended Insights Section */}
         <View className="px-4 ">

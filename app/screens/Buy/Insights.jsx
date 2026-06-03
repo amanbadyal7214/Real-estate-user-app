@@ -1,5 +1,6 @@
 import { router, Stack } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+import { useIsFocused } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -14,6 +15,7 @@ import UniqueAmenityCard from '../../../components/UniqueAmenityCard';
 import { useLocality } from '../../../hooks/useLocality';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
+import { useUserActivity } from '../../../hooks/useUserActivity';
 import { useLocation } from '../../context/LocationContext';
 
 
@@ -161,13 +163,63 @@ const preferencesData = [
     }
 ];
 
+const formatPrice = (value) => {
+    if (!value) return "Price on Request";
+    if (typeof value !== 'number') return value;
+    if (value >= 10000000) {
+        return `₹ ${(value / 10000000).toFixed(1)} Cr`;
+    } else if (value >= 100000) {
+        return `₹ ${(value / 100000).toFixed(1)} L`;
+    }
+    return `₹ ${value.toLocaleString('en-IN')}`;
+};
+
+const getPropertyLocation = (property) => {
+    if (!property) return '';
+    const locality = property.locality?.label || property.localityName || property.locality || '';
+    const city = property.city?.name || property.city || '';
+    return [locality, city].filter(Boolean).join(', ');
+};
+
 const Insights = () => {
+    const isFocused = useIsFocused();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userName, setUserName] = useState("Guest");
+    const { fetchRecentlyViewed, recentlyViewed } = useUserActivity();
+
     const { findPropertiesByLocation, loading: discoveryLoading } = usePropertyDiscovery();
     const { resolveLocalities, loading: localityLoading } = useLocality();
     const { fetchAveragePriceByCity, loading: localityPriceLoading } = useLocalityAveragePrice();
     const { currentLocation } = useLocation();
     const [nearbyProperties, setNearbyProperties] = useState([]);
     const [nearbyLocalities, setNearbyLocalities] = useState([]);
+
+    useEffect(() => {
+        const checkLogin = async () => {
+            const token = await SecureStore.getItemAsync('token');
+            setIsLoggedIn(!!token);
+            if (token) {
+                const userStr = await SecureStore.getItemAsync('userData');
+                if (userStr) {
+                    try {
+                        const user = JSON.parse(userStr);
+                        setUserName(user.name || "User");
+                    } catch (e) {
+                        console.error("Error parsing userData in Insights:", e);
+                        setUserName("User");
+                    }
+                } else {
+                    setUserName("User");
+                }
+                fetchRecentlyViewed().catch(err => console.error("Error fetching recently viewed in Insights:", err));
+            } else {
+                setUserName("Guest");
+            }
+        };
+        if (isFocused) {
+            checkLogin();
+        }
+    }, [isFocused, fetchRecentlyViewed]);
 
     const handleProtectedViewMore = async (destination) => {
       const token = await SecureStore.getItemAsync('token');
@@ -237,7 +289,7 @@ const Insights = () => {
                 </Animated.View>
 
                 <Animated.View entering={FadeInDown.duration(600).delay(200)} className="px-4 mt-6 mb-3">
-                    <Text className="text-[#6A7282] text-[13px] font-inter-medium">Hi  Guest,</Text>
+                    <Text className="text-[#6A7282] text-[13px] font-inter-medium">Hi  {userName},</Text>
                     <Text className="text-[#101828] text-[24px] font-inter-bold mt-1">Welcome back!</Text>
                 </Animated.View>
 
@@ -289,9 +341,27 @@ const Insights = () => {
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingRight: 16 }}
                     >
-                        {revisitMockProperties.map((prop, index) => (
-                            <RevisitPropertyCard key={`revisit-${index}`} {...prop} />
-                        ))}
+                        {(isLoggedIn && recentlyViewed.length > 0 ? recentlyViewed : revisitMockProperties).map((prop, index) => {
+                            const property = prop.property || prop;
+                            const isMock = !isLoggedIn || recentlyViewed.length === 0;
+
+                            const cardData = isMock ? prop : {
+                                id: property._id || property.id,
+                                image: property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=400&auto=format&fit=crop',
+                                possession: property.possessionStatus?.label || property.possessionStatus || 'Ready to Move',
+                                title: property.title || property.projectName || 'Premium Residence',
+                                location: getPropertyLocation(property) || 'Mohali',
+                                price: formatPrice(property.price),
+                                bhk: property.residential ? `${property.residential?.bedrooms || 0} BHK Apartment` : (property.bhk || ''),
+                                area: property.area ? `${property.area} ${property.areaUnit?.name || 'sq.ft.'}` : (property.bhkFlats || ''),
+                                isRera: property.isRera !== undefined ? property.isRera : true,
+                                isWishlisted: prop.isWishlisted
+                            };
+
+                            return (
+                                <RevisitPropertyCard key={cardData.id || `revisit-${index}`} {...cardData} />
+                            );
+                        })}
                     </ScrollView>
                 </Animated.View>
 
@@ -363,7 +433,7 @@ const Insights = () => {
                 </Animated.View> */}
 
                 {/* Projects with Unique Amenities Section */}
-                <Animated.View entering={FadeInDown.duration(600).delay(800)} className="pl-4 mt-6 pb-6">
+                {/* <Animated.View entering={FadeInDown.duration(600).delay(800)} className="pl-4 mt-6 pb-6">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Projects with unique amenities</Text>
                         <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/UniqueAmenities')}>
@@ -381,7 +451,7 @@ const Insights = () => {
                             </View>
                         ))}
                     </ScrollView>
-                </Animated.View>
+                </Animated.View> */}
 
                 {/* Explore by your preferences Section */}
                 <Animated.View entering={FadeInDown.duration(600).delay(900)} className="px-4 ">

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Folder, Heart, Search } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import ActivityTabs from '../navigation/ActivityTabs';
 import { useUserActivity } from '../../hooks/useUserActivity';
 import PropertyCardSmall from '../../components/PropertyCardSmall';
 
 const Saved = () => {
-  const [activeTab, setActiveTab] = useState('saved');
+  const { tab } = useLocalSearchParams();
+  const [activeTab, setActiveTab] = useState(tab || 'saved');
   const router = useRouter();
   const {
     fetchActivitySummary,
@@ -23,6 +24,12 @@ const Saved = () => {
     recentSearches,
     loading
   } = useUserActivity();
+
+  useEffect(() => {
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [tab]);
 
   useEffect(() => {
     fetchActivitySummary().catch((err) => {

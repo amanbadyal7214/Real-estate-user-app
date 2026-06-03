@@ -26,7 +26,7 @@ const ComingSoon = () => {
         <View className="flex-1 items-center justify-center">
           <View className="w-full max-w-[360px] rounded-[24px] bg-white border border-[#DCE7E7] p-5 items-center">
             <LottieView
-              source={require('../../assets/nothing.json')}
+              source={require('../../assets/comming.json')}
               autoPlay
               loop
               style={{ width: 240, height: 240 }}
