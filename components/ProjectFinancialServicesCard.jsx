@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 const ProjectFinancialServicesCard = () => {
@@ -15,7 +16,10 @@ const ProjectFinancialServicesCard = () => {
       <Text className="font-inter-medium text-[#101828] text-[18px]">Financial services</Text>
       
       <View className="flex-row gap-3">
-        <TouchableOpacity className="flex-1 border border-[#E5E7EB] rounded-[14px] p-4 items-center justify-center gap-2">
+        <TouchableOpacity 
+          onPress={() => router.push('/screens/ComingSoon')}
+          className="flex-1 border border-[#E5E7EB] rounded-[14px] p-4 items-center justify-center gap-2"
+        >
            <Text className="text-[24px]">🏠</Text>
            <Text className="font-inter-regular text-[#101828] text-[14px]">Home Loans</Text>
         </TouchableOpacity>

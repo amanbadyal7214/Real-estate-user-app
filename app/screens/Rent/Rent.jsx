@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
+import { useUserActivity } from '../../../hooks/useUserActivity';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CalculatorCard from '../../../components/CalculatorCard';
@@ -156,9 +158,35 @@ const normalizeProjectSuggestions = (responseData, defaultCity = 'Mohali') => {
   });
 };
 
+const getPropertyLocation = (property) => {
+  if (!property) return '';
+  const directAddress = typeof property.address === 'string' ? property.address.trim() : '';
+  if (directAddress) return directAddress;
+  const locality = property.locality?.label || property.localityName || property.locality || '';
+  const city = property.city?.name || property.city || '';
+  return [locality, city].filter(Boolean).join(', ') || 'Location not available';
+};
+
 const Rent = () => {
+  const isFocused = useIsFocused();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { fetchRecentlyViewed, recentlyViewed } = useUserActivity();
+
   const { selectedTab, setSelectedTab } = useCategoryTab();
   const skipFirstRedirect = useRef(true);
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = await SecureStore.getItemAsync('token');
+      setIsLoggedIn(!!token);
+      if (token) {
+        fetchRecentlyViewed().catch(err => console.error("Error fetching recently viewed in Rent screen:", err));
+      }
+    };
+    if (isFocused) {
+      checkLogin();
+    }
+  }, [isFocused, fetchRecentlyViewed]);
 
   useEffect(() => {
     setSelectedTab('Rent');
@@ -199,11 +227,14 @@ const Rent = () => {
     router.push(destination);
   };
 
-    const recentSearches = [
-        { title: 'Apartment, Rent, Mohali,', subtitle: 'Min ₹15K, 2+ BHK' },
-        { title: 'Rent, Sector 66', subtitle: 'Max ₹40K' },
-        { title: 'Independent House, Rent, Zirakpur', subtitle: '3 BHK' },
-    ];
+    const continueData = recentlyViewed.slice(0, 4).map((item) => {
+      const property = item.property || item;
+      return {
+        id: property._id || property.id,
+        title: property.title || property.projectName || 'Property',
+        subtitle: getPropertyLocation(property) || 'Mohali',
+      };
+    });
 
     const [suggestions, setSuggestions] = useState(fallbackSuggestions);
     const [recommendedProperties, setRecommendedProperties] = useState([]);
@@ -428,7 +459,7 @@ const emiVectors = [
         </View>
 
         {/* Continue where you left Section */}
-        <ContinueCards data={recentSearches} />
+        {isLoggedIn && <ContinueCards data={continueData} />}
 
                 {/* Smart Suggestions Section */}
                 <View>
