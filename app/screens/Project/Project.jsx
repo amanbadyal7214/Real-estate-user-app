@@ -847,9 +847,9 @@ const Project = () => {
               <Text className="font-inter-bold text-[17px] text-[#101828]">Top rated developers</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282]">Projects from the best developers</Text>
             </View>
-            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            {/* <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <View className="flex-row items-stretch gap-4 mb-6">
