@@ -295,11 +295,8 @@ const Insights = () => {
 
                 {/* New Listings Section */}
                 <Animated.View entering={FadeInDown.duration(600).delay(300)} className="pl-4">
-                    <View className="flex-row items-center justify-between pr-4 mb-4">
+                    <View className="flex-row items-center pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold">New Listings added nearby</Text>
-                        <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/PrefectlyMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
-                            <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
-                        </TouchableOpacity>
                     </View>
                     <ScrollView
                         horizontal
@@ -332,9 +329,6 @@ const Insights = () => {
                 <Animated.View entering={FadeInDown.duration(600).delay(400)} className="pl-4 mt-8">
                     <View className="flex-row items-center justify-between pr-4 mb-4">
                         <Text className="text-[#101828] text-[16px] font-inter-semibold">Revisit properties seen by you</Text>
-                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/RevisitProperty')}>
-                            <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
-                        </TouchableOpacity>
                     </View>
                     <ScrollView
                         horizontal

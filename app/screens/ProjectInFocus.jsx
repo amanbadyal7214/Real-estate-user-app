@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, RefreshCcw } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { useProject } from '../../hooks/useProject';
@@ -10,26 +10,48 @@ import { formatPrice } from '../utils/formatPrice';
 const ProjectInFocus = () => {
   const router = useRouter();
   const { city, locality, pincode } = useLocalSearchParams();
-  const { fetchProjects, loading, error } = useProject();
+  const { fetchProjects, loading: apiLoading, error } = useProject();
   const [projectsList, setProjectsList] = useState([]);
 
-  // using shared formatPrice
+  // Pagination states
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
 
-  const loadFocusProjects = async () => {
+  const loading = isInitialLoading || apiLoading;
+
+  const loadFocusProjects = async (pageToFetch = 1, isLoadMore = false) => {
+    if (isLoadMore && (loadingMore || !hasMore)) return;
+
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setIsInitialLoading(true);
+      setHasMore(true);
+      setPage(1);
+    }
+
     try {
-      const response = await fetchProjects({
+      const params = {
         isFocus: true,
         limit: 10,
+        page: pageToFetch,
         city,
         locality,
         pincode
-      });
+      };
+
+      const response = await fetchProjects(params);
 
       // API returns array or { data: [...] }
       const data = response?.data || response || [];
 
       if (!Array.isArray(data)) {
-        setProjectsList([]);
+        if (!isLoadMore) {
+          setProjectsList([]);
+        }
+        setHasMore(false);
         return;
       }
 
@@ -47,15 +69,35 @@ const ProjectInFocus = () => {
           ? project.media.map(m => m.fileUrl)
           : ["https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=203&auto=format&fit=crop"]
       }));
-      setProjectsList(formattedData);
+
+      if (isLoadMore) {
+        setProjectsList((prev) => [...prev, ...formattedData]);
+      } else {
+        setProjectsList(formattedData);
+      }
+
+      if (formattedData.length < params.limit) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+      setPage(pageToFetch);
     } catch (err) {
       console.error("Error fetching focus projects:", err);
+      if (!isLoadMore) {
+        setProjectsList([]);
+      }
+      setHasMore(false);
+    } finally {
+      setIsInitialLoading(false);
+      setLoadingMore(false);
     }
   };
 
   useEffect(() => {
-    loadFocusProjects();
-  }, []);
+    loadFocusProjects(1, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [city, locality, pincode]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -73,35 +115,29 @@ const ProjectInFocus = () => {
       </View>
 
       {/* Content */}
-      <ScrollView
-        className="flex-1 px-4"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
-        {loading ? (
-          <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#008E96" />
-            <Text className="mt-4 font-inter-medium text-[#6A7282]">Fetching focus projects...</Text>
-          </View>
-        ) : error ? (
-          <View className="flex-1 items-center justify-center py-20 px-10">
-            <Text className="text-red-500 font-inter-semibold text-center mb-4">{error}</Text>
-            <TouchableOpacity
-              onPress={loadFocusProjects}
-              className="flex-row items-center gap-2 bg-[#008E96] px-6 py-3 rounded-xl"
-            >
-              <RefreshCcw size={18} color="white" />
-              <Text className="text-white font-inter-bold">Retry</Text>
-            </TouchableOpacity>
-          </View>
-        ) : projectsList.length === 0 ? (
-          <View className="flex-1 items-center justify-center py-20">
-            <Text className="font-inter-medium text-[#6A7282]">No focus projects found.</Text>
-          </View>
-        ) : (
-          projectsList.map((item) => (
+      {loading && projectsList.length === 0 ? (
+        <View className="flex-1 items-center justify-center py-20">
+          <ActivityIndicator size="large" color="#008E96" />
+          <Text className="mt-4 font-inter-medium text-[#6A7282]">Fetching focus projects...</Text>
+        </View>
+      ) : error ? (
+        <View className="flex-1 items-center justify-center py-20 px-10">
+          <Text className="text-red-500 font-inter-semibold text-center mb-4">{error}</Text>
+          <TouchableOpacity
+            onPress={() => loadFocusProjects(1, false)}
+            className="flex-row items-center gap-2 bg-[#008E96] px-6 py-3 rounded-xl"
+          >
+            <RefreshCcw size={18} color="white" />
+            <Text className="text-white font-inter-bold">Retry</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <FlatList
+          className="flex-1 px-4"
+          data={projectsList}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
             <PerfectMatchCard
-              key={item.id}
               property={item}
               showWishlist={false}
               onPress={() => router.push({
@@ -109,11 +145,32 @@ const ProjectInFocus = () => {
                 params: { projectId: item.id }
               })}
             />
-          ))
-        )}
-      </ScrollView>
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          onEndReached={() => {
+            if (hasMore && !loadingMore && !loading) {
+              loadFocusProjects(page + 1, true);
+            }
+          }}
+          onEndReachedThreshold={0.2}
+          ListEmptyComponent={
+            <View className="flex-1 items-center justify-center py-20">
+              <Text className="font-inter-medium text-[#6A7282]">No focus projects found.</Text>
+            </View>
+          }
+          ListFooterComponent={
+            loadingMore ? (
+              <View className="py-4 items-center justify-center">
+                <ActivityIndicator size="small" color="#008E96" />
+              </View>
+            ) : null
+          }
+        />
+      )}
     </SafeAreaView>
   );
 };
 
 export default ProjectInFocus;
+

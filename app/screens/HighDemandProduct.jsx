@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, RefreshCcw, ChevronDown, ChevronUp, X } from 'lucide-react-native';
-import { useEffect, useState, useCallback } from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { useLocality } from '../../hooks/useLocality';
@@ -14,10 +14,14 @@ import { formatPrice } from '../utils/formatPrice';
 const HighDemandProduct = () => {
   const router = useRouter();
   const searchParams = useLocalSearchParams();
-  const { fetchHighDemandProperties, loading: discoveryLoading, error } = usePropertyDiscovery();
+  const { fetchHighDemandProperties, error } = usePropertyDiscovery();
   const { resolveLocalities, loading: localityLoading } = useLocality();
   const { currentLocation } = useLocation();
   const [projects, setProjects] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
 
   // Filter States
   const [propertyType, setPropertyType] = useState(null);
@@ -63,12 +67,23 @@ const HighDemandProduct = () => {
     loadLocalities();
   }, [city, currentLocation?.city]);
 
-  const loading = discoveryLoading || localityLoading;
+  const loading = isInitialLoading || localityLoading;
 
-  const loadHighDemandProperties = useCallback(async () => {
+  const loadHighDemandProperties = async (pageToFetch = 1, isLoadMore = false) => {
+    if (isLoadMore && (loadingMore || !hasMore)) return;
+
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setIsInitialLoading(true);
+      setHasMore(true);
+      setPage(1);
+    }
+
     try {
       const params = {
-        limit: 20,
+        limit: 10,
+        page: pageToFetch,
         lookingFor
       };
 
@@ -101,7 +116,10 @@ const HighDemandProduct = () => {
 
       if (!Array.isArray(propertiesArray)) {
         console.error("API did not return an array:", response);
-        setProjects([]);
+        if (!isLoadMore) {
+          setProjects([]);
+        }
+        setHasMore(false);
         return;
       }
 
@@ -129,15 +147,35 @@ const HighDemandProduct = () => {
             : ["https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=203&auto=format&fit=crop"]
         };
       });
-      setProjects(formattedData);
+
+      if (isLoadMore) {
+        setProjects((prev) => [...prev, ...formattedData]);
+      } else {
+        setProjects(formattedData);
+      }
+
+      if (formattedData.length < params.limit) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+      setPage(pageToFetch);
     } catch (err) {
       console.error("Error fetching high demand properties:", err);
+      if (!isLoadMore) {
+        setProjects([]);
+      }
+      setHasMore(false);
+    } finally {
+      setIsInitialLoading(false);
+      setLoadingMore(false);
     }
-  }, [propertyType, lookingFor, city, locality, budget, fetchHighDemandProperties, resolveLocalities, searchParams.city, currentLocation?.city]);
+  };
 
   useEffect(() => {
-    loadHighDemandProperties();
-  }, [loadHighDemandProperties]);
+    loadHighDemandProperties(1, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propertyType, lookingFor, city, locality, budget]);
 
   const clearFilter = (type) => {
     if (type === 'propertyType') setPropertyType(null);
@@ -483,37 +521,52 @@ const HighDemandProduct = () => {
       </View>
 
       {/* Content */}
-      <ScrollView
-        className="flex-1 px-4"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
-        {loading ? (
-          <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#008E96" />
-            <Text className="mt-4 font-inter-medium text-[#6A7282]">Fetching high demand projects...</Text>
-          </View>
-        ) : error ? (
-          <View className="flex-1 items-center justify-center py-20 px-10">
-            <Text className="text-red-500 font-inter-semibold text-center mb-4">{error}</Text>
-            <TouchableOpacity
-              onPress={loadHighDemandProperties}
-              className="flex-row items-center gap-2 bg-[#008E96] px-6 py-3 rounded-xl"
-            >
-              <RefreshCcw size={18} color="white" />
-              <Text className="text-white font-inter-bold">Retry</Text>
-            </TouchableOpacity>
-          </View>
-        ) : projects.length === 0 ? (
-          <View className="flex-1 items-center justify-center py-20">
-            <Text className="font-inter-medium text-[#6A7282]">No high demand projects found.</Text>
-          </View>
-        ) : (
-          projects.map((item) => (
-            <PerfectMatchCard key={item.id} property={item} />
-          ))
-        )}
-      </ScrollView>
+      {loading && projects.length === 0 ? (
+        <View className="flex-1 items-center justify-center py-20">
+          <ActivityIndicator size="large" color="#008E96" />
+          <Text className="mt-4 font-inter-medium text-[#6A7282]">Fetching high demand projects...</Text>
+        </View>
+      ) : error ? (
+        <View className="flex-1 items-center justify-center py-20 px-10">
+          <Text className="text-red-500 font-inter-semibold text-center mb-4">{error}</Text>
+          <TouchableOpacity
+            onPress={() => loadHighDemandProperties(1, false)}
+            className="flex-row items-center gap-2 bg-[#008E96] px-6 py-3 rounded-xl"
+          >
+            <RefreshCcw size={18} color="white" />
+            <Text className="text-white font-inter-bold">Retry</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <FlatList
+          className="flex-1 px-4"
+          data={projects}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <PerfectMatchCard property={item} />
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          onEndReached={() => {
+            if (hasMore && !loadingMore && !loading) {
+              loadHighDemandProperties(page + 1, true);
+            }
+          }}
+          onEndReachedThreshold={0.2}
+          ListEmptyComponent={
+            <View className="flex-1 items-center justify-center py-20">
+              <Text className="font-inter-medium text-[#6A7282]">No high demand projects found.</Text>
+            </View>
+          }
+          ListFooterComponent={
+            loadingMore ? (
+              <View className="py-4 items-center justify-center">
+                <ActivityIndicator size="small" color="#008E96" />
+              </View>
+            ) : null
+          }
+        />
+      )}
 
       {/* Dropdown Modals */}
       {renderSelectionModal()}
@@ -522,3 +575,4 @@ const HighDemandProduct = () => {
 };
 
 export default HighDemandProduct;
+

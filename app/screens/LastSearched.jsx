@@ -1,9 +1,9 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions, FlatList, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PropertyListingCard from '../../components/PropertyListingCard';
 import { useLookup } from '../../hooks/useLookup';
@@ -16,13 +16,11 @@ const LastSearched = () => {
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Price: High to Low');
-  const params = useLocalSearchParams();
   // Lock searching to Buy (which maps to API lookingFor: 'sell') and prevent changes
   const [lookingTo] = useState('sell');
 
   // Animation for Bottom Sheet
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
-  const lastScrollY = useRef(0);
   const isFullScreen = useRef(false);
 
   const openFilter = () => {
@@ -62,7 +60,6 @@ const LastSearched = () => {
     }
   };
 
-  
   const sortOptions = [
     'Price : Low to High',
     'Price: High to Low',
@@ -81,25 +78,39 @@ const LastSearched = () => {
   const [structureInput, setStructureInput] = useState('');
   const [selectedConstructionStatus, setSelectedConstructionStatus] = useState(null);
   const [selectedPossessionStatus, setSelectedPossessionStatus] = useState(null);
-  const listedBy = [ 'Owner', 'Builder'];
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
   const [minArea, setMinArea] = useState(null);
   const [maxArea, setMaxArea] = useState(null);
 
-
-  const { fetchProperties, loading } = usePropertyDiscovery();
+  const { fetchProperties, loading: apiLoading } = usePropertyDiscovery();
   const [properties, setProperties] = useState([]);
 
-  useEffect(() => {
-    loadProperties();
-    // fetch lookup data for property types and structures
-    fetchLookups();
-  }, [lookingTo, selectedSort, selectedStructure, structureInput, selectedPropertyType, selectedSubPropertyType, selectedConstructionStatus, selectedPossessionStatus, minPrice, maxPrice, minArea, maxArea]);
+  // Pagination states
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
 
-  const loadProperties = async () => {
+  const loading = isInitialLoading || apiLoading;
+
+  useEffect(() => {
+    fetchLookups();
+  }, [fetchLookups]);
+
+  const loadProperties = async (pageToFetch = 1, isLoadMore = false) => {
+    if (isLoadMore && (loadingMore || !hasMore)) return;
+
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setIsInitialLoading(true);
+      setHasMore(true);
+      setPage(1);
+    }
+
     try {
-      const params = { city: 'Mohali', lookingFor: lookingTo, limit: 10 };
+      const params = { city: 'Mohali', lookingFor: lookingTo, limit: 10, page: pageToFetch };
 
       // include selected property/sub-property/structure in params when present
       if (selectedPropertyType) params.propertyType = selectedPropertyType;
@@ -140,12 +151,40 @@ const LastSearched = () => {
           });
         }
 
-        setProperties(items);
+        if (isLoadMore) {
+          setProperties((prev) => [...prev, ...items]);
+        } else {
+          setProperties(items);
+        }
+
+        if (items.length < params.limit) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+        setPage(pageToFetch);
+      } else {
+        if (!isLoadMore) {
+          setProperties([]);
+        }
+        setHasMore(false);
       }
     } catch (err) {
       console.error("Error loading properties:", err);
+      if (!isLoadMore) {
+        setProperties([]);
+      }
+      setHasMore(false);
+    } finally {
+      setIsInitialLoading(false);
+      setLoadingMore(false);
     }
   };
+
+  useEffect(() => {
+    loadProperties(1, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lookingTo, selectedSort, selectedStructure, structureInput, selectedPropertyType, selectedSubPropertyType, selectedConstructionStatus, selectedPossessionStatus, minPrice, maxPrice, minArea, maxArea]);
 
   const clearAllFilters = () => {
     setSelectedPropertyType(null);
@@ -159,105 +198,70 @@ const LastSearched = () => {
     setMinArea(null);
     setMaxArea(null);
     // reload properties after clearing
-    loadProperties();
+    loadProperties(1, false);
   };
 
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
       <View className="flex-1">
         {/* Header Container (Based on CSS) */}
-        <View className="flex-row justify-between items-center px-[16px] pt-[24px] pb-[16px] h-[64px]">
+        <View className="flex-row justify-between items-center px-[16px] h-[64px]">
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="#4A5565" />
           </TouchableOpacity>
         </View>
 
-        <ScrollView className="flex-1">
-          {/* Location Selector (Based on CSS) */}
-          <View className="flex-row items-center px-[16px] h-[33px] mt-[10px]">
-            <TouchableOpacity className="flex-row items-center bg-[#008E96]/10 px-[12px] py-[6px] rounded-[20px]">
-              <Text className="text-[#008E96] font-inter-medium text-[14px]">+ Add</Text>
-            </TouchableOpacity>
-            <View className="ml-[8px]">
-              <Text className="text-[#008E96] font-inter-semibold text-[16px]">Mohali</Text>
-            </View>
+        {/* Content Section */}
+        {loading && properties.length === 0 ? (
+          <View className="flex-1 justify-center items-center py-20">
+            <ActivityIndicator size="large" color="#008E96" />
+            <Text className="text-[#667085] font-inter-medium mt-4">Loading listings...</Text>
           </View>
-
-          {/* Filter Pills */}
-          {/* <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
-            className="mt-[20px] px-[16px]"
-            contentContainerStyle={{ gap: 12, paddingRight: 32 }}
-          >
-            {filters.map((filter, index) => (
-              <TouchableOpacity 
-                key={index}
-                className="flex-row items-center border border-[#D0D5DD] bg-white px-[12px] py-[8px] rounded-[12px]"
-              >
-                <Text className="text-[#101828] font-inter-medium text-[14px]">{filter}</Text>
-                <Ionicons name="chevron-down" size={16} color="#101828" />
-              </TouchableOpacity>
-            ))}
-          </ScrollView> */}
-
-          {/* Shop Card (Based on CSS) */}
-          {/* <View 
-            className="mx-[27px] mt-[24px] bg-white p-[12px] rounded-[12px] border border-[#E4E7EC] flex-row items-start h-[116px]"
-            style={{ 
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-              elevation: 2 
-            }}
-          >
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000' }} 
-              className="w-[80px] h-[80px] rounded-[8px]"
-            />
-            <View className="flex-1 ml-[12px] justify-between h-[84.67px]">
-              <View>
-                <View className="flex-row justify-between items-start w-full">
-                  <Text className="text-[#101828] font-inter-medium text-[16px] leading-[24px]">Shop</Text>
-                  <View className="bg-[#FEE4E2] px-[8px] py-[4px] rounded-[6px]">
-                    <Text className="text-[#D92D20] font-inter-medium text-[12px] leading-[18px]">Popular</Text>
-                  </View>
-                </View>
-                <Text className="text-[#6A7282] font-inter-regular text-[13px] leading-[20px] mt-[4px]">Gmada Aerocity, Mohali</Text>
-                <Text className="text-[#6A7282] font-inter-regular text-[12px] leading-[18px]">200 sq.ft. • Ground Floor</Text>
+        ) : (
+          <FlatList
+            className="flex-1 px-[16px]"
+            data={properties}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <View style={{ marginBottom: 23 }}>
+                <PropertyListingCard data={item} />
               </View>
-              <Text className="text-[#101828] font-inter-bold text-[16px] leading-[24px]">₹ 30,000</Text>
-            </View>
-            <View className="ml-[12px] items-end justify-end h-[84.67px]">
-              <TouchableOpacity className="bg-[#34C38F] px-[14px] py-[8px] rounded-[8px] flex-row items-center">
-                <Text className="text-white font-inter-medium text-[13px] leading-[20px]">Contact</Text>
-                <MaterialIcons name="arrow-forward" size={14} color="white" style={{ marginLeft: 4 }} />
-              </TouchableOpacity>
-            </View>
-          </View> */}
-
-          {/* Listings Container (Based on CSS Frame 21) */}
-          <View className="px-[16px] mt-[24px] gap-[23px] pb-[100px]">
-            {loading ? (
-                <View className="py-10 items-center">
-                    <Text className="text-[#667085] font-inter-medium italic">Loading listings...</Text>
-                </View>
-            ) : properties.length > 0 ? (
-                properties.map((item) => (
-                    <PropertyListingCard key={item._id} data={item} />
-                ))
-            ) : (
-                <View className="py-20 items-center">
-                    <Ionicons name="home-outline" size={48} color="#D0D5DD" />
-                    <Text className="text-[#667085] font-inter-medium mt-4">No listings found for Mohali</Text>
-                </View>
             )}
-          </View>
-        </ScrollView>
-          </View>
+            ListHeaderComponent={
+              <View className="flex-row items-center h-[33px] mt-[10px] mb-[24px]">
+                <TouchableOpacity className="flex-row items-center bg-[#008E96]/10 px-[12px] py-[6px] rounded-[20px]">
+                  <Text className="text-[#008E96] font-inter-medium text-[14px]">+ Add</Text>
+                </TouchableOpacity>
+                <View className="ml-[8px]">
+                  <Text className="text-[#008E96] font-inter-semibold text-[16px]">Mohali</Text>
+                </View>
+              </View>
+            }
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 100 }}
+            onEndReached={() => {
+              if (hasMore && !loadingMore && !loading) {
+                loadProperties(page + 1, true);
+              }
+            }}
+            onEndReachedThreshold={0.2}
+            ListEmptyComponent={
+              <View className="py-20 items-center">
+                <Ionicons name="home-outline" size={48} color="#D0D5DD" />
+                <Text className="text-[#667085] font-inter-medium mt-4">No listings found for Mohali</Text>
+              </View>
+            }
+            ListFooterComponent={
+              loadingMore ? (
+                <View className="py-4 items-center justify-center">
+                  <ActivityIndicator size="small" color="#008E96" />
+                </View>
+              ) : null
+            }
+          />
+        )}
+      </View>
 
-         
       {/* Floating Action Buttons */}
       <View 
         className="absolute bottom-[30px] self-center flex-row bg-white rounded-full border border-[#E4E7EC]" 
@@ -343,7 +347,7 @@ const LastSearched = () => {
                   </Text>
                   <TouchableOpacity className="flex-row items-center">
                     <Text className="text-[#008E96] font-inter-medium text-[16px]">Change Location</Text>
-                    <Ionicons name="chevron-forward" size={16} color="#008E96" />
+                    <Ionicons name="chevron-forward" size={16} color="#008E96" style={{ marginLeft: 4 }} />
                   </TouchableOpacity>
                 </View>
 
@@ -360,14 +364,13 @@ const LastSearched = () => {
 
                 {/* I'm Looking to */}
                 <View className="mt-[32px]">
-                  <Text className="text-[#101828] font-inter-semibold text-[16px]">I'm Looking to</Text>
+                  <Text className="text-[#101828] font-inter-semibold text-[16px]">{"I'm Looking to"}</Text>
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
                     {lookOptions.map(option => (
                       <TouchableOpacity 
                         key={option}
-                        // Disabled: keep Buy selected and prevent changes
                         activeOpacity={1}
-                        className={`px-[16px] py-[10px] rounded-[12px] border ${'bg-[#008E96]/10 border-[#008E96]'}`}
+                        className={`px-[16px] py-[10px] rounded-[12px] border bg-[#008E96]/10 border-[#008E96]`}
                       >
                         <Text className={`font-inter-medium text-[14px] text-[#008E96]`}>
                           {option}
@@ -382,7 +385,7 @@ const LastSearched = () => {
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Localities</Text>
                   <View className="flex-row items-center gap-[12px] mt-[12px]">
                     <TouchableOpacity 
-                      className="flex-row items-center px-[16px] py-[10px] rounded-[12px]"
+                      className="flex-row items-center px-[16px] py-[10px] rounded-[12px] overflow-hidden"
                       style={{ backgroundColor: '#008E96' }}
                     >
                       <LinearGradient
@@ -412,7 +415,7 @@ const LastSearched = () => {
                         return (
                           <TouchableOpacity 
                             key={key}
-                            onPress={() => { setSelectedPropertyType(key); setSelectedSubPropertyType(null); }}
+                            onPress={() => { setSelectedPropertyType(isActive ? null : key); setSelectedSubPropertyType(null); }}
                             className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
                           >
                             <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
@@ -420,13 +423,12 @@ const LastSearched = () => {
                         );
                       })
                     ) : (
-                      // Fallback to empty state until lookups load
                       <Text className="text-[#6A7282]">Loading property types...</Text>
                     )}
                   </View>
                 </View>
 
-                {/* Sub Property Type (shown below Property Type) */}
+                {/* Sub Property Type */}
                 <View className="mt-[16px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Sub Property Type</Text>
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
@@ -445,7 +447,7 @@ const LastSearched = () => {
                           return (
                             <TouchableOpacity
                               key={key}
-                              onPress={() => setSelectedSubPropertyType(key)}
+                              onPress={() => setSelectedSubPropertyType(isActive ? null : key)}
                               className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
                             >
                               <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
@@ -520,7 +522,7 @@ const LastSearched = () => {
                   </View>
                 </View>
 
-                {/* Structure Type (replaces BHK Type) */}
+                {/* Structure Type */}
                 <View className="mt-[32px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Structure Type</Text>
                   <View className="mt-[12px]">
@@ -549,7 +551,7 @@ const LastSearched = () => {
                         return (
                           <TouchableOpacity
                             key={key}
-                            onPress={() => { setSelectedStructure(st._id || label); setStructureInput(''); }}
+                            onPress={() => { setSelectedStructure(isActive ? null : (st._id || label)); setStructureInput(''); }}
                             className={`px-[12px] py-[10px] rounded-[12px] border min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
                           >
                             <Text className={`font-inter-medium text-[13px] ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>
@@ -576,8 +578,8 @@ const LastSearched = () => {
                         return (
                           <TouchableOpacity
                             key={key}
-                            onPress={() => setSelectedConstructionStatus(key)}
-                            className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+                            onPress={() => setSelectedConstructionStatus(isActive ? null : key)}
+                            className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
                           >
                             <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
                           </TouchableOpacity>
@@ -590,7 +592,7 @@ const LastSearched = () => {
                 </View>
 
                 {/* Possession Status */}
-                <View className="mt-[20px]">
+                <View className="mt-[20px] mb-[40px]">
                   <Text className="text-[#101828] font-inter-semibold text-[16px]">Possession Status</Text>
                   <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
                     {possessionStatus && possessionStatus.length > 0 ? (
@@ -601,8 +603,8 @@ const LastSearched = () => {
                         return (
                           <TouchableOpacity
                             key={key}
-                            onPress={() => setSelectedPossessionStatus(key)}
-                            className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+                            onPress={() => setSelectedPossessionStatus(isActive ? null : key)}
+                            className={`px-[12px] py-[10px] rounded-[12px] min-w-[90px] justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
                           >
                             <Text className={`text-[13px] font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`}>{label}</Text>
                           </TouchableOpacity>
@@ -613,38 +615,6 @@ const LastSearched = () => {
                     )}
                   </View>
                 </View>
-
-                {/*
-                <View className="mt-[32px]">
-                  <Text className="text-[#101828] font-inter-semibold text-[16px]">Available</Text>
-                  <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
-                    {availabilityOptions.map(option => (
-                      <TouchableOpacity 
-                        key={option}
-                        className="bg-white border border-[#E4E7EC] px-[16px] py-[12px] rounded-[12px]"
-                      >
-                        <Text className="text-[#101828] font-inter-medium text-[14px]">{option}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-                */}
-
-                {/* Listed By */}
-                {/* <View className="mt-[32px] mb-[40px]">
-                  <Text className="text-[#101828] font-inter-semibold text-[16px]">Listed By</Text>
-                  <View className="flex-row flex-wrap gap-[12px] mt-[12px]">
-                    {listedBy.map(option => (
-                      <TouchableOpacity 
-                        key={option}
-                        className="flex-row items-center border border-[#F2F4F7] bg-white px-[12px] py-[10px] rounded-[12px]"
-                      >
-                        <View className="w-[18px] h-[18px] border-[1.5px] border-[#D0D5DD] rounded-[4px] mr-[8px]" />
-                        <Text className="text-[#101828] font-inter-medium text-[13px]">{option}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View> */}
               </ScrollView>
 
               {/* Bottom Fixed Apply Button Container */}

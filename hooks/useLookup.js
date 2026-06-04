@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import api from "../app/api";
 
 export const useLookup = () => {
@@ -21,7 +21,7 @@ export const useLookup = () => {
         structures: [],
     });
 
-    const fetchLookups = async () => {
+    const fetchLookups = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -63,10 +63,10 @@ export const useLookup = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     // Helper to fetch a single lookup if needed
-    const fetchSingleLookup = async (entity) => {
+    const fetchSingleLookup = useCallback(async (entity) => {
         const endpoints = {
             propertyTypes: "/property-types",
             categories: "/categories",
@@ -80,12 +80,12 @@ export const useLookup = () => {
             zoneTypes: "/zone-types",
             locationHubs: "/location-hubs",
             facingDirections: "/facing-directions",
-        structures: "/structures",
-    };
+            structures: "/structures",
+        };
 
-    if (!endpoints[entity]) return;
+        if (!endpoints[entity]) return;
 
-    try {
+        try {
             const response = await api.get(endpoints[entity]);
             if (response.data && response.data.success) {
                 setLookups(prev => ({ ...prev, [entity]: response.data.data }));
@@ -93,7 +93,7 @@ export const useLookup = () => {
         } catch (err) {
             console.error(`Error fetching ${entity}:`, err);
         }
-    };
+    }, []);
 
     return {
         ...lookups,
@@ -103,3 +103,4 @@ export const useLookup = () => {
         fetchSingleLookup
     };
 };
+

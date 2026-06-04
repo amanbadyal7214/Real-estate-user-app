@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, ChevronDown, ChevronUp, X } from 'lucide-react-native';
 
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
+import { ActivityIndicator, FlatList, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import NoDataFound from '../../components/NoDataFound';
@@ -13,13 +13,17 @@ import { useLookup } from '../../hooks/useLookup';
 import api from '../api';
 
 const PrefectlyMatchedHome = () => {
-  const { findPropertiesByLocation, loading: discoveryLoading } = usePropertyDiscovery();
+  const { findPropertiesByLocation } = usePropertyDiscovery();
   const { resolveLocalities, loading: localityLoading } = useLocality();
   const { currentLocation } = useLocation();
   const searchParams = useLocalSearchParams();
   const [properties, setProperties] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
   
-  const loading = discoveryLoading || localityLoading;
+  const loading = isInitialLoading || localityLoading;
   const searchQuery = searchParams.city || currentLocation?.city || '';
 
   // Filter States
@@ -39,8 +43,7 @@ const PrefectlyMatchedHome = () => {
 
   useEffect(() => {
     fetchLookups();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchLookups]);
 
   // Fetch localities when selected city changes
   useEffect(() => {
@@ -68,9 +71,19 @@ const PrefectlyMatchedHome = () => {
   }, [city, currentLocation?.city]);
 
   // Load properties based on selected filters
-  const fetchMatches = async () => {
+  const fetchMatches = async (pageToFetch = 1, isLoadMore = false) => {
+    if (isLoadMore && (loadingMore || !hasMore)) return;
+
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setIsInitialLoading(true);
+      setHasMore(true);
+      setPage(1);
+    }
+
     try {
-      const params = { limit: 20 };
+      const params = { limit: 10, page: pageToFetch };
 
       // 1. Looking For
       params.lookingFor = lookingFor;
@@ -114,15 +127,38 @@ const PrefectlyMatchedHome = () => {
       const res = await findPropertiesByLocation(params);
       if (res.success) {
         const enriched = await resolveLocalities(res.data);
-        setProperties(enriched);
+        if (isLoadMore) {
+          setProperties((prev) => [...prev, ...enriched]);
+        } else {
+          setProperties(enriched);
+        }
+        
+        if (enriched.length < params.limit) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+        setPage(pageToFetch);
+      } else {
+        if (!isLoadMore) {
+          setProperties([]);
+        }
+        setHasMore(false);
       }
     } catch (err) {
       console.error("Match Fetch Error:", err);
+      if (!isLoadMore) {
+        setProperties([]);
+      }
+      setHasMore(false);
+    } finally {
+      setIsInitialLoading(false);
+      setLoadingMore(false);
     }
   };
 
   useEffect(() => {
-    fetchMatches();
+    fetchMatches(1, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, propertyType, lookingFor, city, locality, budget]);
 
@@ -465,16 +501,18 @@ const PrefectlyMatchedHome = () => {
       </View>
 
       {/* Property List */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
-        {loading ? (
-          <View className="py-20 items-center justify-center">
-            <ActivityIndicator size="large" color="#008E96" />
-            <Text className="mt-4 text-[#6A7282] font-inter-medium">Searching...</Text>
-          </View>
-        ) : properties.length > 0 ? (
-          properties.map((property) => (
+      {loading && properties.length === 0 ? (
+        <View className="flex-1 items-center justify-center py-20">
+          <ActivityIndicator size="large" color="#008E96" />
+          <Text className="mt-4 text-[#6A7282] font-inter-medium">Searching...</Text>
+        </View>
+      ) : properties.length > 0 ? (
+        <FlatList
+          className="flex-1 px-4"
+          data={properties}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item: property }) => (
             <PerfectMatchCard 
-              key={property._id} 
               property={{
                 id: property._id,
                 price: `₹ ${property.price}`,
@@ -490,11 +528,26 @@ const PrefectlyMatchedHome = () => {
                 isWishlisted: property.isWishlisted || false
               }} 
             />
-          ))
-        ) : (
-          <NoDataFound />
-        )}
-      </ScrollView>
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 24 }}
+          onEndReached={() => {
+            if (hasMore && !loadingMore && !loading) {
+              fetchMatches(page + 1, true);
+            }
+          }}
+          onEndReachedThreshold={0.2}
+          ListFooterComponent={
+            loadingMore ? (
+              <View className="py-4 items-center justify-center">
+                <ActivityIndicator size="small" color="#008E96" />
+              </View>
+            ) : null
+          }
+        />
+      ) : (
+        <NoDataFound />
+      )}
 
       {/* Dropdown Modals */}
       {renderSelectionModal()}

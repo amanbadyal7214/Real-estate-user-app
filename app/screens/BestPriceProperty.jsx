@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft, ChevronDown, ChevronUp, X } from 'lucide-react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NoDataFound from '../../components/NoDataFound';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
@@ -16,9 +16,16 @@ const BestPriceProperty = () => {
   const router = useRouter();
   const searchParams = useLocalSearchParams();
   const { currentLocation } = useLocation();
-  const { fetchBetterPricedProperties, loading: discoveryLoading } = usePropertyDiscovery();
+  const { fetchBetterPricedProperties } = usePropertyDiscovery();
   const { resolveLocalities, loading: localityLoading } = useLocality();
-  const loading = discoveryLoading || localityLoading;
+  
+  // Pagination states
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
+
+  const loading = isInitialLoading || localityLoading;
 
   const [properties, setProperties] = useState([]);
 
@@ -67,10 +74,21 @@ const BestPriceProperty = () => {
   }, [city, currentLocation?.city]);
 
   // Load properties based on selected filters
-  const fetchMatches = useCallback(async () => {
+  const fetchMatches = async (pageToFetch = 1, isLoadMore = false) => {
+    if (isLoadMore && (loadingMore || !hasMore)) return;
+
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setIsInitialLoading(true);
+      setHasMore(true);
+      setPage(1);
+    }
+
     try {
       const params = { 
-        limit: 20, 
+        limit: 10, 
+        page: pageToFetch,
         PriceAscending: true 
       };
 
@@ -106,16 +124,40 @@ const BestPriceProperty = () => {
       const res = await fetchBetterPricedProperties(params);
       if (res.success) {
         const enriched = await resolveLocalities(res.data);
-        setProperties(enriched);
+        if (isLoadMore) {
+          setProperties((prev) => [...prev, ...enriched]);
+        } else {
+          setProperties(enriched);
+        }
+        
+        if (enriched.length < params.limit) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+        setPage(pageToFetch);
+      } else {
+        if (!isLoadMore) {
+          setProperties([]);
+        }
+        setHasMore(false);
       }
     } catch (err) {
       console.error("Best Price Fetch Error:", err);
+      if (!isLoadMore) {
+        setProperties([]);
+      }
+      setHasMore(false);
+    } finally {
+      setIsInitialLoading(false);
+      setLoadingMore(false);
     }
-  }, [lookingFor, city, searchParams.city, currentLocation?.city, propertyType, locality, budget, fetchBetterPricedProperties, resolveLocalities]);
+  };
 
   useEffect(() => {
-    fetchMatches();
-  }, [fetchMatches]);
+    fetchMatches(1, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lookingFor, city, propertyType, locality, budget]);
 
   const clearFilter = (type) => {
     if (type === 'propertyType') setPropertyType(null);
@@ -405,7 +447,7 @@ const BestPriceProperty = () => {
   };
 
   const formattedProperties = properties.map((property, index) => {
-    const id = property._id || property.id || `best-${index}`;
+    const id = property._id || property.id || `matched-${index}`;
     const priceVal = property.price?.$numberDecimal || property.price || property.priceRange || 0;
     const formattedPrice = typeof priceVal === 'number' 
       ? formatPrice(priceVal) 
@@ -437,7 +479,7 @@ const BestPriceProperty = () => {
         <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center items-center">
           <ArrowLeft size={28} color="#101828" />
         </TouchableOpacity>
-        <Text className="ml-2 text-[20px] text-[#101828] font-inter-semibold">Better Price Properties</Text>
+        <Text className="ml-2 text-[20px] text-[#101828] font-inter-semibold">Best Price Properties</Text>
       </View>
 
       {/* Scrollable Filter Bar */}
@@ -482,20 +524,43 @@ const BestPriceProperty = () => {
       </View>
 
       {/* Property List */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
-        {loading ? (
-          <View className="py-20 items-center justify-center">
-            <ActivityIndicator size="large" color="#008E96" />
-            <Text className="mt-4 text-[#6A7282] font-inter-medium">Finding best prices...</Text>
-          </View>
-        ) : formattedProperties.length > 0 ? (
-          formattedProperties.map((property) => (
-            <PerfectMatchCard key={property.id} property={property} />
-          ))
-        ) : (
-          <NoDataFound />
-        )}
-      </ScrollView>
+      {loading && properties.length === 0 ? (
+        <View className="flex-1 items-center justify-center py-20">
+          <ActivityIndicator size="large" color="#008E96" />
+          <Text className="mt-4 text-[#6A7282] font-inter-medium">Searching...</Text>
+        </View>
+      ) : properties.length > 0 ? (
+        <FlatList
+          className="flex-1 px-4"
+          data={formattedProperties}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item: property }) => (
+            <PerfectMatchCard property={property} />
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 24 }}
+          onEndReached={() => {
+            if (hasMore && !loadingMore && !loading) {
+              fetchMatches(page + 1, true);
+            }
+          }}
+          onEndReachedThreshold={0.2}
+          ListEmptyComponent={
+            <View className="flex-1 items-center justify-center py-20">
+              <Text className="font-inter-medium text-[#6A7282]">No properties found.</Text>
+            </View>
+          }
+          ListFooterComponent={
+            loadingMore ? (
+              <View className="py-4 items-center justify-center">
+                <ActivityIndicator size="small" color="#008E96" />
+              </View>
+            ) : null
+          }
+        />
+      ) : (
+        <NoDataFound />
+      )}
 
       {/* Dropdown Modals */}
       {renderSelectionModal()}
