@@ -1,116 +1,267 @@
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronDown, Mic, Target } from 'lucide-react-native';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Search, TrendingUp } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import api from '../../api';
+import { useLocation } from '../../context/LocationContext';
 
 const CommercialSearch = () => {
-  const popularLocalities = [
-    { id: 1, name: 'Kharar' },
-    { id: 2, name: 'Sector 115' },
-    { id: 3, name: 'Sector 116' },
-  ];
+  const { currentLocation, updateLocation } = useLocation();
+  const [city, setCity] = useState(currentLocation?.city || "");
+  const [locality, setLocality] = useState(currentLocation?.locality || "");
+  const [suggestions, setSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
-  const trendingProjects = [
-    { id: 1, name: 'STJ Mohali Citi Centre 3', location: 'Gmada Aerocity, Mohali', price: 'Price On Request' },
-    { id: 2, name: 'STJ Mohali Citi Centre Walk', location: 'Gmada Aerocity, Mohali', price: 'Price On Request' },
-    { id: 3, name: 'Icon Downtown Mohali', location: 'Sector 62, Mohali', price: 'Price On Request' },
-    { id: 4, name: 'Emaar Mohali Hills', location: 'Sector 105, Mohali', price: 'Price On Request' },
-    { id: 5, name: 'Ireo Victory Valley', location: 'Sector 67, Mohali', price: 'Price On Request' },
-  ];
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (locality.trim().length > 1) {
+        searchLocalities();
+      } else {
+        setSuggestions([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locality]);
+
+  const searchLocalities = async () => {
+    try {
+      setLoadingSuggestions(true);
+      const response = await api.get(`/localities`, {
+        params: { city: city || currentLocation?.city || 'Mohali' }
+      });
+      
+      if (response.data?.success) {
+        const filtered = response.data.data.filter(item => 
+          item.name.toLowerCase().includes(locality.toLowerCase()) ||
+          item.label.toLowerCase().includes(locality.toLowerCase())
+        );
+        setSuggestions(filtered);
+      }
+    } catch (err) {
+      console.error("Error searching localities:", err);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
+
+  const handleLocalitySelect = (localityName) => {
+    const selectedCity = city || currentLocation?.city || "Mohali";
+    updateLocation({
+      city: selectedCity,
+      locality: localityName,
+      display: `${localityName}, ${selectedCity}`
+    });
+    // Navigate to Commercial listing screen after selecting locality
+    router.replace('/screens/Commercial/Commercial');
+  };
+
+  const handleSearchSubmit = () => {
+    const finalCity = city.trim() || currentLocation?.city || "Mohali";
+    const finalLocality = locality.trim();
+    
+    updateLocation({
+      city: finalCity,
+      locality: finalLocality,
+      display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
+    });
+    // Navigate to Commercial listing screen after submitting search
+    router.replace('/screens/Commercial/Commercial');
+  };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
+    <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="px-4 pt-2">
-        <TouchableOpacity 
-          onPress={() => router.push('/screens/Commercial/Commercial')} 
-          className="w-10 h-10 rounded-full justify-center items-start"
-        >
-          <ArrowLeft size={24} color="#101828" />
-        </TouchableOpacity>
-
-        <View className="mt-4 mb-6">
-          <Text className="font-inter-regular text-[15px] text-[#4A5565] mb-1">
-            You are looking to buy in
-          </Text>
-          <TouchableOpacity className="flex-row items-center gap-2">
-            <Text className="font-inter-bold text-[22px] text-[#101828]">
-              Select Locality or Landmark in Mohali
-            </Text>
-            <ChevronDown size={22} color="#101828" />
+      <View className="flex-row items-center px-4 py-3 justify-between">
+        <View className="flex-row items-center gap-3">
+          <TouchableOpacity 
+            onPress={() => router.push('/screens/Commercial/Commercial')}
+            className="w-10 h-10 items-center justify-center rounded-full border border-gray-100"
+          >
+            <ArrowLeft size={20} color="#101828" />
           </TouchableOpacity>
+          <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[18px] text-[#101828]">Commercial</Text>
+        </View>
+
+        <View 
+          className="flex-row items-center bg-gray-50/50 px-3 py-1.5 rounded-xl border border-gray-100 gap-1.5"
+        >
+          <MapPin size={14} color="#008E96" />
+          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#4A5565]">
+            {currentLocation?.city || 'Mohali'}
+          </Text>
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
-        {/* Search Bar */}
-        <View className="px-4 mb-4">
-          <View className="flex-row items-center px-4 h-12 bg-[#F3F4F6] rounded-[12px]">
-            <TextInput
-              placeholder="Locality, Landmark, Project..."
-              placeholderTextColor="#9CA3AF"
-              className="flex-1 font-inter-regular text-[15px] color-[#101828]"
-            />
-            <TouchableOpacity className="w-9 h-9 items-center justify-center bg-transparent">
-              <Mic size={20} color="#008E96" />
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+        {/* Search Section */}
+        <View className="mx-4 my-2 p-4 bg-white border border-gray-100 rounded-[24px] shadow-sm">
+          <View className="gap-3">
+            {/* City Input */}
+            <View className="h-12 px-4 flex-row items-center bg-[#F2F4F7] rounded-xl">
+              <MapPin size={18} color="#008E96" />
+              <TextInput 
+                placeholder="Enter City"
+                placeholderTextColor="#6A7282"
+                style={{ fontFamily: 'Inter-Medium' }}
+                className="flex-1 ml-3 text-[14px] text-[#101828]"
+                value={city}
+                onChangeText={setCity}
+              />
+            </View>
+
+            {/* Locality Input */}
+            <View style={{ zIndex: 50 }}>
+              <View className="h-12 px-4 flex-row items-center bg-[#F2F4F7] rounded-xl">
+                <Search size={18} color="#667085" />
+                <TextInput 
+                  placeholder="Enter Locality"
+                  placeholderTextColor="#6A7282"
+                  style={{ fontFamily: 'Inter-Medium' }}
+                  className="flex-1 ml-3 text-[14px] text-[#101828]"
+                  value={locality}
+                  onChangeText={(text) => {
+                    setLocality(text);
+                  }}
+                  onSubmitEditing={handleSearchSubmit}
+                />
+                {loadingSuggestions && <ActivityIndicator size="small" color="#008E96" />}
+              </View>
+
+              {suggestions.length > 0 && (
+                <View className="mt-2 bg-white border border-gray-100 rounded-xl shadow-sm max-h-48 overflow-hidden">
+                  <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+                    {suggestions.map((item) => (
+                      <TouchableOpacity 
+                        key={item._id}
+                        onPress={() => {
+                          setLocality(item.name);
+                          setSuggestions([]);
+                        }}
+                        className="px-4 py-3 border-b border-gray-50 flex-row items-center gap-2"
+                      >
+                        <MapPin size={14} color="#667085" />
+                        <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#101828]">
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+            </View>
+
+            {/* Search Button */}
+            <TouchableOpacity 
+              onPress={handleSearchSubmit}
+              className="h-12 bg-[#008E96] items-center justify-center rounded-xl mt-1 shadow-sm shadow-[#008E96]/20"
+            >
+              <View className="flex-row items-center gap-2">
+                <Search size={18} color="white" />
+                <Text style={{ fontFamily: 'Inter-Bold' }} className="text-white text-[15px]">Search Commercial Properties</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Current Location CTA */}
-        <TouchableOpacity className="flex-row items-center px-4 py-3 gap-2 border-b border-[#E4E7EC]">
-          <Target size={20} color="#008E96" />
-          <Text className="font-inter-medium text-[15px] text-[#008E96]">
-            Use my current location
-          </Text>
-        </TouchableOpacity>
-
         {/* Popular Localities Section */}
+        <View className="mx-4 mt-4 p-4 rounded-3xl bg-[#EDFBFA]">
+          <View className="flex-row items-center gap-2 mb-3">
+            <TrendingUp size={16} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Popular Localities</Text>
+          </View>
+          
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
+            {[
+              { name: 'Kharar', price: 'Price on Request' },
+              { name: 'Sector 115', price: 'Price on Request' },
+              { name: 'Sector 116', price: 'Price on Request' },
+              { name: 'Aerocity', price: 'Price on Request' },
+            ].map((locality, index) => (
+              <TouchableOpacity 
+                key={index}
+                onPress={() => handleLocalitySelect(locality.name)}
+                className="w-[140px] p-3 mr-3 bg-[#F7F9FA] border border-[#E4E7EC] rounded-2xl shadow-sm"
+              >
+                <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[15px] text-[#101828] mb-1">{locality.name}</Text>
+                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#6A7282]">{locality.price}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Popular Landmarks Section */}
         <View className="mt-6">
-          <Text className="px-4 font-inter-medium text-[14px] text-[#9CA3AF] mb-1">
-            Popular Localities
-          </Text>
-          {popularLocalities.map((item) => (
-            <TouchableOpacity 
-              key={item.id} 
-              onPress={() => router.push('/screens/Commercial/Commercial')}
-              className="flex-row justify-between items-center px-4 py-4 border-b border-[#E4E7EC]"
-            >
-              <Text className="font-inter-medium text-[16px] text-[#101828]">{item.name}</Text>
-              <Text className="font-inter-medium text-[14px] text-[#9CA3AF]">Locality</Text>
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity className="flex-row items-center justify-end px-4 py-3 gap-1">
-            <Text className="font-inter-medium text-[14px] text-[#008E96]">more</Text>
-            <ChevronDown size={16} color="#008E96" />
-          </TouchableOpacity>
+          <View className="flex-row items-center px-4 gap-2 mb-4">
+            <MapPin size={16} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Popular Landmarks</Text>
+          </View>
+          
+          <View className="flex-row flex-wrap px-4 gap-2">
+            {[
+              'Airport Road', 'Mohali IT Park', 'Phase 7 Market', 
+              'Sector 62', 'Phase 11 Market'
+            ].map((landmark, index) => (
+              <TouchableOpacity 
+                key={index}
+                onPress={() => handleLocalitySelect(landmark)}
+                className="flex-row items-center px-4 py-2.5 bg-white border border-[#E4E7EC] rounded-full gap-2"
+              >
+                <MapPin size={14} color="#008E96" />
+                <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[13px] text-[#4A5565]">{landmark}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
 
         {/* Trending Projects Section */}
-        <View className="mt-4">
-          <Text className="px-4 font-inter-medium text-[14px] text-[#9CA3AF] mb-1">
-            Trending Projects
-          </Text>
-          {trendingProjects.map((project) => (
-            <TouchableOpacity 
-              key={project.id} 
-              onPress={() => router.push('/screens/Commercial/Commercial')}
-              className="flex-row justify-between items-center px-4 py-4 border-b border-[#E4E7EC]"
-            >
-              <View className="flex-1 pr-4">
-                <Text className="font-inter-semibold text-[16px] text-[#101828] mb-1">
-                  {project.name}
-                </Text>
-                <Text className="font-inter-medium text-[14px] text-[#9CA3AF]">
-                  {project.location}
-                </Text>
-              </View>
-              <Text className="font-inter-medium text-[14px] text-[#9CA3AF]">
-                {project.price}
-              </Text>
-            </TouchableOpacity>
-          ))}
+        <View className="mt-8 mb-6">
+          <View className="flex-row items-center px-4 gap-2 mb-4">
+            <LayoutGrid size={16} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Trending Projects</Text>
+          </View>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row px-4">
+            {[
+              { name: 'STJ Mohali Citi Centre 3', area: 'Gmada Aerocity, Mohali', price: 'Price On Request', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Icon Downtown Mohali', area: 'Sector 62, Mohali', price: 'Price On Request', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Emaar Mohali Hills', area: 'Sector 105, Mohali', price: 'Price On Request', image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=400' },
+            ].map((project, index) => (
+              <TouchableOpacity 
+                key={index}
+                className="w-[170px] mr-3 bg-white border border-[#E4E7EC] rounded-2xl overflow-hidden shadow-sm"
+              >
+                <View className="w-full h-24 bg-gray-100">
+                  <Image 
+                    source={{ uri: project.image }} 
+                    className="w-full h-full"
+                  />
+                </View>
+                <View className="p-3">
+                  <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#101828]" numberOfLines={1}>{project.name}</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[12px] text-[#6A7282] mt-0.5" numberOfLines={1}>{project.area}</Text>
+                  <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[13px] text-[#008E96] mt-2">{project.price}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
+
+        {/* Explore Nearby Properties Button */}
+        <TouchableOpacity 
+          onPress={handleSearchSubmit}
+          className="mx-4 mb-10 p-4 flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20 rounded-2xl"
+        >
+          <View className="flex-row items-center gap-3">
+            <View className="w-9 h-9 bg-white items-center justify-center rounded-full border border-gray-100">
+               <ArrowLeft size={16} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
+            </View>
+            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[15px] text-[#101828]">Explore nearby properties</Text>
+          </View>
+          <ChevronRight size={20} color="#008E96" />
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

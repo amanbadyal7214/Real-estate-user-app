@@ -39,7 +39,17 @@ const RecommendedProperties = () => {
 
   useEffect(() => {
     fetchLookups();
-  }, [fetchLookups]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (searchParams.propertyType && propertyTypes.length > 0) {
+      const type = propertyTypes.find(pt => pt._id === searchParams.propertyType);
+      if (type && (!propertyType || propertyType._id !== type._id)) {
+        setPropertyType(type);
+      }
+    }
+  }, [searchParams.propertyType, propertyTypes, propertyType]);
 
   // Fetch localities when selected city changes
   useEffect(() => {
