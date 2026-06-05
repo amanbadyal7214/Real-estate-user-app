@@ -174,7 +174,7 @@ export const useRegister = () => {
                 // Wait for all storage operations to complete first
                 await Promise.all([
                     SecureStore.setItemAsync("token", token),
-                    SecureStore.setItemAsync("userRole", role),
+                    SecureStore.setItemAsync("userRole", typeof role === "string" ? role : JSON.stringify(role)),
                     SecureStore.setItemAsync("userData", JSON.stringify(user))
                 ]);
 
@@ -215,7 +215,7 @@ export const useRegister = () => {
                 // Wait for all storage operations to complete first
                 await Promise.all([
                     SecureStore.setItemAsync("token", token),
-                    SecureStore.setItemAsync("userRole", role),
+                    SecureStore.setItemAsync("userRole", typeof role === "string" ? role : JSON.stringify(role)),
                     SecureStore.setItemAsync("userData", JSON.stringify(user))
                 ]);
 

@@ -31,6 +31,19 @@ const getDisplayValue = (value) => {
   return value.label || value.name || value.title || value.value || '';
 };
 
+const capitalize = (str) => {
+  if (!str || typeof str !== 'string') return '';
+  return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+};
+
+const getFurnishingLabel = (status) => {
+  const name = status?.name || status || '';
+  if (name === 'fully_furnished') return 'Fully Furnished';
+  if (name === 'semi_furnished') return 'Semi Furnished';
+  if (name === 'unfurnished') return 'Unfurnished';
+  return name || 'N/A';
+};
+
 const PropertyDetails = () => {
   const router = useRouter();
   const { propertyId, property } = useLocalSearchParams();
@@ -39,27 +52,15 @@ const PropertyDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('Overview');
   const [resolvedFacing, setResolvedFacing] = useState('');
+  const [resolvedZoneType, setResolvedZoneType] = useState('');
+  const [resolvedLocationHub, setResolvedLocationHub] = useState('');
+  const [resolvedOwnership, setResolvedOwnership] = useState('');
   const flatListRef = useRef(null);
   
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [toast, setToast] = useState(null);
 
   const recordedViewsRef = useRef(new Set());
-
-  useEffect(() => {
-    const targetId = propertyId || propertyData?._id || propertyData?.id;
-    if (targetId && !recordedViewsRef.current.has(targetId)) {
-      recordedViewsRef.current.add(targetId);
-      const recordView = async () => {
-        try {
-          await api.post(`/properties/view/${targetId}`);
-        } catch (err) {
-          console.error("Error logging property view:", err.response?.data || err.message);
-        }
-      };
-      recordView();
-    }
-  }, [propertyId, propertyData?._id, propertyData?.id]);
 
   const showToast = (message) => {
     setToast(message);
@@ -119,10 +120,185 @@ const PropertyDetails = () => {
     };
   }, [fetchPropertyById, initialProperty, propertyId]);
 
+  useEffect(() => {
+    if (fetching) return;
+
+    const targetId = propertyId || propertyData?._id || propertyData?.id;
+    if (targetId && !recordedViewsRef.current.has(targetId)) {
+      recordedViewsRef.current.add(targetId);
+      const recordView = async () => {
+        try {
+          await api.post(`/properties/view/${targetId}`);
+        } catch (err) {
+          console.error("Error logging property view:", err.response?.data || err.message);
+        }
+      };
+      // 500ms delay to make sure GET request transaction is fully completed on the server
+      setTimeout(recordView, 500);
+    }
+  }, [propertyId, propertyData?._id, propertyData?.id, fetching]);
+
   const normalizedProperty = propertyData || {};
   const projectInfo = normalizedProperty.project || {};
   const residentialInfo = normalizedProperty.residential || {};
+  const commercialInfo = normalizedProperty.commercial || {};
+  const plotInfo = normalizedProperty.plot || {};
+  const pgInfo = normalizedProperty.pg || {};
   const sellerInfo = normalizedProperty.user || {};
+
+  const propType = useMemo(() => {
+    const typeObj = normalizedProperty.propertyType;
+    if (!typeObj) return 'residential';
+    const name = typeof typeObj === 'string' ? typeObj : (typeObj.name || typeObj.label || '');
+    return name.toLowerCase();
+  }, [normalizedProperty.propertyType]);
+
+  const isRent = useMemo(() => {
+    const lookingForObj = normalizedProperty.lookingFor;
+    if (!lookingForObj) return false;
+    const name = typeof lookingForObj === 'string' ? lookingForObj : (lookingForObj.name || lookingForObj.label || '');
+    return name.toLowerCase() === 'rent';
+  }, [normalizedProperty.lookingFor]);
+
+  const subtitle = useMemo(() => {
+    if (propType === 'residential') {
+      const config = residentialInfo.structure?.id?.name || 'BHK';
+      return `${residentialInfo.bedrooms || 0} ${config} • ${getFurnishingLabel(residentialInfo.furnishingStatus)}`;
+    } else if (propType === 'commercial') {
+      const typeLabel = commercialInfo.officeType
+        ? capitalize(commercialInfo.officeType)
+        : 'Commercial Space';
+      return `${typeLabel} • ${resolvedOwnership || 'Commercial'}`;
+    } else if (propType === 'plot') {
+      return `${plotInfo.isCornerPlot ? 'Corner Plot' : 'Standard Plot'} • Plot`;
+    } else if (propType === 'pg') {
+      return `PG Accommodation • ${pgInfo.mealsAvailable ? 'Meals Included' : 'No Meals'}`;
+    }
+    return '';
+  }, [propType, residentialInfo, commercialInfo, resolvedOwnership, plotInfo, pgInfo]);
+
+  const overviewSpecs = useMemo(() => {
+    if (propType === 'commercial') {
+      return [
+        { label: 'Office/Shop Type', value: commercialInfo.officeType ? capitalize(commercialInfo.officeType) : 'N/A', icon: 'briefcase-outline' },
+        { label: 'Built Up Area', value: formatArea(commercialInfo.builtUpArea?.value || normalizedProperty.area), icon: 'move-outline' },
+        { label: 'Meeting Rooms', value: commercialInfo.meetingRooms?.toString() || '0', icon: 'chatbubbles-outline' },
+        { label: 'Ownership', value: resolvedOwnership || 'N/A', icon: 'key-outline' },
+      ];
+    } else if (propType === 'plot') {
+      return [
+        { label: 'Plot Area', value: formatArea(normalizedProperty.area), icon: 'resize-outline' },
+        { label: 'Corner Plot', value: plotInfo.isCornerPlot ? 'Yes' : 'No', icon: 'map-outline' },
+        { label: 'Boundary Wall', value: plotInfo.isBoundaryWall ? 'Yes' : 'No', icon: 'shield-checkmark-outline' },
+        { label: 'Facing', value: resolvedFacing || getDisplayValue(normalizedProperty.facing) || 'N/A', icon: 'compass-outline' },
+      ];
+    } else if (propType === 'pg') {
+      return [
+        { label: 'Meals Available', value: pgInfo.mealsAvailable ? 'Yes' : 'No', icon: 'restaurant-outline' },
+        { label: 'Common Areas', value: pgInfo.commonAreas && pgInfo.commonAreas.length > 0 ? 'Available' : 'None', icon: 'people-outline' },
+        { label: 'Rooms/Sharing', value: pgInfo.rooms && pgInfo.rooms.length > 0 ? `${pgInfo.rooms.length} Rooms` : 'N/A', icon: 'bed-outline' },
+        { label: 'Pincode', value: normalizedProperty.pincode || 'N/A', icon: 'location-outline' },
+      ];
+    } else {
+      // Default / Residential
+      return [
+        { label: 'Bedrooms', value: `${residentialInfo.bedrooms || 0} BHK`, icon: 'bed-outline' },
+        { label: 'Bathrooms', value: residentialInfo.bathrooms || 'N/A', icon: 'water-outline' },
+        { label: 'Floor', value: `${residentialInfo.floor || 'N/A'} of ${residentialInfo.totalFloors || 'N/A'}`, icon: 'layers-outline' },
+        { label: 'Facing', value: resolvedFacing || getDisplayValue(normalizedProperty.facing) || 'N/A', icon: 'compass-outline' },
+      ];
+    }
+  }, [propType, commercialInfo, plotInfo, pgInfo, residentialInfo, resolvedFacing, resolvedOwnership, normalizedProperty]);
+
+  // Resolve Zone Type
+  useEffect(() => {
+    let active = true;
+    const val = commercialInfo.zoneType;
+    if (!val) {
+      setResolvedZoneType('');
+      return;
+    }
+    const text = typeof val === 'string' || typeof val === 'number' ? String(val) : getDisplayValue(val);
+    const isId = /^[0-9a-fA-F]{24}$/.test(text);
+    if (!isId) {
+      setResolvedZoneType(capitalize(text));
+      return;
+    }
+    const load = async () => {
+      try {
+        const response = await api.get(`/zone-types/${text}`);
+        const data = response.data?.data || response.data;
+        if (active) {
+          setResolvedZoneType(capitalize(data?.label || data?.name || text));
+        }
+      } catch (error) {
+        if (active) setResolvedZoneType(capitalize(text));
+        console.error('Error resolving zone type:', error);
+      }
+    };
+    load();
+    return () => { active = false; };
+  }, [commercialInfo.zoneType]);
+
+  // Resolve Location Hub
+  useEffect(() => {
+    let active = true;
+    const val = commercialInfo.locationHub;
+    if (!val) {
+      setResolvedLocationHub('');
+      return;
+    }
+    const text = typeof val === 'string' || typeof val === 'number' ? String(val) : getDisplayValue(val);
+    const isId = /^[0-9a-fA-F]{24}$/.test(text);
+    if (!isId) {
+      setResolvedLocationHub(capitalize(text));
+      return;
+    }
+    const load = async () => {
+      try {
+        const response = await api.get(`/location-hubs/${text}`);
+        const data = response.data?.data || response.data;
+        if (active) {
+          setResolvedLocationHub(capitalize(data?.label || data?.name || text));
+        }
+      } catch (error) {
+        if (active) setResolvedLocationHub(capitalize(text));
+        console.error('Error resolving location hub:', error);
+      }
+    };
+    load();
+    return () => { active = false; };
+  }, [commercialInfo.locationHub]);
+
+  // Resolve Ownership Type
+  useEffect(() => {
+    let active = true;
+    const val = commercialInfo.ownershipType;
+    if (!val) {
+      setResolvedOwnership('');
+      return;
+    }
+    const text = typeof val === 'string' || typeof val === 'number' ? String(val) : getDisplayValue(val);
+    const isId = /^[0-9a-fA-F]{24}$/.test(text);
+    if (!isId) {
+      setResolvedOwnership(capitalize(text));
+      return;
+    }
+    const load = async () => {
+      try {
+        const response = await api.get(`/ownership-types/${text}`);
+        const data = response.data?.data || response.data;
+        if (active) {
+          setResolvedOwnership(capitalize(data?.label || data?.name || text));
+        }
+      } catch (error) {
+        if (active) setResolvedOwnership(capitalize(text));
+        console.error('Error resolving ownership type:', error);
+      }
+    };
+    load();
+    return () => { active = false; };
+  }, [commercialInfo.ownershipType]);
 
   const images = (normalizedProperty.images || [])
     .concat(projectInfo.media || [])
@@ -177,14 +353,6 @@ const PropertyDetails = () => {
   const handleScroll = (event) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width);
     setCurrentImageIndex(index);
-  };
-
-  const getFurnishingLabel = (status) => {
-    const name = status?.name || status || '';
-    if (name === 'fully_furnished') return 'Fully Furnished';
-    if (name === 'semi_furnished') return 'Semi Furnished';
-    if (name === 'unfurnished') return 'Unfurnished';
-    return name || 'N/A';
   };
 
   if (fetching && !propertyData) {
@@ -254,7 +422,7 @@ const PropertyDetails = () => {
                 <View className="bg-[#008E96] self-start px-2 py-0.5 rounded-[4px] flex-row items-center gap-1">
                   <Ionicons name="flash" size={10} color="white" />
                   <Text className="text-white text-[10px] font-inter-bold uppercase">
-                    {getDisplayValue(normalizedProperty.propertyType) || 'Residential'}
+                    {capitalize(getDisplayValue(normalizedProperty.propertyType)) || 'Residential'}
                   </Text>
                 </View>
                 <Text className="text-white text-[20px] font-inter-semibold" numberOfLines={2}>
@@ -301,17 +469,29 @@ const PropertyDetails = () => {
                         <MaterialCommunityIcons name="cash-multiple" size={16} color="#008E96" />
                       </View>
                       <View>
-                        <Text className="text-[#667085] text-[11px] font-inter-medium">Total Price</Text>
-                        <Text className="text-[#0A0A0A] text-[18px] font-inter-bold">{formatPrice(normalizedProperty.price)}</Text>
+                        <Text className="text-[#667085] text-[11px] font-inter-medium">
+                          {isRent ? 'Monthly Rent' : 'Total Price'}
+                        </Text>
+                        <Text className="text-[#0A0A0A] text-[18px] font-inter-bold">
+                          {formatPrice(normalizedProperty.price)}{isRent ? ' / month' : ''}
+                        </Text>
                       </View>
                     </View>
+                    {isRent && typeof normalizedProperty.securityDeposit !== 'undefined' && (
+                      <View className="flex-row items-center gap-1.5 mt-1 mb-2">
+                        <Text className="text-[#667085] text-[11px] font-inter-medium">Security Deposit:</Text>
+                        <Text className="text-[#101828] text-[12px] font-inter-semibold">
+                          {normalizedProperty.securityDeposit > 0 ? formatPrice(normalizedProperty.securityDeposit) : 'Nil'}
+                        </Text>
+                      </View>
+                    )}
                     <Text className="text-[#6A7282] text-[12px] font-inter-regular">
-                      {residentialInfo.bedrooms || 0} BHK • {getFurnishingLabel(residentialInfo.furnishingStatus)}
+                      {subtitle}
                     </Text>
                   </View>
                   <View className="bg-[#F0F9FA] rounded-[12px] px-3 py-1.5 border border-[#D2F0F2]">
                     <Text className="text-[#008E96] text-[12px] font-inter-semibold">
-                      {formatArea(normalizedProperty.area)}
+                      {formatArea(normalizedProperty.area || commercialInfo.builtUpArea?.value || residentialInfo.builtUpArea?.value)}
                     </Text>
                   </View>
                 </View>
@@ -319,12 +499,7 @@ const PropertyDetails = () => {
 
               {/* Key Specs Grid */}
               <View className="flex-row flex-wrap gap-3">
-                {[
-                  { label: 'Bedrooms', value: `${residentialInfo.bedrooms || 0} BHK`, icon: 'bed-outline' },
-                  { label: 'Bathrooms', value: residentialInfo.bathrooms || 'N/A', icon: 'water-outline' },
-                  { label: 'Floor', value: `${residentialInfo.floor || 'N/A'} of ${residentialInfo.totalFloors || 'N/A'}`, icon: 'layers-outline' },
-                  { label: 'Facing', value: resolvedFacing || getDisplayValue(normalizedProperty.facing) || 'N/A', icon: 'compass-outline' },
-                ].map((item, idx) => (
+                {overviewSpecs.map((item, idx) => (
                   <View key={idx} className="w-[48%] bg-white rounded-[16px] p-3 border border-[#E5E7EB]">
                     <View className="flex-row items-center gap-2 mb-1.5">
                       <View className="w-7 h-7 rounded-full bg-[#F0F9FA] items-center justify-center">
@@ -436,24 +611,42 @@ const PropertyDetails = () => {
                 <Text className="text-[#101828] text-[18px] font-inter-semibold">Property Facts</Text>
                 <View className="flex-row flex-wrap justify-between">
                   {[
-                    { label: 'Property Type', value: getDisplayValue(normalizedProperty.propertyType), icon: 'business-outline' },
-                    { label: 'Sub Type', value: getDisplayValue(normalizedProperty.subPropertyType), icon: 'home-outline' },
+                    { label: 'Property Type', value: capitalize(getDisplayValue(normalizedProperty.propertyType)), icon: 'business-outline' },
+                    { label: 'Sub Type', value: capitalize(getDisplayValue(normalizedProperty.subPropertyType)), icon: 'home-outline' },
                     // Residential specific
-                    ...(normalizedProperty.propertyType?.name === 'residential' ? [
+                    ...(propType === 'residential' ? [
                       { label: 'Configuration', value: `${residentialInfo.bedrooms || 0} BHK`, icon: 'apps-outline' },
                       { label: 'Carpet Area', value: formatArea(residentialInfo.carpetArea?.value), icon: 'move-outline' },
                       { label: 'Furnishing', value: getFurnishingLabel(residentialInfo.furnishingStatus), icon: 'bed-outline' },
-                      { label: 'Total Floors', value: residentialInfo.totalFloors, icon: 'layers-outline' },
+                      { label: 'Total Floors', value: residentialInfo.totalFloors ? String(residentialInfo.totalFloors) : 'N/A', icon: 'layers-outline' },
+                    ] : []),
+                    // Commercial specific
+                    ...(propType === 'commercial' ? [
+                      { label: 'Office/Shop Type', value: commercialInfo.officeType ? capitalize(commercialInfo.officeType) : 'N/A', icon: 'briefcase-outline' },
+                      { label: 'Carpet Area', value: formatArea(commercialInfo.carpetArea?.value), icon: 'move-outline' },
+                      { label: 'Built Up Area', value: formatArea(commercialInfo.builtUpArea?.value), icon: 'business-outline' },
+                      { label: 'Meeting Rooms', value: commercialInfo.meetingRooms?.toString() || '0', icon: 'chatbubbles-outline' },
+                      { label: 'Zone Type', value: resolvedZoneType || 'N/A', icon: 'grid-outline' },
+                      { label: 'Location Hub', value: resolvedLocationHub || 'N/A', icon: 'navigate-outline' },
+                      { label: 'Ownership', value: resolvedOwnership || 'N/A', icon: 'key-outline' },
+                      { label: 'Condition', value: commercialInfo.propertyCondition ? capitalize(commercialInfo.propertyCondition) : 'N/A', icon: 'construct-outline' },
                     ] : []),
                     // PG specific
-                    ...(normalizedProperty.propertyType?.name === 'pg' ? [
-                      { label: 'Meals', value: normalizedProperty.pg?.mealsAvailable ? 'Yes' : 'No', icon: 'restaurant-outline' },
-                      { label: 'Common Areas', value: (normalizedProperty.pg?.commonAreas || []).length > 0 ? 'Available' : 'None', icon: 'people-outline' },
+                    ...(propType === 'pg' ? [
+                      { label: 'Meals Available', value: pgInfo.mealsAvailable ? 'Yes' : 'No', icon: 'restaurant-outline' },
+                      { label: 'Meal Types', value: pgInfo.mealTypes && pgInfo.mealTypes.length > 0 ? pgInfo.mealTypes.map(m => capitalize(m)).join(', ') : 'N/A', icon: 'fast-food-outline' },
+                      { label: 'Common Areas', value: pgInfo.commonAreas && pgInfo.commonAreas.length > 0 ? pgInfo.commonAreas.map(c => capitalize(c)).join(', ') : 'None', icon: 'people-outline' },
+                      { label: 'Rooms/Sharing', value: pgInfo.rooms && pgInfo.rooms.length > 0 ? `${pgInfo.rooms.length} Rooms` : 'N/A', icon: 'bed-outline' },
                     ] : []),
                     // Plot specific
-                    ...(normalizedProperty.propertyType?.name === 'plot' ? [
-                      { label: 'Boundary Wall', value: normalizedProperty.plot?.isBoundaryWall ? 'Yes' : 'No', icon: 'shield-checkmark-outline' },
-                      { label: 'Dimensions', value: normalizedProperty.plot?.dimensions || 'N/A', icon: 'resize-outline' },
+                    ...(propType === 'plot' ? [
+                      { label: 'Corner Plot', value: plotInfo.isCornerPlot ? 'Yes' : 'No', icon: 'map-outline' },
+                      { label: 'Boundary Wall', value: plotInfo.isBoundaryWall ? 'Yes' : 'No', icon: 'shield-checkmark-outline' },
+                      { label: 'Dimensions', value: plotInfo.dimensions || 'N/A', icon: 'resize-outline' },
+                    ] : []),
+                    // Rent specific
+                    ...(isRent ? [
+                      { label: 'Security Deposit', value: normalizedProperty.securityDeposit ? formatPrice(normalizedProperty.securityDeposit) : 'Nil', icon: 'cash-outline' },
                     ] : []),
                     { label: 'Pincode', value: normalizedProperty.pincode, icon: 'location-outline' },
                     { label: 'Available From', value: normalizedProperty.availableFrom ? new Date(normalizedProperty.availableFrom).toLocaleDateString('en-IN') : 'Immediately', icon: 'calendar-outline' },
