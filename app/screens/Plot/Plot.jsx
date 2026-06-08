@@ -14,6 +14,7 @@ import UserHeader from '../../../components/UserHeader';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
+import ComingSoon from '../../../components/ComingSoon';
 
 const Plot = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
@@ -190,22 +191,22 @@ const Plot = () => {
         </View>
 
 
-        {/* Matches Section */}
+        {/* Coming Soon Section */}
+        <ComingSoon />
+
+        {/* Matches Section
         <View className="px-4 mt-8 mb-6">
           <Spotlight />
         </View>
+        */}
 
-       
-
-         {/* Popular on Propertize Section */}
+        {/* Popular on Propertize Section
         <View className="px-4 mb-6">
-          {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
             <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on Propertize</Text>
           </View>
 
-          {/* Tools Grid Card */}
           <View
             className="bg-white rounded-[24px] w-full min-h-[221.5px] p-4 pt-10 shadow-sm mb-6"
             style={{
@@ -265,11 +266,10 @@ const Plot = () => {
               </TouchableOpacity>
             </View>
           </View>
+        </View>
+        */}
 
-        </View> 
-
-
-          {/* Recommended Sellers Section */}
+        {/* Recommended Sellers Section
         <View className="px-4 mb-3">
           <View className="mb-4 flex-row items-center justify-between">
             <View>
@@ -302,13 +302,15 @@ const Plot = () => {
             ))}
           </ScrollView>
         </View>
+        */}
 
-             {/* Featured Collections Section */}
+        {/* Featured Collections Section
         <View className=" mb-6">
           <FeaturedCollectionCard />
         </View>
+        */}
 
-        {/* Better Priced Properties Section */}
+        {/* Better Priced Properties Section
         <View className="px-4 mb-3">
           <View className="flex-row items-center justify-between mb-4">
             <View>
@@ -338,8 +340,9 @@ const Plot = () => {
             ))}
           </ScrollView>
         </View>
+        */}
 
-         {/* News For You Section */}
+        {/* News For You Section
         <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
@@ -367,6 +370,7 @@ const Plot = () => {
             ))}
           </ScrollView>
         </View>
+        */}
 
 
       </ScrollView>

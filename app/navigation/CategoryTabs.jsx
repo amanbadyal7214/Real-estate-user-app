@@ -7,7 +7,7 @@ const DEFAULT_TABS = [
   { id: 'Rent', label: 'Rentals', icon: Key, color: '#101828' },
   { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
   { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
-  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
+  // { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
   { id: 'Commercial', label: 'Business', icon: Building, color: '#101828' },
 ];
 
@@ -16,7 +16,7 @@ const PLOT_TABS = [
   { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
   { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
   { id: 'Buy', label: 'Homes', icon: Home, color: '#008E96' },
-  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
+  // { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
   { id: 'Commercial', label: 'Business', icon: Building, color: '#101828' },
   
 ];
@@ -27,13 +27,13 @@ const COMMERCIAL_TABS = [
   { id: 'Commercial', label: 'Business', icon: Building, color: '#008E96' },
   { id: 'Buy', label: 'Homes', icon: Home, color: '#101828' },
   { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
-  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
+  // { id: 'PG', label: 'PG', icon: HomeIcon, color: '#101828' },
 ];
 
 const PG_TABS = [
   { id: 'Buy', label: 'Homes', icon: Home, color: '#101828' },
   { id: 'Rent', label: 'Rentals', icon: Key, color: '#101828' },
-  { id: 'PG', label: 'PG', icon: HomeIcon, color: '#008E96' },
+  // { id: 'PG', label: 'PG', icon: HomeIcon, color: '#008E96' },
   { id: 'Project', label: 'Project', icon: Building2, color: '#101828' },
   { id: 'Plot', label: 'Plot', icon: LandPlot, color: '#101828' },
   { id: 'Commercial', label: 'Business', icon: Building, color: '#101828' },
