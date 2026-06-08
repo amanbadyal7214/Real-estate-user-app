@@ -9,14 +9,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useRegister } from "../../hooks/Register";
+import { useRegister, performRoleBasedRedirect } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
+import DashboardSelectorModal from "../../components/DashboardSelectorModal";
 
 const Login = () => {
   const router = useRouter();
   const { redirectTo } = useLocalSearchParams();
   const [showPassword, setShowPassword] = useState(false);
-  const { formData, updateFormData, loading, handleLogin } = useRegister();
+  const { formData, updateFormData, loading, handleLogin, roleSelector, setRoleSelector } = useRegister();
 
   const resolveRedirectTarget = () => {
     if (!redirectTo || typeof redirectTo !== "string") {
@@ -31,8 +32,13 @@ const Login = () => {
     }
   };
 
-  const handleLoginSuccess = () => {
-    router.replace(resolveRedirectTarget());
+  const handleLoginSuccess = (data) => {
+    const role = data?.role;
+    let target = resolveRedirectTarget();
+    if (target === "/screens/PostProperty/PropertyDetails") {
+      target = undefined; // Let role check determine fallback (Buyer Buy dashboard vs Owner dashboard)
+    }
+    performRoleBasedRedirect(role, target, setRoleSelector);
   };
 
   const handleSafeBack = () => {
@@ -136,6 +142,15 @@ const Login = () => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      <DashboardSelectorModal
+        visible={roleSelector.visible}
+        roles={roleSelector.roles}
+        onSelect={(target) => {
+          setRoleSelector(prev => ({ ...prev, visible: false }));
+          router.replace(target);
+        }}
+        onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
+      />
     </SafeAreaView>
   );
 };

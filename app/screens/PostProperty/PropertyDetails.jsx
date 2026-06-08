@@ -1,6 +1,6 @@
 import { FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -71,7 +71,8 @@ const RenderIcon = ({ name, size = 32, color = "#008E96", apiAmenities = [] }) =
 
 const PropertyDetails = () => {
   const router = useRouter();
-  const { postData, updatePropertyDetails, updatePriceDetails } = usePostProperty();
+  const { isEditMode, editPropertyId } = useLocalSearchParams();
+  const { postData, setPostData, resetPostData, updatePropertyDetails, updatePriceDetails } = usePostProperty();
   const { 
     propertyTypes: apiPropertyTypes, 
     subPropertyTypes: apiSubPropertyTypes, 
@@ -108,6 +109,7 @@ const PropertyDetails = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [localitySuggestions, setLocalitySuggestions] = useState([]);
   const [loadingLocalitySuggestions, setLoadingLocalitySuggestions] = useState(false);
+  const [loadingEditData, setLoadingEditData] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -309,6 +311,117 @@ const PropertyDetails = () => {
     fetchCountries();
   }, []);
 
+  useEffect(() => {
+    const initForm = async () => {
+      if (isEditMode === 'true' && editPropertyId) {
+        try {
+          setLoadingEditData(true);
+          const response = await api.get(`/properties/${editPropertyId}`);
+          if (response.data?.success) {
+            const prop = response.data.data || response.data.property || response.data;
+            
+            // Map the property details back into the postData format
+            const mappedDetails = {
+              category: prop.category?.label || prop.category?.name || prop.category || '',
+              type: prop.propertyType?.label || prop.propertyType?.name || prop.propertyType || '',
+              subPropertyType: prop.subPropertyType?.label || prop.subPropertyType?.name || prop.subPropertyType || '',
+              title: prop.name || prop.title || '',
+              bhk: prop.residential?.bedrooms?.toString() || prop.bedrooms?.toString() || prop.bhk?.toString() || '',
+              builtUpArea: prop.builtUpArea?.toString() || '',
+              measurementUnit: prop.areaUnit?.label || prop.areaUnit?.name || prop.areaUnit || '',
+              buildingName: prop.projectName || prop.projectSociety || '',
+              locality: prop.locality?.name || prop.locality?.label || prop.locality || '',
+              localityId: prop.locality?._id || (typeof prop.locality === 'string' ? prop.locality : ''),
+              city: prop.city?.name || prop.city?.label || prop.city || '',
+              cityId: prop.city?._id || (typeof prop.city === 'string' ? prop.city : ''),
+              state: prop.state?.name || prop.state?.label || prop.state || '',
+              stateId: prop.state?._id || (typeof prop.state === 'string' ? prop.state : ''),
+              country: prop.country?.name || prop.country?.label || prop.country || '',
+              countryId: prop.country?._id || (typeof prop.country === 'string' ? prop.country : ''),
+              projectId: prop.project?._id || '',
+              furnishing: prop.furnishingStatus?.label || prop.furnishingStatus?.name || prop.furnishingStatus || '',
+              description: prop.description || '',
+              address: prop.address || '',
+              structure: prop.structure?.label || prop.structure?.name || prop.structure || '',
+              constructionStatus: prop.constructionStatus?.label || prop.constructionStatus?.name || prop.constructionStatus || '',
+              possessionStatus: prop.possessionStatus?.label || prop.possessionStatus?.name || prop.possessionStatus || '',
+              zoneType: prop.zoneType?.label || prop.zoneType?.name || prop.zoneType || '',
+              locationHub: prop.locationHub?.label || prop.locationHub?.name || prop.locationHub || '',
+              ownershipType: prop.ownershipType?.label || prop.ownershipType?.name || prop.ownershipType || '',
+              propertyCondition: prop.propertyCondition || '',
+            };
+
+            // Map amenities back to furnishings
+            const selectedItems = [];
+            const counters = { AC: 0, Bed: 0, TV: 0, Geyser: 0, Wardrobe: 0 };
+            
+            if (prop.amenities && Array.isArray(prop.amenities)) {
+              prop.amenities.forEach(item => {
+                const amenityObj = item.amenity || {};
+                const name = amenityObj.label || amenityObj.name || '';
+                const count = item.count || 1;
+                if (name) {
+                  if (name in counters) {
+                    counters[name] = count;
+                  } else {
+                    selectedItems.push(name);
+                  }
+                }
+              });
+            }
+
+            const mappedPrice = {
+              expectedPrice: prop.price?.toString() || prop.monthlyRent?.toString() || '',
+              maintenance: prop.maintenance?.toString() || '',
+              securityDeposit: prop.securityDeposit?.toString() || prop.securityDepositAmount?.toString() || '',
+              isNegotiable: !!prop.isNegotiable,
+              availableFrom: prop.availableFrom || '',
+            };
+
+            const mappedAdvanced = {
+              floor: prop.residential?.floor?.toString() || prop.floor?.toString() || '',
+              totalFloors: prop.residential?.totalFloors?.toString() || prop.totalFloors?.toString() || '',
+              bathrooms: prop.residential?.bathrooms?.toString() || prop.bathrooms?.toString() || '',
+              balconies: prop.residential?.balconies?.toString() || prop.balconies?.toString() || '',
+              ageOfProperty: prop.ageOfProperty?.toString() || '',
+              parking: {
+                covered: prop.parking?.covered || 0,
+                open: prop.parking?.open || 0
+              },
+              tenantType: prop.tenantType || [],
+              petFriendly: prop.petFriendly !== undefined ? prop.petFriendly : null,
+            };
+
+            const mappedPhotos = (prop.images || []).map(img => ({ uri: img }));
+
+            setPostData({
+              propertyDetails: mappedDetails,
+              furnishings: { selectedItems, counters },
+              priceDetails: mappedPrice,
+              advancedDetails: mappedAdvanced,
+              photos: mappedPhotos
+            });
+
+            // Pre-fetch geographical state/city lists
+            if (prop.country?._id) {
+              fetchStates(prop.country._id);
+            }
+            if (prop.state?._id) {
+              fetchCities(prop.state._id);
+            }
+          }
+        } catch (err) {
+          console.error("Error loading property for edit:", err);
+        } finally {
+          setLoadingEditData(false);
+        }
+      } else {
+        resetPostData();
+      }
+    };
+    initForm();
+  }, [isEditMode, editPropertyId]);
+
   const propertyTypes = apiPropertyTypes.map(pt => ({
     id: pt._id,
     label: pt.label || pt.name,
@@ -391,7 +504,8 @@ const PropertyDetails = () => {
       };
 
       const res = await saveProperty(formData, {
-        isEditMode: false,
+        isEditMode: isEditMode === 'true',
+        editPropertyId: editPropertyId,
         isRent: postData.propertyDetails.category?.toLowerCase().includes('rent'),
         isResidential: postData.propertyDetails.type?.toLowerCase().includes('residential'),
         isCommercial: postData.propertyDetails.type?.toLowerCase().includes('commercial'),
@@ -412,9 +526,10 @@ const PropertyDetails = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
-      {lookupLoading && currentStep === 1 && (
+      {(lookupLoading || loadingEditData) && currentStep === 1 && (
         <View className="absolute inset-0 bg-white/80 z-[999] items-center justify-center">
-          <Text className="text-[#008E96] font-inter-semibold">Loading data...</Text>
+          <ActivityIndicator size="large" color="#008E96" />
+          <Text className="text-[#008E96] font-inter-semibold mt-4">Loading listing details...</Text>
         </View>
       )}
       {/* Header Background */}

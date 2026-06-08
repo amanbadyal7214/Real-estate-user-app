@@ -3,11 +3,14 @@ import { ChevronDown, User } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
+import { performRoleBasedRedirect } from "../hooks/Register";
+import DashboardSelectorModal from "./DashboardSelectorModal";
 
 const UserHeader = ({ userName: propUserName }) => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("Guest!");
+  const [roleSelector, setRoleSelector] = useState({ visible: false, roles: [] });
 
   const checkLoginStatus = async () => {
     const token = await SecureStore.getItemAsync("token");
@@ -38,9 +41,10 @@ const UserHeader = ({ userName: propUserName }) => {
     }
   }, [propUserName]);
 
-  const handlePostProperty = () => {
+  const handlePostProperty = async () => {
     if (isLoggedIn) {
-      router.push("/screens/PostProperty/PropertyDetails");
+      const role = await SecureStore.getItemAsync("userRole");
+      performRoleBasedRedirect(role, "/screens/PostProperty/PropertyDetails", setRoleSelector);
     } else {
       router.push("/screens/PostProperty/Register");
     }
@@ -66,6 +70,15 @@ const UserHeader = ({ userName: propUserName }) => {
           <Text className="font-inter-bold text-[9px] text-white">FREE</Text>
         </View>
       </TouchableOpacity>
+      <DashboardSelectorModal
+        visible={roleSelector.visible}
+        roles={roleSelector.roles}
+        onSelect={(target) => {
+          setRoleSelector(prev => ({ ...prev, visible: false }));
+          router.replace(target);
+        }}
+        onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
+      />
     </View>
   );
 };

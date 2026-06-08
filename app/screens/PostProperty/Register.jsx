@@ -1,24 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useRegister } from '../../../hooks/Register';
+import { useRegister, performRoleBasedRedirect } from '../../../hooks/Register';
 import * as SecureStore from "expo-secure-store";
+import DashboardSelectorModal from '../../../components/DashboardSelectorModal';
 
 const PostProperty = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    checkToken();
-  }, []);
-
-  const checkToken = async () => {
-    const token = await SecureStore.getItemAsync("token");
-    if (token) {
-      router.replace("/screens/PostProperty/PropertyDetails");
-    }
-  };
 
   const {
     step,
@@ -30,14 +19,28 @@ const PostProperty = () => {
     handlePhoneValidation,
     verifyMockOtp,
     handleRegister,
-    handleVerifyEmailOtp,
     handleLogin,
+    roleSelector,
+    setRoleSelector,
   } = useRegister();
 
-  const [propertyType, setPropertyType] = useState('Residential');
-  const [lookingTo, setLookingTo] = useState('Rent');
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    checkToken();
+    updateFormData('role', 'owner');
+  }, []);
+
+  const checkToken = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const role = await SecureStore.getItemAsync("userRole");
+    if (token) {
+      setTimeout(() => {
+        performRoleBasedRedirect(role, "/screens/PostProperty/PropertyDetails", setRoleSelector);
+      }, 100);
+    }
+  };
   
   // OTP State
   const [showOTPModal, setShowOTPModal] = useState(false);
@@ -49,6 +52,12 @@ const PostProperty = () => {
     formData.name.trim().length > 0 && 
     formData.email.includes('@') &&
     formData.password.length >= 6;
+
+  const isRoleActive = (roleName) => {
+    return formData.role === roleName || 
+      (Array.isArray(formData.role) && formData.role.includes(roleName)) || 
+      (typeof formData.role === 'string' && formData.role.includes(roleName));
+  };
 
   useEffect(() => {
     if (step === 2 && !showOTPModal) {
@@ -101,8 +110,9 @@ const PostProperty = () => {
         console.log("Calling verifyMockOtp");
         verifyMockOtp();
       } else if (step === 2 || step === 3) {
-        console.log("Calling handleVerifyEmailOtp as fallback for step", step);
-        await handleVerifyEmailOtp();
+        // Comment out email verification fallback
+        // console.log("Calling handleVerifyEmailOtp as fallback for step", step);
+        // await handleVerifyEmailOtp();
       }
     } else {
       console.log("OTP length is not 6");
@@ -177,13 +187,119 @@ const PostProperty = () => {
 
         {/* Floating Form Container */}
         <View className="mx-3 -mt-18 bg-white rounded-2xl shadow-lg px-4 elevation-5 flex-1 mb-24">
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {/* Owner Tab Indicator */}
-            <View className="bg-[#EDE7F6] rounded-t-xl py-2 items-center -mx-4  mb-6">
-              <Text className="text-[#5E35B1] text-base" style={{ fontFamily: 'Inter-Medium' }}>Owner</Text>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20 }}>
+            {/* Auth Tabs */}
+            <View className="flex-row bg-[#F3F4F6] rounded-xl p-1 mb-6">
+              <TouchableOpacity 
+                onPress={() => setIsLogin(false)}
+                className="flex-1 py-3 rounded-lg items-center"
+                style={{
+                  backgroundColor: !isLogin ? '#008E96' : 'transparent',
+                  shadowColor: !isLogin ? '#000' : 'transparent',
+                  shadowOffset: !isLogin ? { width: 0, height: 1 } : { width: 0, height: 0 },
+                  shadowOpacity: !isLogin ? 0.15 : 0,
+                  shadowRadius: !isLogin ? 1.00 : 0,
+                  elevation: !isLogin ? 1 : 0,
+                }}
+              >
+                <Text 
+                  className="text-sm" 
+                  style={{ 
+                    fontFamily: 'Inter-Medium',
+                    color: !isLogin ? '#FFFFFF' : '#4B5563'
+                  }}
+                >
+                  New User
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => setIsLogin(true)}
+                className="flex-1 py-3 rounded-lg items-center"
+                style={{
+                  backgroundColor: isLogin ? '#008E96' : 'transparent',
+                  shadowColor: isLogin ? '#000' : 'transparent',
+                  shadowOffset: isLogin ? { width: 0, height: 1 } : { width: 0, height: 0 },
+                  shadowOpacity: isLogin ? 0.15 : 0,
+                  shadowRadius: isLogin ? 1.00 : 0,
+                  elevation: isLogin ? 1 : 0,
+                }}
+              >
+                <Text 
+                  className="text-sm" 
+                  style={{ 
+                    fontFamily: 'Inter-Medium',
+                    color: isLogin ? '#FFFFFF' : '#4B5563'
+                  }}
+                >
+                  Existing User
+                </Text>
+              </TouchableOpacity>
             </View>
 
-          
+            {/* User Type Selector - Only for Register mode */}
+            {!isLogin && (
+              <View className="mb-6">
+                <Text className="text-[#4A5565] text-sm mb-3" style={{ fontFamily: 'Inter-Medium' }}>
+                  User Type
+                </Text>
+                <View className="flex-row gap-2">
+                  <TouchableOpacity
+                    onPress={() => updateFormData('role', 'buyer')}
+                    className="flex-1 py-3 rounded-xl border items-center"
+                    style={{
+                      backgroundColor: isRoleActive('buyer') ? '#E6F7F6' : '#FFFFFF',
+                      borderColor: isRoleActive('buyer') ? '#008E96' : '#D1D5DC'
+                    }}
+                  >
+                    <Text 
+                      className="text-sm" 
+                      style={{ 
+                        fontFamily: 'Inter-Medium',
+                        color: isRoleActive('buyer') ? '#008E96' : '#364153'
+                      }}
+                    >
+                      Buyer
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => updateFormData('role', 'owner')}
+                    className="flex-1 py-3 rounded-xl border items-center"
+                    style={{
+                      backgroundColor: isRoleActive('owner') ? '#E6F7F6' : '#FFFFFF',
+                      borderColor: isRoleActive('owner') ? '#008E96' : '#D1D5DC'
+                    }}
+                  >
+                    <Text 
+                      className="text-sm" 
+                      style={{ 
+                        fontFamily: 'Inter-Medium',
+                        color: isRoleActive('owner') ? '#008E96' : '#364153'
+                      }}
+                    >
+                      Owner
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => updateFormData('role', 'builder')}
+                    className="flex-1 py-3 rounded-xl border items-center"
+                    style={{
+                      backgroundColor: isRoleActive('builder') ? '#E6F7F6' : '#FFFFFF',
+                      borderColor: isRoleActive('builder') ? '#008E96' : '#D1D5DC'
+                    }}
+                  >
+                    <Text 
+                      className="text-sm" 
+                      style={{ 
+                        fontFamily: 'Inter-Medium',
+                        color: isRoleActive('builder') ? '#008E96' : '#364153'
+                      }}
+                    >
+                      Builder
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
 
             {/* User Inputs Section */}
             <View className="gap-6 mb-6">
@@ -257,62 +373,51 @@ const PostProperty = () => {
                   <Ionicons name="chevron-down" size={20} color="#5E35B1" />
                 </View>
               )}
-                {/* Property Type Section */}
-            {!isLogin && (
-              <View className="mb-6">
-                <Text className="text-[#4A5565] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Property type</Text>
-                <View className="flex-row justify-between">
-                  <TouchableOpacity 
-                    onPress={() => setPropertyType('Residential')}
-                    className={`flex-1 mr-2 py-3 rounded-xl border items-center ${propertyType === 'Residential' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                  >
-                    <Text className={`${propertyType === 'Residential' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Residential</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                    onPress={() => setPropertyType('Commercial')}
-                    className={`flex-1 ml-2 py-3 rounded-xl border items-center ${propertyType === 'Commercial' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                  >
-                    <Text className={`${propertyType === 'Commercial' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Commercial</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
+              {!isLogin && formData.role === 'builder' && (
+                <>
+                  <View className="border-b border-[#E5E7EB] pb-2">
+                    <TextInput 
+                      placeholder="Company Name" 
+                      placeholderTextColor="#99A1AF"
+                      className="text-sm py-1"
+                      style={{ fontFamily: 'Inter-Regular' }}
+                      value={formData.companyName || ''}
+                      onChangeText={(val) => updateFormData('companyName', val)}
+                    />
+                  </View>
+                  <View className="border-b border-[#E5E7EB] pb-2">
+                    <TextInput 
+                      placeholder="Business Since (Year)" 
+                      placeholderTextColor="#99A1AF"
+                      className="text-sm py-1"
+                      keyboardType="number-pad"
+                      style={{ fontFamily: 'Inter-Regular' }}
+                      value={formData.businessSince || ''}
+                      onChangeText={(val) => updateFormData('businessSince', val)}
+                      maxLength={4}
+                    />
+                  </View>
+                </>
+              )}
 
-            {/* Looking To Section */}
-            {!isLogin && (
-              <View className="mb-6">
-                <Text className="text-[#4A5565] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>You're looking to...</Text>
-                <View className="flex-row justify-between mb-4">
-                  <TouchableOpacity 
-                    onPress={() => setLookingTo('Rent')}
-                    className={`flex-1 mr-2 py-3 rounded-xl border items-center ${lookingTo === 'Rent' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                  >
-                    <Text className={`${lookingTo === 'Rent' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Rent</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                    onPress={() => setLookingTo('Sell')}
-                    className={`flex-1 ml-2 py-3 rounded-xl border items-center ${lookingTo === 'Sell' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                  >
-                    <Text className={`${lookingTo === 'Sell' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>Sell</Text>
-                  </TouchableOpacity>
-                </View>
-                <TouchableOpacity 
-                  onPress={() => setLookingTo('PG')}
-                  className={`w-full py-3 rounded-xl border items-center ${lookingTo === 'PG' ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#D1D5DC]'}`}
-                >
-                  <Text className={`${lookingTo === 'PG' ? 'text-[#008E96]' : 'text-[#364153]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>PG/Co-Living</Text>
-                </TouchableOpacity>
-              </View>
-            )}
             </View>
 
             {/* Content Navigation Button */}
             <TouchableOpacity 
               disabled={loading || (isLogin ? !(formData.email.trim() && formData.password.length >= 6) : !isFormValid)}
               onPress={isLogin ? handleLogin : handleNext}
-              className={`w-full py-4 rounded-xl items-center mb-4 ${(loading || (isLogin ? !(formData.email.trim() && formData.password.length >= 6) : !isFormValid)) ? 'bg-[#E5E7EB]' : 'bg-[#008E96]'}`}
+              className="w-full py-4 rounded-xl items-center mb-4"
+              style={{
+                backgroundColor: (loading || (isLogin ? !(formData.email.trim() && formData.password.length >= 6) : !isFormValid)) ? '#E5E7EB' : '#008E96'
+              }}
             >
-              <Text className={`${(loading || (isLogin ? (formData.email.trim() && formData.password.length >= 6) : isFormValid)) ? 'text-white' : 'text-[#99A1AF]'} text-base`} style={{ fontFamily: 'Inter-Medium' }}>
+              <Text 
+                className="text-base" 
+                style={{ 
+                  fontFamily: 'Inter-Medium',
+                  color: (loading || (isLogin ? !(formData.email.trim() && formData.password.length >= 6) : !isFormValid)) ? '#99A1AF' : '#FFFFFF'
+                }}
+              >
                 {loading ? 'Processing...' : (isLogin ? 'Login to continue' : 'Next, add address & price')}
               </Text>
             </TouchableOpacity>
@@ -342,7 +447,8 @@ const PostProperty = () => {
                 <View className="bg-white rounded-t-3xl p-6">
                   <View className="flex-row justify-between items-center mb-6">
                     <Text className="text-xl" style={{ fontFamily: 'Inter-Bold' }}>
-                      {step === 1 ? 'Verify Phone' : 'Verify Email'}
+                      {/* {step === 1 ? 'Verify Phone' : 'Verify Email'} */}
+                      Verify Phone
                     </Text>
                     <TouchableOpacity onPress={() => setShowOTPModal(false)}>
                       <Ionicons name="close" size={24} color="black" />
@@ -350,10 +456,11 @@ const PostProperty = () => {
                   </View>
                   
                   <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
-                    {step === 1 
+                    {/* {step === 1 
                       ? `Enter the 6-digit code sent to +91 ${formData.phone}`
                       : `Enter the 6-digit code sent to ${formData.email}`
-                    }
+                    } */}
+                    Enter the 6-digit code sent to +91 {formData.phone}
                   </Text>
 
                   <View className="flex-row justify-between mb-8">
@@ -374,9 +481,18 @@ const PostProperty = () => {
 
                   <TouchableOpacity 
                     onPress={verifyOTP}
-                    className={`w-full py-4 rounded-xl items-center ${otp.join('').length === 6 ? 'bg-[#008E96]' : 'bg-gray-200'}`}
+                    className="w-full py-4 rounded-xl items-center"
+                    style={{
+                      backgroundColor: otp.join('').length === 6 ? '#008E96' : '#E5E7EB'
+                    }}
                   >
-                    <Text className="text-white text-base" style={{ fontFamily: 'Inter-Medium' }}>
+                    <Text 
+                      className="text-base" 
+                      style={{ 
+                        fontFamily: 'Inter-Medium',
+                        color: otp.join('').length === 6 ? '#FFFFFF' : '#99A1AF'
+                      }}
+                    >
                       Verify & Continue
                     </Text>
                   </TouchableOpacity>
@@ -589,11 +705,31 @@ const PostProperty = () => {
         <TouchableOpacity 
           disabled={!isFormValid}
           onPress={() => router.push('/screens/PostProperty/PriceDetails')}
-          className={`w-full py-4 rounded-xl items-center shadow-lg ${isFormValid ? 'bg-[#008E96]' : 'bg-[#E5E7EB]'}`}
+          className="w-full py-4 rounded-xl items-center shadow-lg"
+          style={{
+            backgroundColor: isFormValid ? '#008E96' : '#E5E7EB'
+          }}
         >
-          <Text className={`${isFormValid ? 'text-white' : 'text-[#99A1AF]'} text-base`} style={{ fontFamily: 'Inter-Bold' }}>Post Property for FREE</Text>
+          <Text 
+            className="text-base" 
+            style={{ 
+              fontFamily: 'Inter-Bold',
+              color: isFormValid ? '#FFFFFF' : '#99A1AF'
+            }}
+          >
+            Post Property for FREE
+          </Text>
         </TouchableOpacity>
       </View>
+      <DashboardSelectorModal
+        visible={roleSelector.visible}
+        roles={roleSelector.roles}
+        onSelect={(target) => {
+          setRoleSelector(prev => ({ ...prev, visible: false }));
+          router.replace(target);
+        }}
+        onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
+      />
     </SafeAreaView>
   );
 };

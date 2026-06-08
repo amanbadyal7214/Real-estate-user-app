@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
+import DashboardSelectorModal from "../../components/DashboardSelectorModal";
 
 const Register = () => {
   const router = useRouter();
@@ -32,6 +33,8 @@ const Register = () => {
     verifyMockOtp,
     handleRegister,
     handleVerifyEmailOtp,
+    roleSelector,
+    setRoleSelector,
   } = useRegister();
 
   useEffect(() => {
@@ -337,6 +340,15 @@ const Register = () => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+      <DashboardSelectorModal
+        visible={roleSelector.visible}
+        roles={roleSelector.roles}
+        onSelect={(target) => {
+          setRoleSelector(prev => ({ ...prev, visible: false }));
+          router.replace(target);
+        }}
+        onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
+      />
     </SafeAreaView>
   );
 };

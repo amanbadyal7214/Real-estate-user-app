@@ -1,13 +1,76 @@
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import { Alert } from "react-native";
 import api from "../app/api";
 
+export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) => {
+    let roleArray = [];
+    if (Array.isArray(role)) {
+        roleArray = role;
+    } else if (typeof role === 'string') {
+        try {
+            const parsed = JSON.parse(role);
+            if (Array.isArray(parsed)) {
+                roleArray = parsed;
+            } else {
+                roleArray = [role];
+            }
+        } catch {
+            roleArray = [role];
+        }
+    }
+
+    const hasOwner = roleArray.includes('owner');
+    const hasBuilder = roleArray.includes('builder');
+    const hasBuyer = roleArray.includes('buyer');
+
+    if ((hasOwner || hasBuilder) && hasBuyer) {
+        if (setRoleSelector) {
+            setRoleSelector({
+                visible: true,
+                roles: roleArray
+            });
+        } else {
+            const buttons = [];
+            if (hasBuyer) {
+                buttons.push({
+                    text: "Buyer Dashboard",
+                    onPress: () => router.replace("/screens/Buy/Buy"),
+                });
+            }
+            if (hasOwner) {
+                buttons.push({
+                    text: "Owner Dashboard",
+                    onPress: () => router.replace("/screens/PostProperty/MyProperties"),
+                });
+            }
+            if (hasBuilder) {
+                buttons.push({
+                    text: "Builder Dashboard",
+                    onPress: () => router.replace("/screens/Project/MyProjects"),
+                });
+            }
+            Alert.alert(
+                "Select Dashboard",
+                "Which dashboard would you like to open?",
+                buttons,
+                { cancelable: false }
+            );
+        }
+    } else if (hasBuilder) {
+        router.replace("/screens/Project/MyProjects");
+    } else if (hasOwner) {
+        router.replace("/screens/PostProperty/MyProperties");
+    } else {
+        router.replace(defaultTarget || "/screens/Buy/Buy");
+    }
+};
+
 export const useRegister = () => {
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(1); // 1: Phone Validation, 2: Details Form, 3: Email OTP Verification
+    const [roleSelector, setRoleSelector] = useState({ visible: false, roles: [] });
 
     // Form states
     const [formData, setFormData] = useState({
@@ -114,12 +177,10 @@ export const useRegister = () => {
             console.log("API Response: /auth/register", response.data);
 
             if (response.data.success) {
-                Alert.alert("Success", response.data.message);
-                if (typeof onSuccess === "function") {
-                    onSuccess(response.data);
-                } else {
-                    setStep(3); // Proceed to Email OTP verification
-                }
+                Alert.alert("Success", "Account created successfully!");
+                // Commented out email verification step, log in directly
+                // setStep(3); // Proceed to Email OTP verification
+                await handleLogin();
             } else {
                 // If success is false but no error thrown
                 Alert.alert("Warning", response.data.error || "Something went wrong.");
@@ -179,7 +240,7 @@ export const useRegister = () => {
                 ]);
 
                 Alert.alert("Success", "Account created successfully!");
-                router.replace("/screens/PostProperty/PropertyDetails"); // Redirect to post property flow
+                performRoleBasedRedirect(role, "/screens/PostProperty/PropertyDetails", setRoleSelector);
             } else {
                 Alert.alert("Verification Failed", response.data.message || "Invalid OTP");
             }
@@ -223,7 +284,7 @@ export const useRegister = () => {
                 if (typeof onSuccess === "function") {
                     onSuccess(response.data);
                 } else {
-                    router.replace("/screens/PostProperty/PropertyDetails"); // Redirect to post property flow
+                    performRoleBasedRedirect(role, "/screens/PostProperty/PropertyDetails", setRoleSelector);
                 }
             } else {
                 Alert.alert("Login Failed", response.data.message || "Invalid credentials");
@@ -254,5 +315,7 @@ export const useRegister = () => {
         handleRegister,
         handleVerifyEmailOtp,
         handleLogin,
+        roleSelector,
+        setRoleSelector,
     };
 };

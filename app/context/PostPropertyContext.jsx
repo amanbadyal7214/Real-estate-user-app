@@ -95,10 +95,71 @@ export const PostPropertyProvider = ({ children }) => {
     }));
   };
 
+  const resetPostData = () => {
+    setPostData({
+      propertyDetails: {
+        category: '',
+        type: '',
+        subPropertyType: '',
+        title: '',
+        bhk: '',
+        builtUpArea: '',
+        measurementUnit: '',
+        buildingName: '',
+        locality: '',
+        localityId: '',
+        city: 'Gurugram',
+        cityId: '',
+        state: 'Haryana',
+        stateId: '',
+        country: 'India',
+        countryId: '',
+        projectId: '',
+        furnishing: '',
+        description: '',
+        ownerName: '',
+        address: '',
+      },
+      furnishings: {
+        selectedItems: [],
+        counters: {
+          AC: 0,
+          Bed: 0,
+          TV: 0,
+          Geyser: 0,
+          Wardrobe: 0,
+        },
+      },
+      priceDetails: {
+        expectedPrice: '',
+        maintenance: '',
+        securityDeposit: '',
+        isNegotiable: false,
+        availableFrom: '',
+      },
+      advancedDetails: {
+        floor: '',
+        totalFloors: '',
+        bathrooms: '',
+        balconies: '',
+        ageOfProperty: '',
+        parking: {
+          covered: 0,
+          open: 0
+        },
+        tenantType: [], // Bachelors, Family, any
+        petFriendly: null,
+      },
+      photos: [],
+    });
+  };
+
   return (
     <PostPropertyContext.Provider
       value={{
         postData,
+        setPostData,
+        resetPostData,
         updatePropertyDetails,
         updateFurnishings,
         updatePriceDetails,
