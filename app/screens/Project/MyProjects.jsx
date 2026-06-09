@@ -16,6 +16,7 @@ import {
   View,
 } from 'react-native';
 import { useProject } from '../../../hooks/useProject';
+import api from '../../api';
 
 
 
@@ -82,6 +83,24 @@ const MOCK_PROJECTS = [
   }
 ];
 
+const getCityName = (city) => {
+  if (!city) return '';
+  if (typeof city === 'object') {
+    return city.name || city.label || '';
+  }
+  return city;
+};
+
+const formatDateOnly = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 const MyProjects = () => {
   const { fetchDeveloperProjects, loading: apiLoading } = useProject();
 
@@ -146,9 +165,19 @@ const MyProjects = () => {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
-            setProjects(prev => prev.filter(p => p._id !== id));
-            Alert.alert('Success', 'Project deleted successfully.');
+          onPress: async () => {
+            try {
+              const res = await api.delete(`/projects/${id}`);
+              if (res.data?.success || res.status === 200 || res.status === 204) {
+                setProjects(prev => prev.filter(p => p._id !== id));
+                Alert.alert('Success', 'Project deleted successfully.');
+              } else {
+                throw new Error(res.data?.message || 'Delete failed');
+              }
+            } catch (err) {
+              const msg = err.response?.data?.message || err.message || 'Failed to delete project';
+              Alert.alert('Error', msg);
+            }
           },
         },
       ]
@@ -194,12 +223,12 @@ const MyProjects = () => {
   };
 
   // Filter List Logic
-  const cities = Array.from(new Set(MOCK_PROJECTS.map(p => p.city).filter(Boolean)));
-  const statuses = Array.from(new Set(MOCK_PROJECTS.map(p => p.status).filter(Boolean)));
-  const projectTypes = Array.from(new Set(MOCK_PROJECTS.map(p => p.projectType).filter(Boolean)));
+  const cities = Array.from(new Set(projects.map(p => getCityName(p.city)).filter(Boolean)));
+  const statuses = Array.from(new Set(projects.map(p => p.status).filter(Boolean)));
+  const projectTypes = Array.from(new Set(projects.map(p => p.projectType).filter(Boolean)));
 
   const filteredProjects = projects.filter(item => {
-    if (selectedCity && item.city !== selectedCity) return false;
+    if (selectedCity && getCityName(item.city) !== selectedCity) return false;
     if (selectedStatus && item.status !== selectedStatus) return false;
     if (selectedProjectType && item.projectType !== selectedProjectType) return false;
     return true;
@@ -403,12 +432,12 @@ const MyProjects = () => {
             </View>
             <View className="flex-row items-center gap-2 mt-2">
               <Text className="text-gray-500 text-xs font-inter-regular">
-                {item.completionDate ? `Date: ${item.completionDate}` : 'Completion N/A'}
+                {item.completionDate ? `Date: ${formatDateOnly(item.completionDate)}` : 'Completion N/A'}
               </Text>
               <Text className="text-gray-300">|</Text>
               <View className="bg-gray-100 px-2 py-0.5 rounded-md">
                 <Text className="text-[10px] font-inter-medium text-gray-600 uppercase">
-                  {item.city}
+                  {getCityName(item.city)}
                 </Text>
               </View>
             </View>
@@ -493,7 +522,12 @@ const MyProjects = () => {
       <LinearGradient colors={['#006B73', '#008E96']} className="px-4 pt-10 pb-6 rounded-b-[32px] shadow-md">
         <View className="flex-row justify-between items-center mb-4">
           <View className="flex-row items-center gap-2">
-            <TouchableOpacity onPress={() => router.back()} className="mr-1">
+            <TouchableOpacity
+              onPress={() => {
+                router.replace('/screens/Buy/Buy');
+              }}
+              className="mr-1"
+            >
               <Ionicons name="arrow-back" size={24} color="white" />
             </TouchableOpacity>
             <Text className="text-white text-lg font-inter-bold">{userName ? `${userName}'s Console` : "My Projects"}</Text>

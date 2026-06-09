@@ -688,7 +688,12 @@ const MyProperties = () => {
       <LinearGradient colors={['#006B73', '#008E96']} className="px-4 pt-10 pb-6 rounded-b-[32px] shadow-md">
         <View className="flex-row justify-between items-center mb-4">
           <View className="flex-row items-center gap-2">
-            <TouchableOpacity onPress={() => router.back()} className="mr-1">
+            <TouchableOpacity
+              onPress={() => {
+                router.replace('/screens/Buy/Buy');
+              }}
+              className="mr-1"
+            >
               <Ionicons name="arrow-back" size={24} color="white" />
             </TouchableOpacity>
             <Text className="text-white text-lg font-inter-bold">My Listings</Text>

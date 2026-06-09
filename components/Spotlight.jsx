@@ -79,19 +79,19 @@ const Spotlight = ({ data }) => {
               </TouchableOpacity>
 
               {/* Property Card - Clickable to PropertyDetails */}
-              <TouchableOpacity 
+              <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => item.property.id && router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: item.property.id } })}
                 className="mt-[10px] rounded-[18px] overflow-hidden bg-white w-[278px] h-[160px] shadow-md elevation-5"
-                style={{ 
+                style={{
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 3 },
                   shadowOpacity: 0.08,
                   shadowRadius: 4,
                 }}
               >
-                <ImageBackground 
-                  source={{ uri: item.property.image }} 
+                <ImageBackground
+                  source={{ uri: item.property.image }}
                   className="w-full h-full"
                   resizeMode="cover"
                 >
@@ -100,7 +100,7 @@ const Spotlight = ({ data }) => {
                     className="absolute inset-0"
                     locations={[0, 0.5, 1]}
                   />
-                  
+
                   <View className="absolute w-[246px] h-[76px] left-4 top-[66px]">
                     <Text className="font-inter-bold text-[14px] h-6 leading-5 text-white">
                       {item.property.title}
@@ -126,7 +126,7 @@ const Spotlight = ({ data }) => {
         </ScrollView>
 
         {/* Fixed Triangle indicator in the center of the viewport */}
-        <View 
+        <View
           className="absolute left-1/2 -ml-[10px] top-[95.5px] z-[10]"
           pointerEvents="none"
           style={{

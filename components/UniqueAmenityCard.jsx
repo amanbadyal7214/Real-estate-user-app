@@ -1,6 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
 import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 
 const UniqueAmenityCard = ({ image, title, properties, onPress }) => {
@@ -16,7 +15,7 @@ const UniqueAmenityCard = ({ image, title, properties, onPress }) => {
                     className="absolute inset-0"
                     locations={[0, 0.5, 1]}
                 />
-                <TouchableOpacity 
+                <TouchableOpacity
                     onPress={onPress}
                     className="flex-1 justify-end p-4 pb-5"
                 >
@@ -27,7 +26,7 @@ const UniqueAmenityCard = ({ image, title, properties, onPress }) => {
                         <Text className="font-inter-regular text-[14px] text-white/90 leading-[21px]">
                             {properties} Properties
                         </Text>
-                        
+
                         <View className="flex-row items-center mt-2 gap-1">
                             <Text className="font-inter-medium text-[15px] text-white underline leading-[22px]">
                                 View all

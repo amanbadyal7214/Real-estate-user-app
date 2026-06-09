@@ -1,12 +1,15 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -17,93 +20,60 @@ import {
 } from 'react-native';
 import api from '../../api';
 import { useLookup } from '../../../hooks/useLookup';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-// ─── Fallback Constants (used when API returns nothing) ─────────────────────────
+// ─── Fallback Constants ───────────────────────────────────────────────────────
 
-const FALLBACK_PROJECT_TYPES = [
-  { label: 'Residential', value: 'Residential' },
-  { label: 'Commercial', value: 'Commercial' },
-  { label: 'Mixed-Use', value: 'Mixed-Use' },
-  { label: 'Industrial', value: 'Industrial' },
-  { label: 'Retail', value: 'Retail' },
+const FALLBACK_UNITS = [
+  { label: 'Sq.ft', value: 'Sq.ft' },
+  { label: 'Sq.mt', value: 'Sq.mt' },
+  { label: 'Yards', value: 'Yards' },
+  { label: 'Acres', value: 'Acres' },
 ];
-
-const FALLBACK_STATUSES = [
-  { label: 'Planning', value: 'Planning' },
-  { label: 'Under Construction', value: 'Under Construction' },
-  { label: 'Ready to Move', value: 'Ready to Move' },
-  { label: 'Completed', value: 'Completed' },
-];
-
-const FALLBACK_AMENITIES = [
-  { _id: 'gym', label: 'Gym', icon: 'fitness-center' },
-  { _id: 'pool', label: 'Swimming Pool', icon: 'pool' },
-  { _id: 'parking', label: 'Parking', icon: 'local-parking' },
-  { _id: 'powerBackup', label: 'Power Backup', icon: 'electric-bolt' },
-  { _id: 'lift', label: 'Lift / Elevator', icon: 'elevator' },
-  { _id: 'security', label: 'Gated Security', icon: 'security' },
-  { _id: 'clubhouse', label: 'Club House', icon: 'nightlife' },
-  { _id: 'garden', label: 'Garden / Park', icon: 'park' },
-  { _id: 'cctv', label: 'CCTV', icon: 'videocam' },
-  { _id: 'sportsComplex', label: 'Sports Complex', icon: 'sports-basketball' },
-  { _id: 'kidsArea', label: "Kids' Play Area", icon: 'child-care' },
-  { _id: 'communityHall', label: 'Community Hall', icon: 'groups' },
-];
-
-// Map a MaterialIcons icon name to an API amenity by label keywords
-const getAmenityIcon = (amenity) => {
-  const lbl = (amenity.label || amenity.name || '').toLowerCase();
-  if (lbl.includes('gym') || lbl.includes('fitness')) return 'fitness-center';
-  if (lbl.includes('pool') || lbl.includes('swim')) return 'pool';
-  if (lbl.includes('park') || lbl.includes('garden')) return 'park';
-  if (lbl.includes('lift') || lbl.includes('elevator')) return 'elevator';
-  if (lbl.includes('power') || lbl.includes('backup')) return 'electric-bolt';
-  if (lbl.includes('secur') || lbl.includes('gate')) return 'security';
-  if (lbl.includes('club')) return 'nightlife';
-  if (lbl.includes('cctv') || lbl.includes('camera')) return 'videocam';
-  if (lbl.includes('sport')) return 'sports-basketball';
-  if (lbl.includes('kid') || lbl.includes('play')) return 'child-care';
-  if (lbl.includes('communit') || lbl.includes('hall')) return 'groups';
-  if (lbl.includes('parking') || lbl.includes('car')) return 'local-parking';
-  if (lbl.includes('water')) return 'water-drop';
-  if (lbl.includes('intercom')) return 'contact-phone';
-  return 'star-outline';
-};
 
 const STEPS = [
-  { id: 1, title: 'Basic Info', icon: 'business' },
-  { id: 2, title: 'Location', icon: 'location-on' },
-  { id: 3, title: 'Amenities', icon: 'star' },
-  { id: 4, title: 'Review', icon: 'check-circle' },
+  { id: 1, title: 'Project Details', icon: 'business' },
+  { id: 2, title: 'Schedule & Area', icon: 'event' },
+  { id: 3, title: 'Location', icon: 'location-on' },
+  { id: 4, title: 'Media', icon: 'perm-media' },
+  { id: 5, title: 'Review', icon: 'check-circle' },
 ];
 
 const EMPTY_FORM = {
-  // Step 1
+  // Step 1 — Project Details
   projectName: '',
+  possessionStatus: '',
   description: '',
-  projectType: '',
-  status: '',
-  totalUnits: '',
-  // Step 2
-  address: '',
-  city: '',
-  state: '',
-  pincode: '',
+  gatedCommunity: false,
+  reraApproved: false,
+  reraNumber: '',
+  // Step 2 — Schedule & Area & Pricing
   startDate: '',
   completionDate: '',
-  averagePricePerSqFt: '',
-  // Step 3
-  amenities: [],
-  // Step 4 — read-only review
+  totalArea: '',
+  areaUnit: '',
+  avgPriceRate: '',
+  priceRateUnit: '',
+  // Step 3 — Location
+  country: '',
+  countryName: '',
+  state: '',
+  stateName: '',
+  city: '',
+  cityName: '',
+  addressLine1: '',
+  addressLine2: '',
+  // Step 4 — Media
+  media: [],       // [{ uri, name, type }]
+  // Step 5 — Review (read-only)
 };
 
-// ─── Helper Components ──────────────────────────────────────────────────────────
+// ─── Helper Components ────────────────────────────────────────────────────────
 
-const SectionLabel = ({ children }) => (
-  <Text
-    style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: 13, marginBottom: 6 }}
-  >
+const SectionLabel = ({ children, required }) => (
+  <Text style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: 13, marginBottom: 6 }}>
     {children}
+    {required ? <Text style={{ color: '#EF4444' }}> *</Text> : null}
   </Text>
 );
 
@@ -150,14 +120,14 @@ const StyledInput = ({
         fontFamily: 'Inter-Regular',
         fontSize: 14,
         color: '#111827',
-        minHeight: multiline ? 80 : 48,
+        minHeight: multiline ? 90 : 48,
         textAlignVertical: multiline ? 'top' : 'center',
       }}
     />
   </View>
 );
 
-// options = array of { label, value } objects
+// Chip selector — options = [{ label, value }]
 const ChipSelector = ({ options, selected, onSelect }) => (
   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
     {options.map((opt) => {
@@ -190,7 +160,190 @@ const ChipSelector = ({ options, selected, onSelect }) => (
   </View>
 );
 
-// ─── Main Component ─────────────────────────────────────────────────────────────
+// Checkbox item — matches the design (checkbox next to label)
+const CheckboxItem = ({ label, checked, onToggle }) => (
+  <TouchableOpacity
+    onPress={onToggle}
+    style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      borderRadius: 12,
+      borderWidth: 1.5,
+      borderColor: checked ? '#008E96' : '#E5E7EB',
+      backgroundColor: checked ? '#E6F7F6' : '#FFFFFF',
+      flex: 1,
+      gap: 10,
+    }}
+    activeOpacity={0.7}
+  >
+    <View
+      style={{
+        width: 20,
+        height: 20,
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: checked ? '#008E96' : '#D1D5DB',
+        backgroundColor: checked ? '#008E96' : 'transparent',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {checked && <MaterialIcons name="check" size={13} color="white" />}
+    </View>
+    <Text
+      style={{
+        fontFamily: checked ? 'Inter-SemiBold' : 'Inter-Regular',
+        fontSize: 13,
+        color: checked ? '#008E96' : '#374151',
+      }}
+    >
+      {label}
+    </Text>
+  </TouchableOpacity>
+);
+
+// DateInput component — acts like StyledInput but is touchable to trigger picker
+const DateInput = ({ placeholder, value, onPress, icon }) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 1.5,
+      borderColor: '#E5E7EB',
+      borderRadius: 12,
+      backgroundColor: '#F9FAFB',
+      paddingHorizontal: 14,
+      height: 48,
+      marginBottom: 14,
+    }}
+    activeOpacity={0.7}
+  >
+    {icon && (
+      <MaterialIcons
+        name={icon}
+        size={18}
+        color="#9CA3AF"
+        style={{ marginRight: 8 }}
+      />
+    )}
+    <Text
+      style={{
+        flex: 1,
+        fontFamily: 'Inter-Regular',
+        fontSize: 14,
+        color: value ? '#111827' : '#9CA3AF',
+      }}
+    >
+      {value || placeholder}
+    </Text>
+  </TouchableOpacity>
+);
+
+// SelectModal component for dynamic search/pick sheet
+const SelectModal = ({ visible, onClose, title, options = [], onSelect }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const filteredOptions = options.filter(o => 
+    (o.label || '').toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+        <View style={{ backgroundColor: '#FFFFFF', borderTopLeftRadius: 24, borderTopRightRadius: 24, height: '60%', padding: 20 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <Text style={{ fontFamily: 'Inter-Bold', fontSize: 16, color: '#111827' }}>{title}</Text>
+            <TouchableOpacity onPress={onClose}>
+              <MaterialIcons name="close" size={24} color="#6B7280" />
+            </TouchableOpacity>
+          </View>
+          
+          <TextInput
+            placeholder="Search..."
+            placeholderTextColor="#9CA3AF"
+            style={{
+              height: 44,
+              borderWidth: 1.5,
+              borderColor: '#E5E7EB',
+              borderRadius: 10,
+              paddingHorizontal: 12,
+              fontFamily: 'Inter-Regular',
+              fontSize: 14,
+              marginBottom: 16,
+              backgroundColor: '#F9FAFB',
+            }}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+
+          <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+            {filteredOptions.map((opt) => (
+              <TouchableOpacity
+                key={opt.value}
+                onPress={() => {
+                  onSelect(opt.value, opt.label);
+                  setSearchQuery('');
+                  onClose();
+                }}
+                style={{
+                  paddingVertical: 14,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#F3F4F6',
+                }}
+              >
+                <Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: '#374151' }}>{opt.label}</Text>
+              </TouchableOpacity>
+            ))}
+            {filteredOptions.length === 0 && (
+              <Text style={{ textAlign: 'center', color: '#9CA3AF', marginTop: 20, fontFamily: 'Inter-Regular' }}>No results found</Text>
+            )}
+          </ScrollView>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+// Section card with icon header — used inside each step
+const SectionCard = ({ title, icon, children }) => (
+  <View
+    style={{
+      backgroundColor: '#FFFFFF',
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: '#E5E7EB',
+      padding: 16,
+      marginBottom: 16,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.04,
+      shadowRadius: 4,
+      elevation: 1,
+    }}
+  >
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+      <View
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: 10,
+          backgroundColor: '#E6F7F6',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <MaterialIcons name={icon} size={18} color="#008E96" />
+      </View>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: 15, color: '#111827' }}>{title}</Text>
+    </View>
+    {children}
+  </View>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 const AddProject = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -198,85 +351,207 @@ const AddProject = () => {
   const [submitting, setSubmitting] = useState(false);
   const scrollRef = useRef(null);
 
+  // Date picker visibility states
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showCompletionDatePicker, setShowCompletionDatePicker] = useState(false);
+
+  // Geographical Lists & Dropdowns
+  const [countries, setCountries] = useState([]);
+  const [statesList, setStatesList] = useState([]);
+  const [citiesList, setCitiesList] = useState([]);
+
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+
+  const fetchCountries = async () => {
+    try {
+      const res = await api.get('/geo/countries');
+      const data = res.data?.data ?? res.data;
+      setCountries(data || []);
+    } catch (err) {
+      console.error('Error fetching countries', err);
+    }
+  };
+
+  const fetchStates = async (countryId) => {
+    if (!countryId) return;
+    try {
+      const res = await api.get('/geo/states', { params: { country: countryId } });
+      const data = res.data?.data ?? res.data;
+      setStatesList(data || []);
+    } catch (err) {
+      console.error('Error fetching states', err);
+    }
+  };
+
+  const fetchCities = async (stateId) => {
+    if (!stateId) return;
+    try {
+      const res = await api.get('/geo/cities', { params: { state: stateId } });
+      const data = res.data?.data ?? res.data;
+      setCitiesList(data || []);
+    } catch (err) {
+      console.error('Error fetching cities', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
   // ─── API Lookups ────────────────────────────────────────────────────────────
   const {
-    propertyTypes: apiPropertyTypes,
-    constructionStatus: apiConstructionStatus,
-    amenities: apiAmenitiesRaw,
+    possessionStatus: apiPossessionStatus,
+    measurementUnits: apiMeasurementUnits,
     fetchSingleLookup,
     loading: lookupLoading,
   } = useLookup();
 
   useEffect(() => {
-    fetchSingleLookup('propertyTypes');
-    fetchSingleLookup('constructionStatus');
-    fetchSingleLookup('amenities');
+    fetchSingleLookup('possessionStatus');
+    fetchSingleLookup('measurementUnits');
   }, [fetchSingleLookup]);
 
-  // Build normalised option arrays — API objects use .label or .name fields
-  const projectTypeOptions =
-    apiPropertyTypes && apiPropertyTypes.length > 0
-      ? apiPropertyTypes.map((t) => ({ label: t.label || t.name, value: t.label || t.name }))
-      : FALLBACK_PROJECT_TYPES;
+  // Normalised option arrays
+  const possessionStatusOptions =
+    apiPossessionStatus && apiPossessionStatus.length > 0
+      ? apiPossessionStatus.map((p) => ({ label: p.label || p.name, value: p._id }))
+      : [];
 
-  const statusOptions =
-    apiConstructionStatus && apiConstructionStatus.length > 0
-      ? apiConstructionStatus.map((s) => ({ label: s.label || s.name, value: s.label || s.name }))
-      : FALLBACK_STATUSES;
+  const unitOptions =
+    apiMeasurementUnits && apiMeasurementUnits.length > 0
+      ? apiMeasurementUnits.map((u) => ({ label: u.label || u.name, value: u._id }))
+      : [];
 
-  // Amenities: API objects have _id, label/name, optional icon
-  const amenitiesList =
-    apiAmenitiesRaw && apiAmenitiesRaw.length > 0
-      ? apiAmenitiesRaw.map((a) => ({
-          _id: a._id || a.label || a.name,
-          label: a.label || a.name,
-          icon: a.icon || getAmenityIcon(a),
-        }))
-      : FALLBACK_AMENITIES;
 
   // ─── Form Helpers ───────────────────────────────────────────────────────────
   const update = useCallback((key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const toggleAmenity = useCallback((id) => {
+  // Pick images from library
+  const pickImages = useCallback(async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Required', 'Please allow access to your photo library.');
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 0.8,
+      orderedSelection: true,
+      base64: true,
+    });
+    if (!result.canceled && result.assets) {
+      const newFiles = result.assets.map((a) => ({
+        uri: a.uri,
+        name: a.fileName || `image_${Date.now()}.jpg`,
+        type: 'image',
+        mimeType: a.mimeType || 'image/jpeg',
+        base64: a.base64,
+        label: '',
+      }));
+      setForm((prev) => ({ ...prev, media: [...prev.media, ...newFiles] }));
+    }
+  }, []);
+
+  const removeMedia = useCallback((uri) => {
+    setForm((prev) => ({ ...prev, media: prev.media.filter((m) => m.uri !== uri) }));
+  }, []);
+
+  const updateMediaLabel = useCallback((uri, label) => {
     setForm((prev) => ({
       ...prev,
-      amenities: prev.amenities.includes(id)
-        ? prev.amenities.filter((a) => a !== id)
-        : [...prev.amenities, id],
+      media: prev.media.map((m) => (m.uri === uri ? { ...m, label } : m)),
     }));
   }, []);
+
+  const parseDate = (str) => {
+    if (!str) return new Date();
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? new Date() : d;
+  };
+
+  const renderDatePicker = (field, show, setShow) => {
+    if (!show) return null;
+
+    const onChange = (event, selectedDate) => {
+      if (Platform.OS === 'android') {
+        setShow(false);
+      }
+      if (selectedDate) {
+        const yyyy = selectedDate.getFullYear();
+        const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(selectedDate.getDate()).padStart(2, '0');
+        update(field, `${yyyy}-${mm}-${dd}`);
+      }
+    };
+
+    if (Platform.OS === 'ios') {
+      return (
+        <View style={{ backgroundColor: '#FFFFFF', padding: 10, borderRadius: 12, borderWidth: 1, borderColor: '#E5E7EB', marginBottom: 14 }}>
+          <DateTimePicker
+            value={parseDate(form[field])}
+            mode="date"
+            display="spinner"
+            onChange={onChange}
+          />
+          <TouchableOpacity
+            onPress={() => setShow(false)}
+            style={{
+              backgroundColor: '#008E96',
+              padding: 10,
+              borderRadius: 8,
+              alignItems: 'center',
+              marginTop: 10,
+            }}
+          >
+            <Text style={{ fontFamily: 'Inter-SemiBold', color: '#FFFFFF', fontSize: 14 }}>Done</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return (
+      <DateTimePicker
+        value={parseDate(form[field])}
+        mode="date"
+        display="default"
+        onChange={onChange}
+      />
+    );
+  };
 
   const scrollToTop = () => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  // ─── Step Validators ──────────────────────────────────────────────────────────
-
+  // ─── Step Validators ────────────────────────────────────────────────────────
   const step1Valid =
-    form.projectName.trim().length >= 3 && form.projectType && form.status;
-
-  const step2Valid =
-    form.city.trim().length >= 2 && form.state.trim().length >= 2;
-
-  const step3Valid = true; // amenities are optional
+    form.projectName.trim().length >= 3 &&
+    !!form.possessionStatus &&
+    (!form.reraApproved || form.reraNumber.trim().length > 0);
+  const step2Valid = form.startDate.trim().length > 0 && form.completionDate.trim().length > 0;
+  const step3Valid = form.country.trim().length > 0 && form.state.trim().length > 0 && form.city.trim().length > 0 && form.addressLine1.trim().length > 0;
+  const step4Valid = true; // media optional
 
   const canProceed = () => {
     if (currentStep === 1) return step1Valid;
     if (currentStep === 2) return step2Valid;
     if (currentStep === 3) return step3Valid;
+    if (currentStep === 4) return step4Valid;
     return true;
   };
 
-  // ─── Navigation ───────────────────────────────────────────────────────────────
-
+  // ─── Navigation ─────────────────────────────────────────────────────────────
   const goNext = () => {
     if (!canProceed()) {
       Alert.alert('Incomplete', 'Please fill all required fields before continuing.');
       return;
     }
-    if (currentStep < 4) {
+    if (currentStep < STEPS.length) {
       setCurrentStep((s) => s + 1);
       scrollToTop();
     }
@@ -287,40 +562,67 @@ const AddProject = () => {
       setCurrentStep((s) => s - 1);
       scrollToTop();
     } else {
-      router.back();
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/screens/Project/MyProjects');
+      }
     }
   };
 
-  // ─── Submit ───────────────────────────────────────────────────────────────────
-
+  // ─── Submit ─────────────────────────────────────────────────────────────────
   const handleSubmit = async () => {
     try {
       setSubmitting(true);
-
       const userStr = await SecureStore.getItemAsync('userData');
       const user = userStr ? JSON.parse(userStr) : null;
       const developerId = user?._id || user?.id;
 
       const payload = {
         projectName: form.projectName.trim(),
-        description: form.description.trim(),
-        projectType: form.projectType,
-        status: form.status,
-        totalUnits: form.totalUnits ? parseInt(form.totalUnits) : undefined,
-        address: form.address.trim(),
-        city: form.city.trim(),
-        state: form.state.trim(),
-        pincode: form.pincode.trim(),
+        possessionStatus: form.possessionStatus || undefined,
+        description: form.description.trim() || undefined,
         startDate: form.startDate.trim() || undefined,
         completionDate: form.completionDate.trim() || undefined,
-        avgPriceRate: form.averagePricePerSqFt ? parseFloat(form.averagePricePerSqFt) : undefined,
-        amenities: form.amenities,
+        area: form.totalArea ? parseFloat(form.totalArea) : undefined,
+        areaUnit: form.areaUnit || undefined,
+        avgPriceRate: form.avgPriceRate ? parseFloat(form.avgPriceRate) : undefined,
+        avgPriceUnit: form.priceRateUnit || undefined,
+        country: form.country.trim() || undefined,
+        state: form.state.trim() || undefined,
+        city: form.city.trim() || undefined,
+        addressLine1: form.addressLine1.trim() || undefined,
+        addressLine2: form.addressLine2.trim() || undefined,
+        isGated: form.gatedCommunity,
+        isReraApproved: form.reraApproved,
+        reraNumber: form.reraApproved ? form.reraNumber.trim() : undefined,
         developer: developerId,
       };
 
       const response = await api.post('/projects', payload);
 
       if (response.data?.success) {
+        const projectId = response.data?.data?._id || response.data?.data?.id || response.data?.project?._id || response.data?.project?.id;
+
+        if (projectId && form.media && form.media.length > 0) {
+          for (const file of form.media) {
+            const fileUrl = file.base64 ? `data:${file.mimeType || 'image/jpeg'};base64,${file.base64}` : file.uri;
+            
+            const mediaPayload = {
+              mediaType: 'project_pic',
+              label: file.label ? file.label.trim() : 'Other',
+              fileName: file.name,
+              fileUrl: fileUrl,
+            };
+
+            try {
+              await api.post(`/projects/${projectId}/media`, mediaPayload);
+            } catch (uploadErr) {
+              console.error('Failed to upload file:', file.name, uploadErr);
+            }
+          }
+        }
+
         Alert.alert(
           '🎉 Project Listed!',
           `"${form.projectName}" has been successfully added to your project portfolio.`,
@@ -342,8 +644,7 @@ const AddProject = () => {
     }
   };
 
-  // ─── Step Progress Bar ────────────────────────────────────────────────────────
-
+  // ─── Progress Bar ────────────────────────────────────────────────────────────
   const renderProgressBar = () => (
     <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 8 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -353,7 +654,6 @@ const AddProject = () => {
           return (
             <View key={step.id} style={{ flex: 1, alignItems: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                {/* Connector left */}
                 {idx > 0 && (
                   <View
                     style={{
@@ -364,12 +664,11 @@ const AddProject = () => {
                     }}
                   />
                 )}
-                {/* Circle */}
                 <View
                   style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 16,
+                    width: 30,
+                    height: 30,
+                    borderRadius: 15,
                     backgroundColor: isDone ? '#008E96' : isActive ? '#008E96' : '#E5E7EB',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -381,12 +680,11 @@ const AddProject = () => {
                   }}
                 >
                   {isDone ? (
-                    <MaterialIcons name="check" size={16} color="white" />
+                    <MaterialIcons name="check" size={15} color="white" />
                   ) : (
-                    <MaterialIcons name={step.icon} size={14} color={isActive ? 'white' : '#9CA3AF'} />
+                    <MaterialIcons name={step.icon} size={13} color={isActive ? 'white' : '#9CA3AF'} />
                   )}
                 </View>
-                {/* Connector right */}
                 {idx < STEPS.length - 1 && (
                   <View
                     style={{
@@ -401,9 +699,10 @@ const AddProject = () => {
               <Text
                 style={{
                   fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Regular',
-                  fontSize: 10,
+                  fontSize: 9,
                   color: isActive ? '#008E96' : isDone ? '#059669' : '#9CA3AF',
                   marginTop: 4,
+                  textAlign: 'center',
                 }}
               >
                 {step.title}
@@ -415,245 +714,362 @@ const AddProject = () => {
     </View>
   );
 
-  // ─── Step 1: Basic Info ───────────────────────────────────────────────────────
-
+  // ─── Step 1: Project Details ─────────────────────────────────────────────────
   const renderStep1 = () => (
     <View>
       <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
-        Basic Information
+        Create New Project
       </Text>
       <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
-        Tell buyers what your project is about.
+        Enter the project name, possession status, and description below.
       </Text>
 
-      <SectionLabel>Project Name *</SectionLabel>
-      <StyledInput
-        placeholder="e.g. SBP Homes Phase 2"
-        value={form.projectName}
-        onChangeText={(v) => update('projectName', v)}
-        icon="business"
-      />
-
-      <SectionLabel>Description</SectionLabel>
-      <StyledInput
-        placeholder="Describe your project — amenities, USPs, connectivity..."
-        value={form.description}
-        onChangeText={(v) => update('description', v)}
-        multiline
-        numberOfLines={4}
-        icon="notes"
-      />
-
-      <SectionLabel>Project Type *</SectionLabel>
-      {lookupLoading && projectTypeOptions === FALLBACK_PROJECT_TYPES ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-          <ActivityIndicator size="small" color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#9CA3AF' }}>Loading types...</Text>
-        </View>
-      ) : (
-        <ChipSelector
-          options={projectTypeOptions}
-          selected={form.projectType}
-          onSelect={(v) => update('projectType', v)}
+      <SectionCard title="Project Details" icon="business">
+        <SectionLabel required>Project Name</SectionLabel>
+        <StyledInput
+          placeholder="e.g. Skyline Residences"
+          value={form.projectName}
+          onChangeText={(v) => update('projectName', v)}
+          icon="business"
         />
-      )}
 
-      <SectionLabel>Current Status *</SectionLabel>
-      {lookupLoading && statusOptions === FALLBACK_STATUSES ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-          <ActivityIndicator size="small" color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#9CA3AF' }}>Loading statuses...</Text>
-        </View>
-      ) : (
-        <ChipSelector
-          options={statusOptions}
-          selected={form.status}
-          onSelect={(v) => update('status', v)}
+        <SectionLabel required>Possession Status</SectionLabel>
+        {lookupLoading && !(apiPossessionStatus && apiPossessionStatus.length > 0) ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <ActivityIndicator size="small" color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#9CA3AF' }}>Loading...</Text>
+          </View>
+        ) : (
+          <ChipSelector
+            options={possessionStatusOptions}
+            selected={form.possessionStatus}
+            onSelect={(v) => update('possessionStatus', v)}
+          />
+        )}
+
+        <SectionLabel>Project Description</SectionLabel>
+        <StyledInput
+          placeholder="Describe the project vision, amenities, and neighborhood benefits."
+          value={form.description}
+          onChangeText={(v) => update('description', v)}
+          multiline
+          numberOfLines={4}
+          icon="notes"
         />
-      )}
 
-      <SectionLabel>Total Units</SectionLabel>
-      <StyledInput
-        placeholder="e.g. 120"
-        value={form.totalUnits}
-        onChangeText={(v) => update('totalUnits', v)}
-        keyboardType="number-pad"
-        icon="apartment"
-      />
+        {/* Checkboxes */}
+        <View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap', marginTop: 2 }}>
+          <CheckboxItem
+            label="Gated Community"
+            checked={form.gatedCommunity}
+            onToggle={() => update('gatedCommunity', !form.gatedCommunity)}
+          />
+          <CheckboxItem
+            label="RERA Approved"
+            checked={form.reraApproved}
+            onToggle={() => update('reraApproved', !form.reraApproved)}
+          />
+        </View>
+
+        {form.reraApproved && (
+          <View style={{ marginTop: 14 }}>
+            <SectionLabel required>RERA Number</SectionLabel>
+            <StyledInput
+              placeholder="e.g. XRFDD-dfg-IJHGB"
+              value={form.reraNumber}
+              onChangeText={(v) => update('reraNumber', v)}
+              icon="verified"
+            />
+          </View>
+        )}
+      </SectionCard>
     </View>
   );
 
-  // ─── Step 2: Location & Timeline ─────────────────────────────────────────────
-
+  // ─── Step 2: Schedule & Approvals + Area & Pricing ──────────────────────────
   const renderStep2 = () => (
     <View>
       <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
-        Location & Timeline
+        Schedule & Area
       </Text>
       <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
-        Where is it located and when will it be ready?
+        Timeline, legal approvals, and space metrics.
       </Text>
 
-      <SectionLabel>Street Address</SectionLabel>
-      <StyledInput
-        placeholder="Plot No, Street, Sector..."
-        value={form.address}
-        onChangeText={(v) => update('address', v)}
-        icon="place"
-      />
+      {/* Schedule & Approvals */}
+      <SectionCard title="Schedule & Approvals" icon="event-note">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6B7280', marginBottom: 14 }}>
+          Timeline and legal approvals.
+        </Text>
 
-      <View style={{ flexDirection: 'row', gap: 10 }}>
-        <View style={{ flex: 1 }}>
-          <SectionLabel>City *</SectionLabel>
-          <StyledInput
-            placeholder="City"
-            value={form.city}
-            onChangeText={(v) => update('city', v)}
-            icon="location-city"
-          />
+        <SectionLabel required>Start Date</SectionLabel>
+        <DateInput
+          placeholder="Select start date"
+          value={form.startDate}
+          onPress={() => setShowStartDatePicker(true)}
+          icon="event"
+        />
+        {renderDatePicker('startDate', showStartDatePicker, setShowStartDatePicker)}
+
+        <SectionLabel required>Completion Date</SectionLabel>
+        <DateInput
+          placeholder="Select completion date"
+          value={form.completionDate}
+          onPress={() => setShowCompletionDatePicker(true)}
+          icon="event-available"
+        />
+        {renderDatePicker('completionDate', showCompletionDatePicker, setShowCompletionDatePicker)}
+      </SectionCard>
+
+      {/* Area & Pricing */}
+      <SectionCard title="Area & Pricing" icon="straighten">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6B7280', marginBottom: 14 }}>
+          Space metrics and price rates.
+        </Text>
+
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <View style={{ flex: 1 }}>
+            <SectionLabel required>Total Area</SectionLabel>
+            <StyledInput
+              placeholder="1650"
+              value={form.totalArea}
+              onChangeText={(v) => update('totalArea', v)}
+              keyboardType="decimal-pad"
+              icon="crop-square"
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <SectionLabel required>Unit</SectionLabel>
+            <ChipSelector
+              options={unitOptions}
+              selected={form.areaUnit}
+              onSelect={(v) => update('areaUnit', v)}
+            />
+          </View>
         </View>
-        <View style={{ flex: 1 }}>
-          <SectionLabel>State *</SectionLabel>
-          <StyledInput
-            placeholder="State"
-            value={form.state}
-            onChangeText={(v) => update('state', v)}
-            icon="map"
-          />
+
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <View style={{ flex: 1 }}>
+            <SectionLabel required>Avg Price Rate</SectionLabel>
+            <StyledInput
+              placeholder="4500"
+              value={form.avgPriceRate}
+              onChangeText={(v) => update('avgPriceRate', v)}
+              keyboardType="decimal-pad"
+              icon="currency-rupee"
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <SectionLabel required>Rate Unit</SectionLabel>
+            <ChipSelector
+              options={unitOptions}
+              selected={form.priceRateUnit}
+              onSelect={(v) => update('priceRateUnit', v)}
+            />
+          </View>
         </View>
-      </View>
-
-      <SectionLabel>Pincode</SectionLabel>
-      <StyledInput
-        placeholder="6-digit Pincode"
-        value={form.pincode}
-        onChangeText={(v) => update('pincode', v)}
-        keyboardType="number-pad"
-        icon="pin"
-      />
-
-      <SectionLabel>Launch / Start Date</SectionLabel>
-      <StyledInput
-        placeholder="MM/DD/YYYY"
-        value={form.startDate}
-        onChangeText={(v) => update('startDate', v)}
-        icon="event"
-      />
-
-      <SectionLabel>Expected Completion Date</SectionLabel>
-      <StyledInput
-        placeholder="MM/DD/YYYY"
-        value={form.completionDate}
-        onChangeText={(v) => update('completionDate', v)}
-        icon="event-available"
-      />
-
-      <SectionLabel>Avg. Price / Sq.ft (₹)</SectionLabel>
-      <StyledInput
-        placeholder="e.g. 4500"
-        value={form.averagePricePerSqFt}
-        onChangeText={(v) => update('averagePricePerSqFt', v)}
-        keyboardType="decimal-pad"
-        icon="currency-rupee"
-      />
+      </SectionCard>
     </View>
   );
 
-  // ─── Step 3: Amenities ────────────────────────────────────────────────────────
-
+  // ─── Step 3: Location Details ────────────────────────────────────────────────
   const renderStep3 = () => (
     <View>
       <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
-        Amenities
+        Location Details
       </Text>
       <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
-        Select all amenities available in your project.
+        Exact address and locality information.
       </Text>
 
-      {lookupLoading && amenitiesList === FALLBACK_AMENITIES ? (
-        <View style={{ alignItems: 'center', paddingVertical: 32, gap: 10 }}>
-          <ActivityIndicator size="large" color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#9CA3AF' }}>Loading amenities...</Text>
-        </View>
-      ) : (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-          {amenitiesList.map((a) => {
-            const isSelected = form.amenities.includes(a._id);
-            return (
-              <TouchableOpacity
-                key={a._id}
-                onPress={() => toggleAmenity(a._id)}
+      <SectionCard title="Location Details" icon="location-on">
+        <SectionLabel required>Country</SectionLabel>
+        <DateInput
+          placeholder="Select Country"
+          value={form.countryName}
+          onPress={() => setShowCountryDropdown(true)}
+          icon="public"
+        />
+
+        <SectionLabel required>State</SectionLabel>
+        <DateInput
+          placeholder={form.country ? "Select State" : "Select country first"}
+          value={form.stateName}
+          onPress={() => form.country && setShowStateDropdown(true)}
+          icon="map"
+        />
+
+        <SectionLabel required>City</SectionLabel>
+        <DateInput
+          placeholder={form.state ? "Select City" : "Select state first"}
+          value={form.cityName}
+          onPress={() => form.state && setShowCityDropdown(true)}
+          icon="location-city"
+        />
+
+        <SectionLabel required>Address Line 1</SectionLabel>
+        <StyledInput
+          placeholder="e.g. House number, building, street"
+          value={form.addressLine1}
+          onChangeText={(v) => update('addressLine1', v)}
+          icon="place"
+        />
+
+        <SectionLabel>Address Line 2</SectionLabel>
+        <StyledInput
+          placeholder="e.g. Locality, landmark, neighborhood"
+          value={form.addressLine2}
+          onChangeText={(v) => update('addressLine2', v)}
+          icon="near-me"
+        />
+      </SectionCard>
+    </View>
+  );
+
+  // ─── Step 4: Project Media ────────────────────────────────────────────────────
+  const renderStep4 = () => (
+    <View>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
+        Project Media
+      </Text>
+      <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
+        Upload images, brochures, or documents.
+      </Text>
+
+      <SectionCard title="Project Media" icon="perm-media">
+        {/* Upload button */}
+        <TouchableOpacity
+          onPress={pickImages}
+          style={{
+            borderWidth: 1.5,
+            borderStyle: 'dashed',
+            borderColor: '#008E96',
+            borderRadius: 14,
+            paddingVertical: 28,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#F0FFFE',
+            marginBottom: 16,
+            gap: 8,
+          }}
+        >
+          <View
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: '#E6F7F6',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 4,
+            }}
+          >
+            <MaterialIcons name="cloud-upload" size={26} color="#008E96" />
+          </View>
+          <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 14, color: '#008E96' }}>
+            Tap to Upload Images
+          </Text>
+          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#9CA3AF' }}>
+            JPG, PNG • Multiple selection supported
+          </Text>
+        </TouchableOpacity>
+
+        {/* Selected images list with labels */}
+        {form.media.length > 0 && (
+          <View style={{ marginBottom: 10 }}>
+            <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 13, color: '#374151', marginBottom: 10 }}>
+              Selected ({form.media.length})
+            </Text>
+            {form.media.map((item) => (
+              <View
+                key={item.uri}
                 style={{
-                  width: '47%',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  gap: 10,
-                  borderWidth: 1.5,
-                  borderColor: isSelected ? '#008E96' : '#E5E7EB',
-                  backgroundColor: isSelected ? '#E6F7F6' : '#FFFFFF',
+                  backgroundColor: '#F9FAFB',
+                  borderWidth: 1,
+                  borderColor: '#E5E7EB',
                   borderRadius: 12,
-                  paddingHorizontal: 12,
-                  paddingVertical: 12,
+                  padding: 10,
+                  marginBottom: 10,
+                  gap: 12,
                 }}
               >
-                <View
+                <Image
+                  source={{ uri: item.uri }}
+                  style={{ width: 60, height: 60, borderRadius: 8 }}
+                  resizeMode="cover"
+                />
+                
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 13, color: '#374151' }} numberOfLines={1}>
+                    {item.name}
+                  </Text>
+                  {/* Label input field */}
+                  <TextInput
+                    placeholder="e.g. Logo, Cover, Floor Plan"
+                    placeholderTextColor="#9CA3AF"
+                    value={item.label}
+                    onChangeText={(text) => updateMediaLabel(item.uri, text)}
+                    style={{
+                      height: 36,
+                      borderWidth: 1,
+                      borderColor: '#D1D5DB',
+                      borderRadius: 8,
+                      paddingHorizontal: 10,
+                      fontFamily: 'Inter-Regular',
+                      fontSize: 12,
+                      marginTop: 6,
+                      backgroundColor: '#FFFFFF',
+                      color: '#374151',
+                    }}
+                  />
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => removeMedia(item.uri)}
                   style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 10,
-                    backgroundColor: isSelected ? '#008E96' : '#F3F4F6',
+                    width: 28,
+                    height: 28,
+                    borderRadius: 14,
+                    backgroundColor: '#FEE2E2',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  <MaterialIcons
-                    name={a.icon || 'star-outline'}
-                    size={18}
-                    color={isSelected ? 'white' : '#9CA3AF'}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular',
-                    fontSize: 12,
-                    color: isSelected ? '#008E96' : '#374151',
-                    flex: 1,
-                  }}
-                  numberOfLines={2}
-                >
-                  {a.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      )}
+                  <MaterialIcons name="delete" size={16} color="#EF4444" />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
 
-      <View
-        style={{
-          backgroundColor: '#F0FDF4',
-          borderRadius: 12,
-          padding: 14,
-          marginTop: 16,
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          gap: 10,
-          borderWidth: 1,
-          borderColor: '#BBF7D0',
-        }}
-      >
-        <MaterialIcons name="info" size={18} color="#16A34A" style={{ marginTop: 1 }} />
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#15803D', flex: 1, lineHeight: 18 }}>
-          Projects with 5+ amenities listed get{' '}
-          <Text style={{ fontFamily: 'Inter-Bold' }}>3× more enquiries</Text> on average.
-          Add as many as apply!
-        </Text>
-      </View>
+        {/* Tip */}
+        <View
+          style={{
+            backgroundColor: '#EFF6FF',
+            borderRadius: 10,
+            padding: 12,
+            marginTop: 14,
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            gap: 8,
+            borderWidth: 1,
+            borderColor: '#BFDBFE',
+          }}
+        >
+          <MaterialIcons name="info" size={16} color="#3B82F6" style={{ marginTop: 1 }} />
+          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#1E40AF', flex: 1, lineHeight: 18 }}>
+            Projects with high-quality images receive{' '}
+            <Text style={{ fontFamily: 'Inter-Bold' }}>2× more enquiries.</Text>{' '}
+            Brochures and floor plans also help buyers decide faster.
+          </Text>
+        </View>
+      </SectionCard>
     </View>
   );
 
-  // ─── Step 4: Review & Submit ─────────────────────────────────────────────────
-
+  // ─── Step 5: Review & Submit ─────────────────────────────────────────────────
   const ReviewRow = ({ label, value }) => {
     if (!value) return null;
     return (
@@ -681,11 +1097,71 @@ const AddProject = () => {
     );
   };
 
-  const renderStep4 = () => {
-    const selectedAmenities = amenitiesList
-      .filter((a) => form.amenities.includes(a._id))
-      .map((a) => a.label)
-      .join(', ');
+  const renderStep5 = () => {
+    const possessionLabel = possessionStatusOptions.find(o => o.value === form.possessionStatus)?.label || form.possessionStatus;
+    const areaUnitLabel = unitOptions.find(o => o.value === form.areaUnit)?.label || form.areaUnit;
+    const priceRateUnitLabel = unitOptions.find(o => o.value === form.priceRateUnit)?.label || form.priceRateUnit;
+
+    const sections = [
+      {
+        title: 'Project Details',
+        icon: 'business',
+        step: 1,
+        rows: [
+          { label: 'Project Name', value: form.projectName },
+          { label: 'Possession Status', value: possessionLabel },
+          { label: 'Description', value: form.description },
+          { label: 'Gated Community', value: form.gatedCommunity ? 'Yes' : 'No' },
+          { label: 'RERA Approved', value: form.reraApproved ? 'Yes' : 'No' },
+          ...(form.reraApproved ? [{ label: 'RERA Number', value: form.reraNumber }] : []),
+        ],
+      },
+      {
+        title: 'Schedule & Area',
+        icon: 'event',
+        step: 2,
+        rows: [
+          { label: 'Start Date', value: form.startDate },
+          { label: 'Completion Date', value: form.completionDate },
+          { label: 'Total Area', value: form.totalArea ? `${form.totalArea} ${areaUnitLabel}` : '' },
+          { label: 'Avg Price Rate', value: form.avgPriceRate ? `₹${form.avgPriceRate} / ${priceRateUnitLabel}` : '' },
+        ],
+      },
+      {
+        title: 'Location',
+        icon: 'location-on',
+        step: 3,
+        rows: [
+          { label: 'Country', value: form.countryName },
+          { label: 'State', value: form.stateName },
+          { label: 'City', value: form.cityName },
+          { label: 'Address Line 1', value: form.addressLine1 },
+          { label: 'Address Line 2', value: form.addressLine2 },
+        ],
+      },
+      {
+        title: 'Media',
+        icon: 'perm-media',
+        step: 4,
+        rows: [
+          {
+            label: 'Files',
+            value: (() => {
+              if (form.media.length === 0) return 'None';
+              const counts = {};
+              form.media.forEach((m) => {
+                const lbl = m.label ? m.label.trim() : 'Unlabeled';
+                counts[lbl] = (counts[lbl] || 0) + 1;
+              });
+              const summary = Object.entries(counts)
+                .map(([lbl, count]) => `${count} ${lbl}`)
+                .join(', ');
+              return `${form.media.length} file(s) (${summary})`;
+            })(),
+          },
+        ],
+      },
+    ];
 
     return (
       <View>
@@ -696,38 +1172,7 @@ const AddProject = () => {
           Double-check your project details before publishing.
         </Text>
 
-        {/* Section Card */}
-        {[
-          {
-            title: 'Basic Info',
-            icon: 'business',
-            rows: [
-              { label: 'Project Name', value: form.projectName },
-              { label: 'Type', value: form.projectType },
-              { label: 'Status', value: form.status },
-              { label: 'Total Units', value: form.totalUnits },
-              { label: 'Description', value: form.description },
-            ],
-          },
-          {
-            title: 'Location & Timeline',
-            icon: 'location-on',
-            rows: [
-              { label: 'Address', value: form.address },
-              { label: 'City', value: form.city },
-              { label: 'State', value: form.state },
-              { label: 'Pincode', value: form.pincode },
-              { label: 'Start Date', value: form.startDate },
-              { label: 'Completion', value: form.completionDate },
-              { label: 'Avg ₹/Sq.ft', value: form.averagePricePerSqFt ? `₹${form.averagePricePerSqFt}` : '' },
-            ],
-          },
-          {
-            title: 'Amenities',
-            icon: 'star',
-            rows: [{ label: 'Selected', value: selectedAmenities || 'None selected' }],
-          },
-        ].map((section) => (
+        {sections.map((section) => (
           <View
             key={section.title}
             style={{
@@ -744,7 +1189,6 @@ const AddProject = () => {
               elevation: 1,
             }}
           >
-            {/* Section header */}
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <View
                 style={{
@@ -762,11 +1206,7 @@ const AddProject = () => {
                 {section.title}
               </Text>
               <TouchableOpacity
-                onPress={() => {
-                  const stepNum = section.title === 'Basic Info' ? 1 : section.title === 'Location & Timeline' ? 2 : 3;
-                  setCurrentStep(stepNum);
-                  scrollToTop();
-                }}
+                onPress={() => { setCurrentStep(section.step); scrollToTop(); }}
                 style={{ marginLeft: 'auto' }}
               >
                 <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 12, color: '#008E96' }}>Edit</Text>
@@ -778,7 +1218,6 @@ const AddProject = () => {
           </View>
         ))}
 
-        {/* Warning */}
         <View
           style={{
             backgroundColor: '#FFFBEB',
@@ -801,14 +1240,16 @@ const AddProject = () => {
     );
   };
 
-  // ─── Render ───────────────────────────────────────────────────────────────────
-
+  // ─── Render ──────────────────────────────────────────────────────────────────
   const stepContent = () => {
     if (currentStep === 1) return renderStep1();
     if (currentStep === 2) return renderStep2();
     if (currentStep === 3) return renderStep3();
-    return renderStep4();
+    if (currentStep === 4) return renderStep4();
+    return renderStep5();
   };
+
+  const isLastStep = currentStep === STEPS.length;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
@@ -845,7 +1286,6 @@ const AddProject = () => {
             Step {currentStep} of {STEPS.length} — {STEPS[currentStep - 1].title}
           </Text>
         </View>
-        {/* Step counter badge */}
         <View
           style={{
             backgroundColor: 'rgba(255,255,255,0.25)',
@@ -880,6 +1320,48 @@ const AddProject = () => {
           {stepContent()}
         </ScrollView>
 
+        {/* Select Modals */}
+        <SelectModal
+          visible={showCountryDropdown}
+          onClose={() => setShowCountryDropdown(false)}
+          title="Select Country"
+          options={countries.map((c) => ({ label: c.label || c.name, value: c._id }))}
+          onSelect={(val, label) => {
+            update('country', val);
+            update('countryName', label);
+            update('state', '');
+            update('stateName', '');
+            update('city', '');
+            update('cityName', '');
+            fetchStates(val);
+          }}
+        />
+
+        <SelectModal
+          visible={showStateDropdown}
+          onClose={() => setShowStateDropdown(false)}
+          title="Select State"
+          options={statesList.map((s) => ({ label: s.label || s.name, value: s._id }))}
+          onSelect={(val, label) => {
+            update('state', val);
+            update('stateName', label);
+            update('city', '');
+            update('cityName', '');
+            fetchCities(val);
+          }}
+        />
+
+        <SelectModal
+          visible={showCityDropdown}
+          onClose={() => setShowCityDropdown(false)}
+          title="Select City"
+          options={citiesList.map((c) => ({ label: c.label || c.name, value: c._id }))}
+          onSelect={(val, label) => {
+            update('city', val);
+            update('cityName', label);
+          }}
+        />
+
         {/* Bottom Action Bar */}
         <View
           style={{
@@ -911,13 +1393,11 @@ const AddProject = () => {
               }}
             >
               <Ionicons name="arrow-back" size={16} color="#6B7280" />
-              <Text style={{ fontFamily: 'Inter-SemiBold', color: '#6B7280', fontSize: 14 }}>
-                Back
-              </Text>
+              <Text style={{ fontFamily: 'Inter-SemiBold', color: '#6B7280', fontSize: 14 }}>Back</Text>
             </TouchableOpacity>
           )}
 
-          {currentStep < 4 ? (
+          {!isLastStep ? (
             <TouchableOpacity
               onPress={goNext}
               disabled={!canProceed()}
@@ -937,13 +1417,7 @@ const AddProject = () => {
                 elevation: canProceed() ? 4 : 0,
               }}
             >
-              <Text
-                style={{
-                  fontFamily: 'Inter-Bold',
-                  color: canProceed() ? 'white' : '#9CA3AF',
-                  fontSize: 15,
-                }}
-              >
+              <Text style={{ fontFamily: 'Inter-Bold', color: canProceed() ? 'white' : '#9CA3AF', fontSize: 15 }}>
                 Continue
               </Text>
               <Ionicons name="arrow-forward" size={16} color={canProceed() ? 'white' : '#9CA3AF'} />

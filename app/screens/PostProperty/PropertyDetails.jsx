@@ -535,7 +535,19 @@ const PropertyDetails = () => {
       {/* Header Background */}
       <View className="absolute top-0 left-0 right-0 h-[230px] bg-[#008E96]">
         <View className="flex-row items-center px-4 mt-12 justify-between">
-          <TouchableOpacity onPress={() => currentStep > 1 ? setCurrentStep(currentStep - 1) : router.back()}>
+          <TouchableOpacity
+            onPress={() => {
+              if (currentStep > 1) {
+                setCurrentStep(currentStep - 1);
+              } else {
+                if (router.canGoBack()) {
+                  router.back();
+                } else {
+                  router.replace('/screens/PostProperty/MyProperties');
+                }
+              }
+            }}
+          >
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
           <Text className="text-white text-[27px]" style={{ fontFamily: 'Inter-Bold' }}>Post Property</Text>

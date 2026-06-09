@@ -134,6 +134,59 @@ const normalizeMatchedProjects = (responseData, defaultCity = 'Mohali') => {
   });
 };
 
+const enrichProjectsWithMedia = async (projectsArray) => {
+  if (!Array.isArray(projectsArray)) return projectsArray;
+  return Promise.all(
+    projectsArray.map(async (project) => {
+      try {
+        const projectId = project._id || project.id;
+        if (!projectId) return project;
+        const mediaRes = await api.get(`/projects/${projectId}/media`);
+        
+        let mediaArray = [];
+        if (mediaRes?.data) {
+          if (Array.isArray(mediaRes.data)) {
+            mediaArray = mediaRes.data;
+          } else if (Array.isArray(mediaRes.data?.data)) {
+            mediaArray = mediaRes.data.data;
+          } else if (Array.isArray(mediaRes.data?.media)) {
+            mediaArray = mediaRes.data.media;
+          }
+        }
+
+        const mediaUrls = mediaArray
+          .filter(m => m.fileUrl)
+          .map(m => m.fileUrl);
+
+        return {
+          ...project,
+          media: mediaArray,
+          images: mediaUrls.length > 0 ? mediaUrls : (project.images || [])
+        };
+      } catch (e) {
+        console.warn(`Failed to fetch media for project ${project._id || project.id}:`, e?.message);
+      }
+      return project;
+    })
+  );
+};
+
+const enrichResponseData = async (rawData) => {
+  if (Array.isArray(rawData)) {
+    return await enrichProjectsWithMedia(rawData);
+  } else if (rawData && typeof rawData === 'object') {
+    const keysToEnrich = ['data', 'projects', 'results'];
+    const enrichedObj = { ...rawData };
+    for (const key of keysToEnrich) {
+      if (Array.isArray(rawData[key])) {
+        enrichedObj[key] = await enrichProjectsWithMedia(rawData[key]);
+      }
+    }
+    return enrichedObj;
+  }
+  return rawData;
+};
+
 const developerProjectsCache = new Map();
 
 class ErrorBoundary extends React.Component {
@@ -224,7 +277,8 @@ const Project = () => {
     setMatchedHomesError(null);
     try {
       const response = await api.get('/projects/city', { params });
-      const normalizedProjects = normalizeMatchedProjects(response.data, params.city || currentLocation?.city || 'Mohali');
+      const enrichedData = await enrichResponseData(response.data);
+      const normalizedProjects = normalizeMatchedProjects(enrichedData, params.city || currentLocation?.city || 'Mohali');
 
       if (normalizedProjects.length > 0) {
         setMatchedHomes(normalizedProjects);
@@ -232,7 +286,7 @@ const Project = () => {
         setMatchedHomes(fallbackMatchedHomes);
       }
 
-      return response.data;
+      return enrichedData;
     } catch (err) {
       const errorMessage = err.response?.data?.error || 'Failed to fetch projects';
       setMatchedHomesError(errorMessage);
