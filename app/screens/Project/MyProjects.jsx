@@ -193,11 +193,13 @@ const MyProjects = () => {
   };
 
   const handleEdit = (project) => {
-    Alert.alert(
-      "Edit Project",
-      `Would you like to edit details for "${project.projectName || project.title}"? This wizard is coming soon.`,
-      [{ text: "OK" }]
-    );
+    router.push({
+      pathname: '/screens/Project/AddProject',
+      params: {
+        projectId: project._id || project.id,
+        project: JSON.stringify(project)
+      }
+    });
   };
 
   const toggleProjectMenu = (id) => {

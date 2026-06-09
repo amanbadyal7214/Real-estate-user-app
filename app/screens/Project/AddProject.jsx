@@ -1,7 +1,7 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -346,8 +346,12 @@ const SectionCard = ({ title, icon, children }) => (
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const AddProject = () => {
+  const params = useLocalSearchParams();
+  const editProjectId = params.projectId;
+
   const [currentStep, setCurrentStep] = useState(1);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [deletedMediaIds, setDeletedMediaIds] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const scrollRef = useRef(null);
 
@@ -399,6 +403,69 @@ const AddProject = () => {
   useEffect(() => {
     fetchCountries();
   }, []);
+
+  useEffect(() => {
+    if (params.project) {
+      try {
+        const projectData = JSON.parse(params.project);
+        
+        const initialForm = {
+          projectName: projectData.projectName || projectData.title || '',
+          possessionStatus: projectData.possessionStatus?._id || projectData.possessionStatus || '',
+          description: projectData.description || '',
+          gatedCommunity: !!projectData.isGated,
+          reraApproved: !!projectData.isReraApproved,
+          reraNumber: projectData.reraNumber || '',
+          
+          startDate: projectData.startDate || '',
+          completionDate: projectData.completionDate || '',
+          totalArea: projectData.area ? String(projectData.area) : '',
+          areaUnit: projectData.areaUnit?._id || projectData.areaUnit || '',
+          avgPriceRate: projectData.avgPriceRate ? String(projectData.avgPriceRate) : '',
+          priceRateUnit: projectData.avgPriceUnit?._id || projectData.avgPriceUnit || '',
+          
+          country: projectData.country?._id || projectData.country || '',
+          countryName: projectData.country?.name || (typeof projectData.country === 'string' ? '' : (projectData.country?.label || '')),
+          state: projectData.state?._id || projectData.state || '',
+          stateName: projectData.state?.name || (typeof projectData.state === 'string' ? '' : (projectData.state?.label || '')),
+          city: projectData.city?._id || projectData.city || '',
+          cityName: projectData.city?.name || (typeof projectData.city === 'string' ? projectData.city : (projectData.city?.label || '')),
+          addressLine1: projectData.addressLine1 || '',
+          addressLine2: projectData.addressLine2 || '',
+          
+          media: Array.isArray(projectData.media) 
+            ? projectData.media.map(m => ({
+                uri: m.fileUrl,
+                name: m.fileName || m.fileUrl.split('/').pop(),
+                type: 'image',
+                label: m.label || 'Other',
+                isExisting: true,
+                _id: m._id || m.id
+              }))
+            : (Array.isArray(projectData.images)
+                ? projectData.images.map((img, idx) => ({
+                    uri: img,
+                    name: `image_${idx}.jpg`,
+                    type: 'image',
+                    label: 'Other',
+                    isExisting: true
+                  }))
+                : [])
+        };
+
+        setForm(initialForm);
+        
+        if (projectData.country?._id || projectData.country) {
+          fetchStates(projectData.country?._id || projectData.country);
+        }
+        if (projectData.state?._id || projectData.state) {
+          fetchCities(projectData.state?._id || projectData.state);
+        }
+      } catch (err) {
+        console.error("Failed to parse project data for editing:", err);
+      }
+    }
+  }, [params.project]);
 
   // ─── API Lookups ────────────────────────────────────────────────────────────
   const {
@@ -458,7 +525,13 @@ const AddProject = () => {
   }, []);
 
   const removeMedia = useCallback((uri) => {
-    setForm((prev) => ({ ...prev, media: prev.media.filter((m) => m.uri !== uri) }));
+    setForm((prev) => {
+      const target = prev.media.find((m) => m.uri === uri);
+      if (target && target.isExisting && target._id) {
+        setDeletedMediaIds(prevIds => [...prevIds, target._id]);
+      }
+      return { ...prev, media: prev.media.filter((m) => m.uri !== uri) };
+    });
   }, []);
 
   const updateMediaLabel = useCallback((uri, label) => {
@@ -599,13 +672,27 @@ const AddProject = () => {
         developer: developerId,
       };
 
-      const response = await api.post('/projects', payload);
+      const response = editProjectId
+        ? await api.put(`/projects/${editProjectId}`, payload)
+        : await api.post('/projects', payload);
 
       if (response.data?.success) {
-        const projectId = response.data?.data?._id || response.data?.data?.id || response.data?.project?._id || response.data?.project?.id;
+        const projectId = editProjectId || response.data?.data?._id || response.data?.data?.id || response.data?.project?._id || response.data?.project?.id;
+
+        if (editProjectId && deletedMediaIds.length > 0) {
+          for (const mediaId of deletedMediaIds) {
+            try {
+              await api.delete(`/projects/${editProjectId}/media/${mediaId}`);
+            } catch (delErr) {
+              console.error('Failed to delete media item:', mediaId, delErr);
+            }
+          }
+        }
 
         if (projectId && form.media && form.media.length > 0) {
           for (const file of form.media) {
+            if (file.isExisting) continue;
+
             const fileUrl = file.base64 ? `data:${file.mimeType || 'image/jpeg'};base64,${file.base64}` : file.uri;
             
             const mediaPayload = {
@@ -624,8 +711,10 @@ const AddProject = () => {
         }
 
         Alert.alert(
-          '🎉 Project Listed!',
-          `"${form.projectName}" has been successfully added to your project portfolio.`,
+          editProjectId ? '🎉 Project Updated!' : '🎉 Project Listed!',
+          editProjectId
+            ? `"${form.projectName}" has been successfully updated.`
+            : `"${form.projectName}" has been successfully added to your project portfolio.`,
           [
             {
               text: 'View Projects',
@@ -634,7 +723,7 @@ const AddProject = () => {
           ]
         );
       } else {
-        throw new Error(response.data?.message || 'Failed to create project');
+        throw new Error(response.data?.message || (editProjectId ? 'Failed to update project' : 'Failed to create project'));
       }
     } catch (err) {
       const msg = err?.response?.data?.message || err?.message || 'Something went wrong.';
@@ -1280,7 +1369,7 @@ const AddProject = () => {
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={{ fontFamily: 'Inter-Bold', fontSize: 18, color: 'white' }}>
-            Add New Project
+            {editProjectId ? 'Edit Project' : 'Add New Project'}
           </Text>
           <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 1 }}>
             Step {currentStep} of {STEPS.length} — {STEPS[currentStep - 1].title}
@@ -1448,7 +1537,7 @@ const AddProject = () => {
                 <>
                   <MaterialIcons name="rocket-launch" size={18} color="white" />
                   <Text style={{ fontFamily: 'Inter-Bold', color: 'white', fontSize: 15 }}>
-                    Publish Project
+                    {editProjectId ? 'Update Project' : 'Publish Project'}
                   </Text>
                 </>
               )}
