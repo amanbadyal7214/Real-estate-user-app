@@ -21,6 +21,7 @@ const Register = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const {
     step,
@@ -36,6 +37,9 @@ const Register = () => {
     handleVerifyEmailOtp,
     roleSelector,
     setRoleSelector,
+    existingUserDetails,
+    isPhoneVerified,
+    resetForm,
   } = useRegister();
 
   useEffect(() => {
@@ -64,11 +68,21 @@ const Register = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const otpInputs = useRef([]);
 
-  const isFormValid =
+  const isExistingUserFormValid =
+    isPhoneVerified &&
     formData.phone.length === 10 &&
+    formData.role &&
     formData.name.trim().length > 0 &&
     formData.email.includes('@') &&
-    formData.password.length >= 6;
+    formData.password.length >= 6 &&
+    (formData.role !== 'builder' || (formData.companyName?.trim() && formData.businessSince?.trim()));
+
+  const isFormValid = isLogin
+    ? isExistingUserFormValid
+    : (formData.phone.length === 10 &&
+       formData.name.trim().length > 0 &&
+       formData.email.includes('@') &&
+       formData.password.length >= 6);
 
   const handleNext = async () => {
     if (isFormValid) {
@@ -78,6 +92,14 @@ const Register = () => {
         handlePhoneValidation();
       }, 500);
     }
+  };
+
+  const handleVerifyPhonePress = () => {
+    setOtp(['', '', '', '', '', '']);
+    setShowOTPModal(true);
+    setTimeout(() => {
+      handlePhoneValidation();
+    }, 500);
   };
 
   const handleOtpChange = (value, index) => {
@@ -111,12 +133,11 @@ const Register = () => {
     console.log("verifyOTP Clicked:", { step, otpValueLength: otpValue.length });
     if (otpValue.length === 6) {
       if (step === 1) {
-        console.log("Calling verifyMockOtp");
-        verifyMockOtp();
-      } else if (step === 2 || step === 3) {
-        // Comment out email verification fallback to match screens/PostProperty/Register.jsx
-        // console.log("Calling handleVerifyEmailOtp as fallback for step", step);
-        // await handleVerifyEmailOtp();
+        console.log("Calling verifyMockOtp with isExisting:", isLogin);
+        const success = await verifyMockOtp({ isExisting: isLogin });
+        if (success) {
+          setShowOTPModal(false);
+        }
       }
     } else {
       console.log("OTP length is not 6");
@@ -167,183 +188,343 @@ const Register = () => {
 
         <View className=" mb-8">
           <Text className="text-[24px] font-inter-bold text-gray-900">
-            Create Your Account
+            {isLogin ? "Existing User Roles" : "Create Your Account"}
           </Text>
           <Text className="text-gray-500 mt-3 font-inter-regular ">
-            Sign up as a <Text className="font-inter-bold capitalize" style={{ color: PRIMARY_COLOR }}>{formData.role}</Text> to access the platform.
+            {isLogin 
+              ? "Verify your phone and select a new role to continue."
+              : `Sign up as a ${formData.role || 'user'} to access the platform.`
+            }
           </Text>
         </View>
 
-        {/* Role Selector */}
-        <View className="mb-6">
-          <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
-            User Type
-          </Text>
-          <View className="flex-row gap-2">
-            <TouchableOpacity
-              onPress={() => updateFormData('role', 'buyer')}
-              className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
+        {/* Auth Tabs */}
+        <View className="flex-row bg-[#F3F4F6] rounded-xl p-1 mb-6">
+          <TouchableOpacity
+            onPress={() => {
+              setIsLogin(false);
+              resetForm(false);
+            }}
+            className="flex-1 py-3 rounded-lg items-center"
+            style={{
+              backgroundColor: !isLogin ? '#008E96' : 'transparent',
+              shadowColor: !isLogin ? '#000' : 'transparent',
+              shadowOffset: !isLogin ? { width: 0, height: 1 } : { width: 0, height: 0 },
+              shadowOpacity: !isLogin ? 0.15 : 0,
+              shadowRadius: !isLogin ? 1.00 : 0,
+              elevation: !isLogin ? 1 : 0,
+            }}
+          >
+            <Text
+              className="text-sm font-inter-medium"
               style={{
-                backgroundColor: isRoleActive('buyer') ? '#E6F7F6' : '#FFFFFF',
-                borderColor: isRoleActive('buyer') ? '#008E96' : '#E5E7EB'
+                color: !isLogin ? '#FFFFFF' : '#4B5563'
               }}
             >
-              <Text
-                className="text-sm font-inter-bold"
-                style={{
-                  color: isRoleActive('buyer') ? '#008E96' : '#4B5563'
-                }}
-              >
-                Buyer
-              </Text>
-            </TouchableOpacity>
+              New User
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setIsLogin(true);
+              resetForm(true);
+            }}
+            className="flex-1 py-3 rounded-lg items-center"
+            style={{
+              backgroundColor: isLogin ? '#008E96' : 'transparent',
+              shadowColor: isLogin ? '#000' : 'transparent',
+              shadowOffset: isLogin ? { width: 0, height: 1 } : { width: 0, height: 0 },
+              shadowOpacity: isLogin ? 0.15 : 0,
+              shadowRadius: isLogin ? 1.00 : 0,
+              elevation: isLogin ? 1 : 0,
+            }}
+          >
+            <Text
+              className="text-sm font-inter-medium"
+              style={{
+                color: isLogin ? '#FFFFFF' : '#4B5563'
+              }}
+            >
+              Existing User
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-            <TouchableOpacity
-              onPress={() => updateFormData('role', 'owner')}
-              className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
-              style={{
-                backgroundColor: isRoleActive('owner') ? '#E6F7F6' : '#FFFFFF',
-                borderColor: isRoleActive('owner') ? '#008E96' : '#E5E7EB'
-              }}
-            >
-              <Text
-                className="text-sm font-inter-bold"
+        {/* Role Selector for New User, or Role Assignment for Existing User */}
+        {!isLogin ? (
+          <View className="mb-6">
+            <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
+              User Type
+            </Text>
+            <View className="flex-row gap-2">
+              <TouchableOpacity
+                onPress={() => updateFormData('role', 'buyer')}
+                className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
                 style={{
-                  color: isRoleActive('owner') ? '#008E96' : '#4B5563'
+                  backgroundColor: isRoleActive('buyer') ? '#E6F7F6' : '#FFFFFF',
+                  borderColor: isRoleActive('buyer') ? '#008E96' : '#E5E7EB'
                 }}
               >
-                Owner
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  className="text-sm font-inter-bold"
+                  style={{
+                    color: isRoleActive('buyer') ? '#008E96' : '#4B5563'
+                  }}
+                >
+                  Buyer
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => updateFormData('role', 'builder')}
-              className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
-              style={{
-                backgroundColor: isRoleActive('builder') ? '#E6F7F6' : '#FFFFFF',
-                borderColor: isRoleActive('builder') ? '#008E96' : '#E5E7EB'
-              }}
-            >
-              <Text
-                className="text-sm font-inter-bold"
+              <TouchableOpacity
+                onPress={() => updateFormData('role', 'owner')}
+                className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
                 style={{
-                  color: isRoleActive('builder') ? '#008E96' : '#4B5563'
+                  backgroundColor: isRoleActive('owner') ? '#E6F7F6' : '#FFFFFF',
+                  borderColor: isRoleActive('owner') ? '#008E96' : '#E5E7EB'
                 }}
               >
-                Builder
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  className="text-sm font-inter-bold"
+                  style={{
+                    color: isRoleActive('owner') ? '#008E96' : '#4B5563'
+                  }}
+                >
+                  Owner
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => updateFormData('role', 'builder')}
+                className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
+                style={{
+                  backgroundColor: isRoleActive('builder') ? '#E6F7F6' : '#FFFFFF',
+                  borderColor: isRoleActive('builder') ? '#008E96' : '#E5E7EB'
+                }}
+              >
+                <Text
+                  className="text-sm font-inter-bold"
+                  style={{
+                    color: isRoleActive('builder') ? '#008E96' : '#4B5563'
+                  }}
+                >
+                  Builder
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        ) : (
+          isPhoneVerified && (
+            <View className="mb-6 gap-4">
+              {/* Already Assigned Roles */}
+              <View>
+                <Text className="text-gray-500 text-sm mb-2 font-inter-medium">
+                  Already Assigned Roles
+                </Text>
+                <View className="flex-row gap-2 flex-wrap">
+                  {existingUserDetails?.role && (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role]).map((r) => (
+                    <View key={r} className="bg-gray-100 px-4 py-2 rounded-2xl border border-gray-200">
+                      <Text className="text-gray-500 text-xs capitalize font-semibold" style={{ fontFamily: 'Inter-Medium' }}>
+                        {r}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+
+              {/* Select Your Role (unassigned) */}
+              <View>
+                <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
+                  Select Your Role
+                </Text>
+                {(() => {
+                  const allRolesList = ['buyer', 'owner', 'builder'];
+                  const assignedRolesList = existingUserDetails?.role 
+                    ? (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role]) 
+                    : [];
+                  const unassignedRolesList = allRolesList.filter(r => !assignedRolesList.includes(r));
+
+                  if (unassignedRolesList.length === 0) {
+                    return (
+                      <Text className="text-red-500 text-xs italic" style={{ fontFamily: 'Inter-Regular' }}>
+                        All roles are already assigned to this account.
+                      </Text>
+                    );
+                  }
+
+                  return (
+                    <View className="flex-row gap-2">
+                      {unassignedRolesList.map((roleName) => (
+                        <TouchableOpacity
+                          key={roleName}
+                          onPress={() => updateFormData('role', roleName)}
+                          className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
+                          style={{
+                            backgroundColor: formData.role === roleName ? '#E6F7F6' : '#FFFFFF',
+                            borderColor: formData.role === roleName ? '#008E96' : '#E5E7EB'
+                          }}
+                        >
+                          <Text
+                            className="text-sm capitalize font-inter-bold"
+                            style={{
+                              color: formData.role === roleName ? '#008E96' : '#4B5563'
+                            }}
+                          >
+                            {roleName}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  );
+                })()}
+              </View>
+            </View>
+          )
+        )}
 
         {/* Form Fields - Tightened */}
         <View className="space-y-3 mb-2">
-          <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl">
-            <Ionicons name="person-outline" size={18} color="#9CA3AF" />
-            <TextInput
-              placeholder="Your Full Name"
-              className="flex-1 ml-3 font-inter-regular text-gray-800"
-              placeholderTextColor="#9CA3AF"
-              value={formData.name}
-              onChangeText={(value) => updateFormData("name", value)}
-            />
-          </View>
-
-          <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-            <Ionicons name="mail-outline" size={18} color="#9CA3AF" />
-            <TextInput
-              placeholder="Email address"
-              keyboardType="email-address"
-              className="flex-1 ml-3 font-inter-regular text-gray-800"
-              placeholderTextColor="#9CA3AF"
-              value={formData.email}
-              onChangeText={(value) => updateFormData("email", value)}
-            />
-          </View>
-
-          <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-            <Ionicons name="phone-portrait-outline" size={18} color="#9CA3AF" />
-            <TextInput
-              placeholder="Phone Number"
-              keyboardType="phone-pad"
-              className="flex-1 ml-3 font-inter-regular text-gray-800"
-              placeholderTextColor="#9CA3AF"
-              value={formData.phone}
-              onChangeText={(value) => updateFormData("phone", value)}
-            />
-          </View>
-
-          <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-            <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
-            <TextInput
-              placeholder="Password"
-              secureTextEntry={!showPassword}
-              className="flex-1 ml-3 font-inter-regular text-gray-800"
-              placeholderTextColor="#9CA3AF"
-              value={formData.password}
-              onChangeText={(value) => updateFormData("password", value)}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
-            </TouchableOpacity>
-          </View>
-
-          <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-            <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
-            <TextInput
-              placeholder="Confirm Password"
-              secureTextEntry={!showConfirmPassword}
-              className="flex-1 ml-3 font-inter-regular text-gray-800"
-              placeholderTextColor="#9CA3AF"
-              value={formData.confirmPassword}
-              onChangeText={(value) => updateFormData("confirmPassword", value)}
-            />
-            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-              <Ionicons name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Search City */}
-        <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-          <Ionicons name="location-outline" size={18} color="#9CA3AF" />
-          <TextInput
-            placeholder="Search City"
-            className="flex-1 ml-3 font-inter-regular text-gray-800"
-            placeholderTextColor="#9CA3AF"
-            value={formData.city || ''}
-            onChangeText={(value) => updateFormData("city", value)}
-          />
-        </View>
-
-        {/* Builder specific fields */}
-        {isRoleActive('builder') && (
-          <>
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-              <Ionicons name="business-outline" size={18} color="#9CA3AF" />
+          {/* Phone Number Input */}
+          {(!isLogin || !isPhoneVerified) ? (
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl">
+              <Ionicons name="phone-portrait-outline" size={18} color="#9CA3AF" />
               <TextInput
-                placeholder="Company Name"
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
                 className="flex-1 ml-3 font-inter-regular text-gray-800"
                 placeholderTextColor="#9CA3AF"
-                value={formData.companyName || ''}
-                onChangeText={(value) => updateFormData("companyName", value)}
+                value={formData.phone}
+                onChangeText={(value) => updateFormData("phone", value)}
+                maxLength={10}
               />
             </View>
-
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-              <Ionicons name="calendar-outline" size={18} color="#9CA3AF" />
+          ) : (
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl opacity-60">
+              <Ionicons name="phone-portrait-outline" size={18} color="#9CA3AF" />
               <TextInput
-                placeholder="Business Since (Year)"
-                keyboardType="number-pad"
-                maxLength={4}
+                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                value={formData.phone}
+                editable={false}
+              />
+              <Ionicons name="checkmark-circle" size={20} color="green" />
+            </View>
+          )}
+
+          {/* Name Field */}
+          {(!isLogin || isPhoneVerified) && (
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+              <Ionicons name="person-outline" size={18} color="#9CA3AF" />
+              <TextInput
+                placeholder="Your Full Name"
                 className="flex-1 ml-3 font-inter-regular text-gray-800"
                 placeholderTextColor="#9CA3AF"
-                value={formData.businessSince || ''}
-                onChangeText={(value) => updateFormData("businessSince", value)}
+                value={formData.name}
+                onChangeText={(value) => updateFormData("name", value)}
               />
             </View>
-          </>
-        )}
+          )}
+
+          {/* Email Field */}
+          {(!isLogin || isPhoneVerified) && (
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+              <Ionicons name="mail-outline" size={18} color="#9CA3AF" />
+              <TextInput
+                placeholder="Email address"
+                keyboardType="email-address"
+                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                placeholderTextColor="#9CA3AF"
+                value={formData.email}
+                onChangeText={(value) => updateFormData("email", value)}
+                autoCapitalize="none"
+              />
+            </View>
+          )}
+
+          {/* Password Field */}
+          {(!isLogin || isPhoneVerified) && (
+            <View className="mt-3">
+              <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl">
+                <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
+                <TextInput
+                  placeholder="Password"
+                  secureTextEntry={!showPassword}
+                  className="flex-1 ml-3 font-inter-regular text-gray-800"
+                  placeholderTextColor="#9CA3AF"
+                  value={formData.password}
+                  onChangeText={(value) => updateFormData("password", value)}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
+                </TouchableOpacity>
+              </View>
+              {isLogin && (
+                <Text className="text-xs text-gray-500 mt-1 ml-1" style={{ fontFamily: 'Inter-Regular' }}>
+                  Fill your login password to get a new role
+                </Text>
+              )}
+            </View>
+          )}
+
+          {/* Confirm Password Field (Only for New User) */}
+          {!isLogin && (
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+              <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
+              <TextInput
+                placeholder="Confirm Password"
+                secureTextEntry={!showConfirmPassword}
+                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                placeholderTextColor="#9CA3AF"
+                value={formData.confirmPassword}
+                onChangeText={(value) => updateFormData("confirmPassword", value)}
+              />
+              <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                <Ionicons name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Search City Field */}
+          {(!isLogin || isPhoneVerified) && (
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+              <Ionicons name="location-outline" size={18} color="#9CA3AF" />
+              <TextInput
+                placeholder="Search City"
+                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                placeholderTextColor="#9CA3AF"
+                value={formData.city || ''}
+                onChangeText={(value) => updateFormData("city", value)}
+              />
+            </View>
+          )}
+
+          {/* Builder specific fields */}
+          {(!isLogin || isPhoneVerified) && formData.role === 'builder' && (
+            <>
+              <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+                <Ionicons name="business-outline" size={18} color="#9CA3AF" />
+                <TextInput
+                  placeholder="Company Name"
+                  className="flex-1 ml-3 font-inter-regular text-gray-800"
+                  placeholderTextColor="#9CA3AF"
+                  value={formData.companyName || ''}
+                  onChangeText={(value) => updateFormData("companyName", value)}
+                />
+              </View>
+
+              <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+                <Ionicons name="calendar-outline" size={18} color="#9CA3AF" />
+                <TextInput
+                  placeholder="Business Since (Year)"
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  className="flex-1 ml-3 font-inter-regular text-gray-800"
+                  placeholderTextColor="#9CA3AF"
+                  value={formData.businessSince || ''}
+                  onChangeText={(value) => updateFormData("businessSince", value)}
+                />
+              </View>
+            </>
+          )}
+        </View>
 
         <View
           style={{
@@ -358,21 +539,70 @@ const Register = () => {
             className="p-4 mt-4 items-center"
             style={{
               borderRadius: 14,
-              backgroundColor: isFormValid && !loading ? '#008E96' : '#E5E7EB',
+              backgroundColor: (
+                isLogin
+                  ? (isPhoneVerified ? isExistingUserFormValid : formData.phone.length === 10)
+                  : isFormValid
+              ) && !loading ? '#008E96' : '#E5E7EB',
               shadowColor: '#9ADDD9',
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 1,
               shadowRadius: 6,
               elevation: 4
             }}
-            onPress={handleNext}
-            disabled={loading || !isFormValid}
+            onPress={() => {
+              if (isLogin) {
+                if (isPhoneVerified) {
+                  handleRegister();
+                } else {
+                  handleVerifyPhonePress();
+                }
+              } else {
+                handleNext();
+              }
+            }}
+            disabled={loading || !(
+              isLogin
+                ? (isPhoneVerified ? isExistingUserFormValid : formData.phone.length === 10)
+                : isFormValid
+            )}
           >
-            <Text className={`${isFormValid && !loading ? 'text-white' : 'text-[#99A1AF]'} font-inter-bold text-lg`}>
-              {loading ? "Registering..." : "Register and Create Account"}
+            <Text className={`${(
+              isLogin
+                ? (isPhoneVerified ? isExistingUserFormValid : formData.phone.length === 10)
+                : isFormValid
+            ) && !loading ? 'text-white' : 'text-[#99A1AF]'} font-inter-bold text-lg`}>
+              {loading 
+                ? "Processing..." 
+                : (isLogin 
+                    ? (isPhoneVerified ? "Get New Role & Login" : "Verify Phone") 
+                    : "Register and Create Account"
+                  )
+              }
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Toggle to Existing User / New User */}
+        <TouchableOpacity
+          className="mt-6 mb-4"
+          onPress={() => {
+            if (isLogin) {
+              setIsLogin(false);
+              resetForm(false);
+            } else {
+              setIsLogin(true);
+              resetForm(true);
+            }
+          }}
+        >
+          <Text className="text-center font-inter-regular text-gray-500">
+            {isLogin ? "Need a new account? " : "Already have an account? "}
+            <Text className="font-inter-bold" style={{ color: PRIMARY_COLOR }}>
+              {isLogin ? "Register Here" : "Add Role / Login Here"}
+            </Text>
+          </Text>
+        </TouchableOpacity>
 
         {/* Social Login - Optimized height */}
         <View className="mt-6">

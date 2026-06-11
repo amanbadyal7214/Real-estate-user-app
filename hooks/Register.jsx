@@ -79,6 +79,10 @@ export const useRegister = () => {
     const [step, setStep] = useState(1); // 1: Phone Validation, 2: Details Form, 3: Email OTP Verification
     const [roleSelector, setRoleSelector] = useState({ visible: false, roles: [] });
 
+    // Existing user flow states
+    const [existingUserDetails, setExistingUserDetails] = useState(null);
+    const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+
     // Form states
     const [formData, setFormData] = useState({
         name: "",
@@ -89,6 +93,7 @@ export const useRegister = () => {
         role: "buyer", // default role
         companyName: "",
         businessSince: "",
+        city: "",
     });
 
     const [mockOtp, setMockOtp] = useState("");
@@ -97,6 +102,25 @@ export const useRegister = () => {
 
     const updateFormData = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const resetForm = (isExistingUser = false) => {
+        setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            password: "",
+            confirmPassword: "",
+            role: isExistingUser ? "" : "buyer",
+            companyName: "",
+            businessSince: "",
+            city: "",
+        });
+        setExistingUserDetails(null);
+        setIsPhoneVerified(false);
+        setStep(1);
+        setEnteredMockOtp("");
+        setEmailOtp("");
     };
 
     // Step 1: Phone Validation
@@ -126,10 +150,11 @@ export const useRegister = () => {
         }
     };
 
-    const verifyMockOtp = async () => {
+    const verifyMockOtp = async (options = {}) => {
+        const { isExisting = false } = options;
         if (enteredMockOtp.length !== 6) {
             Alert.alert("Error", "Please enter a 6-digit OTP code.");
-            return;
+            return false;
         }
         setLoading(true);
         try {
@@ -137,19 +162,44 @@ export const useRegister = () => {
                 phone: formData.phone,
                 otp: enteredMockOtp.trim(),
             };
+            if (isExisting) {
+                payload.existUser = true;
+            }
             console.log("API Request: POST /auth/verify-phone-otp (Verify)", payload);
             const response = await api.post("/auth/verify-phone-otp", payload);
             console.log("API Response: /auth/verify-phone-otp (Verify)", response.data);
 
             if (response.data.success) {
-                setStep(2); // Proceed to registration details
+                if (isExisting) {
+                    const user = response.data.user;
+                    setExistingUserDetails(user);
+                    setIsPhoneVerified(true);
+                    
+                    // Pre-fill form fields
+                    setFormData(prev => ({
+                        ...prev,
+                        name: user.name || "",
+                        email: user.email || "",
+                        city: user.city || "",
+                        password: "", // password must be filled by user
+                        confirmPassword: "",
+                        role: "", // reset role for selection
+                        companyName: "",
+                        businessSince: "",
+                    }));
+                } else {
+                    setStep(2); // Proceed to registration details
+                }
+                return true;
             } else {
                 Alert.alert("Verification Failed", response.data.message || "Incorrect verification code.");
+                return false;
             }
         } catch (error) {
             console.error("API Error: /auth/verify-phone-otp (Verify)", error.response?.data || error.message);
             const message = error.response?.data?.message || error.response?.data?.error || "Verification failed. Please try again.";
             Alert.alert("Error", message);
+            return false;
         } finally {
             setLoading(false);
         }
@@ -310,6 +360,7 @@ export const useRegister = () => {
         step,
         setStep,
         formData,
+        setFormData,
         updateFormData,
         loading,
         mockOtp,
@@ -324,5 +375,10 @@ export const useRegister = () => {
         handleLogin,
         roleSelector,
         setRoleSelector,
+        existingUserDetails,
+        setExistingUserDetails,
+        isPhoneVerified,
+        setIsPhoneVerified,
+        resetForm,
     };
 };
