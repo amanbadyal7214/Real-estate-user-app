@@ -167,7 +167,13 @@ const PostProperty = () => {
         >
           <View className="flex-row justify-between items-center mb-6">
             <View className="flex-row items-center gap-2">
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                if (router.canGoBack()) {
+                  router.back();
+                } else {
+                  router.replace("/(tabs)");
+                }
+              }}>
                 <Ionicons name="arrow-back" size={24} color="white" />
               </TouchableOpacity>
               <View className="flex-row items-center bg-[#FDC700] p-1 rounded-sm w-6 h-6 justify-center">
