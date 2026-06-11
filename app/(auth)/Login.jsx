@@ -1,23 +1,42 @@
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import * as SecureStore from "expo-secure-store";
+import { useEffect, useState } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useRegister, performRoleBasedRedirect } from "../../hooks/Register";
-import { PRIMARY_COLOR } from "../constants/theme";
+import { SafeAreaView } from "react-native-safe-area-context";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
+import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
+import { PRIMARY_COLOR } from "../constants/theme";
 
 const Login = () => {
   const router = useRouter();
   const { redirectTo } = useLocalSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const { formData, updateFormData, loading, handleLogin, roleSelector, setRoleSelector } = useRegister();
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  const checkToken = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const role = await SecureStore.getItemAsync("userRole");
+    if (token) {
+      let target = resolveRedirectTarget();
+      if (target === "/screens/PostProperty/PropertyDetails") {
+        target = undefined;
+      }
+      setTimeout(() => {
+        performRoleBasedRedirect(role, target, setRoleSelector);
+      }, 100);
+    }
+  };
 
   const resolveRedirectTarget = () => {
     if (!redirectTo || typeof redirectTo !== "string") {
@@ -102,7 +121,7 @@ const Login = () => {
             <Text className="font-inter-medium" style={{ color: PRIMARY_COLOR }}>Forgot Password?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             className="mt-8 p-5 rounded-2xl items-center shadow-lg"
             style={{ backgroundColor: PRIMARY_COLOR }}
             onPress={() => handleLogin({ onSuccess: handleLoginSuccess })}
@@ -120,9 +139,9 @@ const Login = () => {
               <Text className="mx-4 text-gray-500 font-inter-medium">Or login with social</Text>
               <View className="flex-1 h-[1px] bg-gray-200" />
             </View>
-            
+
             <View className="flex-row justify-center">
-              <TouchableOpacity 
+              <TouchableOpacity
                 activeOpacity={0.7}
                 className="flex-row items-center justify-center p-2 bg-white border border-gray-200 rounded-2xl shadow-sm w-full h-16"
               >
@@ -133,7 +152,7 @@ const Login = () => {
           </View>
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           className="mt-auto py-6"
           onPress={() => router.push("/(auth)/Register")}
         >

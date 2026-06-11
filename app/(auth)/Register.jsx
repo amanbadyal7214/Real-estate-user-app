@@ -1,20 +1,21 @@
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useRegister } from "../../hooks/Register";
-import { PRIMARY_COLOR } from "../constants/theme";
+import { SafeAreaView } from "react-native-safe-area-context";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
+import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
+import { PRIMARY_COLOR } from "../constants/theme";
 
 const Register = () => {
   const router = useRouter();
@@ -38,8 +39,25 @@ const Register = () => {
   } = useRegister();
 
   useEffect(() => {
-    updateFormData("role", "user");
+    checkToken();
+    updateFormData("role", "buyer");
   }, []);
+
+  const checkToken = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const role = await SecureStore.getItemAsync("userRole");
+    if (token) {
+      setTimeout(() => {
+        performRoleBasedRedirect(role, "/screens/Buy/Buy", setRoleSelector);
+      }, 100);
+    }
+  };
+
+  const isRoleActive = (roleName) => {
+    return formData.role === roleName ||
+      (Array.isArray(formData.role) && formData.role.includes(roleName)) ||
+      (typeof formData.role === 'string' && formData.role.includes(roleName));
+  };
 
   // OTP State
   const [showOTPModal, setShowOTPModal] = useState(false);
@@ -96,13 +114,9 @@ const Register = () => {
         console.log("Calling verifyMockOtp");
         verifyMockOtp();
       } else if (step === 2 || step === 3) {
-        console.log("Calling handleVerifyEmailOtp as fallback for step", step);
-        await handleVerifyEmailOtp({
-          onSuccess: () => {
-            setShowOTPModal(false);
-            router.replace("/screens/Buy/Buy");
-          }
-        });
+        // Comment out email verification fallback to match screens/PostProperty/Register.jsx
+        // console.log("Calling handleVerifyEmailOtp as fallback for step", step);
+        // await handleVerifyEmailOtp();
       }
     } else {
       console.log("OTP length is not 6");
@@ -115,6 +129,7 @@ const Register = () => {
       if (step === 2 && showOTPModal && !loading) {
         // Mock OTP verified, now register
         await handleRegister();
+        setShowOTPModal(false);
       }
     };
     registerAndNext();
@@ -132,27 +147,93 @@ const Register = () => {
     setStep(1);
   };
 
-  return (
-    <SafeAreaView className="flex-1 pt-12 bg-white">
+  const handleSafeBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(auth)/onboard");
+    }
+  };
 
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 py-7">
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="px-4">
+        <TouchableOpacity onPress={handleSafeBack} className="p-2 self-start">
+          <Ionicons name="chevron-back" size={32} color="black" />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 pb-16">
 
         <View className=" mb-8">
-          <Text className="text-[24px] font-inter-bold text-gray-900 mt-4">
+          <Text className="text-[24px] font-inter-bold text-gray-900">
             Create Your Account
           </Text>
           <Text className="text-gray-500 mt-3 font-inter-regular ">
-            Sign up as a <Text className="text-blue font-inter-medium">BUYER</Text> to access the platform.
+            Sign up as a <Text className="font-inter-bold capitalize" style={{ color: PRIMARY_COLOR }}>{formData.role}</Text> to access the platform.
           </Text>
         </View>
 
-        {/* Role Selector - More Compact */}
-        <View
-          className="flex-row items-center justify-center p-4 rounded-2xl mb-6 shadow-sm"
-          style={{ backgroundColor: PRIMARY_COLOR }}
-        >
-          <Ionicons name="person-outline" size={18} color="white" />
-          <Text className="text-white font-inter-bold ml-2">Buyer</Text>
+        {/* Role Selector */}
+        <View className="mb-6">
+          <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
+            User Type
+          </Text>
+          <View className="flex-row gap-2">
+            <TouchableOpacity
+              onPress={() => updateFormData('role', 'buyer')}
+              className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
+              style={{
+                backgroundColor: isRoleActive('buyer') ? '#E6F7F6' : '#FFFFFF',
+                borderColor: isRoleActive('buyer') ? '#008E96' : '#E5E7EB'
+              }}
+            >
+              <Text
+                className="text-sm font-inter-bold"
+                style={{
+                  color: isRoleActive('buyer') ? '#008E96' : '#4B5563'
+                }}
+              >
+                Buyer
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => updateFormData('role', 'owner')}
+              className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
+              style={{
+                backgroundColor: isRoleActive('owner') ? '#E6F7F6' : '#FFFFFF',
+                borderColor: isRoleActive('owner') ? '#008E96' : '#E5E7EB'
+              }}
+            >
+              <Text
+                className="text-sm font-inter-bold"
+                style={{
+                  color: isRoleActive('owner') ? '#008E96' : '#4B5563'
+                }}
+              >
+                Owner
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => updateFormData('role', 'builder')}
+              className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
+              style={{
+                backgroundColor: isRoleActive('builder') ? '#E6F7F6' : '#FFFFFF',
+                borderColor: isRoleActive('builder') ? '#008E96' : '#E5E7EB'
+              }}
+            >
+              <Text
+                className="text-sm font-inter-bold"
+                style={{
+                  color: isRoleActive('builder') ? '#008E96' : '#4B5563'
+                }}
+              >
+                Builder
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Form Fields - Tightened */}
@@ -222,6 +303,47 @@ const Register = () => {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Search City */}
+        <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+          <Ionicons name="location-outline" size={18} color="#9CA3AF" />
+          <TextInput
+            placeholder="Search City"
+            className="flex-1 ml-3 font-inter-regular text-gray-800"
+            placeholderTextColor="#9CA3AF"
+            value={formData.city || ''}
+            onChangeText={(value) => updateFormData("city", value)}
+          />
+        </View>
+
+        {/* Builder specific fields */}
+        {isRoleActive('builder') && (
+          <>
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+              <Ionicons name="business-outline" size={18} color="#9CA3AF" />
+              <TextInput
+                placeholder="Company Name"
+                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                placeholderTextColor="#9CA3AF"
+                value={formData.companyName || ''}
+                onChangeText={(value) => updateFormData("companyName", value)}
+              />
+            </View>
+
+            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
+              <Ionicons name="calendar-outline" size={18} color="#9CA3AF" />
+              <TextInput
+                placeholder="Business Since (Year)"
+                keyboardType="number-pad"
+                maxLength={4}
+                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                placeholderTextColor="#9CA3AF"
+                value={formData.businessSince || ''}
+                onChangeText={(value) => updateFormData("businessSince", value)}
+              />
+            </View>
+          </>
+        )}
 
         <View
           style={{

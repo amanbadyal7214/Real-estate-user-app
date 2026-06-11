@@ -25,7 +25,12 @@ export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) =
     const hasBuilder = roleArray.includes('builder');
     const hasBuyer = roleArray.includes('buyer');
 
-    if ((hasOwner || hasBuilder) && hasBuyer) {
+    const activeRoles = [];
+    if (hasBuyer) activeRoles.push('buyer');
+    if (hasOwner) activeRoles.push('owner');
+    if (hasBuilder) activeRoles.push('builder');
+
+    if (activeRoles.length > 1) {
         if (setRoleSelector) {
             setRoleSelector({
                 visible: true,
@@ -62,6 +67,8 @@ export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) =
         router.replace("/screens/Project/MyProjects");
     } else if (hasOwner) {
         router.replace("/screens/PostProperty/MyProperties");
+    } else if (hasBuyer) {
+        router.replace("/screens/Buy/Buy");
     } else {
         router.replace(defaultTarget || "/screens/Buy/Buy");
     }
