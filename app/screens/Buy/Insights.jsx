@@ -391,7 +391,7 @@ const Insights = () => {
                 </Animated.View>
 
                 {/* Top Rated Projects Section */}
-                <Animated.View entering={FadeInDown.duration(600).delay(600)} className="px-4 mt-6">
+                {/* <Animated.View entering={FadeInDown.duration(600).delay(600)} className="px-4 mt-6">
                     <View className="flex-row items-center justify-between mb-4">
                         <Text className="text-[#101828] text-[18px] font-inter-semibold">Top rated projects</Text>
                         <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedProject')}>
@@ -403,7 +403,7 @@ const Insights = () => {
                             <TopRatedProjectCard key={project.id} {...project} />
                         ))}
                     </View>
-                </Animated.View>
+                </Animated.View> */}
 
                 {/* Highest Growth Projects Section */}
                 {/* <Animated.View entering={FadeInDown.duration(600).delay(700)} className="pl-4 mt-6">

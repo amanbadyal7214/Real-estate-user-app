@@ -3,10 +3,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform,  ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import DashboardSelectorModal from '../../../components/DashboardSelectorModal';
 import { performRoleBasedRedirect, useRegister } from '../../../hooks/Register';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const PostProperty = () => {
 
   const {
@@ -494,14 +494,13 @@ const PostProperty = () => {
                 <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
                   <Ionicons name="location-outline" size={20} color="#5E35B1" />
                   <TextInput
-                    placeholder="Search City"
+                    placeholder="City"
                     placeholderTextColor="#99A1AF"
                     className="flex-1 text-sm px-2 py-1"
                     style={{ fontFamily: 'Inter-Regular' }}
                     value={formData.city || ''}
                     onChangeText={(val) => updateFormData('city', val)}
                   />
-                  <Ionicons name="chevron-down" size={20} color="#5E35B1" />
                 </View>
               )}
 
@@ -844,7 +843,7 @@ const PostProperty = () => {
             </View>
 
             {/* FAQs Section */}
-            <View className="mt-12 mb-10">
+            <View className="mt-12 mb-10"> 
               <Text className="text-[#101828] text-xl text-center mb-2" style={{ fontFamily: 'Inter-Bold' }}>Frequently asked questions</Text>
               <View className="items-center mb-8">
                 <View className="w-12 h-1 bg-[#008E96] rounded-full" />
