@@ -14,7 +14,7 @@ import UserHeader from '../../../components/UserHeader';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
-import ComingSoon from '../../../components/ComingSoon';
+import NoDataFound from '../../../components/NoDataFound';
 
 const Plot = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
@@ -191,8 +191,8 @@ const Plot = () => {
         </View>
 
 
-        {/* Coming Soon Section */}
-        <ComingSoon />
+        {/* No Data Found Section */}
+        <NoDataFound />
 
         {/* Matches Section
         <View className="px-4 mt-8 mb-6">
