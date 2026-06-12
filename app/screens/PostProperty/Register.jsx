@@ -5,6 +5,7 @@ import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform,  ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import DashboardSelectorModal from '../../../components/DashboardSelectorModal';
+import Toast from '../../../components/Toast';
 import { performRoleBasedRedirect, useRegister } from '../../../hooks/Register';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const PostProperty = () => {
@@ -25,6 +26,8 @@ const PostProperty = () => {
     existingUserDetails,
     isPhoneVerified,
     resetForm,
+    toast,
+    setToast,
   } = useRegister();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -897,6 +900,7 @@ const PostProperty = () => {
         }}
         onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
       />
+      <Toast message={toast?.message} type={toast?.type} onDismiss={() => setToast(null)} />
     </SafeAreaView>
   );
 };

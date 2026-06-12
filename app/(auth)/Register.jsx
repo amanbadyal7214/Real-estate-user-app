@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
+import Toast from "../../components/Toast";
 import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
 
@@ -40,6 +41,8 @@ const Register = () => {
     existingUserDetails,
     isPhoneVerified,
     resetForm,
+    toast,
+    setToast,
   } = useRegister();
 
   useEffect(() => {
@@ -701,6 +704,7 @@ const Register = () => {
         }}
         onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
       />
+      <Toast message={toast?.message} type={toast?.type} onDismiss={() => setToast(null)} />
     </SafeAreaView>
   );
 };

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
+import Toast from "../../components/Toast";
 import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
 
@@ -18,7 +19,7 @@ const Login = () => {
   const router = useRouter();
   const { redirectTo } = useLocalSearchParams();
   const [showPassword, setShowPassword] = useState(false);
-  const { formData, updateFormData, loading, handleLogin, roleSelector, setRoleSelector } = useRegister();
+  const { formData, updateFormData, loading, handleLogin, roleSelector, setRoleSelector, toast, setToast } = useRegister();
 
   useEffect(() => {
     checkToken();
@@ -170,6 +171,7 @@ const Login = () => {
         }}
         onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
       />
+      <Toast message={toast?.message} type={toast?.type} onDismiss={() => setToast(null)} />
     </SafeAreaView>
   );
 };
