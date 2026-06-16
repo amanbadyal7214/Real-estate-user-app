@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -190,6 +191,12 @@ const Register = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 pb-16">
 
         <View className=" mb-8">
+          <Image
+            source={require('../../assets/images/realeasteapphorizontal1.png')}
+            style={{ width: 220, height: 60 }}
+            resizeMode="contain"
+            className="mb-3"
+          />
           <Text className="text-[24px] font-inter-bold text-gray-900">
             {isLogin ? "Existing User Roles" : "Create Your Account"}
           </Text>

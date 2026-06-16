@@ -7,8 +7,13 @@ const Welcome2 = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 px-8 pt-4">
-        {/* Skip Button */}
-        <View className="items-end mb-10">
+        {/* Header: Logo + Skip */}
+        <View className="flex-row items-center justify-between mb-10">
+          <Image
+            source={require('../../assets/images/realeasteapphorizontal1.png')}
+            style={{ width: 150, height: 40 }}
+            resizeMode="contain"
+          />
           <TouchableOpacity onPress={() => router.replace('/(auth)/onboard')}>
             <Text className="text-[#99A1AF] text-md font-inter-regular">Skip</Text>
           </TouchableOpacity>

@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { ChevronDown, User } from 'lucide-react-native';
-import { Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback, StyleSheet, Alert } from 'react-native';
+import { Image, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback, StyleSheet, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
 import { performRoleBasedRedirect } from "../hooks/Register";
@@ -102,6 +102,13 @@ const UserHeader = ({ userName: propUserName }) => {
             <ChevronDown size={18} color="#101828" className="ml-1" />
           </View>
         </TouchableOpacity>
+
+        {/* Center Logo */}
+        <Image
+          source={require('../assets/images/realeasteapphorizontal1.png')}
+          style={{ width: 140, height: 36 }}
+          resizeMode="contain"
+        />
 
         <TouchableOpacity 
           onPress={handlePostProperty}

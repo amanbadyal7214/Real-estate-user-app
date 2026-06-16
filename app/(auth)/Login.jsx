@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
 import {
+  Image,
   ScrollView,
   Text,
   TextInput,
@@ -80,6 +81,11 @@ const Login = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 py-4">
         <View className="flex-1 justify-center">
           <View className="items-center mb-8">
+            <Image
+              source={require('../../assets/images/realeasteapphorizontal1.png')}
+              style={{ width: 240, height: 70 }}
+              resizeMode="contain"
+            />
             <Text className="text-3xl font-inter-bold text-gray-900 mt-4">
               Login to Your Account
             </Text>

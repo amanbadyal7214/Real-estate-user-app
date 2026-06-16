@@ -208,20 +208,26 @@ const MyProjects = () => {
 
   const handleAddSummary = (project) => {
     setActiveMenuProjectId(null);
-    Alert.alert(
-      "Add Property Summary",
-      `Add summary details for "${project.projectName || project.title}". Feature coming soon.`,
-      [{ text: "OK" }]
-    );
+    router.push({
+      pathname: '/screens/Project/PropertySummary',
+      params: { 
+        projectId: project._id || project.id,
+        projectName: project.projectName || project.title,
+        mode: 'add'
+      }
+    });
   };
 
   const handleViewSummary = (project) => {
     setActiveMenuProjectId(null);
-    Alert.alert(
-      "View Property Summary",
-      `Displaying summary details for "${project.projectName || project.title}". Feature coming soon.`,
-      [{ text: "OK" }]
-    );
+    router.push({
+      pathname: '/screens/Project/PropertySummary',
+      params: {
+        projectId: project._id || project.id,
+        projectName: project.projectName || project.title,
+        mode: 'view'
+      }
+    });
   };
 
   // Filter List Logic

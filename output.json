@@ -1,0 +1,299 @@
+{
+  "propertyTypes": {
+    "success": true,
+    "count": 4,
+    "data": [
+      {
+        "_id": "69e76d1dfa8e334f7ea6d8d6",
+        "name": "commercial",
+        "label": "Commercial",
+        "description": "Commercial Properties",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:27:09.100Z",
+        "updatedAt": "2026-04-21T12:27:09.100Z",
+        "__v": 0
+      },
+      {
+        "_id": "69e76d3dfa8e334f7ea6d8d7",
+        "name": "residential",
+        "label": "Residential",
+        "description": "Residential Properties",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:27:41.882Z",
+        "updatedAt": "2026-04-21T12:27:41.882Z",
+        "__v": 0
+      },
+      {
+        "_id": "69fadbb7bf84a66681f5d29d",
+        "name": "industrial",
+        "label": "Industrial",
+        "isActive": true,
+        "createdAt": "2026-05-06T06:12:07.685Z",
+        "updatedAt": "2026-05-06T06:12:07.685Z",
+        "__v": 0
+      },
+      {
+        "_id": "69fadbcdbf84a66681f5d29e",
+        "name": "agricultural",
+        "label": "Agricultural",
+        "isActive": true,
+        "createdAt": "2026-05-06T06:12:29.091Z",
+        "updatedAt": "2026-05-06T06:12:29.091Z",
+        "__v": 0
+      }
+    ]
+  },
+  "subPropertyTypes": {
+    "success": true,
+    "count": 5,
+    "data": [
+      {
+        "_id": "69e76fdce2d1f9e144d13cc9",
+        "name": "apartment_complex",
+        "label": "Apartment",
+        "propertyType": {
+          "_id": "69e76d3dfa8e334f7ea6d8d7",
+          "name": "residential",
+          "label": "Residential"
+        },
+        "description": "Residential apartment",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:38:52.720Z",
+        "updatedAt": "2026-04-21T12:38:52.720Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a042bc055e81a08fed2dadc",
+        "name": "independent house",
+        "label": "Independent House",
+        "propertyType": {
+          "_id": "69e76d3dfa8e334f7ea6d8d7",
+          "name": "residential",
+          "label": "Residential"
+        },
+        "description": "Retail shop",
+        "isActive": true,
+        "createdAt": "2026-05-13T07:44:00.574Z",
+        "updatedAt": "2026-05-13T07:44:00.574Z",
+        "__v": 0
+      },
+      {
+        "_id": "69eb2e93fbd6e001ae0e5ab7",
+        "name": "office",
+        "label": "Office",
+        "propertyType": {
+          "_id": "69e76d1dfa8e334f7ea6d8d6",
+          "name": "commercial",
+          "label": "Commercial"
+        },
+        "description": "Commercial Office",
+        "isActive": true,
+        "createdAt": "2026-04-24T08:49:23.922Z",
+        "updatedAt": "2026-04-24T08:49:23.922Z",
+        "__v": 0
+      },
+      {
+        "_id": "69eb37240c4ec2f23333732f",
+        "name": "retail shop",
+        "label": "Retail Shop",
+        "propertyType": {
+          "_id": "69e76d1dfa8e334f7ea6d8d6",
+          "name": "commercial",
+          "label": "Commercial"
+        },
+        "description": "Retail shop",
+        "isActive": true,
+        "createdAt": "2026-04-24T09:25:56.188Z",
+        "updatedAt": "2026-04-24T09:25:56.188Z",
+        "__v": 0
+      },
+      {
+        "_id": "69eb2ac0d2ef886f18348dba",
+        "name": "villa",
+        "label": "Villa",
+        "propertyType": {
+          "_id": "69e76d3dfa8e334f7ea6d8d7",
+          "name": "residential",
+          "label": "Residential"
+        },
+        "description": "Residential apartment",
+        "isActive": true,
+        "createdAt": "2026-04-24T08:33:04.665Z",
+        "updatedAt": "2026-04-24T08:33:04.665Z",
+        "__v": 0
+      }
+    ]
+  },
+  "measurementUnits": {
+    "success": true,
+    "count": 1,
+    "data": [
+      {
+        "_id": "69eb1ebbe9cb1e7e5cb14a11",
+        "name": "sq_ft",
+        "label": "Sq. Ft",
+        "description": "This is SQ. FT. Unit",
+        "isActive": true,
+        "createdAt": "2026-04-24T07:41:47.916Z",
+        "updatedAt": "2026-04-24T07:41:47.916Z",
+        "__v": 0
+      }
+    ]
+  },
+  "structures": {
+    "success": true,
+    "count": 5,
+    "data": [
+      {
+        "_id": "69e76b69fa8e334f7ea6d8cf",
+        "name": "BHK",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:19:53.227Z",
+        "updatedAt": "2026-06-10T05:20:25.667Z",
+        "__v": 0,
+        "label": "bhk"
+      },
+      {
+        "_id": "69e76b69fa8e334f7ea6d8d1",
+        "name": "Studio",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:19:53.229Z",
+        "updatedAt": "2026-06-10T05:20:36.808Z",
+        "__v": 0,
+        "label": "studio"
+      },
+      {
+        "_id": "69e76b69fa8e334f7ea6d8d0",
+        "name": "RK",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:19:53.229Z",
+        "updatedAt": "2026-06-10T05:20:45.288Z",
+        "__v": 0,
+        "label": "rk"
+      },
+      {
+        "_id": "69e76b69fa8e334f7ea6d8d2",
+        "name": "Single Room",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:19:53.229Z",
+        "updatedAt": "2026-06-10T05:21:09.850Z",
+        "__v": 0,
+        "label": "single_room"
+      },
+      {
+        "_id": "69e76b69fa8e334f7ea6d8d3",
+        "name": "BHK with Servant Room",
+        "isActive": true,
+        "createdAt": "2026-04-21T12:19:53.229Z",
+        "updatedAt": "2026-06-10T05:21:31.289Z",
+        "__v": 0,
+        "label": "bhk_with_servant_room"
+      }
+    ]
+  },
+  "amenities": {
+    "success": true,
+    "count": 9,
+    "data": [
+      {
+        "isCounter": false,
+        "_id": "69e7652ffd4bb50f7e0d908e",
+        "name": "gym",
+        "label": "Gym",
+        "icon": "fitness-center",
+        "isActive": true,
+        "createdAt": "2026-04-21T11:53:19.529Z",
+        "updatedAt": "2026-04-21T11:53:19.529Z",
+        "__v": 0
+      },
+      {
+        "isCounter": false,
+        "_id": "69e7652ffd4bb50f7e0d9090",
+        "name": "lift",
+        "label": "Lift",
+        "icon": "elevator",
+        "isActive": true,
+        "createdAt": "2026-04-21T11:53:19.530Z",
+        "updatedAt": "2026-04-21T11:53:19.530Z",
+        "__v": 0
+      },
+      {
+        "isCounter": false,
+        "_id": "69e7652ffd4bb50f7e0d908f",
+        "name": "parking",
+        "label": "Parking",
+        "icon": "local-parking",
+        "isActive": true,
+        "createdAt": "2026-04-21T11:53:19.530Z",
+        "updatedAt": "2026-04-21T11:53:19.530Z",
+        "__v": 0
+      },
+      {
+        "isCounter": false,
+        "_id": "69e7652ffd4bb50f7e0d9091",
+        "name": "swimming_pool",
+        "label": "Swimming Pool",
+        "icon": "pool",
+        "isActive": true,
+        "createdAt": "2026-04-21T11:53:19.530Z",
+        "updatedAt": "2026-04-21T11:53:19.530Z",
+        "__v": 0
+      },
+      {
+        "isCounter": false,
+        "_id": "69e7652ffd4bb50f7e0d9092",
+        "name": "security",
+        "label": "24x7 Security",
+        "icon": "security",
+        "isActive": true,
+        "createdAt": "2026-04-21T11:53:19.530Z",
+        "updatedAt": "2026-04-21T11:53:19.530Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a02b9c15ee7c55a6cc0ee67",
+        "name": "fan",
+        "label": "Fan",
+        "icon": "default-icon",
+        "isCounter": true,
+        "isActive": true,
+        "createdAt": "2026-05-12T05:25:21.611Z",
+        "updatedAt": "2026-05-12T05:25:21.611Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a02b9cf5ee7c55a6cc0ee68",
+        "name": "light",
+        "label": "Light",
+        "icon": "default-icon",
+        "isCounter": true,
+        "isActive": true,
+        "createdAt": "2026-05-12T05:25:35.463Z",
+        "updatedAt": "2026-05-12T05:25:35.463Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a02ba045ee7c55a6cc0ee69",
+        "name": "ac",
+        "label": "AC",
+        "icon": "default-icon",
+        "isCounter": true,
+        "isActive": true,
+        "createdAt": "2026-05-12T05:26:28.014Z",
+        "updatedAt": "2026-05-12T05:26:28.014Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a02ba165ee7c55a6cc0ee6a",
+        "name": "wardrobe",
+        "label": "Wardrobe",
+        "icon": "default-icon",
+        "isCounter": true,
+        "isActive": true,
+        "createdAt": "2026-05-12T05:26:46.913Z",
+        "updatedAt": "2026-05-12T05:26:46.913Z",
+        "__v": 0
+      }
+    ]
+  }
+}
