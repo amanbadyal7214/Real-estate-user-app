@@ -121,6 +121,7 @@ const MyProjects = () => {
 
   // Project Dots Menu State
   const [activeMenuProjectId, setActiveMenuProjectId] = useState(null);
+  const [menuProject, setMenuProject] = useState(null);
 
   const loadBuilderProjects = useCallback(async () => {
     try {
@@ -202,8 +203,14 @@ const MyProjects = () => {
     });
   };
 
-  const toggleProjectMenu = (id) => {
-    setActiveMenuProjectId(prev => (prev === id ? null : id));
+  const toggleProjectMenu = (id, project) => {
+    if (activeMenuProjectId === id) {
+      setActiveMenuProjectId(null);
+      setMenuProject(null);
+    } else {
+      setActiveMenuProjectId(id);
+      setMenuProject(project);
+    }
   };
 
   const handleAddSummary = (project) => {
@@ -220,12 +227,12 @@ const MyProjects = () => {
 
   const handleViewSummary = (project) => {
     setActiveMenuProjectId(null);
+    setMenuProject(null);
     router.push({
-      pathname: '/screens/Project/PropertySummary',
+      pathname: '/screens/Project/ViewPropertySummary',
       params: {
         projectId: project._id || project.id,
-        projectName: project.projectName || project.title,
-        mode: 'view'
+        projectName: project.projectName || project.title
       }
     });
   };
@@ -485,40 +492,13 @@ const MyProjects = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => toggleProjectMenu(item._id)}
+            onPress={() => toggleProjectMenu(item._id, item)}
             className="p-1"
           >
             <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
           </TouchableOpacity>
 
-          {/* Dropdown Menu Popup */}
-          {activeMenuProjectId === item._id && (
-            <View
-              className="absolute right-0 top-10 bg-white border border-gray-100 rounded-2xl p-4 shadow-xl z-50 w-[220px]"
-              style={{
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.1,
-                shadowRadius: 12,
-                elevation: 5,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => handleAddSummary(item)}
-                className="flex-row items-center py-2 border-b border-gray-50"
-              >
-                <View className="w-2.5 h-2.5 rounded-full bg-[#10B981] mr-3" />
-                <Text className="text-[#0F172A] text-sm font-inter-semibold">Add Property Summary</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleViewSummary(item)}
-                className="flex-row items-center py-2 mt-1"
-              >
-                <View className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] mr-3" />
-                <Text className="text-[#0F172A] text-sm font-inter-semibold">View Property Summary</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          {/* Dropdown Menu Popup - rendered via Modal to avoid clipping */}
         </View>
       </View>
     );
@@ -632,6 +612,136 @@ const MyProjects = () => {
 
       {/* Dropdown Modals */}
       {renderSelectionModal()}
+
+      {/* Project Actions Bottom Sheet Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={!!activeMenuProjectId}
+        onRequestClose={() => { setActiveMenuProjectId(null); setMenuProject(null); }}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => { setActiveMenuProjectId(null); setMenuProject(null); }}
+          style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' }}
+        >
+          <TouchableOpacity activeOpacity={1}>
+            <View style={{
+              backgroundColor: '#FFFFFF',
+              borderTopLeftRadius: 28,
+              borderTopRightRadius: 28,
+              paddingBottom: 36,
+              paddingTop: 8,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -4 },
+              shadowOpacity: 0.12,
+              shadowRadius: 20,
+              elevation: 20,
+            }}>
+              {/* Handle */}
+              <View style={{ alignItems: 'center', paddingVertical: 12 }}>
+                <View style={{ width: 40, height: 4, backgroundColor: '#E5E7EB', borderRadius: 999 }} />
+              </View>
+
+              {/* Project Name Header */}
+              {menuProject && (
+                <View style={{ paddingHorizontal: 24, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#F3F4F6' }}>
+                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: 16, color: '#101828' }} numberOfLines={1}>
+                    {menuProject.projectName || menuProject.title || 'Project'}
+                  </Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6B7280', marginTop: 2 }}>
+                    Manage project content
+                  </Text>
+                </View>
+              )}
+
+              {/* Action: Add Property Summary */}
+              <TouchableOpacity
+                onPress={() => menuProject && handleAddSummary(menuProject)}
+                activeOpacity={0.7}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 24,
+                  paddingVertical: 18,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#F9FAFB',
+                }}
+              >
+                <View style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 14,
+                  backgroundColor: '#ECFDF5',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 16,
+                }}>
+                  <Ionicons name="add-circle-outline" size={22} color="#059669" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 15, color: '#0F172A' }}>
+                    Add Property Summary
+                  </Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#9CA3AF', marginTop: 2 }}>
+                    Write a description for this project
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color="#D1D5DB" />
+              </TouchableOpacity>
+
+              {/* Action: View Property Summary */}
+              <TouchableOpacity
+                onPress={() => menuProject && handleViewSummary(menuProject)}
+                activeOpacity={0.7}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 24,
+                  paddingVertical: 18,
+                }}
+              >
+                <View style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 14,
+                  backgroundColor: '#EFF6FF',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 16,
+                }}>
+                  <Ionicons name="document-text-outline" size={22} color="#2563EB" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 15, color: '#0F172A' }}>
+                    View Property Summary
+                  </Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#9CA3AF', marginTop: 2 }}>
+                    Preview the existing summary
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color="#D1D5DB" />
+              </TouchableOpacity>
+
+              {/* Cancel */}
+              <TouchableOpacity
+                onPress={() => { setActiveMenuProjectId(null); setMenuProject(null); }}
+                activeOpacity={0.7}
+                style={{
+                  marginHorizontal: 24,
+                  marginTop: 12,
+                  backgroundColor: '#F9FAFB',
+                  borderRadius: 14,
+                  paddingVertical: 14,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 15, color: '#4B5563' }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 };

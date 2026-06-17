@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  Modal,
   ActivityIndicator,
   Alert,
-  SafeAreaView,
-  Image,
   Dimensions,
+  Image,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import * as ImagePicker from 'expo-image-picker';
 import api from '../../api';
 
 // Custom Label Component
@@ -45,9 +45,8 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
           setSearchQuery('');
           setModalVisible(true);
         }}
-        className={`flex-row justify-between items-center h-12 rounded-xl border border-gray-200 px-3 bg-white ${
-          disabled ? 'opacity-50 bg-gray-50' : ''
-        }`}
+        className={`flex-row justify-between items-center h-12 rounded-xl border border-gray-200 px-3 bg-white ${disabled ? 'opacity-50 bg-gray-50' : ''
+          }`}
       >
         <Text
           style={{ fontFamily: 'Inter-Regular' }}
@@ -138,6 +137,7 @@ export default function PropertySummary() {
   const [activeTab, setActiveTab] = useState(mode === 'view' ? 'view' : 'add');
   const [loadingMetadata, setLoadingMetadata] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [editSummaryGroupId, setEditSummaryGroupId] = useState('');
 
   // Lookups lists
   const [propertyTypes, setPropertyTypes] = useState([]);
@@ -234,6 +234,48 @@ export default function PropertySummary() {
   useEffect(() => {
     fetchInitialData();
   }, [fetchInitialData]);
+
+  // Handle Edit Mode Prefill
+  useEffect(() => {
+    if (mode === 'edit' && params.summaryGroup) {
+      try {
+        const group = JSON.parse(params.summaryGroup);
+        setEditSummaryGroupId(group._id);
+        setSelectedPropertyType(group.propertyType?._id || group.propertyType);
+        setSelectedSubPropertyType(group.subPropertyType?._id || group.subPropertyType);
+        if (group.totalTowers) setTotalTowers(String(group.totalTowers));
+        if (group.floorsPerTower) setFloorsPerTower(String(group.floorsPerTower));
+        
+        const prevAmenities = [];
+        if (group.amenities && Array.isArray(group.amenities)) {
+           group.amenities.forEach(a => {
+              const aId = a._id || a;
+              if (aId) prevAmenities.push(aId);
+           });
+        }
+        setSelectedAmenities(prevAmenities);
+
+        if (group.summaries && group.summaries.length > 0) {
+          const loadedRows = group.summaries.map((s, idx) => ({
+            id: s._id || Date.now() + idx,
+            propertyItem: s.propertyItem?._id || s.propertyItem || '',
+            area: s.area ? String(s.area) : '',
+            areaUnit: s.areaUnit?._id || s.areaUnit || '',
+            structureValue: s.structure?.value ? String(s.structure.value) : '1',
+            structureId: s.structure?.id?._id || s.structure?.id || '',
+            quantity: s.quantity ? String(s.quantity) : '1',
+            price: s.price ? String(s.price) : '',
+            images: s.images || [],
+          }));
+          setRows(loadedRows);
+        }
+        
+        setActiveTab('add');
+      } catch (err) {
+        console.error("Failed to parse edit summary group:", err);
+      }
+    }
+  }, [mode, params.summaryGroup]);
 
   // Load sub-properties when property type changes
   useEffect(() => {
@@ -403,17 +445,24 @@ export default function PropertySummary() {
         })),
       };
 
-      const res = await api.post(`/projects/${projectId}/summaries`, payload);
+      const res = editSummaryGroupId
+        ? await api.put(`/projects/${projectId}/summaries/${editSummaryGroupId}`, payload)
+        : await api.post(`/projects/${projectId}/summaries`, payload);
+        
       if (res.data?.success) {
         Alert.alert(
           'Success 🎉',
-          'Property summaries added successfully!',
+          editSummaryGroupId ? 'Property summaries updated successfully!' : 'Property summaries added successfully!',
           [
             {
               text: 'View Setup',
               onPress: () => {
-                fetchInitialData();
-                setActiveTab('view');
+                if (mode === 'edit') {
+                  router.back();
+                } else {
+                  fetchInitialData();
+                  setActiveTab('view');
+                }
               },
             },
           ]
@@ -438,6 +487,7 @@ export default function PropertySummary() {
         setTotalTowers('');
         setFloorsPerTower('');
         setSelectedAmenities([]);
+        setEditSummaryGroupId('');
       } else {
         throw new Error(res.data?.message || 'Error occurred while saving summaries.');
       }
@@ -526,7 +576,7 @@ export default function PropertySummary() {
 
   const activeSummaries = summaries.filter(
     s => (s.propertyType?._id || s.propertyType) === expandedPtId &&
-         (s.subPropertyType?._id || s.subPropertyType) === activeSubPtId
+      (s.subPropertyType?._id || s.subPropertyType) === activeSubPtId
   );
 
   return (
@@ -811,9 +861,8 @@ export default function PropertySummary() {
                         <TouchableOpacity
                           key={am._id}
                           onPress={() => handleAmenityToggle(am._id)}
-                          className={`px-3 py-2.5 rounded-xl border flex-row items-center gap-1.5 mr-1 mb-1 bg-white ${
-                            isSelected ? 'bg-[#E6F7F6] border-[#008E96]' : 'border-gray-200'
-                          }`}
+                          className={`px-3 py-2.5 rounded-xl border flex-row items-center gap-1.5 mr-1 mb-1 bg-white ${isSelected ? 'bg-[#E6F7F6] border-[#008E96]' : 'border-gray-200'
+                            }`}
                         >
                           <Text
                             style={{ fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular' }}
@@ -945,9 +994,8 @@ export default function PropertySummary() {
                                 <TouchableOpacity
                                   key={subId}
                                   onPress={() => setActiveSubPtId(subId)}
-                                  className={`px-3 py-1.5 rounded-lg border mr-2 flex-row items-center gap-1.5 ${
-                                    isActive ? 'bg-[#008E96] border-[#008E96]' : 'bg-white border-gray-200'
-                                  }`}
+                                  className={`px-3 py-1.5 rounded-lg border mr-2 flex-row items-center gap-1.5 ${isActive ? 'bg-[#008E96] border-[#008E96]' : 'bg-white border-gray-200'
+                                    }`}
                                 >
                                   <Text
                                     style={{ fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium' }}
