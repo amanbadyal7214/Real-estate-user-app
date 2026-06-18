@@ -1,9 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
-import { useUserActivity } from '../../../hooks/useUserActivity';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CalculatorCard from '../../../components/CalculatorCard';
@@ -20,6 +19,7 @@ import UserHeader from '../../../components/UserHeader';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { useProject } from '../../../hooks/useProject';
 import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
+import { useUserActivity } from '../../../hooks/useUserActivity';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import { useLocation } from '../../context/LocationContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
@@ -227,87 +227,87 @@ const Rent = () => {
     router.push(destination);
   };
 
-    const continueData = recentlyViewed.slice(0, 4).map((item) => {
-      const property = item.property || item;
-      return {
-        id: property._id || property.id,
-        title: property.title || property.projectName || 'Property',
-        subtitle: getPropertyLocation(property) || 'Mohali',
-      };
-    });
+  const continueData = recentlyViewed.slice(0, 4).map((item) => {
+    const property = item.property || item;
+    return {
+      id: property._id || property.id,
+      title: property.title || property.projectName || 'Property',
+      subtitle: getPropertyLocation(property) || 'Mohali',
+    };
+  });
 
-    const [suggestions, setSuggestions] = useState(fallbackSuggestions);
-    const [recommendedProperties, setRecommendedProperties] = useState([]);
-    const [ownerProperties, setOwnerProperties] = useState([]);
-    const [sellers, setSellers] = useState([]);
-    const [exploreLocalities, setExploreLocalities] = useState([]);
-    const { fetchProjects } = useProject();
-    const { findPropertiesByLocation, fetchSellersByLocation } = usePropertyDiscovery();
-    const { fetchAveragePriceByCity, loading: localityLoading, error: localityError } = useLocalityAveragePrice();
-    const { currentLocation } = useLocation();
+  const [suggestions, setSuggestions] = useState(fallbackSuggestions);
+  const [recommendedProperties, setRecommendedProperties] = useState([]);
+  const [ownerProperties, setOwnerProperties] = useState([]);
+  const [sellers, setSellers] = useState([]);
+  const [exploreLocalities, setExploreLocalities] = useState([]);
+  const { fetchProjects } = useProject();
+  const { findPropertiesByLocation, fetchSellersByLocation } = usePropertyDiscovery();
+  const { fetchAveragePriceByCity, loading: localityLoading, error: localityError } = useLocalityAveragePrice();
+  const { currentLocation } = useLocation();
 
-    useEffect(() => {
-      let isMounted = true;
-      const city = currentLocation?.city || 'Mohali';
+  useEffect(() => {
+    let isMounted = true;
+    const city = currentLocation?.city || 'Mohali';
 
-      const loadProjects = async () => {
-        try {
-          const res = await fetchProjects({ city, limit: 5 });
-          if (!isMounted) return;
-          const normalized = normalizeProjectSuggestions(res, city);
-          setSuggestions(normalized.length > 0 ? normalized : fallbackSuggestions);
-        } catch (_err) {
-          if (isMounted) setSuggestions(fallbackSuggestions);
-        }
-      };
+    const loadProjects = async () => {
+      try {
+        const res = await fetchProjects({ city, limit: 5 });
+        if (!isMounted) return;
+        const normalized = normalizeProjectSuggestions(res, city);
+        setSuggestions(normalized.length > 0 ? normalized : fallbackSuggestions);
+      } catch (_err) {
+        if (isMounted) setSuggestions(fallbackSuggestions);
+      }
+    };
 
-      loadProjects();
+    loadProjects();
 
-      return () => { isMounted = false; };
-    }, [fetchProjects, findPropertiesByLocation, currentLocation]);
+    return () => { isMounted = false; };
+  }, [fetchProjects, findPropertiesByLocation, currentLocation]);
 
-    useEffect(() => {
-      let isMounted = true;
-      const city = currentLocation?.city || 'Mohali';
+  useEffect(() => {
+    let isMounted = true;
+    const city = currentLocation?.city || 'Mohali';
 
-      const loadRecommendedProperties = async () => {
-        try {
-          const res = await findPropertiesByLocation({ city, limit: 4, lookingFor: 'rent', PriceAscending: true });
-          if (!isMounted) return;
+    const loadRecommendedProperties = async () => {
+      try {
+        const res = await findPropertiesByLocation({ city, limit: 4, lookingFor: 'rent', PriceAscending: true });
+        if (!isMounted) return;
 
-          const projects = Array.isArray(res)
-            ? res
-            : Array.isArray(res?.data)
-              ? res.data
-              : Array.isArray(res?.projects)
-                ? res.projects
-                : Array.isArray(res?.results)
-                  ? res.results
-                  : [];
+        const projects = Array.isArray(res)
+          ? res
+          : Array.isArray(res?.data)
+            ? res.data
+            : Array.isArray(res?.projects)
+              ? res.projects
+              : Array.isArray(res?.results)
+                ? res.results
+                : [];
 
-          const mapped = projects.map((property, index) => ({
-            id: property._id || property.id || property.projectId || `recommended-${index}`,
-            image: property.media?.[0]?.fileUrl || property.images?.[0] || property.coverImage || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
-            price: property.priceRange || property.priceText || (property.avgPriceRate ? `${formatPrice(property.avgPriceRate)}${property.avgPriceUnit?.label ? ` / ${property.avgPriceUnit.label}` : ''}` : (typeof property.price === 'number' ? formatPrice(property.price) : property.price || 'View details')),
-            title: property.title || property.projectName || 'Property',
-            area: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK • ${property.area || 'N/A'} ${property.areaUnit?.name || property.areaUnit?.label || 'sq.ft.'}`,
-            location: formatPropertyLocation(property),
-          }));
+        const mapped = projects.map((property, index) => ({
+          id: property._id || property.id || property.projectId || `recommended-${index}`,
+          image: property.media?.[0]?.fileUrl || property.images?.[0] || property.coverImage || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400',
+          price: property.priceRange || property.priceText || (property.avgPriceRate ? `${formatPrice(property.avgPriceRate)}${property.avgPriceUnit?.label ? ` / ${property.avgPriceUnit.label}` : ''}` : (typeof property.price === 'number' ? formatPrice(property.price) : property.price || 'View details')),
+          title: property.title || property.projectName || 'Property',
+          area: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK • ${property.area || 'N/A'} ${property.areaUnit?.name || property.areaUnit?.label || 'sq.ft.'}`,
+          location: formatPropertyLocation(property),
+        }));
 
-          setRecommendedProperties(mapped);
-          // Populate a short list for owner-listed properties (fallback to recommended list)
-          setOwnerProperties(mapped.slice(0, 4));
-        } catch (_err) {
-          if (isMounted) setRecommendedProperties([]);
-        }
-      };
+        setRecommendedProperties(mapped);
+        // Populate a short list for owner-listed properties (fallback to recommended list)
+        setOwnerProperties(mapped.slice(0, 4));
+      } catch (_err) {
+        if (isMounted) setRecommendedProperties([]);
+      }
+    };
 
-      loadRecommendedProperties();
+    loadRecommendedProperties();
 
-      return () => { isMounted = false; };
-    }, [findPropertiesByLocation, currentLocation]);
-  
-const emiVectors = [
+    return () => { isMounted = false; };
+  }, [findPropertiesByLocation, currentLocation]);
+
+  const emiVectors = [
     { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
     { left: 30, right: 52.5, top: 25, bottom: 18.75, background: '#D4A574' },
     { left: 32.5, right: 55, top: 31.25, bottom: 62.5, background: '#8B6F47' },
@@ -317,7 +317,7 @@ const emiVectors = [
     { left: 52.5, right: 32.5, top: 43.75, bottom: 25, background: '#D4A574' },
     { left: 56, right: 36, top: 48.75, bottom: 31.25, background: '#FFF4E6', isDot: true }
   ];
-   const affordabilityVectors = [
+  const affordabilityVectors = [
     { left: 10, right: 10, top: 25, bottom: -25, background: '#FFF4E6', roundedTop: true },
     { left: 35, right: 45, top: 31.25, bottom: 25, background: '#D4A574' },
     { left: 37.5, right: 47.5, top: 37.5, bottom: 57.5, background: '#8B6F47' },
@@ -325,7 +325,7 @@ const emiVectors = [
     { left: 37.5, right: 52.5, top: 57.5, bottom: 37.5, background: '#8B6F47' }
   ];
 
-   const newsArticles = [
+  const newsArticles = [
     {
       id: 1,
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=600",
@@ -341,115 +341,115 @@ const emiVectors = [
       description: "Discover the emerging trends in the real estate market, from sustainable building to AI-driven virtual tours."
     }
   ];
-    // sellers will be loaded from API
+  // sellers will be loaded from API
 
-    const [activeIndex, setActiveIndex] = useState(0);
-    const scrollRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef(null);
 
-    useEffect(() => {
-        if (!suggestions || suggestions.length <= 1) return;
+  useEffect(() => {
+    if (!suggestions || suggestions.length <= 1) return;
 
-        const interval = setInterval(() => {
-          setActiveIndex((prev) => {
-            const next = (prev + 1) % suggestions.length;
-            scrollRef.current?.scrollTo({ x: next * SUGGESTION_CARD_INTERVAL, animated: true });
-            return next;
-          });
-        }, 3000);
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => {
+        const next = (prev + 1) % suggestions.length;
+        scrollRef.current?.scrollTo({ x: next * SUGGESTION_CARD_INTERVAL, animated: true });
+        return next;
+      });
+    }, 3000);
 
-        return () => clearInterval(interval);
-    }, [suggestions.length]);
+    return () => clearInterval(interval);
+  }, [suggestions.length]);
 
-    useEffect(() => {
-      let isMounted = true;
-      const city = currentLocation?.city || 'Mohali';
+  useEffect(() => {
+    let isMounted = true;
+    const city = currentLocation?.city || 'Mohali';
 
-      const loadSellers = async () => {
-        try {
-          const res = await fetchSellersByLocation({ city, limit: 6 });
-          if (!isMounted) return;
+    const loadSellers = async () => {
+      try {
+        const res = await fetchSellersByLocation({ city, limit: 6 });
+        if (!isMounted) return;
 
-          const items = Array.isArray(res)
-            ? res
-            : Array.isArray(res?.data)
-              ? res.data
-              : Array.isArray(res?.results)
-                ? res.results
-                : [];
+        const items = Array.isArray(res)
+          ? res
+          : Array.isArray(res?.data)
+            ? res.data
+            : Array.isArray(res?.results)
+              ? res.results
+              : [];
 
-          const mapped = items.map((s, i) => ({
-            id: s._id || s.id || `seller-${i}`,
-            name: s.name || s.user?.name || s.sellerName || 'Seller',
-            experienceYears: String(s.experienceYears || s.yearsExperience || s.experience || '5'),
-            propertiesCount: String(s.propertiesCount || s.totalProperties || (s.properties && s.properties.length) || '0'),
-            locality: s.locality?.name || s.localityName || s.city || 'Mohali',
-          }));
+        const mapped = items.map((s, i) => ({
+          id: s._id || s.id || `seller-${i}`,
+          name: s.name || s.user?.name || s.sellerName || 'Seller',
+          experienceYears: String(s.experienceYears || s.yearsExperience || s.experience || '5'),
+          propertiesCount: String(s.propertiesCount || s.totalProperties || (s.properties && s.properties.length) || '0'),
+          locality: s.locality?.name || s.localityName || s.city || 'Mohali',
+        }));
 
-          setSellers(mapped);
-        } catch (_err) {
-          if (isMounted) setSellers([]);
-        }
-      };
-
-      loadSellers();
-
-      return () => { isMounted = false; };
-    }, [fetchSellersByLocation, currentLocation]);
-
-    useEffect(() => {
-      let isMounted = true;
-      const city = currentLocation?.city || 'Mohali';
-
-      const loadExploreLocalities = async () => {
-        try {
-          const res = await fetchAveragePriceByCity(city);
-          if (!isMounted) return;
-
-          const items = Array.isArray(res?.data) ? res.data : [];
-
-          const mapped = items
-            .filter((item) => item?.localityName || item?.locality)
-            .map((item) => ({
-              locality: item.locality,
-              localityName: item.localityName || item.locality,
-              avgLabel: 'Avg.\nPrice/sq.ft:',
-              averagePrice: formatPricePerSqft(item.averagePricePerSqft),
-              priceRange: `${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`,
-              totalProperties: item.totalProperties,
-            }))
-            .slice(0, 4);
-
-          setExploreLocalities(mapped);
-        } catch (_err) {
-          if (isMounted) setExploreLocalities([]);
-        }
-      };
-
-      loadExploreLocalities();
-
-      return () => { isMounted = false; };
-    }, [fetchAveragePriceByCity, currentLocation]);
-
-    const handleScroll = (event) => {
-        const scrollPosition = event.nativeEvent.contentOffset.x;
-        const index = Math.round(scrollPosition / SUGGESTION_CARD_INTERVAL);
-        if (index !== activeIndex) {
-            setActiveIndex(index);
-        }
+        setSellers(mapped);
+      } catch (_err) {
+        if (isMounted) setSellers([]);
+      }
     };
 
-    return (
-        <SafeAreaView className="flex-1 bg-white">
-            {/* Top Header */}
-            <UserHeader />
+    loadSellers();
 
-            {/* Scrollable Content */}
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                className="flex-1"
-            >
-                {/* Main Category Blue Container */}
-                <View className="mx-2 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
+    return () => { isMounted = false; };
+  }, [fetchSellersByLocation, currentLocation]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const city = currentLocation?.city || 'Mohali';
+
+    const loadExploreLocalities = async () => {
+      try {
+        const res = await fetchAveragePriceByCity(city);
+        if (!isMounted) return;
+
+        const items = Array.isArray(res?.data) ? res.data : [];
+
+        const mapped = items
+          .filter((item) => item?.localityName || item?.locality)
+          .map((item) => ({
+            locality: item.locality,
+            localityName: item.localityName || item.locality,
+            avgLabel: 'Avg.\nPrice/sq.ft:',
+            averagePrice: formatPricePerSqft(item.averagePricePerSqft),
+            priceRange: `${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`,
+            totalProperties: item.totalProperties,
+          }))
+          .slice(0, 4);
+
+        setExploreLocalities(mapped);
+      } catch (_err) {
+        if (isMounted) setExploreLocalities([]);
+      }
+    };
+
+    loadExploreLocalities();
+
+    return () => { isMounted = false; };
+  }, [fetchAveragePriceByCity, currentLocation]);
+
+  const handleScroll = (event) => {
+    const scrollPosition = event.nativeEvent.contentOffset.x;
+    const index = Math.round(scrollPosition / SUGGESTION_CARD_INTERVAL);
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+    }
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      {/* Top Header */}
+      <UserHeader />
+
+      {/* Scrollable Content */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="flex-1"
+      >
+        {/* Main Category Blue Container */}
+        <View className="mx-2 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
           <CategoryTabs
             activeTab={selectedTab}
             onTabPress={setSelectedTab}
@@ -461,49 +461,49 @@ const emiVectors = [
         {/* Continue where you left Section */}
         {isLoggedIn && <ContinueCards data={continueData} />}
 
-                {/* Smart Suggestions Section */}
-                <View>
-                    <View className="px-4 my-4">
-                      <View className="flex-row justify-between items-center">
-                        <Text className="font-inter-semibold text-[17px] text-[#101828]">Smart Suggestions</Text>
-                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-                          <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
-                        </TouchableOpacity>
-                      </View>
-                      <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">
-                        Based on your last search in {currentLocation?.city || 'Khanpur'}
-                      </Text>
-                    </View>
+        {/* Smart Suggestions Section */}
+        <View>
+          <View className="px-4 my-4">
+            <View className="flex-row justify-between items-center">
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Smart Suggestions</Text>
+              <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
+              </TouchableOpacity>
+            </View>
+            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">
+              Based on your last search in {currentLocation?.city || 'Khanpur'}
+            </Text>
+          </View>
 
-                    <View className="flex-row gap-2 px-4 mb-6">
-                        {suggestions.map((_, index) => (
-                            <View 
-                                key={index}
-                                className={`w-10 h-1 rounded-full ${index === activeIndex ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'}`} 
-                            />
-                        ))}
-                    </View>
+          <View className="flex-row gap-2 px-4 mb-6">
+            {suggestions.map((_, index) => (
+              <View
+                key={index}
+                className={`w-10 h-1 rounded-full ${index === activeIndex ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'}`}
+              />
+            ))}
+          </View>
 
-                    <ScrollView
-                        ref={scrollRef}
-                        horizontal
-                        onMomentumScrollEnd={handleScroll}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
-                        snapToInterval={SUGGESTION_CARD_INTERVAL}
-                        decelerationRate="fast"
-                    >
-                        {suggestions.map((item) => (
-                          <PropertySuggestionCard
-                            key={item.id}
-                            {...item}
-                            onPress={() => item.id && handleProtectedViewMore({ pathname: '/screens/ProjectDetails', params: { projectId: item.id, source: 'rent' } })}
-                          />
-                        ))}
-                    </ScrollView>
-                </View>
+          <ScrollView
+            ref={scrollRef}
+            horizontal
+            onMomentumScrollEnd={handleScroll}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
+            snapToInterval={SUGGESTION_CARD_INTERVAL}
+            decelerationRate="fast"
+          >
+            {suggestions.map((item) => (
+              <PropertySuggestionCard
+                key={item.id}
+                {...item}
+                onPress={() => item.id && handleProtectedViewMore({ pathname: '/screens/ProjectDetails', params: { projectId: item.id, source: 'rent' } })}
+              />
+            ))}
+          </ScrollView>
+        </View>
 
-                {/* Owner Properties Section */}
+        {/* Owner Properties Section */}
         <View className="px-4 my-6">
           <View className="mb-4 flex-row items-center justify-between">
             <View>
@@ -539,10 +539,10 @@ const emiVectors = [
         </View>
 
 
-       
+
         <FurnishedPropertiesSection />
 
-        {/* Popular on Propertize Section */}
+        {/* Popular on The Property Wall Section */}
         <View className="px-4 pt-6 mb-6 items-center">
           <View
             style={{
@@ -561,7 +561,7 @@ const emiVectors = [
             {/* Section Header */}
             <View className="flex-row items-center gap-2 mb-6">
               <Text style={{ fontSize: 16 }}>⭐</Text>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Popular on Propertize</Text>
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
             </View>
 
             <View className="flex-row justify-around">
@@ -611,14 +611,14 @@ const emiVectors = [
           </ScrollView>
         </View>
 
-                        {/* Recommended Properties Section */}
+        {/* Recommended Properties Section */}
         <View className="px-4 py-2">
           <View className="flex-row justify-between items-center mb-4">
             <View>
               <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
               <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
-             <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
@@ -642,16 +642,16 @@ const emiVectors = [
           </ScrollView>
         </View>
 
-      
 
-            {/* Explore Localities Section */}
+
+        {/* Explore Localities Section */}
         <View className="px-4  ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
               <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
               <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
             </View>
-           <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
@@ -718,7 +718,7 @@ const emiVectors = [
         </View>
 
         {/* Calculators Section */}
-           <View className="px-4  mt-4">
+        <View className="px-4  mt-4">
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -744,11 +744,11 @@ const emiVectors = [
             />
           </ScrollView>
         </View>
-            </ScrollView>
-            <BottomTabBar mode="Rent" />
-        </SafeAreaView>
-        
-    );
+      </ScrollView>
+      <BottomTabBar mode="Rent" />
+    </SafeAreaView>
+
+  );
 };
 
 export default Rent;

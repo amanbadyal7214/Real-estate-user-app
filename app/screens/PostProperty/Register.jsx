@@ -3,11 +3,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform,  ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import DashboardSelectorModal from '../../../components/DashboardSelectorModal';
 import Toast from '../../../components/Toast';
 import { performRoleBasedRedirect, useRegister } from '../../../hooks/Register';
-import { SafeAreaView } from 'react-native-safe-area-context';
 const PostProperty = () => {
 
   const {
@@ -65,9 +65,9 @@ const PostProperty = () => {
   const isFormValid = isLogin
     ? isExistingUserFormValid
     : (formData.phone.length === 10 &&
-       formData.name.trim().length > 0 &&
-       formData.email.includes('@') &&
-       formData.password.length >= 6);
+      formData.name.trim().length > 0 &&
+      formData.email.includes('@') &&
+      formData.password.length >= 6);
 
   const isRoleActive = (roleName) => {
     return formData.role === roleName ||
@@ -179,10 +179,11 @@ const PostProperty = () => {
               }}>
                 <Ionicons name="arrow-back" size={24} color="white" />
               </TouchableOpacity>
-              <View className="flex-row items-center bg-[#FDC700] p-1 rounded-sm w-6 h-6 justify-center">
-                <View className="w-3 h-3 rounded-full bg-[#006B73]" />
-              </View>
-              <Text className="text-white text-lg ml-1" style={{ fontFamily: 'Inter-Bold' }}>Propertize</Text>
+              <Image
+                source={require('../../../assets/images/hori-tpw-green.png')}
+                style={{ width: 140, height: 35 }}
+                resizeMode="contain"
+              />
             </View>
           </View>
 
@@ -190,7 +191,7 @@ const PostProperty = () => {
             Sell or rent your property
           </Text>
           <Text className="text-white text-2xl leading-8" style={{ fontFamily: 'Inter-Medium' }}>
-            faster with Propertize
+            faster with The Property Wall
           </Text>
           <View className="w-24 h-1 bg-[#FDC700] rounded-full mt-2 mb-6" />
 
@@ -360,8 +361,8 @@ const PostProperty = () => {
                     </Text>
                     {(() => {
                       const allRolesList = ['buyer', 'owner', 'builder'];
-                      const assignedRolesList = existingUserDetails?.role 
-                        ? (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role]) 
+                      const assignedRolesList = existingUserDetails?.role
+                        ? (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role])
                         : [];
                       const unassignedRolesList = allRolesList.filter(r => !assignedRolesList.includes(r));
 
@@ -539,7 +540,7 @@ const PostProperty = () => {
             {/* Content Navigation Button */}
             <TouchableOpacity
               disabled={loading || (
-                isLogin 
+                isLogin
                   ? (isPhoneVerified ? !isExistingUserFormValid : formData.phone.length !== 10)
                   : !isFormValid
               )}
@@ -557,7 +558,7 @@ const PostProperty = () => {
               className="w-full py-4 rounded-xl items-center mb-4"
               style={{
                 backgroundColor: (loading || (
-                  isLogin 
+                  isLogin
                     ? (isPhoneVerified ? !isExistingUserFormValid : formData.phone.length !== 10)
                     : !isFormValid
                 )) ? '#E5E7EB' : '#008E96'
@@ -568,18 +569,18 @@ const PostProperty = () => {
                 style={{
                   fontFamily: 'Inter-Medium',
                   color: (loading || (
-                    isLogin 
+                    isLogin
                       ? (isPhoneVerified ? !isExistingUserFormValid : formData.phone.length !== 10)
                       : !isFormValid
                   )) ? '#99A1AF' : '#FFFFFF'
                 }}
               >
-                {loading 
-                  ? 'Processing...' 
-                  : (isLogin 
-                      ? (isPhoneVerified ? 'Get New Role & Login' : 'Verify Phone') 
-                      : 'Next, add address & price'
-                    )
+                {loading
+                  ? 'Processing...'
+                  : (isLogin
+                    ? (isPhoneVerified ? 'Get New Role & Login' : 'Verify Phone')
+                    : 'Next, add address & price'
+                  )
                 }
               </Text>
             </TouchableOpacity>
@@ -846,7 +847,7 @@ const PostProperty = () => {
             </View>
 
             {/* FAQs Section */}
-            <View className="mt-12 mb-10"> 
+            <View className="mt-12 mb-10">
               <Text className="text-[#101828] text-xl text-center mb-2" style={{ fontFamily: 'Inter-Bold' }}>Frequently asked questions</Text>
               <View className="items-center mb-8">
                 <View className="w-12 h-1 bg-[#008E96] rounded-full" />
@@ -854,7 +855,7 @@ const PostProperty = () => {
 
               <View className="gap-3">
                 {[
-                  "How to post a property on Propertize?",
+                  "How to post a property on The Property Wall?",
                   "Can I post a property for free?",
                   "Can I post a property for free?",
                   "Can I post a property for free?"

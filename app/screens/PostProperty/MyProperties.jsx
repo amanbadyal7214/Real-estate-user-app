@@ -1,4 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,12 +14,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useLookup } from '../../../hooks/useLookup';
 import api from '../../api';
 import { formatPrice } from '../../utils/formatPrice';
-import { useLookup } from '../../../hooks/useLookup';
 
 const getLocalityName = (locality) => {
   if (!locality) return '';
@@ -27,7 +27,7 @@ const getLocalityName = (locality) => {
 };
 
 const DEACTIVATE_REASONS = [
-  'Sold/Rented out via Propertize',
+  'Sold/Rented out via The Property Wall',
   'Sold/Rented out via other source',
   'I don\'t want to sell/rent anymore',
   'Duplicate Listing',
@@ -48,7 +48,7 @@ const MyProperties = () => {
   const [selectedLocality, setSelectedLocality] = useState(null);
   const [selectedPropertyType, setSelectedPropertyType] = useState(null);
   const [selectedBhk, setSelectedBhk] = useState(null);
-  
+
   // Dropdown UI States
   const [activeFilterDropdown, setActiveFilterDropdown] = useState(null);
 
@@ -227,20 +227,20 @@ const MyProperties = () => {
         onPress={() => setActiveFilterDropdown(isDropdownOpen ? null : type)}
         className="flex-row items-center border rounded-full px-4 py-2 justify-center gap-1.5"
         style={{
-          backgroundColor: isActive 
-            ? '#008E96' 
-            : isDropdownOpen 
-              ? 'rgba(0, 142, 150, 0.1)' 
+          backgroundColor: isActive
+            ? '#008E96'
+            : isDropdownOpen
+              ? 'rgba(0, 142, 150, 0.1)'
               : '#FFFFFF',
-          borderColor: isActive 
-            ? '#008E96' 
-            : isDropdownOpen 
-              ? '#008E96' 
+          borderColor: isActive
+            ? '#008E96'
+            : isDropdownOpen
+              ? '#008E96'
               : '#E4E7EC'
         }}
       >
         <Text
-          style={{ 
+          style={{
             fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium',
             color: isActive ? '#FFFFFF' : isDropdownOpen ? '#008E96' : '#4A5565'
           }}
@@ -263,7 +263,7 @@ const MyProperties = () => {
     let title = '';
     let options = [];
     let selectedValue = null;
-    let onSelect = () => {};
+    let onSelect = () => { };
 
     if (activeFilterDropdown === 'locality') {
       title = 'Select Locality';
@@ -329,7 +329,7 @@ const MyProperties = () => {
                       className="py-4 border-b border-gray-50 flex-row justify-between items-center"
                     >
                       <Text
-                        style={{ 
+                        style={{
                           fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular',
                           color: isSelected ? '#008E96' : '#344054'
                         }}
@@ -376,7 +376,7 @@ const MyProperties = () => {
               <Text style={{ fontFamily: 'Inter-Bold' }} className="text-xl text-[#0F172A]">
                 Deactivate Listing
               </Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => {
                   setShowDeactivateModal(false);
                   setPropertyToDeactivate(null);
@@ -408,7 +408,7 @@ const MyProperties = () => {
                     }}
                   >
                     {/* Radio Button */}
-                    <View 
+                    <View
                       className="w-5 h-5 rounded-full border items-center justify-center mr-3"
                       style={{
                         borderColor: isSelected ? '#008E96' : '#94A3B8'
@@ -418,7 +418,7 @@ const MyProperties = () => {
                         <View className="w-2.5 h-2.5 rounded-full bg-[#008E96]" />
                       )}
                     </View>
-                    <Text 
+                    <Text
                       style={{ fontFamily: isSelected ? 'Inter-Medium' : 'Inter-Regular' }}
                       className="text-[#334155] text-sm flex-1"
                     >
@@ -431,7 +431,7 @@ const MyProperties = () => {
 
             {/* Actions Footer */}
             <View className="flex-row items-center justify-between mt-2">
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => {
                   setShowDeactivateModal(false);
                   setPropertyToDeactivate(null);
@@ -443,7 +443,7 @@ const MyProperties = () => {
                   Cancel
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 disabled={!deactivateReason || loading}
                 onPress={submitDeactivation}
                 className="rounded-2xl py-3 px-8 justify-center items-center"
@@ -487,8 +487,8 @@ const MyProperties = () => {
             />
             {/* Status Badge */}
             <View className="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded-full flex-row items-center gap-1 shadow-sm">
-              <View 
-                className="w-1.5 h-1.5 rounded-full" 
+              <View
+                className="w-1.5 h-1.5 rounded-full"
                 style={{ backgroundColor: item.isActive ? '#10B981' : '#F97316' }}
               />
               <Text className="text-[10px] font-inter-semibold text-gray-700 uppercase">
@@ -561,7 +561,7 @@ const MyProperties = () => {
           <View className="h-2 bg-gray-100 rounded-full overflow-hidden">
             <View
               className="h-full"
-              style={{ 
+              style={{
                 width: `${visibilityScore}%`,
                 backgroundColor: visibilityScore === 100 ? '#10B981' : '#F59E0B'
               }}
@@ -666,7 +666,7 @@ const MyProperties = () => {
             onPress={() =>
               router.push({
                 pathname: '/screens/PropertyDetails',
-                params: { 
+                params: {
                   propertyId: item._id || item.id,
                   property: JSON.stringify(item)
                 },

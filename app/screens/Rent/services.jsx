@@ -6,7 +6,6 @@ import { Animated, Dimensions, ScrollView, StatusBar, Text, TouchableOpacity, Vi
 import ServicesArticleCard from '../../../components/ServicesArticleCard';
 import ServicesBenefitItem from '../../../components/ServicesBenefitItem';
 import ServicesCalculatorCard from '../../../components/ServicesCalculatorCard';
-import ServicesTestimonialCard from '../../../components/ServicesTestimonialCard';
 
 const { width } = Dimensions.get('window');
 
@@ -131,8 +130,8 @@ const Services = () => {
     const faqs = [
         {
             id: 0,
-            question: 'What is Propertize Premium?',
-            answer: 'Propertize Premium is an exclusive service that provides verified listings, relationship managers, and priority support for your property search.'
+            question: 'What is The Property Wall Premium?',
+            answer: 'The Property Wall Premium is an exclusive service that provides verified listings, relationship managers, and priority support for your property search.'
         },
         {
             id: 1,
@@ -313,114 +312,114 @@ const Services = () => {
                                 />
                             ))}
                         </ScrollView> */}
-                {/* </View> */}
+                    {/* </View> */}
 
-                {/* Articles Section */}
-                <View className="mt-8">
-                    {/* Header */}
-                    <View className="px-4 gap-1 mb-4">
-                        <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>ARTICLES</Text>
-                        <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Read more about our services</Text>
-                    </View>
+                    {/* Articles Section */}
+                    <View className="mt-8">
+                        {/* Header */}
+                        <View className="px-4 gap-1 mb-4">
+                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>ARTICLES</Text>
+                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Read more about our services</Text>
+                        </View>
 
-                    {/* Divider */}
-                    <View className="items-center mb-4">
-                        <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
-                    </View>
+                        {/* Divider */}
+                        <View className="items-center mb-4">
+                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        </View>
 
-                    {/* Cards */}
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
-                    >
-                        {articles.map((article) => (
-                            <ServicesArticleCard
-                                key={article.id}
-                                title={article.title}
-                                date={article.date}
-                                excerpt={article.excerpt}
-                                image={article.image}
-                            />
-                        ))}
-                    </ScrollView>
-                </View>
-
-                {/* FAQ Section */}
-                <View className="mt-8">
-                    {/* Header */}
-                    <View className="px-4 gap-1 mb-4">
-                        <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>SUPPORT</Text>
-                        <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Frequently asked questions</Text>
-                    </View>
-
-                    {/* Divider */}
-                    <View className="items-center mb-4">
-                        <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
-                    </View>
-
-                    {/* Tab Buttons */}
-                    <View className="flex-row px-4 gap-2 mb-5">
-                        <TouchableOpacity
-                            className="rounded-[10px] px-4 justify-center items-center"
-                            style={{ height: 58, backgroundColor: '#F3F4F6' }}
+                        {/* Cards */}
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
                         >
-                            <Text className="font-inter-medium text-[#6A7282] text-center" style={{ fontSize: 14, lineHeight: 21 }}>
-                                Questions{'\n'}about
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            className="rounded-[10px] px-4 justify-center items-center"
-                            style={{ height: 58, backgroundColor: 'rgba(0, 142, 150, 0.1)' }}
-                        >
-                            <Text className="font-inter-medium text-center" style={{ fontSize: 14, lineHeight: 21, color: '#008E96' }}>
-                                Home{'\n'}Loans
-                            </Text>
-                        </TouchableOpacity>
+                            {articles.map((article) => (
+                                <ServicesArticleCard
+                                    key={article.id}
+                                    title={article.title}
+                                    date={article.date}
+                                    excerpt={article.excerpt}
+                                    image={article.image}
+                                />
+                            ))}
+                        </ScrollView>
                     </View>
 
-                    {/* FAQ Accordion */}
-                    <View className="px-4 gap-3">
-                        {faqs.map((faq) => (
+                    {/* FAQ Section */}
+                    <View className="mt-8">
+                        {/* Header */}
+                        <View className="px-4 gap-1 mb-4">
+                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>SUPPORT</Text>
+                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Frequently asked questions</Text>
+                        </View>
+
+                        {/* Divider */}
+                        <View className="items-center mb-4">
+                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        </View>
+
+                        {/* Tab Buttons */}
+                        <View className="flex-row px-4 gap-2 mb-5">
                             <TouchableOpacity
-                                key={faq.id}
-                                className="bg-white rounded-xl overflow-hidden"
-                                style={{
-                                    borderWidth: 0.667,
-                                    borderColor: expandedFaq === faq.id ? '#008E96' : '#E4E7EC',
-                                    borderRadius: 12,
-                                }}
-                                onPress={() => setExpandedFaq(expandedFaq === faq.id ? -1 : faq.id)}
-                                activeOpacity={0.8}
+                                className="rounded-[10px] px-4 justify-center items-center"
+                                style={{ height: 58, backgroundColor: '#F3F4F6' }}
                             >
-                                <View className="flex-row justify-between items-center px-4" style={{ minHeight: 56 }}>
-                                    <Text
-                                        className="font-inter-medium text-[#101828] flex-1 mr-4"
-                                        style={{ fontSize: 15, lineHeight: 22 }}
-                                    >
-                                        {faq.question}
-                                    </Text>
-                                    <Ionicons
-                                        name={expandedFaq === faq.id ? 'remove' : 'add'}
-                                        size={20}
-                                        color="#6A7282"
-                                    />
-                                </View>
-                                {expandedFaq === faq.id && (
-                                    <Text
-                                        className="font-inter-regular text-[#4A5565] px-4 pb-4"
-                                        style={{ fontSize: 14, lineHeight: 22 }}
-                                    >
-                                        {faq.answer}
-                                    </Text>
-                                )}
+                                <Text className="font-inter-medium text-[#6A7282] text-center" style={{ fontSize: 14, lineHeight: 21 }}>
+                                    Questions{'\n'}about
+                                </Text>
                             </TouchableOpacity>
-                        ))}
-                    </View>
-                </View>
+                            <TouchableOpacity
+                                className="rounded-[10px] px-4 justify-center items-center"
+                                style={{ height: 58, backgroundColor: 'rgba(0, 142, 150, 0.1)' }}
+                            >
+                                <Text className="font-inter-medium text-center" style={{ fontSize: 14, lineHeight: 21, color: '#008E96' }}>
+                                    Home{'\n'}Loans
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
 
-            </ScrollView>
-        </Animated.View>
+                        {/* FAQ Accordion */}
+                        <View className="px-4 gap-3">
+                            {faqs.map((faq) => (
+                                <TouchableOpacity
+                                    key={faq.id}
+                                    className="bg-white rounded-xl overflow-hidden"
+                                    style={{
+                                        borderWidth: 0.667,
+                                        borderColor: expandedFaq === faq.id ? '#008E96' : '#E4E7EC',
+                                        borderRadius: 12,
+                                    }}
+                                    onPress={() => setExpandedFaq(expandedFaq === faq.id ? -1 : faq.id)}
+                                    activeOpacity={0.8}
+                                >
+                                    <View className="flex-row justify-between items-center px-4" style={{ minHeight: 56 }}>
+                                        <Text
+                                            className="font-inter-medium text-[#101828] flex-1 mr-4"
+                                            style={{ fontSize: 15, lineHeight: 22 }}
+                                        >
+                                            {faq.question}
+                                        </Text>
+                                        <Ionicons
+                                            name={expandedFaq === faq.id ? 'remove' : 'add'}
+                                            size={20}
+                                            color="#6A7282"
+                                        />
+                                    </View>
+                                    {expandedFaq === faq.id && (
+                                        <Text
+                                            className="font-inter-regular text-[#4A5565] px-4 pb-4"
+                                            style={{ fontSize: 14, lineHeight: 22 }}
+                                        >
+                                            {faq.answer}
+                                        </Text>
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+
+                </ScrollView>
+            </Animated.View>
         </View >
     );
 };

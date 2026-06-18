@@ -145,10 +145,10 @@ const PG = () => {
             </View>
           </LinearGradient>
         </View>
-        
-        {/* Popular on Propertize Section */}
+
+        {/* Popular on The Property Wall Section */}
         <View className="px-4 mb-6">
-         
+
 
           {/* Tools Grid Card */}
           <View
@@ -161,11 +161,11 @@ const PG = () => {
               elevation: 4
             }}
           >
-             {/* Section Header */}
-          <View className="flex-row items-center gap-2 mb-4">
-            <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on Propertize</Text>
-          </View>
+            {/* Section Header */}
+            <View className="flex-row items-center gap-2 mb-4">
+              <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
+              <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
+            </View>
             <View className="flex-row justify-around mb-8">
               <TouchableOpacity
                 onPress={() => router.push('/screens/Buy/Suggestions')}
@@ -177,7 +177,7 @@ const PG = () => {
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Collection</Text>
               </TouchableOpacity>
 
-           
+
 
               <TouchableOpacity className="items-center w-[100px]">
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
@@ -185,7 +185,7 @@ const PG = () => {
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
               </TouchableOpacity>
-                <TouchableOpacity className="items-center w-[100px]">
+              <TouchableOpacity className="items-center w-[100px]">
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="calculator-outline" size={24} color="blue" />
                 </View>
@@ -193,10 +193,10 @@ const PG = () => {
               </TouchableOpacity>
             </View>
 
-            
+
           </View>
 
-         
+
         </View>
 
         {/* Home at First Sight Section */}

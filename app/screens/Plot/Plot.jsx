@@ -1,20 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect, useRef, } from 'react';
-import { DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { DeviceEventEmitter, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
-import FeaturedCollectionCard from '../../../components/FeaturedCollectionCard';
-import NewsCard from '../../../components/NewsCard';
+import NoDataFound from '../../../components/NoDataFound';
 import SearchBox from '../../../components/SearchBox';
-import SellerCard from '../../../components/SellerCard';
-import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
 import CategoryTabs from '../../navigation/CategoryTabs';
-import NoDataFound from '../../../components/NoDataFound';
 
 const Plot = () => {
   const { selectedTab, setSelectedTab } = useCategoryTab();
@@ -161,8 +155,8 @@ const Plot = () => {
 
 
 
-  
-   
+
+
 
 
   return (
@@ -200,11 +194,11 @@ const Plot = () => {
         </View>
         */}
 
-        {/* Popular on Propertize Section
+        {/* Popular on The Property Wall Section
         <View className="px-4 mb-6">
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on Propertize</Text>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
           </View>
 
           <View

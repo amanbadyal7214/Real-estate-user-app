@@ -1,8 +1,8 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { useIsFocused } from '@react-navigation/native';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, DeviceEventEmitter, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -14,6 +14,7 @@ import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
 import DeveloperSummaryCard from '../../../components/DeveloperSummaryCard';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
 import HighDemandProjectCard from '../../../components/HighDemandProjectCard';
+import LastSearchedCard from '../../../components/LastSearchedCard';
 import LocalityCard from '../../../components/LocalityCard';
 import NewsCard from '../../../components/NewsCard';
 import ProjectFocusCard from '../../../components/ProjectFocusCard';
@@ -23,11 +24,10 @@ import RecommendedSellerCard from '../../../components/RecommendedSellerCard';
 import SearchBox from '../../../components/SearchBox';
 import Spotlight from '../../../components/Spotlight';
 import UserHeader from '../../../components/UserHeader';
-import LastSearchedCard from '../../../components/LastSearchedCard';
-import { useUserActivity } from '../../../hooks/useUserActivity';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { useProject } from '../../../hooks/useProject';
 import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
+import { useUserActivity } from '../../../hooks/useUserActivity';
 import { getCategoryRoute, useCategoryTab } from '../../context/CategoryTabContext';
 import { useLocation } from '../../context/LocationContext';
 import BottomTabBar from '../../navigation/BottomTabBar';
@@ -556,12 +556,12 @@ const Buy = () => {
 
 
 
-        {/* Popular on Propertize Section */}
+        {/* Popular on The Property Wall Section */}
         <View className="px-4 mb-6">
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on Propertize</Text>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
           </View>
 
           {/* Tools Grid Card */}

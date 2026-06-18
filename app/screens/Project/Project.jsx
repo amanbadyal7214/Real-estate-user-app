@@ -142,7 +142,7 @@ const enrichProjectsWithMedia = async (projectsArray) => {
         const projectId = project._id || project.id;
         if (!projectId) return project;
         const mediaRes = await api.get(`/projects/${projectId}/media`);
-        
+
         let mediaArray = [];
         if (mediaRes?.data) {
           if (Array.isArray(mediaRes.data)) {
@@ -419,7 +419,7 @@ const Project = () => {
 
     loadExploreLocalities(currentLocation?.city || 'Mohali');
     loadHighDemandProjects({ city: currentLocation?.city || 'Mohali' });
-    
+
     loadTopDevelopers({
       city: currentLocation?.city || 'Mohali',
       limit: 10
@@ -539,7 +539,7 @@ const Project = () => {
             onTabPress={setSelectedTab}
           />
 
-          <SearchBox 
+          <SearchBox
             onPress={() => router.push('/screens/Project/ProjectSearch')}
           />
         </View>
@@ -566,7 +566,7 @@ const Project = () => {
           <PropertyMatchedCards data={matchedHomes} destination="project" />
         </View>
 
-        
+
 
         {/* Smart Suggestions Section */}
         <View className=" mb-6">
@@ -644,12 +644,12 @@ const Project = () => {
           </ScrollView>
         </View> */}
 
-        {/* Popular on Propertize Section */}
+        {/* Popular on The Property Wall Section */}
         <View className="px-4 mb-6">
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on Propertize</Text>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
           </View>
 
           {/* Tools Grid Card */}
@@ -894,7 +894,7 @@ const Project = () => {
 
 
 
-       {/* Top Rated Developers Section */}
+        {/* Top Rated Developers Section */}
         <View className="px-4 mb-4 ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
@@ -1023,46 +1023,46 @@ const Project = () => {
 
         {/* Explore Localities Section */}
         <View className="px-4  mt-6">
-            <View className="flex-row items-center justify-between mb-4">
-              <View>
-                <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
-                <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in {currentLocation?.city || 'Mohali'}</Text>
-              </View>
-              <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-                <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
-              </TouchableOpacity>
+          <View className="flex-row items-center justify-between mb-4">
+            <View>
+              <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
+              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in {currentLocation?.city || 'Mohali'}</Text>
             </View>
+            <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+            </TouchableOpacity>
+          </View>
 
-            {localityLoading ? (
-              <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: 127 }}>
-                <ActivityIndicator size="small" color="#008E96" />
-              </View>
-            ) : localityError ? (
-              <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
-                <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
-              </View>
-            ) : exploreLocalities.length === 0 ? (
-              <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
-                <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
-              </View>
-            ) : (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
-              >
-                {exploreLocalities.map((item, index) => (
-                  <ExploreLocalityCard
-                    key={`${item.locality || 'locality'}-${index}`}
-                    title={item.localityName || item.locality}
-                    avgLabel={"Avg.\nPrice/sq.ft:"}
-                    averagePrice={formatPricePerSqft(item.averagePricePerSqft)}
-                    priceRange={`${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`}
-                    totalProperties={item.totalProperties}
-                  />
-                ))}
-              </ScrollView>
-            )}
+          {localityLoading ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: 127 }}>
+              <ActivityIndicator size="small" color="#008E96" />
+            </View>
+          ) : localityError ? (
+            <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
+              <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
+            </View>
+          ) : exploreLocalities.length === 0 ? (
+            <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
+              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 8, gap: 12 }}
+            >
+              {exploreLocalities.map((item, index) => (
+                <ExploreLocalityCard
+                  key={`${item.locality || 'locality'}-${index}`}
+                  title={item.localityName || item.locality}
+                  avgLabel={"Avg.\nPrice/sq.ft:"}
+                  averagePrice={formatPricePerSqft(item.averagePricePerSqft)}
+                  priceRange={`${formatPrice(item.minPrice)} - ${formatPrice(item.maxPrice)}`}
+                  totalProperties={item.totalProperties}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* News For You Section */}
@@ -1096,7 +1096,7 @@ const Project = () => {
 
         {/* Calculators Section */}
         <View className="px-4 mb-24 mt-4">
-           <ScrollView
+          <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 8 }}
@@ -1113,7 +1113,7 @@ const Project = () => {
               vectorsConfig={affordabilityVectors}
               onPress={() => router.push('/screens/AffordabilityCalculator')}
             />
-            
+
           </ScrollView>
         </View>
 
