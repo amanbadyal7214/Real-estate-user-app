@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { useEffect, useMemo, useState } from 'react'
 import { Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import LocalityReviewCard from '../../components/LocalityReviewCard'
 import ProjectReviewCard from '../../components/ProjectReviewCard'
 import { useLocalityAveragePrice } from '../../hooks/useLocalityAveragePrice'
@@ -23,7 +24,7 @@ const BestRatedLocalities = () => {
   const propertyTypes = ['Apartments', 'Independent Floor', 'Independent House', 'Villa'];
 
   const [localitiesData, setLocalitiesData] = useState([]);
-  const { fetchAveragePriceByCity, loading: localityLoading } = useLocalityAveragePrice();
+  const { fetchAveragePriceByCity } = useLocalityAveragePrice();
   const { currentLocation } = useLocation();
   const router = useRouter();
 
@@ -48,7 +49,7 @@ const BestRatedLocalities = () => {
     return () => { mounted = false; };
   }, [currentLocation?.city, fetchAveragePriceByCity]);
 
-  const { fetchProjects, loading: projectsLoading } = useProject();
+  const { fetchProjects } = useProject();
   const [projectsData, setProjectsData] = useState([]);
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const BestRatedLocalities = () => {
   return (
     <View className="flex-1 bg-white">
       {/* Header Section */}
-      <View className="relative h-[310px]">
+      <View style={{ height: hp('38.2%') }} className="relative">
         <LinearGradient
           colors={['#008E96', '#1CB2A9']}
           start={{ x: 0, y: 0 }}
@@ -109,96 +110,104 @@ const BestRatedLocalities = () => {
         />
         
         {/* Nav Bar */}
-        <View className="flex-row justify-between items-center px-[16px] mt-[16px] h-[72px]">
-          <TouchableOpacity onPress={() => router.back()} className="w-[40px] h-[40px] items-center justify-center">
-            <Ionicons name="arrow-back" size={24} color="white" />
+        <View className="flex-row justify-between items-center" style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2%'), height: hp('8.9%') }}>
+          <TouchableOpacity onPress={() => router.back()} className="items-center justify-center" style={{ width: wp('10.6%'), height: wp('10.6%') }}>
+            <Ionicons name="arrow-back" size={wp('6.4%')} color="white" />
           </TouchableOpacity>
           
-          <TouchableOpacity className="flex-row items-center bg-white/20 px-[12px] py-[6px] rounded-[10px]">
-            <Ionicons name="location-outline" size={16} color="white" />
-            <Text className="text-white font-inter-medium text-[14px] mx-[4px]">Mohali</Text>
-            <Ionicons name="chevron-down" size={16} color="white" />
+          <TouchableOpacity
+            className="flex-row items-center bg-white/20"
+            style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.7%'), borderRadius: wp('2.7%') }}
+          >
+            <Ionicons name="location-outline" size={wp('4.3%')} color="white" />
+            <Text className="text-white font-inter-medium" style={{ fontSize: wp('3.7%'), marginHorizontal: wp('1%') }}>Mohali</Text>
+            <Ionicons name="chevron-down" size={wp('4.3%')} color="white" />
           </TouchableOpacity>
         </View>
-
+ 
         {/* Title */}
-        <View className="px-[16px] mt-[0px]">
-          <Text className="text-white font-inter-semibold text-[22px] leading-[29px]">
+        <View style={{ paddingHorizontal: wp('4.3%'), marginTop: 0 }}>
+          <Text className="text-white font-inter-semibold" style={{ fontSize: wp('5.9%'), lineHeight: wp('7.7%') }}>
             Resident Reviews on{"\n"}Projects and Localities
           </Text>
         </View>
-
+ 
         {/* Search Bar */}
-        <View className="px-[16px] mt-[24px]">
-            <View className="flex-row items-center bg-white rounded-[12px] px-[16px] h-[48px] shadow-sm">
+        <View style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3%') }}>
+            <View className="flex-row items-center bg-white shadow-sm" style={{ borderRadius: wp('3.2%'), paddingHorizontal: wp('4.3%'), height: hp('5.9%') }}>
               <TextInput 
                 placeholder="Enter a locality, society or project to search..." 
                 placeholderTextColor="rgba(16, 24, 40, 0.5)"
-                className="flex-1 font-inter-regular text-[14px]"
+                className="flex-1 font-inter-regular"
+                style={{ fontSize: wp('3.7%') }}
                 value={searchText}
                 onChangeText={(text) => setSearchText(text)}
                 returnKeyType="search"
               />
-              <TouchableOpacity onPress={() => { /* no-op: instant filtering on change */ }} className="w-[36px] h-[36px] bg-[#008E96] rounded-[8px] items-center justify-center">
-                <Feather name="search" size={20} color="white" />
+              <TouchableOpacity onPress={() => { /* no-op: instant filtering on change */ }} className="bg-[#008E96] items-center justify-center" style={{ width: wp('9.6%'), height: wp('9.6%'), borderRadius: wp('2.1%') }}>
+                <Feather name="search" size={wp('5.3%')} color="white" />
               </TouchableOpacity>
             </View>
         </View>
       </View>
 
       {/* Content Section */}
-      <View className="flex-1 bg-white -mt-[20px] rounded-t-[20px] pt-[20px]">
+      <View className="flex-1 bg-white" style={{ marginTop: -wp('5.3%'), borderTopLeftRadius: wp('5.3%'), borderTopRightRadius: wp('5.3%'), paddingTop: hp('2.5%') }}>
         {/* Tabs */}
-        <View className="flex-row px-[16px] gap-[12px] h-[48px]">
+        <View className="flex-row" style={{ paddingHorizontal: wp('4.3%'), gap: wp('3.2%'), height: hp('5.9%') }}>
           <TouchableOpacity 
             onPress={() => setActiveTab('localities')}
-            className={`flex-1 rounded-[12px] items-center justify-center ${activeTab === 'localities' ? 'bg-[#008E96]/10 border-2 border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+            className={`flex-1 items-center justify-center ${activeTab === 'localities' ? 'bg-[#008E96]/10 border-2 border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+            style={{ borderRadius: wp('3.2%') }}
           >
-            <Text className={`font-inter-semibold text-[14px] ${activeTab === 'localities' ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>Localities</Text>
+            <Text className="font-inter-semibold" style={{ fontSize: wp('3.7%'), color: activeTab === 'localities' ? '#008E96' : '#6A7282' }}>Localities</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('projects')}
-            className={`flex-1 rounded-[12px] items-center justify-center ${activeTab === 'projects' ? 'bg-[#008E96]/10 border-2 border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+            className={`flex-1 items-center justify-center ${activeTab === 'projects' ? 'bg-[#008E96]/10 border-2 border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+            style={{ borderRadius: wp('3.2%') }}
           >
-            <Text className={`font-inter-semibold text-[14px] ${activeTab === 'projects' ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>Projects</Text>
+            <Text className="font-inter-semibold" style={{ fontSize: wp('3.7%'), color: activeTab === 'projects' ? '#008E96' : '#6A7282' }}>Projects</Text>
           </TouchableOpacity>
         </View>
-
+ 
         {/* List Header */}
-        <View className="px-[16px] mt-[20px]">
-          <Text className="text-[#101828] font-inter-semibold text-[18px]">
+        <View style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2.5%') }}>
+          <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4.8%') }}>
             Reviews for {activeTab} in Mohali
           </Text>
           
           {activeTab === 'projects' && (
-            <View className="flex-row items-center mt-[12px]">
-              <Text className="text-[#6A7282] font-inter-regular text-[14px] mr-[8px]">Filter by</Text>
+            <View className="flex-row items-center" style={{ marginTop: hp('1.5%') }}>
+              <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.7%'), marginRight: wp('2.1%') }}>Filter by</Text>
               <TouchableOpacity 
                 onPress={() => setIsFilterModalVisible(true)}
-                className="flex-row items-center border border-[#008E96] rounded-[10px] px-[12px] py-[8px]"
+                className="flex-row items-center border border-[#008E96]"
+                style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('1%') }}
               >
-                <Text className="text-[#008E96] font-inter-medium text-[14px]">{selectedPropertyType}</Text>
-                <Ionicons name="chevron-down" size={16} color="#008E96" className="ml-[4px]" />
+                <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.7%') }}>{selectedPropertyType}</Text>
+                <Ionicons name="chevron-down" size={wp('4.3%')} color="#008E96" style={{ marginLeft: wp('1%') }} />
               </TouchableOpacity>
             </View>
           )}
-
-          <View className="flex-row justify-between items-center mt-[16px]">
-            <Text className="text-[#6A7282] font-inter-regular text-[13px]">
+ 
+          <View className="flex-row justify-between items-center" style={{ marginTop: hp('2%') }}>
+            <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.5%') }}>
               Showing top {activeTab === 'localities' ? (localitiesDataFiltered.length) : (projectsDataFiltered.length)} results
             </Text>
             <TouchableOpacity 
               onPress={() => setIsSortModalVisible(true)}
-              className="flex-row items-center gap-[4px]"
+              className="flex-row items-center"
+              style={{ gap: wp('1%') }}
             >
-              <Text className="text-[#101828] font-inter-medium text-[14px]">{selectedSort}</Text>
-              <Ionicons name="chevron-down" size={16} color="#4A5565" />
+              <Text className="text-[#101828] font-inter-medium" style={{ fontSize: wp('3.7%') }}>{selectedSort}</Text>
+              <Ionicons name="chevron-down" size={wp('4.3%')} color="#4A5565" />
             </TouchableOpacity>
           </View>
         </View>
-
+ 
         {/* Results List */}
-        <ScrollView className="flex-1 px-[16px] mt-[16px]" contentContainerStyle={{ gap: 16, paddingBottom: 20 }}>
+        <ScrollView className="flex-1" style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2%') }} contentContainerStyle={{ gap: 16, paddingBottom: 20 }}>
           {activeTab === 'localities' ? (
             localitiesDataFiltered.length > 0 ? (
               localitiesDataFiltered.map((item, index) => (
@@ -214,7 +223,7 @@ const BestRatedLocalities = () => {
               ))
             ) : (
               <View className="items-center py-8">
-                <Text className="text-[#6A7282]">No localities match "{searchText}"</Text>
+                <Text className="text-[#6A7282]">No localities match &quot;{searchText}&quot;</Text>
               </View>
             )
           ) : (
@@ -233,7 +242,7 @@ const BestRatedLocalities = () => {
               ))
             ) : (
               <View className="items-center py-8">
-                <Text className="text-[#6A7282]">No projects match "{searchText}"</Text>
+                <Text className="text-[#6A7282]">No projects match &quot;{searchText}&quot;</Text>
               </View>
             )
           )}
@@ -255,33 +264,35 @@ const BestRatedLocalities = () => {
             tint="light" 
             className="flex-1"
           >
-            <View className="mt-auto bg-white rounded-t-[24px] shadow-2xl">
+            <View className="mt-auto bg-white shadow-2xl" style={{ borderTopLeftRadius: wp('6.4%'), borderTopRightRadius: wp('6.4%') }}>
               {/* Handlebar */}
-              <View className="items-center py-[12px]">
-                <View className="w-[40px] h-[4px] bg-[#D0D5DD] rounded-full" />
+              <View className="items-center" style={{ paddingVertical: hp('1.5%') }}>
+                <View className="bg-[#D0D5DD] rounded-full" style={{ width: wp('10.6%'), height: hp('0.5%') }} />
               </View>
-
+ 
               {/* Content */}
-              <View className="px-[20px] pb-[40px] pt-[10px]">
-                <Text className="text-[#101828] font-inter-semibold text-[20px] mb-[20px]">Sort by</Text>
-                <View className="mb-[32px]">
+              <View style={{ paddingHorizontal: wp('5.3%'), paddingBottom: hp('4.9%'), paddingTop: hp('1.2%') }}>
+                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5.3%'), marginBottom: hp('2.5%') }}>Sort by</Text>
+                <View style={{ marginBottom: hp('3.9%') }}>
                   {sortOptions.map((option) => (
                     <TouchableOpacity 
                       key={option}
                       onPress={() => setSelectedSort(option)}
-                      className={`py-[12px] px-[0px] flex-row justify-between items-center ${selectedSort === option ? '' : ''}`}
+                      className="flex-row justify-between items-center"
+                      style={{ paddingVertical: hp('1.5%') }}
                     >
-                      <Text className={`font-inter-regular text-[16px] ${selectedSort === option ? 'text-[#008E96]' : 'text-black'}`}>
+                      <Text className="font-inter-regular" style={{ fontSize: wp('4.3%'), color: selectedSort === option ? '#008E96' : 'black' }}>
                         {option}
                       </Text>
-                      {selectedSort === option && <Ionicons name="checkmark" size={20} color="#008E96" />}
+                      {selectedSort === option && <Ionicons name="checkmark" size={wp('5.3%')} color="#008E96" />}
                     </TouchableOpacity>
                   ))}
                 </View>
-
+ 
                 <TouchableOpacity 
                   onPress={() => setIsSortModalVisible(false)}
-                  className="h-[52px] rounded-[12px] items-center justify-center overflow-hidden"
+                  className="items-center justify-center overflow-hidden"
+                  style={{ height: hp('6.4%'), borderRadius: wp('3.2%') }}
                 >
                   <LinearGradient
                     colors={['#008E96', '#1CB2A9']}
@@ -289,14 +300,14 @@ const BestRatedLocalities = () => {
                     end={{ x: 1, y: 1 }}
                     style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
                   />
-                  <Text className="text-white font-inter-semibold text-[16px]">Apply filters</Text>
+                  <Text className="text-white font-inter-semibold" style={{ fontSize: wp('4.3%') }}>Apply filters</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </BlurView>
         </Pressable>
       </Modal>
-
+ 
       {/* Filter Modal */}
       <Modal
         animationType="slide"
@@ -313,64 +324,63 @@ const BestRatedLocalities = () => {
             tint="light" 
             className="flex-1"
           >
-            <View className="mt-auto bg-white rounded-t-[24px] shadow-2xl">
+            <View className="mt-auto bg-white shadow-2xl" style={{ borderTopLeftRadius: wp('6.4%'), borderTopRightRadius: wp('6.4%') }}>
               {/* Handlebar */}
-              <View className="items-center py-[12px]">
-                <View className="w-[40px] h-[4px] bg-[#D0D5DD] rounded-full" />
+              <View className="items-center" style={{ paddingVertical: hp('1.5%') }}>
+                <View className="bg-[#D0D5DD] rounded-full" style={{ width: wp('10.6%'), height: hp('0.5%') }} />
               </View>
-
+ 
               {/* Header */}
-              <View className="px-[20px] pt-[10px] pb-[20px]">
-                <Text className="text-[#101828] font-inter-semibold text-[20px]">Filters</Text>
-                <Text className="text-[#6A7282] font-inter-regular text-[14px] mt-[8px]">Searching in <Text className="text-[#101828] font-inter-medium">Mohali</Text></Text>
+              <View style={{ paddingHorizontal: wp('5.3%'), paddingTop: hp('1.2%'), paddingBottom: hp('2.5%') }}>
+                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5.3%') }}>Filters</Text>
+                <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.7%'), marginTop: hp('1%') }}>Searching in <Text className="text-[#101828] font-inter-medium">Mohali</Text></Text>
                 
-                <TouchableOpacity className="flex-row items-center mt-[16px]">
-                  <Text className="text-[#6A7282] font-inter-medium text-[14px]">Filters: </Text>
-                  <Text className="text-[#008E96] font-inter-medium text-[14px]">{selectedPropertyType}</Text>
-                  <Ionicons name="chevron-forward" size={16} color="#008E96" />
+                <TouchableOpacity className="flex-row items-center" style={{ marginTop: hp('2%') }}>
+                  <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.7%') }}>Filters: </Text>
+                  <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.7%') }}>{selectedPropertyType}</Text>
+                  <Ionicons name="chevron-forward" size={wp('4.3%')} color="#008E96" />
                 </TouchableOpacity>
               </View>
-
-              <View className="h-[1px] bg-[#E4E7EC] mx-[20px]" />
-
+ 
+              <View className="h-[1px] bg-[#E4E7EC]" style={{ marginHorizontal: wp('5.3%') }} />
+ 
               {/* Property Type Section */}
-              <View className="px-[20px] py-[24px]">
-                <Text className="text-[#101828] font-inter-medium text-[16px] mb-[16px]">Property Type</Text>
-                <View className="flex-row flex-wrap gap-[12px]">
+              <View style={{ paddingHorizontal: wp('5.3%'), paddingVertical: hp('3%') }}>
+                <Text className="text-[#101828] font-inter-medium" style={{ fontSize: wp('4.3%'), marginBottom: hp('2%') }}>Property Type</Text>
+                <View className="flex-row flex-wrap" style={{ gap: wp('3.2%') }}>
                   {propertyTypes.map((type) => (
                     <TouchableOpacity
                       key={type}
                       onPress={() => setSelectedPropertyType(type)}
-                      className={`px-[16px] py-[10px] rounded-[12px] border ${
+                      className={`border ${
                         selectedPropertyType === type 
                         ? 'bg-[#008E96]/10 border-[#008E96]' 
                         : 'bg-white border-[#D0D5DD]'
                       }`}
+                      style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3.2%') }}
                     >
-                      <Text className={`font-inter-medium text-[14px] ${
-                        selectedPropertyType === type ? 'text-[#008E96]' : 'text-[#101828]'
-                      }`}>
+                      <Text className="font-inter-medium" style={{ fontSize: wp('3.7%'), color: selectedPropertyType === type ? '#008E96' : '#101828' }}>
                         {type}
                       </Text>
                     </TouchableOpacity>
                   ))}
                 </View>
               </View>
-
+ 
               {/* Footer Button */}
-              <View className="px-[16px] py-[16px] border-t border-[#E4E7EC]">
+              <View className="border-t border-[#E4E7EC]" style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('2%') }}>
                 <TouchableOpacity 
                   onPress={() => setIsFilterModalVisible(false)}
-                  className="h-[52px] rounded-[12px] items-center justify-center"
-                  style={{ backgroundColor: '#008E96' }}
+                  className="items-center justify-center"
+                  style={{ backgroundColor: '#008E96', height: hp('6.4%'), borderRadius: wp('3.2%') }}
                 >
                   <LinearGradient
                     colors={['#008E96', '#1CB2A9']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
-                    style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: 12 }}
+                    style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: wp('3.2%') }}
                   />
-                  <Text className="text-white font-inter-semibold text-[16px]">Apply filters</Text>
+                  <Text className="text-white font-inter-semibold" style={{ fontSize: wp('4.3%') }}>Apply filters</Text>
                 </TouchableOpacity>
               </View>
             </View>

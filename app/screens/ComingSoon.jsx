@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ComingSoon = () => {
@@ -14,40 +15,47 @@ const ComingSoon = () => {
         colors={['#E7F6F5', '#F8FBFB']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="flex-1 px-5"
+        className="flex-1"
+        style={{ paddingHorizontal: wp('5.3%') }}
       >
-        <View className="flex-row items-center justify-between pt-2">
-          <TouchableOpacity onPress={() => router.back()} className="p-2">
-            <Ionicons name="arrow-back" size={24} color="#101828" />
+        <View className="flex-row items-center justify-between" style={{ paddingTop: hp('1%') }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ padding: wp('2.1%') }}>
+            <Ionicons name="arrow-back" size={wp('6.4%')} color="#101828" />
           </TouchableOpacity>
-
         </View>
 
         <View className="flex-1 items-center justify-center">
-          <View className="w-full max-w-[360px] rounded-[24px] bg-white border border-[#DCE7E7] p-5 items-center">
+          <View
+            className="w-full bg-white border border-[#DCE7E7] items-center"
+            style={{ maxWidth: wp('96%'), borderRadius: wp('6.4%'), padding: wp('5.3%') }}
+          >
             <LottieView
               source={require('../../assets/comming.json')}
               autoPlay
               loop
-              style={{ width: 240, height: 240 }}
+              style={{ width: wp('64%'), height: wp('64%') }}
             />
 
-            <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#101828] text-[28px] text-center mt-2">
+            <Text
+              style={{ fontFamily: 'Inter-Bold', fontSize: wp('7.5%'), marginTop: hp('1%') }}
+              className="text-[#101828] text-center"
+            >
               Coming Soon
             </Text>
 
             <Text
-              style={{ fontFamily: 'Inter-Regular' }}
-              className="text-[#4A5565] text-[15px] text-center leading-[22px] mt-3"
+              style={{ fontFamily: 'Inter-Regular', fontSize: wp('4%'), lineHeight: wp('5.9%'), marginTop: hp('1.5%') }}
+              className="text-[#4A5565] text-center"
             >
               We are building something exciting for you. This feature will be available very soon.
             </Text>
 
             <TouchableOpacity
               onPress={() => router.back()}
-              className="mt-6 bg-[#008E96] rounded-[14px] px-6 py-3"
+              className="bg-[#008E96]"
+              style={{ marginTop: hp('3%'), paddingHorizontal: wp('6.4%'), paddingVertical: hp('1.5%'), borderRadius: wp('3.7%') }}
             >
-              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-white text-[15px]">
+              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }} className="text-white">
                 Go Back
               </Text>
             </TouchableOpacity>
