@@ -82,12 +82,12 @@ export default function Index() {
   });
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-light">
       {/* Splash 1.0 Background (Solid) */}
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: '#1BAFA6' }]} />
+      <View className="absolute inset-0 bg-light" />
 
       {/* Splash 1.1 / Onboarding Background (Gradient) */}
-      <Animated.View style={[StyleSheet.absoluteFill, animatedBgStyle]}>
+      <Animated.View className="absolute inset-0" style={animatedBgStyle}>
         <LinearGradient
           colors={['#008E96', '#1B3DA8', '#2B7571']}
           locations={[-0.08, 0.14, 0.71]}
@@ -98,59 +98,21 @@ export default function Index() {
       </Animated.View>
 
       {/* Rectangle 1 - Glow Blur Simulation */}
-      <Animated.View style={[styles.glowOverlay, animatedOverlayStyle]} />
+      <Animated.View className="absolute inset-0 bg-white/35" style={animatedOverlayStyle} />
 
       {/* Ellipse (Icon) */}
-      <Animated.View style={[styles.ellipse, animatedEllipseStyle]}>
+      <Animated.View 
+        className="absolute justify-center items-center shadow-black/20 shadow-[0_10px_20px_rgba(0,0,0,0.2)] elevation-[8]" 
+        style={[{ width: 144 * scale, height: 136 * scale }, animatedEllipseStyle]}
+      >
         <Image
-          source={require('../assets/images/icon1.png')}
-          style={styles.fullImage}
+          source={require('../assets/images/Frame1.png')}
+          className="w-full h-full"
           resizeMode="contain"
         />
         {/* Inner shadow/border glow simulation */}
-        <View style={[StyleSheet.absoluteFill, { borderRadius: 100, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' }]} />
+        <View className="absolute inset-0 rounded-full border border-white/20" />
       </Animated.View>
-
-     
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1BAFA6',
-  },
-  glowOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
-    // Radial glow is simulated by a centered blur or opacity.
-    // mix-blend-mode: overlay is hard in RN, so we use transparency.
-  },
-  ellipse: {
-    position: 'absolute',
-    width: 144 * scale,
-    height: 136 * scale,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 20,
-    elevation: 8,
-  },
-  fullImage: {
-    width: '100%',
-    height: '100%',
-  },
-  branding: {
-    position: 'absolute',
-    bottom: 80,
-    width: '100%',
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    letterSpacing: 8,
-  }
-});

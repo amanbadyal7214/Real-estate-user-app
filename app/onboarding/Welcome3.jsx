@@ -10,7 +10,7 @@ const Welcome3 = () => {
         {/* Header: Logo + Skip */}
         <View className="flex-row items-center justify-between mb-10">
           <Image
-            source={require('../../assets/images/realeasteapphorizontal1.png')}
+            source={require('../../assets/images/realeasteapphorizontal11(1).png')}
             style={{ width: 150, height: 40 }}
             resizeMode="contain"
           />
@@ -58,7 +58,7 @@ const Welcome3 = () => {
               elevation: 10,
             }}
           >
-            <TouchableOpacity 
+            <TouchableOpacity
               className="w-full h-14 items-center justify-center flex-row"
               style={{
                 borderRadius: 14,

@@ -84,9 +84,9 @@ const Register = () => {
   const isFormValid = isLogin
     ? isExistingUserFormValid
     : (formData.phone.length === 10 &&
-       formData.name.trim().length > 0 &&
-       formData.email.includes('@') &&
-       formData.password.length >= 6);
+      formData.name.trim().length > 0 &&
+      formData.email.includes('@') &&
+      formData.password.length >= 6);
 
   const handleNext = async () => {
     if (isFormValid) {
@@ -192,7 +192,7 @@ const Register = () => {
 
         <View className=" mb-8">
           <Image
-            source={require('../../assets/images/realeasteapphorizontal1.png')}
+            source={require('../../assets/images/realeasteapphorizontal11(1).png')}
             style={{ width: 220, height: 60 }}
             resizeMode="contain"
             className="mb-3"
@@ -201,7 +201,7 @@ const Register = () => {
             {isLogin ? "Existing User Roles" : "Create Your Account"}
           </Text>
           <Text className="text-gray-500 mt-3 font-inter-regular ">
-            {isLogin 
+            {isLogin
               ? "Verify your phone and select a new role to continue."
               : `Sign up as a ${formData.role || 'user'} to access the platform.`
             }
@@ -348,8 +348,8 @@ const Register = () => {
                 </Text>
                 {(() => {
                   const allRolesList = ['buyer', 'owner', 'builder'];
-                  const assignedRolesList = existingUserDetails?.role 
-                    ? (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role]) 
+                  const assignedRolesList = existingUserDetails?.role
+                    ? (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role])
                     : [];
                   const unassignedRolesList = allRolesList.filter(r => !assignedRolesList.includes(r));
 
@@ -582,12 +582,12 @@ const Register = () => {
                 ? (isPhoneVerified ? isExistingUserFormValid : formData.phone.length === 10)
                 : isFormValid
             ) && !loading ? 'text-white' : 'text-[#99A1AF]'} font-inter-bold text-lg`}>
-              {loading 
-                ? "Processing..." 
-                : (isLogin 
-                    ? (isPhoneVerified ? "Get New Role & Login" : "Verify Phone") 
-                    : "Register and Create Account"
-                  )
+              {loading
+                ? "Processing..."
+                : (isLogin
+                  ? (isPhoneVerified ? "Get New Role & Login" : "Verify Phone")
+                  : "Register and Create Account"
+                )
               }
             </Text>
           </TouchableOpacity>

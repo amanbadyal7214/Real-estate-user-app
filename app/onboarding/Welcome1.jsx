@@ -10,7 +10,7 @@ const Welcome1 = () => {
         {/* Header: Logo + Skip */}
         <View className="flex-row items-center justify-between mb-10">
           <Image
-            source={require('../../assets/images/realeasteapphorizontal1.png')}
+            source={require('../../assets/images/realeasteapphorizontal11(1).png')}
             style={{ width: 150, height: 40 }}
             resizeMode="contain"
           />

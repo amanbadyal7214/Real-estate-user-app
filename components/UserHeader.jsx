@@ -1,8 +1,8 @@
 import { useRouter } from "expo-router";
-import { ChevronDown, User } from 'lucide-react-native';
-import { Image, Text, TouchableOpacity, View, Modal, TouchableWithoutFeedback, StyleSheet, Alert } from 'react-native';
 import * as SecureStore from "expo-secure-store";
+import { ChevronDown, User } from 'lucide-react-native';
 import { useEffect, useState } from "react";
+import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { performRoleBasedRedirect } from "../hooks/Register";
 import DashboardSelectorModal from "./DashboardSelectorModal";
 
@@ -89,10 +89,10 @@ const UserHeader = ({ userName: propUserName }) => {
   return (
     <View style={{ zIndex: 1000 }}>
       <View className="flex-row items-center justify-between px-3 py-3 border-b border-gray-100 bg-white">
-        
+
         {/* Left Section: User */}
         <View className="flex-1 items-start justify-center">
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setShowDropdown(!showDropdown)}
             className="flex-row items-center gap-1.5 flex-shrink"
             activeOpacity={0.7}
@@ -112,7 +112,7 @@ const UserHeader = ({ userName: propUserName }) => {
         {/* Center Logo */}
         <View className="items-center justify-center px-1">
           <Image
-            source={require('../assets/images/realeasteapphorizontal1.png')}
+            source={require('../assets/images/realeasteapphorizontal11.png')}
             style={{ width: 120, height: 32 }}
             resizeMode="contain"
           />
@@ -120,7 +120,7 @@ const UserHeader = ({ userName: propUserName }) => {
 
         {/* Right Section: Post Button */}
         <View className="flex-1 items-end justify-center">
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handlePostProperty}
             className="flex-row items-center bg-[#F2F4F7] px-2.5 py-1.5 rounded-full"
           >
@@ -154,7 +154,7 @@ const UserHeader = ({ userName: propUserName }) => {
                         {userData.name}
                       </Text>
                     </View>
-                    
+
                     {userData.email && (
                       <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#4A5565] ml-1">
                         ✉️  {userData.email}
@@ -181,7 +181,7 @@ const UserHeader = ({ userName: propUserName }) => {
 
                     <View className="h-[1px] bg-gray-100 my-2" />
 
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={handleLogout}
                       className="flex-row items-center justify-center bg-red-50 py-2.5 rounded-xl border border-red-100"
                     >
@@ -198,7 +198,7 @@ const UserHeader = ({ userName: propUserName }) => {
                     <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#6A7282] leading-5">
                       Log in to access your properties, post new ads, and explore calculators.
                     </Text>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => {
                         setShowDropdown(false);
                         router.push("/(auth)/Login");

@@ -82,7 +82,7 @@ const Login = () => {
         <View className="flex-1 justify-center">
           <View className="items-center mb-8">
             <Image
-              source={require('../../assets/images/realeasteapphorizontal1.png')}
+              source={require('../../assets/images/realeasteapphorizontal11(1).png')}
               style={{ width: 240, height: 70 }}
               resizeMode="contain"
             />
