@@ -1,4 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { formatPrice, formatPricePerSqft } from '../app/utils/formatPrice';
 
 const ExploreLocalityCard = ({
@@ -37,59 +38,59 @@ const ExploreLocalityCard = ({
     <TouchableOpacity
       activeOpacity={0.9}
       style={{
-        width: 170,
-        height: 120,
+        width: wp('45.3%'),
+        height: hp('14.8%'),
         backgroundColor: '#FFFFFF',
         borderWidth: 0.67,
         borderColor: '#F3F4F6',
-        borderBottomLeftRadius: 16,
-        borderBottomRightRadius: 16,
+        borderBottomLeftRadius: wp('4.3%'),
+        borderBottomRightRadius: wp('4.3%'),
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
+        shadowOffset: { width: 0, height: hp('0.1%') },
         shadowOpacity: 0.06,
-        shadowRadius: 3,
+        shadowRadius: wp('0.8%'),
         elevation: 2,
         overflow: 'hidden'
       }}
     >
       <View
         style={{
-          height: 32,
+          height: hp('3.9%'),
           backgroundColor: '#EBF9F8',
           justifyContent: 'center',
-          paddingHorizontal: 12,
+          paddingHorizontal: wp('3.2%'),
         }}
       >
-        <Text className="font-inter-bold text-[#101828] text-[14px]" numberOfLines={2} ellipsizeMode="tail">
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.7%') }} numberOfLines={2} ellipsizeMode="tail">
           {title}
         </Text>
       </View>
 
       <View
-        style={{ paddingHorizontal: 14, paddingTop: 10, paddingBottom: 12, flex: 1, justifyContent: 'space-between' }}
+        style={{ paddingHorizontal: wp('3.7%'), paddingTop: hp('1.2%'), paddingBottom: hp('1.5%'), flex: 1, justifyContent: 'space-between' }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <Text className="font-inter-regular text-[#6A7282] text-[12px] leading-[18px]" style={{ flex: 0.4 }} numberOfLines={1} ellipsizeMode="tail">
+          <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), flex: 0.4 }} numberOfLines={1} ellipsizeMode="tail">
              Avg. Price
           </Text>
           {String(displayPrice).includes('/') ? (
             <View style={{ flex: 0.6, alignItems: 'flex-end' }}>
-              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: 14, lineHeight: 20 }} numberOfLines={1} ellipsizeMode="tail">
+              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%') }} numberOfLines={1} ellipsizeMode="tail">
                 {displayPrice.split('/')[0]}
               </Text>
-              <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 11, lineHeight: 14 }} numberOfLines={1} ellipsizeMode="tail">
+              <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.9%'), lineHeight: hp('1.7%') }} numberOfLines={1} ellipsizeMode="tail">
                 /{displayPrice.split('/').slice(1).join('/')}
               </Text>
             </View>
           ) : (
-            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: 14, lineHeight: 20, flex: 0.6, textAlign: 'right' }} numberOfLines={1} ellipsizeMode="tail">
+            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%'), flex: 0.6, textAlign: 'right' }} numberOfLines={1} ellipsizeMode="tail">
               {displayPrice}
             </Text>
           )}
         </View>
 
         {!!secondaryText && (
-          <Text className="font-inter-semibold text-[13px]" style={{ color: secondaryTextColor }} numberOfLines={2} ellipsizeMode="tail">
+          <Text className="font-inter-semibold" style={{ fontSize: wp('3.5%'), color: secondaryTextColor }} numberOfLines={2} ellipsizeMode="tail">
             {secondaryText}
           </Text>
         )}

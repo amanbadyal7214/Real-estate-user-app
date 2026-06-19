@@ -1,14 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) => {
   return (
     <View 
-      className="bg-white rounded-[16px] mb-2 relative overflow-hidden shadow-sm"
+      className="bg-white relative overflow-hidden shadow-sm"
       style={{
-        width: 208,
-        height: 102,
+        width: wp('55.5%'),
+        height: hp('12.6%'),
+        borderRadius: wp('4.3%'),
+        marginBottom: hp('1%'),
         elevation: 1,
       }}
     >
@@ -20,36 +23,37 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       />
 
-      <View className="flex-row justify-between items-start p-3 z-10">
+      <View className="flex-row justify-between items-start z-10" style={{ padding: wp('3.2%') }}>
         <View className="flex-1">
           <Text
-            className="font-inter-semibold text-[14px] text-[#101828] leading-[20px] mb-1"
-            style={{ marginTop: -4 }}
+            className="font-inter-semibold text-[#101828]"
+            style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%'), marginBottom: hp('0.5%'), marginTop: hp('-0.5%') }}
             numberOfLines={2}
             ellipsizeMode="tail"
           >
             {title}
           </Text>
-          <View className="flex-row items-center mb-2" style={{ gap: 6 }}>
-            <View className="flex-row items-center" style={{ gap: 2 }}>
-              <Ionicons name="star" size={16} color="#00A63E" />
-              <Text className="font-inter-semibold text-[13px] text-[#101828] leading-[20px]">{rating}</Text>
+          <View className="flex-row items-center" style={{ gap: wp('1.6%'), marginBottom: hp('1%') }}>
+            <View className="flex-row items-center" style={{ gap: wp('0.5%') }}>
+              <Ionicons name="star" size={wp('4.3%')} color="#00A63E" />
+              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.5%'), lineHeight: hp('2.5%') }}>{rating}</Text>
             </View>
-            <Text className="font-inter-regular text-[11px] text-[#4A5565] leading-[16px]">({reviews} ratings)</Text>
+            <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>({reviews} ratings)</Text>
           </View>
-          <Text className="font-inter-bold text-[14px] text-[#101828] leading-[21px]">{price}</Text>
+          <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.6%') }}>{price}</Text>
         </View>
 
         <View
-          className="w-[50px] h-[50px] rounded-[12px] items-center justify-center bg-[#DFFFFD]"
+          className="items-center justify-center bg-[#DFFFFD]"
+          style={{ width: wp('13.3%'), height: wp('13.3%'), borderRadius: wp('3.2%') }}
         >
-          <Ionicons name="cube-outline" size={24} color={iconColor} style={{ opacity: 0.6 }} />
+          <Ionicons name="cube-outline" size={wp('6.4%')} color={iconColor} style={{ opacity: 0.6 }} />
         </View>
       </View>
 
-      <View className="flex-row items-center p-3 absolute bottom-0 left-0 z-10">
-        <Text className="font-inter-medium text-[12px] text-[#2B7571] leading-[18px]">Read all reviews</Text>
-        <Ionicons name="chevron-forward" size={14} color="#2B7571" className="ml-1" />
+      <View className="flex-row items-center absolute bottom-0 left-0 z-10" style={{ padding: wp('3.2%') }}>
+        <Text className="font-inter-medium text-[#2B7571]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>Read all reviews</Text>
+        <Ionicons name="chevron-forward" size={wp('3.7%')} color="#2B7571" style={{ marginLeft: wp('1.1%') }} />
       </View>
     </View>
   );

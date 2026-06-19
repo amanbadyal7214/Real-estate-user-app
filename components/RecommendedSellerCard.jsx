@@ -1,20 +1,21 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight, Phone } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, location }) => {
   return (
     <View 
       style={{
-        width: 272,
-        height: 180,
-        borderRadius: 16,
-        marginRight: 12,
+        width: wp('72.5%'),
+        height: hp('22.2%'),
+        borderRadius: wp('4.3%'),
+        marginRight: wp('3.2%'),
         backgroundColor: 'white',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: { width: 0, height: hp('0.4%') },
         shadowOpacity: 0.08,
-        shadowRadius: 4,
+        shadowRadius: wp('1.1%'),
         elevation: 3,
       }}
     >
@@ -45,8 +46,8 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
         style={{
           width: '100%',
           height: '100%',
-          borderRadius: 20,
-          padding: 16,
+          borderRadius: wp('5.3%'),
+          padding: wp('4.3%'),
           justifyContent: 'space-between'
         }}
       >
@@ -54,49 +55,49 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
         <View className="flex-row items-center">
           <View 
             style={{ 
-              width: 48, 
-              height: 48, 
+              width: wp('12.8%'), 
+              height: wp('12.8%'), 
               backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-              borderRadius: 12,
+              borderRadius: wp('3.2%'),
               alignItems: 'center',
               justifyContent: 'center'
             }}
           >
-            <Text style={{ fontSize: 20 }}>👤</Text>
+            <Text style={{ fontSize: wp('5.3%') }}>👤</Text>
           </View>
           
-          <View className="flex-row items-center ml-3">
-            <Text className="font-inter-bold text-white text-[15px]">{name}</Text>
-            <ChevronRight size={16} color="white" className="ml-1" />
+          <View className="flex-row items-center" style={{ marginLeft: wp('3.2%') }}>
+            <Text className="font-inter-bold text-white" style={{ fontSize: wp('4%') }}>{name}</Text>
+            <ChevronRight size={wp('4.3%')} color="white" style={{ marginLeft: wp('1.1%') }} />
           </View>
         </View>
 
         {/* Info Section */}
-        <View style={{ gap: 8, marginTop: 4 }}>
-          <View className="flex-row items-center" style={{ gap: 10 }}>
-            <Text className="text-white text-[12px]">
+        <View style={{ gap: wp('2.1%'), marginTop: hp('0.5%') }}>
+          <View className="flex-row items-center" style={{ gap: wp('2.7%') }}>
+            <Text className="text-white" style={{ fontSize: wp('3.2%') }}>
               <Text className="font-inter-bold">{experienceYears} yrs </Text>
               <Text className="font-inter-regular">Experience</Text>
             </Text>
             
-            <View style={{ width: 1, height: 16, backgroundColor: 'rgba(255, 255, 255, 0.3)' }} />
+            <View style={{ width: wp('0.3%'), height: hp('2%'), backgroundColor: 'rgba(255, 255, 255, 0.3)' }} />
             
-            <Text className="text-white text-[12px]">
+            <Text className="text-white" style={{ fontSize: wp('3.2%') }}>
               <Text className="font-inter-bold">{propertiesCount} </Text>
               <Text className="font-inter-regular">Properties</Text>
             </Text>
           </View>
           
-          <Text className="font-inter-regular text-white text-[12px]">{location}</Text>
+          <Text className="font-inter-regular text-white" style={{ fontSize: wp('3.2%') }}>{location}</Text>
         </View>
 
         {/* Button */}
         <TouchableOpacity 
-          className="bg-white flex-row items-center justify-center mt-2"
-          style={{ width: '100%', height: 38, borderRadius: 9999, gap: 8 }}
+          className="bg-white flex-row items-center justify-center"
+          style={{ width: '100%', height: hp('4.7%'), borderRadius: 9999, gap: wp('2.1%'), marginTop: hp('1%') }}
         >
-          <Phone size={16} color="#008E96" />
-          <Text className="font-inter-medium text-[#008E96] text-[13px]">
+          <Phone size={wp('4.3%')} color="#008E96" />
+          <Text className="font-inter-medium text-[#008E96]" style={{ fontSize: wp('3.5%') }}>
             Show Contact
           </Text>
         </TouchableOpacity>

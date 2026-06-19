@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { ChevronDown, Search } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useLocation } from '../app/context/LocationContext';
 
 const SearchBox = ({ 
@@ -61,26 +62,28 @@ const SearchBox = ({
   };
 
   return (
-    <View className="bg-white p-5 rounded-[24px]">
+    <View className="bg-white" style={{ padding: wp('5.3%'), borderRadius: wp('6.4%') }}>
       <TouchableOpacity 
         onPress={() => router.push('/screens/Buy/BuySearch')}
-        className="flex-row items-center mb-4"
+        className="flex-row items-center"
+        style={{ marginBottom: hp('2%') }}
       >
-        <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">
+        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#101828]">
           Currently looking in <Text className="font-inter-bold">{currentLocation?.display || currentLocation?.city || location}</Text>
         </Text>
-        <ChevronDown size={20} color="#101828" style={{ marginLeft: 4 }} />
+        <ChevronDown size={wp('5.3%')} color="#101828" style={{ marginLeft: wp('1.1%') }} />
       </TouchableOpacity>
 
       <TouchableOpacity
         onPress={onPress}
-        className="flex-row items-center bg-[#F2F4F7] h-12 px-4 rounded-full"
+        className="flex-row items-center bg-[#F2F4F7] rounded-full"
+        style={{ height: hp('5.9%'), paddingHorizontal: wp('4.3%') }}
       >
-        <Text className="font-inter-regular flex-1 text-[#667085] text-[14px]">
+        <Text className="font-inter-regular flex-1 text-[#667085]" style={{ fontSize: wp('3.7%') }}>
           {placeholder}
         </Text>
-        <View className="w-9 h-9 bg-primary rounded-full items-center justify-center">
-          <Search size={18} color="white" />
+        <View className="bg-primary rounded-full items-center justify-center" style={{ width: wp('9.6%'), height: wp('9.6%') }}>
+          <Search size={wp('4.8%')} color="white" />
         </View>
       </TouchableOpacity>
     </View>

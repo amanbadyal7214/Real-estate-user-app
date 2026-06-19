@@ -1,18 +1,19 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const Spotlight = ({ data }) => {
   const spotlightData = data || [];
 
   return (
-    <View className="mt-6 gap-4">
+    <View style={{ marginTop: hp('3%'), gap: wp('4.3%') }}>
       {/* Header Section */}
       <View>
-        <Text className="font-inter-bold text-[17px] text-[#101828]">
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('4.5%') }}>
           Featured Builder
         </Text>
-        <Text className="font-inter-regular text-[13px] text-[#6A7282]">
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>
           Highly rated builders in your area
         </Text>
       </View>
@@ -21,17 +22,20 @@ const Spotlight = ({ data }) => {
       <View className="relative">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row py-1">
           {spotlightData.length > 0 ? spotlightData.map((item, index) => (
-            <View key={item.id || index} className="mr-4 ml-1">
+            <View key={item.id || index} style={{ marginRight: wp('4.3%'), marginLeft: wp('1.1%') }}>
               {/* Developer Info Card - Clickable to Developer/Project Details */}
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => item.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.id } })}
-                className="w-[278px] h-[88px] rounded-[18px] bg-white shadow-sm elevation-2 z-[1] overflow-hidden"
+                className="bg-white elevation-2 z-[1] overflow-hidden"
                 style={{
+                  width: wp('74.1%'),
+                  height: hp('10.8%'),
+                  borderRadius: wp('4.8%'),
                   shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 1 },
+                  shadowOffset: { width: 0, height: hp('0.1%') },
                   shadowOpacity: 0.1,
-                  shadowRadius: 2,
+                  shadowRadius: wp('0.5%'),
                 }}
               >
                 <LinearGradient
@@ -39,11 +43,12 @@ const Spotlight = ({ data }) => {
                   start={{ x: 0.3, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   locations={[0.064, 0.5258, 1]}
-                  className="flex-1 flex-row items-center px-4 gap-3"
+                  className="flex-1 flex-row items-center"
+                  style={{ paddingHorizontal: wp('4.3%'), gap: wp('3.2%') }}
                 >
                   {/* Icon Container */}
-                  <View className="w-14 h-14 bg-[#CCEFED] rounded-[14px] items-center justify-center">
-                    <View className="w-8 h-8 opacity-80">
+                  <View className="bg-[#CCEFED] items-center justify-center" style={{ width: wp('14.9%'), height: wp('14.9%'), borderRadius: wp('3.7%') }}>
+                    <View className="opacity-80" style={{ width: wp('8.5%'), height: wp('8.5%') }}>
                       <View className="absolute left-[12.5%] top-[12.5%] w-[37.5%] h-[37.5%] bg-[#1CB2A9] rounded-[1px]" />
                       <View className="absolute right-[12.5%] top-[12.5%] w-[37.5%] h-[37.5%] bg-[#1CB2A9] rounded-[1px]" />
                       <View className="absolute left-[12.5%] bottom-[12.5%] w-[37.5%] h-[37.5%] bg-[#1CB2A9] rounded-[1px]" />
@@ -52,26 +57,26 @@ const Spotlight = ({ data }) => {
                   </View>
 
                   {/* Stats Section */}
-                  <View className="w-[198px] h-[58px] gap-2">
-                    <View className="flex-row gap-6 h-[34.5px] items-center">
-                      <View className="w-[53px] h-[34.5px]">
-                        <Text className="font-inter-bold text-[12px] leading-[18px] text-[#101828]">
+                  <View style={{ width: wp('52.8%'), height: hp('7.1%'), gap: wp('2.1%') }}>
+                    <View className="flex-row items-center" style={{ gap: wp('6.4%'), height: hp('4.2%') }}>
+                      <View style={{ width: wp('14.1%'), height: hp('4.2%') }}>
+                        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>
                           {item.developer.estd || '2024'}
                         </Text>
-                        <Text className="font-inter-regular text-[11px] leading-[16px] text-[#6A7282]">
+                        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>
                           Year estd.
                         </Text>
                       </View>
-                      <View className="w-[43px] h-[34.5px]">
-                        <Text className="font-inter-bold text-[12px] leading-[18px] text-[#101828]">
+                      <View style={{ width: wp('11.5%'), height: hp('4.2%') }}>
+                        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>
                           {item.developer.projects || '1'}
                         </Text>
-                        <Text className="font-inter-regular text-[11px] leading-[16px] text-[#6A7282]">
+                        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>
                           Projects
                         </Text>
                       </View>
                     </View>
-                    <Text className="font-inter-bold text-[13px] leading-[18px] text-[#101828]">
+                    <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.5%'), lineHeight: hp('2.2%') }}>
                       {item.developer.name}
                     </Text>
                   </View>
@@ -82,12 +87,16 @@ const Spotlight = ({ data }) => {
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => item.property.id && router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: item.property.id } })}
-                className="mt-[10px] rounded-[18px] overflow-hidden bg-white w-[278px] h-[160px] shadow-md elevation-5"
+                className="overflow-hidden bg-white elevation-5"
                 style={{
+                  marginTop: hp('1.2%'),
+                  borderRadius: wp('4.8%'),
+                  width: wp('74.1%'),
+                  height: hp('19.7%'),
                   shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 3 },
+                  shadowOffset: { width: 0, height: hp('0.4%') },
                   shadowOpacity: 0.08,
-                  shadowRadius: 4,
+                  shadowRadius: wp('1.1%'),
                 }}
               >
                 <ImageBackground
@@ -101,17 +110,17 @@ const Spotlight = ({ data }) => {
                     locations={[0, 0.5, 1]}
                   />
 
-                  <View className="absolute w-[246px] h-[76px] left-4 top-[66px]">
-                    <Text className="font-inter-bold text-[14px] h-6 leading-5 text-white">
+                  <View className="absolute" style={{ width: wp('65.6%'), height: hp('9.4%'), left: wp('4.3%'), top: hp('8.1%') }}>
+                    <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.7%'), height: hp('3%'), lineHeight: hp('2.5%') }}>
                       {item.property.title}
                     </Text>
-                    <Text className="font-inter-regular text-[11px] h-[16px] leading-[16px] text-white/90 mt-1">
+                    <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.9%'), height: hp('2%'), lineHeight: hp('2%'), marginTop: hp('0.5%') }}>
                       {item.property.location}
                     </Text>
-                    <Text className="font-inter-regular text-[10px] h-[14px] leading-4 text-white/80 mt-[2px]">
+                    <Text className="font-inter-regular text-white/80" style={{ fontSize: wp('2.7%'), height: hp('1.7%'), lineHeight: hp('2%'), marginTop: hp('0.2%') }}>
                       {item.property.config}
                     </Text>
-                    <Text className="font-inter-bold text-[14px] h-6 leading-5 text-white mt-2">
+                    <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.7%'), height: hp('3%'), lineHeight: hp('2.5%'), marginTop: hp('1%') }}>
                       {item.property.priceRange}
                     </Text>
                   </View>
@@ -119,7 +128,7 @@ const Spotlight = ({ data }) => {
               </TouchableOpacity>
             </View>
           )) : (
-            <Text className="font-inter-regular text-[13px] text-[#6A7282] ml-1">
+            <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.5%'), marginLeft: wp('1.1%') }}>
               No spotlight projects available right now.
             </Text>
           )}
@@ -127,16 +136,18 @@ const Spotlight = ({ data }) => {
 
         {/* Fixed Triangle indicator in the center of the viewport */}
         <View
-          className="absolute left-1/2 -ml-[10px] top-[95.5px] z-[10]"
+          className="absolute left-1/2 z-[10]"
           pointerEvents="none"
           style={{
+            marginLeft: wp('-2.7%'),
+            top: hp('11.8%'),
             width: 0,
             height: 0,
             backgroundColor: 'transparent',
             borderStyle: 'solid',
-            borderLeftWidth: 10,
-            borderRightWidth: 10,
-            borderBottomWidth: 12,
+            borderLeftWidth: wp('2.7%'),
+            borderRightWidth: wp('2.7%'),
+            borderBottomWidth: hp('1.5%'),
             borderLeftColor: 'transparent',
             borderRightColor: 'transparent',
             borderBottomColor: '#008E96',
@@ -144,42 +155,6 @@ const Spotlight = ({ data }) => {
           }}
         />
       </View>
-
-      {/* Housing Assist Card */}
-      {/* <View 
-        className="h-[97px]  rounded-[20px] overflow-hidden shadow-md elevation-5"
-        style={{
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 6,
-        }}
-      >
-        <LinearGradient
-          colors={['#1CB2A9', '#61BCBA', '#4DD5DD']}
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
-          className="flex-1 flex-row justify-between items-center px-4"
-        >
-          <View className="w-[110.46px] h-[45.5px] gap-[2px]">
-            <Text className="font-inter-regular text-[13px] leading-5 text-white">
-              Introducing
-            </Text>
-            <View className="flex-row items-center">
-              <Text className="font-inter-bold text-[16px] leading-6 text-white">
-                Housing{' '}
-              </Text>
-              <Text className="font-inter-bold text-[16px] leading-6 text-[#FFD700]">
-                Assist
-              </Text>
-            </View>
-          </View>
-          
-          <View className="w-5 h-5 items-center justify-center">
-            <MaterialCommunityIcons name="chevron-right" size={24} color="#FFFFFF" />
-          </View>
-        </LinearGradient>
-      </View> */}
     </View>
   );
 };

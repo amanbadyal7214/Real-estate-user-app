@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { formatPrice } from '../app/utils/formatPrice';
 
 const HighDemandProjectCard = ({ image, priceRange, title, developer, location, projectId, onPress }) => {
@@ -18,14 +19,16 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
   return (
     <Animated.View
       entering={FadeInDown.duration(600).springify().damping(12)}
-      className="bg-white rounded-[16px] mb-2 overflow-hidden"
+      className="bg-white overflow-hidden"
       style={{
-        width: 270,
-        height: 227,
+        width: wp('72%'),
+        height: hp('28%'),
+        borderRadius: wp('4.3%'),
+        marginBottom: hp('1%'),
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: { width: 0, height: hp('0.4%') },
         shadowOpacity: 0.08,
-        shadowRadius: 4,
+        shadowRadius: wp('1.1%'),
         elevation: 2,
       }}
     >
@@ -39,12 +42,12 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           colors={['#FFFBEB', '#FFF7ED']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className="flex-row items-center justify-center px-3"
-          style={{ height: 128 }}
+          className="flex-row items-center justify-center"
+          style={{ height: hp('15.8%'), paddingHorizontal: wp('3.2%') }}
         >
           <View
             className="rounded-lg overflow-hidden"
-            style={{ width: 244, height: 102 }}
+            style={{ width: wp('65.1%'), height: hp('12.6%') }}
           >
             {image ? (
               <Image
@@ -56,19 +59,19 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
               />
             ) : (
               <View className="w-full h-full bg-gray-200 items-center justify-center">
-                <Ionicons name="image-outline" size={40} color="#9CA3AF" />
+                <Ionicons name="image-outline" size={wp('10.7%')} color="#9CA3AF" />
               </View>
             )}
           </View>
         </LinearGradient>
 
         {/* Content Container */}
-        <View className="relative bg-white" style={{ height: 124.5 }}>
+        <View className="relative bg-white" style={{ height: hp('15.3%') }}>
           {/* Price Range */}
-          <View style={{ position: 'absolute', left: 16, top: 16, width: 236, height: 22 }}>
+          <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('2%'), width: wp('62.9%'), height: hp('2.7%') }}>
             <Text
                 className="font-inter-bold text-[#101828]"
-                style={{ fontSize: 14, lineHeight: 20 }}
+                style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%') }}
               >
                 {(() => {
                   const raw = priceRange;
@@ -95,10 +98,10 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           </View>
 
           {/* Title */}
-            <View style={{ position: 'absolute', left: 16, top: 34, width: 236, height: 22.5 }}>
+            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('4.2%'), width: wp('62.9%'), height: hp('2.8%') }}>
               <Text
                 className="font-inter-semibold text-[#101828]"
-                style={{ fontSize: 13, lineHeight: 20 }}
+                style={{ fontSize: wp('3.5%'), lineHeight: hp('2.5%') }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -107,10 +110,10 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
             </View>
 
           {/* Developer */}
-            <View style={{ position: 'absolute', left: 16, top: 56, width: 236 }}>
+            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('6.9%'), width: wp('62.9%') }}>
               <Text
                 className="font-inter-regular text-[#4A5565]"
-                style={{ fontSize: 11, lineHeight: 16 }}
+                style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -119,10 +122,10 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
             </View>
 
           {/* Location (allow wrapping, up to 2 lines) */}
-            <View style={{ position: 'absolute', left: 16, top: 76, width: 236 }}>
+            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('9.4%'), width: wp('62.9%') }}>
               <Text
                 className="font-inter-regular text-[#4A5565]"
-                style={{ fontSize: 11, lineHeight: 16, flexWrap: 'wrap' }}
+                style={{ fontSize: wp('2.9%'), lineHeight: hp('2%'), flexWrap: 'wrap' }}
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >

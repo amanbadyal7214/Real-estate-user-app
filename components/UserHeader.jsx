@@ -3,6 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { ChevronDown, User } from 'lucide-react-native';
 import { useEffect, useState } from "react";
 import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { performRoleBasedRedirect } from "../hooks/Register";
 import DashboardSelectorModal from "./DashboardSelectorModal";
 
@@ -88,45 +89,38 @@ const UserHeader = ({ userName: propUserName }) => {
 
   return (
     <View style={{ zIndex: 1000 }}>
-      <View className="flex-row items-center justify-between px-3 py-3 border-b border-gray-100 bg-white">
+      <View className="flex-row items-center justify-between border-b border-gray-100 bg-white" style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('1.5%') }}>
 
         {/* Left Section: User */}
-        <View className="flex-1 items-start justify-center">
+        <View className="items-start justify-center flex-shrink" style={{ zIndex: 10 }}>
           <TouchableOpacity
             onPress={() => setShowDropdown(!showDropdown)}
-            className="flex-row items-center gap-1.5 flex-shrink"
+            className="flex-row items-center flex-shrink"
+            style={{ gap: wp('1.6%') }}
             activeOpacity={0.7}
           >
-            <View className="w-8 h-8 rounded-full bg-primary items-center justify-center">
-              <User color="white" size={16} />
+            <View className="bg-primary items-center justify-center rounded-full" style={{ width: wp('8.5%'), height: wp('8.5%') }}>
+              <User color="white" size={wp('4.3%')} />
             </View>
-            <View className="flex-row items-center flex-shrink pr-1">
-              <Text numberOfLines={1} style={{ fontFamily: 'Inter-Medium' }} className="text-[13px] text-[#101828] flex-shrink">
+            <View className="flex-row items-center flex-shrink" style={{ paddingRight: wp('1.1%') }}>
+              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }} className="text-[#101828]">
                 Hi {userName}
               </Text>
-              <ChevronDown size={14} color="#101828" className="ml-0.5" />
+              <ChevronDown size={wp('3.7%')} color="#101828" style={{ marginLeft: wp('0.5%') }} />
             </View>
           </TouchableOpacity>
         </View>
 
-        {/* Center Logo */}
-        <View className="items-center justify-center px-1">
-          <Image
-            source={require('../assets/images/realeasteapphorizontal11.png')}
-            style={{ width: 120, height: 32 }}
-            resizeMode="contain"
-          />
-        </View>
-
         {/* Right Section: Post Button */}
-        <View className="flex-1 items-end justify-center">
+        <View className="items-end justify-center" style={{ zIndex: 10 }}>
           <TouchableOpacity
             onPress={handlePostProperty}
-            className="flex-row items-center bg-[#F2F4F7] px-2.5 py-1.5 rounded-full"
+            className="flex-row items-center bg-[#F2F4F7] rounded-full"
+            style={{ paddingHorizontal: wp('2.7%'), paddingVertical: hp('0.7%') }}
           >
-            <Text numberOfLines={1} className="font-inter-medium text-[11px] text-[#101828] mr-1.5">List Property</Text>
-            <View className="bg-primary px-1.5 py-0.5 rounded">
-              <Text className="font-inter-bold text-[8px] text-white">FREE</Text>
+            <Text numberOfLines={1} className="font-inter-medium text-[#101828]" style={{ fontSize: wp('2.9%'), marginRight: wp('1.6%') }}>List Property</Text>
+            <View className="bg-primary rounded" style={{ paddingHorizontal: wp('1.6%'), paddingVertical: hp('0.2%') }}>
+              <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.1%') }}>FREE</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -145,33 +139,33 @@ const UserHeader = ({ userName: propUserName }) => {
             <TouchableWithoutFeedback>
               <View style={styles.dropdownContainer}>
                 {isLoggedIn && userData ? (
-                  <View className="p-4 gap-3">
-                    <View className="flex-row items-center gap-2 mb-1">
-                      <View className="w-8 h-8 rounded-full bg-[#E6F7F6] items-center justify-center">
-                        <User color="#008E96" size={16} />
+                  <View style={{ padding: wp('4.3%'), gap: wp('3.2%') }}>
+                    <View className="flex-row items-center" style={{ gap: wp('2.1%'), marginBottom: hp('0.5%') }}>
+                      <View className="bg-[#E6F7F6] items-center justify-center rounded-full" style={{ width: wp('8.5%'), height: wp('8.5%') }}>
+                        <User color="#008E96" size={wp('4.3%')} />
                       </View>
-                      <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[16px] text-[#101828] flex-1" numberOfLines={1}>
+                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%') }} className="text-[#101828] flex-1" numberOfLines={1}>
                         {userData.name}
                       </Text>
                     </View>
 
                     {userData.email && (
-                      <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#4A5565] ml-1">
+                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginLeft: wp('1.1%') }} className="text-[#4A5565]">
                         ✉️  {userData.email}
                       </Text>
                     )}
 
                     {(userData.phone || userData.profileData?.phone) && (
-                      <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#4A5565] ml-1">
+                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginLeft: wp('1.1%') }} className="text-[#4A5565]">
                         📞  {userData.phone || userData.profileData?.phone}
                       </Text>
                     )}
 
                     {userData.role && (
-                      <View className="flex-row gap-1.5 flex-wrap mt-1">
+                      <View className="flex-row flex-wrap" style={{ gap: wp('1.6%'), marginTop: hp('0.5%') }}>
                         {(Array.isArray(userData.role) ? userData.role : [userData.role]).map((r) => (
-                          <View key={r} className="bg-[#E6F7F6] px-2.5 py-0.5 rounded-md border border-[#008E96]/20">
-                            <Text className="text-[#008E96] text-[10px] uppercase font-semibold" style={{ fontFamily: 'Inter-SemiBold' }}>
+                          <View key={r} className="bg-[#E6F7F6] rounded-md border border-[#008E96]/20" style={{ paddingHorizontal: wp('2.7%'), paddingVertical: hp('0.2%') }}>
+                            <Text className="text-[#008E96] uppercase font-semibold" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('2.7%') }}>
                               {r}
                             </Text>
                           </View>
@@ -179,23 +173,24 @@ const UserHeader = ({ userName: propUserName }) => {
                       </View>
                     )}
 
-                    <View className="h-[1px] bg-gray-100 my-2" />
+                    <View className="h-[1px] bg-gray-100" style={{ marginVertical: hp('1%') }} />
 
                     <TouchableOpacity
                       onPress={handleLogout}
-                      className="flex-row items-center justify-center bg-red-50 py-2.5 rounded-xl border border-red-100"
+                      className="flex-row items-center justify-center bg-red-50 rounded-xl border border-red-100"
+                      style={{ paddingVertical: hp('1.2%') }}
                     >
-                      <Text style={{ fontFamily: 'Inter-Medium' }} className="text-red-600 text-[14px]">
+                      <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-red-600">
                         Logout
                       </Text>
                     </TouchableOpacity>
                   </View>
                 ) : (
-                  <View className="p-4 gap-3">
-                    <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[16px] text-[#101828]">
+                  <View style={{ padding: wp('4.3%'), gap: wp('3.2%') }}>
+                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%') }} className="text-[#101828]">
                       Welcome, Guest!
                     </Text>
-                    <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#6A7282] leading-5">
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%') }} className="text-[#6A7282]">
                       Log in to access your properties, post new ads, and explore calculators.
                     </Text>
                     <TouchableOpacity
@@ -203,9 +198,10 @@ const UserHeader = ({ userName: propUserName }) => {
                         setShowDropdown(false);
                         router.push("/(auth)/Login");
                       }}
-                      className="bg-[#008E96] py-3 rounded-xl items-center shadow-sm"
+                      className="bg-[#008E96] rounded-xl items-center shadow-sm"
+                      style={{ paddingVertical: hp('1.5%') }}
                     >
-                      <Text style={{ fontFamily: 'Inter-Bold' }} className="text-white text-[14px]">
+                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%') }} className="text-white">
                         Login / Register
                       </Text>
                     </TouchableOpacity>
@@ -237,11 +233,11 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: 'absolute',
-    top: 75,
-    left: 16,
-    width: 280,
+    top: hp('9.2%'),
+    left: wp('4.3%'),
+    width: wp('74.7%'),
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: wp('5.3%'),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,

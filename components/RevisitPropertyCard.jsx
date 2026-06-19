@@ -2,6 +2,7 @@ import { Check, Heart, MessageCircle } from 'lucide-react-native';
 import { useState } from 'react';
 import { Image, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import api from '../app/api';
 
 const RevisitPropertyCard = ({
@@ -61,8 +62,17 @@ const RevisitPropertyCard = ({
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={navigateToDetails}
-      className="bg-white mr-4 mb-2 rounded-[16px] border-[0.67px] border-[#E4E7EC] pt-[12.67px] px-[12.67px] pb-[0.67px] w-[260px] h-[376.33px]"
+      className="bg-white border-[#E4E7EC]"
       style={{
+        marginRight: wp('4.3%'),
+        marginBottom: hp('1%'),
+        borderRadius: wp('4.3%'),
+        borderWidth: 0.67,
+        paddingTop: hp('1.6%'),
+        paddingHorizontal: wp('3.4%'),
+        paddingBottom: hp('0.1%'),
+        width: wp('69.3%'),
+        height: hp('46.3%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
@@ -70,7 +80,7 @@ const RevisitPropertyCard = ({
         elevation: 4,
       }}
     >
-      <View className="w-[234.67px] h-[140px] rounded-[14px] overflow-hidden relative">
+      <View className="overflow-hidden relative" style={{ width: wp('62.6%'), height: hp('17.2%'), borderRadius: wp('3.7%') }}>
         <Image
           source={{ uri: image }}
           className="w-full h-full"
@@ -78,17 +88,18 @@ const RevisitPropertyCard = ({
         />
         {/* RERA Badge */}
         {isRera && (
-          <View className="absolute left-2 top-2 bg-[#00C48C] rounded-lg flex-row items-center py-1 px-2 gap-1">
-            <Check size={12} color="#FFFFFF" strokeWidth={3} />
-            <Text className="font-inter-medium text-[11px] leading-[16px] text-white">RERA</Text>
+          <View className="absolute bg-[#00C48C] flex-row items-center" style={{ left: wp('2.1%'), top: hp('1%'), borderRadius: wp('2%'), paddingVertical: hp('0.5%'), paddingHorizontal: wp('2.1%'), gap: wp('1%') }}>
+            <Check size={wp('3.2%')} color="#FFFFFF" strokeWidth={3} />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), lineHeight: hp('2%') }} className="text-white">RERA</Text>
           </View>
         )}
         <TouchableOpacity
           onPress={toggleWishlist}
-          className="absolute right-2 top-2 w-8 h-8 bg-white/90 rounded-full items-center justify-center"
+          className="absolute bg-white/90 rounded-full items-center justify-center"
+          style={{ right: wp('2.1%'), top: hp('1%'), width: wp('8.5%'), height: wp('8.5%') }}
         >
           <Heart
-            size={18}
+            size={wp('4.8%')}
             color={isSaved ? "#F04438" : "#4A5565"}
             fill={isSaved ? "#F04438" : "transparent"}
             strokeWidth={2}
@@ -96,36 +107,38 @@ const RevisitPropertyCard = ({
         </TouchableOpacity>
       </View>
 
-      <View className="mt-3">
-        <Text className="font-inter-regular text-[12px] leading-[18px] text-[#6A7282] mb-1">
+      <View style={{ marginTop: hp('1.5%') }}>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginBottom: hp('0.5%') }} className="text-[#6A7282]">
           {possession}
         </Text>
-        <Text className="font-inter-semibold text-[16px] leading-[24px] text-[#101828] mb-1" numberOfLines={1}>
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%'), lineHeight: hp('3%'), marginBottom: hp('0.5%') }} className="text-[#101828]" numberOfLines={1}>
           {title}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-1.5">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('0.7%') }} className="text-[#6A7282]">
           {location}
         </Text>
-        <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828] mb-1">
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), lineHeight: hp('2.7%'), marginBottom: hp('0.5%') }} className="text-[#101828]">
           {price}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-0.5">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('0.2%') }} className="text-[#6A7282]">
           {bhk}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-3">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('1.5%') }} className="text-[#6A7282]">
           {area}
         </Text>
 
-        <View className="flex-row items-center gap-2 w-[234.67px] h-10">
+        <View className="flex-row items-center" style={{ gap: wp('2.1%'), width: wp('62.6%'), height: hp('4.9%') }}>
           <TouchableOpacity
-            className="w-10 h-10 bg-[#25D366]/10 rounded-full items-center justify-center"
+            className="bg-[#25D366]/10 rounded-full items-center justify-center"
+            style={{ width: wp('10.7%'), height: wp('10.7%') }}
           >
-            <MessageCircle size={20} color="#25D366" fill="#25D366" />
+            <MessageCircle size={wp('5.3%')} color="#25D366" fill="#25D366" />
           </TouchableOpacity>
           <TouchableOpacity
-            className="w-[186.67px] h-10 bg-[#008E96]/10 rounded-[14px] items-center justify-center"
+            className="bg-[#008E96]/10 items-center justify-center"
+            style={{ width: wp('49.8%'), height: hp('4.9%'), borderRadius: wp('3.7%') }}
           >
-            <Text className="font-inter-medium text-[14px] leading-[21px] text-[#008E96] text-center">
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), lineHeight: hp('2.6%') }} className="text-[#008E96] text-center">
               View Phone
             </Text>
           </TouchableOpacity>
@@ -135,13 +148,13 @@ const RevisitPropertyCard = ({
         <View 
           style={{
             position: 'absolute',
-            bottom: 60,
-            left: 10,
-            right: 10,
+            bottom: hp('7.4%'),
+            left: wp('2.7%'),
+            right: wp('2.7%'),
             backgroundColor: '#1E293B',
-            paddingVertical: 10,
-            paddingHorizontal: 12,
-            borderRadius: 20,
+            paddingVertical: hp('1.2%'),
+            paddingHorizontal: wp('3.2%'),
+            borderRadius: wp('5.3%'),
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 999,
@@ -152,7 +165,7 @@ const RevisitPropertyCard = ({
             elevation: 5,
           }}
         >
-          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: 12, textAlign: 'center' }}>
+          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), textAlign: 'center' }}>
             {toast}
           </Text>
         </View>

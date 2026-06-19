@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { ActivityIndicator, DeviceEventEmitter, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
@@ -118,9 +119,7 @@ const Buy = () => {
   const [activeDeveloperProjectsLoading, setActiveDeveloperProjectsLoading] = useState(false);
   const skipFirstRedirect = useRef(true);
 
-  const { width } = Dimensions.get('window');
-  const scale = width / 375; // base design width
-  const s = (n) => Math.round(n * scale);
+  
 
   const handleProtectedViewMore = useCallback(async (destination) => {
     const token = await SecureStore.getItemAsync('token');
@@ -579,28 +578,28 @@ const Buy = () => {
               <TouchableOpacity
                 onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')}
                 className="items-center"
-                style={{ width: s(100) }}
+                style={{ width: wp('26.7%') }}
               >
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
-                  <Ionicons name="bulb-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
+                  <Ionicons name="bulb-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Top Picks</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => handleProtectedViewMore('/screens/BestPriceProperty')}
-                className="items-center" style={{ width: s(100) }}>
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
-                  <Ionicons name="pricetag-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
+                className="items-center" style={{ width: wp('26.7%') }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
+                  <Ionicons name="pricetag-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Best Offers</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => handleProtectedViewMore('/screens/NewsForYou')}
-                className="items-center" style={{ width: s(100) }}>
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
-                  <Ionicons name="newspaper-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
+                className="items-center" style={{ width: wp('26.7%') }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
+                  <Ionicons name="newspaper-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Market Updates</Text>
               </TouchableOpacity>
@@ -609,27 +608,27 @@ const Buy = () => {
             <View className="flex-row justify-around">
               <TouchableOpacity
                 onPress={() => router.push('/screens/EMICalculator')}
-                className="items-center" style={{ width: s(100) }}>
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
-                  <Ionicons name="calculator-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
+                className="items-center" style={{ width: wp('26.7%') }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
+                  <Ionicons name="calculator-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Payment Plan</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => router.push('/screens/AffordabilityCalculator')}
-                className="items-center" style={{ width: s(100) }}>
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
-                  <Ionicons name="stats-chart-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
+                className="items-center" style={{ width: wp('26.7%') }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
+                  <Ionicons name="stats-chart-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">What&apos;s my budget?</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => router.push('/screens/ECalculator')}
-                className="items-center" style={{ width: s(100) }}>
-                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: s(48), height: s(48), borderRadius: s(14) }}>
-                  <Ionicons name="checkmark-done-circle-outline" size={Math.round(24 * (width / 375))} color="#008E96" />
+                className="items-center" style={{ width: wp('26.7%') }}>
+                <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
+                  <Ionicons name="checkmark-done-circle-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
                 <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Eligibility Calculator</Text>
               </TouchableOpacity>
@@ -643,7 +642,7 @@ const Buy = () => {
             end={{ x: 1, y: 1 }}
             className=" p-4 rounded-2xl overflow-hidden border-[#1CB2A9] flex-row items-center justify-between"
             style={{
-              height: s(150.33),
+              height: hp('18.5%'),
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.1,
@@ -654,7 +653,7 @@ const Buy = () => {
             <View className="flex-1 pr-2" style={{ height: 117, gap: 12 }}>
               <Text
                 className="font-inter-bold text-[14px] text-[#101828] leading-[21px]"
-                style={{ width: s(193), height: s(63) }}
+                style={{ width: wp('51.5%'), height: hp('7.8%') }}
               >
                 Want to sell or rent out your place?
               </Text>
@@ -677,33 +676,33 @@ const Buy = () => {
             </View>
 
             {/* Detailed Grid Pattern Icon */}
-            <View style={{ width: s(96), height: s(96), justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width: wp('25.6%'), height: wp('25.6%'), justifyContent: 'center', alignItems: 'center' }}>
               <LinearGradient
                 colors={['#8B5CF6', '#6366F1']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
-                  width: s(80),
-                  height: s(80),
-                  borderRadius: s(12),
-                  borderTopLeftRadius: s(12),
-                  borderBottomLeftRadius: s(12),
-                  borderTopRightRadius: s(4),
-                  borderBottomRightRadius: s(4),
+                  width: wp('21.3%'),
+                  height: wp('21.3%'),
+                  borderRadius: wp('3.2%'),
+                  borderTopLeftRadius: wp('3.2%'),
+                  borderBottomLeftRadius: wp('3.2%'),
+                  borderTopRightRadius: wp('1.1%'),
+                  borderBottomRightRadius: wp('1.1%'),
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
               >
-                <View className="flex-row flex-wrap justify-center items-center" style={{ width: s(60), height: s(60), gap: s(4) }}>
+                <View className="flex-row flex-wrap justify-center items-center" style={{ width: wp('16%'), height: wp('16%'), gap: wp('1.1%') }}>
                   {[...Array(20)].map((_, i) => (
                     <View
                       key={i}
                       style={{
-                        width: s(8),
-                        height: s(8),
+                        width: wp('2.1%'),
+                        height: wp('2.1%'),
                         backgroundColor: '#FFFFFF',
                         opacity: 0.6,
-                        borderRadius: s(1)
+                        borderRadius: wp('0.3%')
                       }}
                     />
                   ))}
@@ -835,7 +834,7 @@ const Buy = () => {
           </View>
 
           {localityLoading ? (
-            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: s(127) }}>
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: hp('15.6%') }}>
               <ActivityIndicator size="small" color="#008E96" />
             </View>
           ) : visibleLocalities.length === 0 ? (
@@ -1213,7 +1212,7 @@ const Buy = () => {
           </View>
 
           {localityLoading ? (
-            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: s(132) }}>
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: hp('16.3%') }}>
               <ActivityIndicator size="small" color="#008E96" />
             </View>
           ) : localityError ? (

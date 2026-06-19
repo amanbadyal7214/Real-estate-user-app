@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { formatPrice } from '../app/utils/formatPrice';
 
 const RecommendedPropertyCard = ({ id, image, price, title, area, location }) => {
@@ -14,26 +15,28 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
         }
       }}
       activeOpacity={0.9}
-      className="bg-white flex-row items-start p-2 mr-3"
+      className="bg-white flex-row items-start"
       style={{
-        width: 272,
-        height: 116,
-        borderRadius: 16,
+        padding: wp('2.1%'),
+        marginRight: wp('3.2%'),
+        width: wp('72.5%'),
+        height: hp('14.3%'),
+        borderRadius: wp('4.3%'),
         borderWidth: 0.67,
         borderColor: '#F3F4F6',
         shadowColor: '#000',
         shadowOffset: {
           width: 0,
-          height: 1,
+          height: hp('0.1%'),
         },
         shadowOpacity: 0.08,
-        shadowRadius: 2,
+        shadowRadius: wp('0.5%'),
         elevation: 1,
-        gap: 10
+        gap: wp('2.7%')
       }}
     >
       {/* Image Container */}
-      <View style={{ width: 112, height: 96, borderRadius: 12, overflow: 'hidden' }}>
+      <View style={{ width: wp('29.9%'), height: hp('11.8%'), borderRadius: wp('3.2%'), overflow: 'hidden' }}>
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }}
@@ -42,8 +45,8 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
       </View>
 
       {/* Details Container */}
-      <View className="flex-col pt-3 py-1" style={{ flex: 1, height: 120 }}>
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: 16, lineHeight: 24 }}>
+      <View className="flex-col" style={{ flex: 1, height: hp('14.8%'), paddingTop: hp('1.5%'), paddingVertical: hp('0.5%') }}>
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('4.3%'), lineHeight: hp('3%') }}>
           {(() => {
             const raw = price;
             if (raw === null || raw === undefined || raw === '') return 'View details';
@@ -66,13 +69,13 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
             return String(raw);
           })()}
         </Text>
-        <Text className="font-inter-semibold text-[#101828] mt-1" style={{ fontSize: 14, lineHeight: 21 }} numberOfLines={1}>
+        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.6%'), marginTop: hp('0.5%') }} numberOfLines={1}>
           {title}
         </Text>
-        <Text className="font-inter-regular text-[#6A7282] mt-1" style={{ fontSize: 12, lineHeight: 18 }}>
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginTop: hp('0.5%') }}>
           {area}
         </Text>
-        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 12, lineHeight: 18 }} numberOfLines={1}>
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} numberOfLines={1}>
           {location}
         </Text>
       </View>

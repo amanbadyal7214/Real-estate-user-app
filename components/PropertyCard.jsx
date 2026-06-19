@@ -1,16 +1,17 @@
 import { useRouter } from 'expo-router';
 import { Heart, MessageSquare } from 'lucide-react-native';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const BHKCard = ({ config, area, price }) => {
   return (
-    <View className="w-[120px] h-[128px] p-3 rounded-xl border border-[#E4E7EC] bg-white mr-3">
-      <Text className="font-inter-bold text-[14px] text-[#101828] leading-[18px]">{config}</Text>
-      <View className="mt-1.5">
-        <Text className="font-inter-medium text-[12px] text-[#6A7282] leading-[15px]">Super Builtup Area</Text>
-        <Text className="font-inter-regular text-[13px] text-[#4A5565] leading-[16px]">{area}</Text>
+    <View className="bg-white border border-[#E4E7EC]" style={{ width: wp('32%'), height: hp('15.8%'), padding: wp('3.2%'), borderRadius: wp('3.2%'), marginRight: wp('3.2%') }}>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), lineHeight: hp('2.2%') }} className="text-[#101828]">{config}</Text>
+      <View style={{ marginTop: hp('0.7%') }}>
+        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), lineHeight: hp('1.8%') }} className="text-[#6A7282]">Super Builtup Area</Text>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2%') }} className="text-[#4A5565]">{area}</Text>
       </View>
-      <Text className="font-inter-bold text-[14px] text-[#101828] leading-[18px] mt-1.5">{price}</Text>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), lineHeight: hp('2.2%'), marginTop: hp('0.7%') }} className="text-[#101828]">{price}</Text>
     </View>
   );
 };
@@ -37,8 +38,11 @@ const PropertyCard = ({ property }) => {
     <TouchableOpacity 
       activeOpacity={0.9}
       onPress={navigateToDetails}
-      className="bg-white rounded-2xl p-2.5 mb-4 self-center w-full border-2 border-primary"
+      className="bg-white self-center w-full border-2 border-primary"
       style={{
+        borderRadius: wp('4.3%'),
+        padding: wp('2.7%'),
+        marginBottom: hp('2%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
@@ -47,7 +51,7 @@ const PropertyCard = ({ property }) => {
       }}
     >
       {/* Image Section */}
-      <View className="relative h-[150px] rounded-[14px] overflow-hidden">
+      <View className="relative overflow-hidden" style={{ height: hp('18.5%'), borderRadius: wp('3.7%') }}>
         <Image 
           source={{ uri: property.image }} 
           className="w-full h-full"
@@ -56,45 +60,45 @@ const PropertyCard = ({ property }) => {
         
         {/* RERA Badge */}
         {property.reraCertified && (
-          <View className="absolute left-3 top-3 bg-primary rounded-lg flex-row items-center px-2.5 py-1 gap-1.5">
-            <View className="w-3.5 h-3.5 bg-white rounded-full items-center justify-center">
-              <View className="w-2 h-2 bg-primary rounded-full" />
+          <View className="absolute bg-primary flex-row items-center" style={{ left: wp('3.2%'), top: hp('1.5%'), borderRadius: wp('2.1%'), paddingHorizontal: wp('2.7%'), paddingVertical: hp('0.5%'), gap: wp('1.6%') }}>
+            <View className="bg-white rounded-full items-center justify-center" style={{ width: wp('3.7%'), height: wp('3.7%') }}>
+              <View className="bg-primary rounded-full" style={{ width: wp('2.1%'), height: wp('2.1%') }} />
             </View>
-            <Text className="text-white text-[11px] font-inter-bold tracking-widest">RERA</Text>
+            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%') }} className="text-white tracking-widest">RERA</Text>
           </View>
         )}
 
         {/* Favorite Button */}
-        <TouchableOpacity className="absolute right-3 top-3 w-9 h-9 bg-white/90 rounded-full items-center justify-center">
-          <Heart size={20} color="#4A5565" />
+        <TouchableOpacity className="absolute bg-white/90 rounded-full items-center justify-center" style={{ right: wp('3.2%'), top: hp('1.5%'), width: wp('9.6%'), height: wp('9.6%') }}>
+          <Heart size={wp('5.3%')} color="#4A5565" />
         </TouchableOpacity>
 
         {/* Image Count & Indicator */}
-        <View className="absolute left-3 bottom-3 bg-black/60 rounded-lg flex-row items-center px-2.5 py-1 gap-1.5">
-          <Text className="text-white text-[12px] font-inter-medium">1/{property.imageCount}</Text>
-          <View className="flex-row gap-1">
-            <View className="w-1 h-1 bg-white rounded-full" />
-            <View className="w-1 h-1 bg-white/40 rounded-full" />
-            <View className="w-1 h-1 bg-white/40 rounded-full" />
+        <View className="absolute bg-black/60 flex-row items-center" style={{ left: wp('3.2%'), bottom: hp('1.5%'), borderRadius: wp('2.1%'), paddingHorizontal: wp('2.7%'), paddingVertical: hp('0.5%'), gap: wp('1.6%') }}>
+          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-white">1/{property.imageCount}</Text>
+          <View className="flex-row" style={{ gap: wp('1.1%') }}>
+            <View className="bg-white rounded-full" style={{ width: wp('1.1%'), height: wp('1.1%') }} />
+            <View className="bg-white/40 rounded-full" style={{ width: wp('1.1%'), height: wp('1.1%') }} />
+            <View className="bg-white/40 rounded-full" style={{ width: wp('1.1%'), height: wp('1.1%') }} />
           </View>
         </View>
       </View>
 
       {/* Property Details */}
-      <View className="mt-3">
-        <Text className="text-[12px] text-[#6A7282] font-inter-regular leading-[15px]">
+      <View style={{ marginTop: hp('1.5%') }}>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: hp('1.8%') }} className="text-[#6A7282]">
           Possession by {property.possessionDate} • Avg. rate/sq.ft. {property.avgRate}
         </Text>
-        <Text className="text-[23px] font-inter-bold text-[#101828] leading-[29px] mt-2">
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('6.1%'), lineHeight: hp('3.6%'), marginTop: hp('1%') }} className="text-[#101828]">
           {property.projectName}
         </Text>
-        <Text className="text-[14px] text-[#4A5565] font-inter-regular leading-[18px] mt-1">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: hp('2.2%'), marginTop: hp('0.5%') }} className="text-[#4A5565]">
           {property.location}
         </Text>
-        <Text className="text-[18px] font-inter-bold text-[#101828] leading-[22px] mt-2">
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%'), lineHeight: hp('2.7%'), marginTop: hp('1%') }} className="text-[#101828]">
           {property.priceRange}
         </Text>
-        <Text className="text-[13px] text-[#4A5565] font-inter-regular leading-[16px] mt-2">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2%'), marginTop: hp('1%') }} className="text-[#4A5565]">
           {property.bhkFlats}
         </Text>
 
@@ -102,8 +106,8 @@ const PropertyCard = ({ property }) => {
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false}
-          className="mt-3"
-          contentContainerStyle={{ paddingRight: 16 }}
+          style={{ marginTop: hp('1.5%') }}
+          contentContainerStyle={{ paddingRight: wp('4.3%') }}
         >
           {property.configurations?.map((config, index) => (
             <BHKCard 
@@ -116,13 +120,13 @@ const PropertyCard = ({ property }) => {
         </ScrollView>
 
         {/* Action Buttons */}
-        <View className="flex-row mt-4 gap-3">
-          <TouchableOpacity className="flex-1 h-12 flex-row justify-center items-center bg-primary/10 rounded-xl gap-2">
-            <MessageSquare size={20} color="#008E96" />
-            <Text className="text-[14px] font-inter-medium text-primary">Chat</Text>
+        <View className="flex-row" style={{ marginTop: hp('2%'), gap: wp('3.2%') }}>
+          <TouchableOpacity className="flex-1 flex-row justify-center items-center bg-primary/10" style={{ height: hp('5.9%'), borderRadius: wp('3.2%'), gap: wp('2.1%') }}>
+            <MessageSquare size={wp('5.3%')} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-primary">Chat</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1 h-12 justify-center items-center bg-primary rounded-xl" style={{ elevation: 2 }}>
-            <Text className="text-[14px] font-inter-medium text-white">Contact Seller</Text>
+          <TouchableOpacity className="flex-1 justify-center items-center bg-primary" style={{ height: hp('5.9%'), borderRadius: wp('3.2%'), elevation: 2 }}>
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-white">Contact Seller</Text>
           </TouchableOpacity>
         </View>
       </View>

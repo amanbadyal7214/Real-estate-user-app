@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { Check, Heart, MessageCircle } from 'lucide-react-native';
 import { useState } from 'react';
 import { Image, Text, TouchableOpacity, View, Alert } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import api from '../app/api';
 
 const InsightPropertyCard = ({ 
@@ -61,8 +62,15 @@ const InsightPropertyCard = ({
     <TouchableOpacity 
       activeOpacity={0.9}
       onPress={navigateToDetails}
-      className="bg-white mr-4 mb-2 rounded-[14px] border-[0.67px] border-[#E4E7EC] pt-[10px] px-[10px] pb-[10px] w-[180px] h-[330px]"
+      className="bg-white border-[#E4E7EC]"
       style={{
+        marginRight: wp('4.3%'),
+        marginBottom: hp('1%'),
+        borderRadius: wp('3.7%'),
+        borderWidth: 0.67,
+        padding: wp('2.7%'),
+        width: wp('48%'),
+        height: hp('40.6%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.06,
@@ -70,7 +78,7 @@ const InsightPropertyCard = ({
         elevation: 3,
       }}
     >
-      <View className="w-full h-[128px] rounded-[12px] overflow-hidden relative">
+      <View className="w-full overflow-hidden relative" style={{ height: hp('15.8%'), borderRadius: wp('3.2%') }}>
         <Image 
           source={{ uri: image }} 
           className="w-full h-full"
@@ -78,17 +86,18 @@ const InsightPropertyCard = ({
         />
         {/* RERA Badge */}
         {isRera && (
-          <View className="absolute left-2 top-2 bg-[#008E96] rounded-lg flex-row items-center py-1 px-2 gap-1">
-            <Check size={12} color="#FFFFFF" strokeWidth={3} />
-            <Text className="font-inter-medium text-[11px] leading-[16px] text-white">RERA</Text>
+          <View className="absolute bg-[#008E96] flex-row items-center" style={{ left: wp('2.1%'), top: hp('1%'), borderRadius: wp('2%'), paddingVertical: hp('0.5%'), paddingHorizontal: wp('2.1%'), gap: wp('1%') }}>
+            <Check size={wp('3.2%')} color="#FFFFFF" strokeWidth={3} />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), lineHeight: hp('2%') }} className="text-white">RERA</Text>
           </View>
         )}
         <TouchableOpacity 
           onPress={toggleWishlist}
-          className="absolute right-2 top-2 w-8 h-8 bg-white/90 rounded-full items-center justify-center"
+          className="absolute bg-white/90 rounded-full items-center justify-center"
+          style={{ right: wp('2.1%'), top: hp('1%'), width: wp('8.5%'), height: wp('8.5%') }}
         >
           <Heart 
-            size={18} 
+            size={wp('4.8%')} 
             color={isSaved ? "#F04438" : "#4A5565"} 
             fill={isSaved ? "#F04438" : "transparent"} 
             strokeWidth={2} 
@@ -96,36 +105,38 @@ const InsightPropertyCard = ({
         </TouchableOpacity>
       </View>
 
-      <View className="mt-1.5">
-        <Text className="font-inter-regular text-[12px] leading-[18px] text-[#6A7282] mb-1">
+      <View style={{ marginTop: hp('0.7%') }}>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginBottom: hp('0.5%') }} className="text-[#6A7282]">
           {possession}
         </Text>
-        <Text className="font-inter-semibold text-[16px] leading-[24px] text-[#101828] mb-0.5" numberOfLines={1}>
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%'), lineHeight: hp('3%'), marginBottom: hp('0.2%') }} className="text-[#101828]" numberOfLines={1}>
           {title}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-1">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('0.5%') }} className="text-[#6A7282]">
           {location}
         </Text>
-        <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828] mb-0.5">
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), lineHeight: hp('2.7%'), marginBottom: hp('0.2%') }} className="text-[#101828]">
           {price}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-0.5">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('0.2%') }} className="text-[#6A7282]">
           {bhk}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mb-2">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('1%') }} className="text-[#6A7282]">
           {area}
         </Text>
 
-        <View className="flex-row items-center gap-2 w-full h-10">
+        <View className="flex-row items-center w-full" style={{ gap: wp('2.1%'), height: hp('4.9%') }}>
           <TouchableOpacity 
-            className="w-10 h-10 bg-[#25D366]/10 rounded-full items-center justify-center"
+            className="bg-[#25D366]/10 rounded-full items-center justify-center"
+            style={{ width: wp('10.7%'), height: wp('10.7%') }}
           >
-            <MessageCircle size={20} color="#25D366" fill="#25D366" />
+            <MessageCircle size={wp('5.3%')} color="#25D366" fill="#25D366" />
           </TouchableOpacity>
           <TouchableOpacity 
-            className="flex-1 h-10 bg-[#008E96]/10 rounded-[14px] items-center justify-center"
+            className="flex-1 bg-[#008E96]/10 items-center justify-center"
+            style={{ height: hp('4.9%'), borderRadius: wp('3.7%') }}
           >
-            <Text className="font-inter-medium text-[14px] leading-[21px] text-[#008E96] text-center">
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), lineHeight: hp('2.6%') }} className="text-[#008E96] text-center">
               View Phone
             </Text>
           </TouchableOpacity>
@@ -135,13 +146,13 @@ const InsightPropertyCard = ({
         <View 
           style={{
             position: 'absolute',
-            bottom: 50,
-            left: 8,
-            right: 8,
+            bottom: hp('6.2%'),
+            left: wp('2.1%'),
+            right: wp('2.1%'),
             backgroundColor: '#1E293B',
-            paddingVertical: 8,
-            paddingHorizontal: 8,
-            borderRadius: 16,
+            paddingVertical: hp('1%'),
+            paddingHorizontal: wp('2.1%'),
+            borderRadius: wp('4.3%'),
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 999,
@@ -152,7 +163,7 @@ const InsightPropertyCard = ({
             elevation: 5,
           }}
         >
-          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: 10, textAlign: 'center' }}>
+          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: wp('2.7%'), textAlign: 'center' }}>
             {toast}
           </Text>
         </View>

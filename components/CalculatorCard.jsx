@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress }) => {
   return (
@@ -7,42 +8,42 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
       onPress={onPress}
       activeOpacity={0.95}
       style={{
-        width: 186,
-        height: 240,
+        width: wp('49.6%'),
+        height: hp('29.5%'),
         backgroundColor: '#FFFFFF',
         borderWidth: 0.8,
         borderColor: '#D4A574',
-        borderRadius: 18,
+        borderRadius: wp('4.8%'),
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
+        shadowOffset: { width: 0, height: hp('0.7%') },
         shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowRadius: wp('3.2%'),
         elevation: 3,
-        marginRight: 12,
-        padding: 16,
-        paddingBottom: 20,
+        marginRight: wp('3.2%'),
+        padding: wp('4.3%'),
+        paddingBottom: hp('2.5%'),
         overflow: 'visible'
       }}
     >
       <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: 16, color: '#8B6F47', lineHeight: 20 }}>{titlePrefix}</Text>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: 14, color: '#8B6F47', marginTop: 2 }}>Calculator</Text>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%'), color: '#8B6F47', lineHeight: hp('2.5%') }}>{titlePrefix}</Text>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), color: '#8B6F47', marginTop: hp('0.2%') }}>Calculator</Text>
       </View>
 
-      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6A7282', marginTop: 12, minHeight: 34 }}>
+      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6A7282', marginTop: hp('1.5%'), minHeight: hp('4.2%') }}>
         {description}
       </Text>
 
-      <View style={{ height: 86, marginTop: 8, position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ height: hp('10.6%'), marginTop: hp('1%'), position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
         {/* Oval background */}
         <View
           style={{
             position: 'absolute',
-            width: 150,
-            height: 64,
-            borderRadius: 40,
+            width: wp('40%'),
+            height: hp('7.9%'),
+            borderRadius: wp('10.7%'),
             backgroundColor: '#FCEFE2',
-            bottom: 2,
+            bottom: hp('0.2%'),
             alignSelf: 'center'
           }}
         />
@@ -64,7 +65,7 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
                 backgroundColor: v.background || 'transparent',
                 borderWidth: v.borderWidth || 0,
                 borderColor: v.borderColor || 'transparent',
-                borderRadius: v.rounded ? 8 : 0,
+                borderRadius: v.rounded ? wp('2.1%') : 0,
                 width: v.width || undefined,
                 height: v.height || undefined,
               }}
@@ -72,23 +73,23 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
           );
         })}
       </View>
-      <View style={{ position: 'absolute', right: 12, bottom: 12 }}>
+      <View style={{ position: 'absolute', right: wp('3.2%'), bottom: hp('1.5%') }}>
         <View
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: 20,
+            width: wp('10.7%'),
+            height: wp('10.7%'),
+            borderRadius: wp('5.3%'),
             backgroundColor: '#D4A574',
             justifyContent: 'center',
             alignItems: 'center',
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: 3 },
+            shadowOffset: { width: 0, height: hp('0.4%') },
             shadowOpacity: 0.1,
-            shadowRadius: 6,
+            shadowRadius: wp('1.6%'),
             elevation: 3
           }}
         >
-          <ChevronRight size={16} color="#FFFFFF" strokeWidth={1.5} />
+          <ChevronRight size={wp('4.3%')} color="#FFFFFF" strokeWidth={1.5} />
         </View>
       </View>
     </TouchableOpacity>

@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { formatPrice } from '../app/utils/formatPrice';
 
 const PropertyCard = ({ item, destination = 'property' }) => {
@@ -40,9 +41,9 @@ const PropertyCard = ({ item, destination = 'property' }) => {
 
           router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: entityId } })
         }}
-        className="mr-5"
+        style={{ marginRight: wp('5.3%') }}
       >
-        <View className="w-[260px] h-[220px] rounded-[20px] overflow-hidden bg-gray-200 shadow-lg">
+        <View className="overflow-hidden bg-gray-200 shadow-lg" style={{ width: wp('69.3%'), height: hp('27.1%'), borderRadius: wp('5.3%') }}>
           <Image
             source={images[currentImageIndex]}
             style={StyleSheet.absoluteFill}
@@ -57,43 +58,44 @@ const PropertyCard = ({ item, destination = 'property' }) => {
           />
 
           {/* Progress Bars / Pagination */}
-          <View className="flex-row gap-1 absolute top-3 left-3 right-3">
+          <View className="flex-row absolute" style={{ gap: wp('1.1%'), top: hp('1.5%'), left: wp('3.2%'), right: wp('3.2%') }}>
             {images.length > 1 ? (
               images.map((_, idx) => (
                 <View
                   key={idx}
-                  className={`flex-1 h-1 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-white/30'}`}
+                  className={`flex-1 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-white/30'}`}
+                  style={{ height: hp('0.5%') }}
                 />
               ))
             ) : (
               <>
-                <View className="flex-1 h-1 rounded-full bg-white/50" />
-                <View className="flex-1 h-1 rounded-full bg-white/30" />
-                <View className="flex-1 h-1 rounded-full bg-white/30" />
+                <View className="flex-1 rounded-full bg-white/50" style={{ height: hp('0.5%') }} />
+                <View className="flex-1 rounded-full bg-white/30" style={{ height: hp('0.5%') }} />
+                <View className="flex-1 rounded-full bg-white/30" style={{ height: hp('0.5%') }} />
               </>
             )}
           </View>
 
           {/* Top Section */}
-          <View className="flex-row justify-between items-start pt-4 px-3">
-            <View className="bg-[#155DFC] px-2 py-1 rounded-[4px]">
-              <Text className="font-inter-bold text-[9px] text-white">RERA</Text>
+          <View className="flex-row justify-between items-start" style={{ paddingTop: hp('2%'), paddingHorizontal: wp('3.2%') }}>
+            <View className="bg-[#155DFC]" style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('1.1%') }}>
+              <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.4%') }}>RERA</Text>
             </View>
             <View className="items-end">
-              <Text className="font-inter-bold text-[11px] text-white tracking-widest text-right">TALLEST LANDMARK</Text>
-              <Text className="font-inter-regular text-[9px] text-white text-right uppercase">BY {item.developer || item.builder || ''}</Text>
+              <Text className="font-inter-bold text-white tracking-widest text-right" style={{ fontSize: wp('2.9%') }}>TALLEST LANDMARK</Text>
+              <Text className="font-inter-regular text-white text-right uppercase" style={{ fontSize: wp('2.4%') }}>BY {item.developer || item.builder || ''}</Text>
             </View>
           </View>
 
           {/* Bottom Section */}
-          <View className="absolute bottom-4 left-3 right-3">
-            <Text className="font-inter-bold text-[15px] text-white leading-[22px]">
+          <View className="absolute" style={{ bottom: hp('2%'), left: wp('3.2%'), right: wp('3.2%') }}>
+            <Text className="font-inter-bold text-white" style={{ fontSize: wp('4%'), lineHeight: hp('2.7%') }}>
               {item.title}
             </Text>
-            <Text className="font-inter-regular text-[11px] text-white/90 leading-[16px]">
+            <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>
               {item.location}
             </Text>
-            <Text className="font-inter-bold text-[13px] text-white mt-2 leading-[18px]">
+            <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.5%'), marginTop: hp('1%'), lineHeight: hp('2.2%') }}>
               {formatPrice(item.priceRange)}
             </Text>
           </View>

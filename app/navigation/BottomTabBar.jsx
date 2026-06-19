@@ -1,8 +1,9 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { Heart, Search, User } from 'lucide-react-native';
+import { Heart, Search, Sparkles, User } from 'lucide-react-native';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
   const handleProtectedNavigation = async (destination) => {
@@ -43,46 +44,46 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: 35,
+          bottom: hp('4.3%'),
           left: 0,
           right: 0,
-          height: Platform.OS === 'ios' ? 70 : 65,
+          height: Platform.OS === 'ios' ? hp('8.6%') : hp('8%'),
           backgroundColor: '#FFFFFF',
           borderWidth: 2,
           borderColor: '#008E96',
           borderBottomWidth: 1,
           borderTopWidth: 1,
-          borderTopLeftRadius: 35,
-          borderTopRightRadius: 35,
-          borderBottomLeftRadius: 35,
-          borderBottomRightRadius: 35,
+          borderTopLeftRadius: wp('9.3%'),
+          borderTopRightRadius: wp('9.3%'),
+          borderBottomLeftRadius: wp('9.3%'),
+          borderBottomRightRadius: wp('9.3%'),
           flexDirection: 'row',
           justifyContent: 'space-around',
-          marginHorizontal: 5,
+          marginHorizontal: wp('1.3%'),
           alignItems: 'flex-start',
-          paddingTop: 4,
-          paddingHorizontal: 4,
+          paddingTop: hp('0.5%'),
+          paddingHorizontal: wp('1.1%'),
           paddingBottom: 0,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: -4 },
+          shadowOffset: { width: 0, height: hp('-0.5%') },
           shadowOpacity: 0.1,
-          shadowRadius: 10,
+          shadowRadius: wp('2.7%'),
           elevation: 8,
         }}
       >
-        <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-          <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Explore</Text>
+        <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: wp('21.3%'), alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+          <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Explore</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-          <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Favorites</Text>
+        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ width: wp('21.3%'), alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+          <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Favorites</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-          <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Account</Text>
+        <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ width: wp('21.3%'), alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+          <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Account</Text>
         </TouchableOpacity>
       </View>
     );
@@ -93,51 +94,51 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: 35,
+          bottom: hp('4.3%'),
           left: 0,
           right: 0,
-          height: Platform.OS === 'ios' ? 70 : 65,
+          height: Platform.OS === 'ios' ? hp('8.6%') : hp('8%'),
           backgroundColor: '#FFFFFF',
           borderWidth: 1,
           borderColor: '#008E96',
           borderBottomWidth: 1,
           borderTopWidth: 1,
-          borderTopLeftRadius: 35,
-          borderTopRightRadius: 35,
-          borderBottomLeftRadius: 35,
-          borderBottomRightRadius: 35,
+          borderTopLeftRadius: wp('9.3%'),
+          borderTopRightRadius: wp('9.3%'),
+          borderBottomLeftRadius: wp('9.3%'),
+          borderBottomRightRadius: wp('9.3%'),
           flexDirection: 'row',
           justifyContent: 'space-around', // Using space-around for 4 items
           alignItems: 'flex-start',
-          marginHorizontal: 5,
-          paddingTop: 6,
-          paddingHorizontal: 4,
+          marginHorizontal: wp('1.3%'),
+          paddingTop: hp('0.7%'),
+          paddingHorizontal: wp('1.1%'),
           paddingBottom: 0,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: -4 },
+          shadowOffset: { width: 0, height: hp('-0.5%') },
           shadowOpacity: 0.1,
-          shadowRadius: 10,
+          shadowRadius: wp('2.7%'),
           elevation: 8,
         }}
       >
-        <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-          <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Explore</Text>
+        <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ width: wp('21.3%'), alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+          <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+          <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Explore</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Rent/services')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-          <MaterialCommunityIcons name="room-service-outline" color={activeTab === 'Services' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Services' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>services</Text>
+        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Rent/services')} style={{ width: wp('21.3%'), alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+          <MaterialCommunityIcons name="room-service-outline" color={activeTab === 'Services' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+          <Text style={{ color: activeTab === 'Services' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>services</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-          <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Favorites</Text>
+        <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ width: wp('21.3%'), alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+          <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+          <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Favorites</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ width: 80, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-          <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Account</Text>
+        <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ width: wp('21.3%'), alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+          <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+          <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Account</Text>
         </TouchableOpacity>
       </View>
     );
@@ -148,56 +149,56 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
     <View
       style={{
         position: 'absolute',
-        bottom: 35,
+        bottom: hp('4.3%'),
         left: 0,
         right: 0,
-        height: Platform.OS === 'ios' ? 70 : 65,
+        height: Platform.OS === 'ios' ? hp('8.6%') : hp('8%'),
         backgroundColor: '#FFFFFF',
-        marginHorizontal: 5,
+        marginHorizontal: wp('1.3%'),
         borderWidth: 1,
         borderColor: '#008E96',
         borderBottomWidth: 1,
         borderTopWidth: 1,
-        borderTopLeftRadius: 35,
-        borderTopRightRadius: 35,
-        borderBottomLeftRadius: 35,
-        borderBottomRightRadius: 35,
+        borderTopLeftRadius: wp('9.3%'),
+        borderTopRightRadius: wp('9.3%'),
+        borderBottomLeftRadius: wp('9.3%'),
+        borderBottomRightRadius: wp('9.3%'),
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        paddingTop: 6,
-        paddingHorizontal: 8,
+        paddingTop: hp('0.7%'),
+        paddingHorizontal: wp('2.1%'),
         paddingBottom: 0,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: -4 },
+        shadowOffset: { width: 0, height: hp('-0.5%') },
         shadowOpacity: 0.1,
-        shadowRadius: 10,
+        shadowRadius: wp('2.7%'),
         elevation: 8,
       }}
     >
-      <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-        <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Explore</Text>
+      <TouchableOpacity onPress={() => router.push(getSearchRoute())} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+        <Search color={activeTab === 'Search' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+        <Text style={{ color: activeTab === 'Search' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Explore</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Buy/Insights')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-        <MaterialCommunityIcons name="google-analytics" color={activeTab === 'Insights' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Insights' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Trends</Text>
+      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Buy/Insights')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+        <MaterialCommunityIcons name="google-analytics" color={activeTab === 'Insights' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+        <Text style={{ color: activeTab === 'Insights' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Trends</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Buy/Suggestions')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-        <Search color={activeTab === 'Suggestions' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Suggestions' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>For You</Text>
+      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Buy/Suggestions')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+        <Sparkles color={activeTab === 'Suggestions' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+        <Text style={{ color: activeTab === 'Suggestions' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>For You</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-        <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Favorites</Text>
+      <TouchableOpacity onPress={() => handleProtectedNavigation('/screens/Saved')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+        <Heart color={activeTab === 'Saved' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+        <Text style={{ color: activeTab === 'Saved' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Favorites</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 55, gap: 4 }}>
-        <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={24} />
-        <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>Account</Text>
+      <TouchableOpacity onPress={() => router.push('/screens/Profile')} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: hp('6.8%'), gap: wp('1.1%') }}>
+        <User color={activeTab === 'Profile' ? "#008E96" : "rgba(16, 24, 40, 0.82)"} size={wp('6.4%')} />
+        <Text style={{ color: activeTab === 'Profile' ? '#008E96' : 'rgba(16, 24, 40, 0.82)', fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), textAlign: 'center' }}>Account</Text>
       </TouchableOpacity>
     </View>
   );

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import InsightPropertyCard from '../../../components/InsightPropertyCard';
 import LocalityExploreCard from '../../../components/LocalityExploreCard';
 import PreferenceCard from '../../../components/PreferenceCard';
@@ -275,36 +276,37 @@ const Insights = () => {
     return (
         <SafeAreaView className="flex-1 bg-white">
             <Stack.Screen options={{ animation: 'slide_from_bottom', gestureEnabled: true }} />
-            <ScrollView contentContainerStyle={{ paddingBottom: 30 }} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={{ paddingBottom: hp('3.7%') }} showsVerticalScrollIndicator={false}>
 
                 {/* Header Section */}
                 <Animated.View entering={FadeInUp.duration(600).delay(100)}>
                     <TouchableOpacity
-                        className="flex-row items-center px-4 mt-2"
+                        className="flex-row items-center"
+                        style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('1%') }}
                         onPress={() => router.back()}
                     >
-                        <ArrowLeft size={18} color="#6A7282" />
-                        <Text className="text-[#6A7282] text-[14px] font-inter-medium ml-2">Back to Home</Text>
+                        <ArrowLeft size={wp('4.8%')} color="#6A7282" />
+                        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), marginLeft: wp('2.1%') }} className="text-[#6A7282]">Back to Home</Text>
                     </TouchableOpacity>
                 </Animated.View>
 
-                <Animated.View entering={FadeInDown.duration(600).delay(200)} className="px-4 mt-6 mb-3">
-                    <Text className="text-[#6A7282] text-[13px] font-inter-medium">Hi  {userName},</Text>
-                    <Text className="text-[#101828] text-[24px] font-inter-bold mt-1">Welcome back!</Text>
+                <Animated.View entering={FadeInDown.duration(600).delay(200)} style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3%'), marginBottom: hp('1.5%') }}>
+                    <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }} className="text-[#6A7282]">Hi  {userName},</Text>
+                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('6.4%'), marginTop: hp('0.5%') }} className="text-[#101828]">Welcome back!</Text>
                 </Animated.View>
 
                 {/* New Listings Section */}
-                <Animated.View entering={FadeInDown.duration(600).delay(300)} className="pl-4">
-                    <View className="flex-row items-center pr-4 mb-4">
-                        <Text className="text-[#101828] text-[16px] font-inter-semibold">New Listings added nearby</Text>
+                <Animated.View entering={FadeInDown.duration(600).delay(300)} style={{ paddingLeft: wp('4.3%') }}>
+                    <View className="flex-row items-center" style={{ paddingRight: wp('4.3%'), marginBottom: hp('2%') }}>
+                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%') }} className="text-[#101828]">New Listings added nearby</Text>
                     </View>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingRight: 16 }}
+                        contentContainerStyle={{ paddingRight: wp('4.3%') }}
                     >
                         {loading && nearbyProperties.length === 0 ? (
-                            <View className="flex-row items-center justify-center py-10 w-[200px]">
+                            <View className="flex-row items-center justify-center" style={{ paddingVertical: hp('4.9%'), width: wp('53.3%') }}>
                                 <ActivityIndicator size="small" color="#008E96" />
                             </View>
                         ) : (nearbyProperties.length > 0 ? nearbyProperties : mockProperties).map((prop) => (
@@ -326,14 +328,14 @@ const Insights = () => {
                 </Animated.View>
 
                 {/* Revisit Properties Section */}
-                <Animated.View entering={FadeInDown.duration(600).delay(400)} className="pl-4 mt-8">
-                    <View className="flex-row items-center justify-between pr-4 mb-4">
-                        <Text className="text-[#101828] text-[16px] font-inter-semibold">Revisit properties seen by you</Text>
+                <Animated.View entering={FadeInDown.duration(600).delay(400)} style={{ paddingLeft: wp('4.3%'), marginTop: hp('3.9%') }}>
+                    <View className="flex-row items-center justify-between" style={{ paddingRight: wp('4.3%'), marginBottom: hp('2%') }}>
+                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%') }} className="text-[#101828]">Revisit properties seen by you</Text>
                     </View>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingRight: 16 }}
+                        contentContainerStyle={{ paddingRight: wp('4.3%') }}
                     >
                         {(isLoggedIn && recentlyViewed.length > 0 ? recentlyViewed : revisitMockProperties).map((prop, index) => {
                             const property = prop.property || prop;
@@ -360,20 +362,20 @@ const Insights = () => {
                 </Animated.View>
 
                 {/* Explore Localities Nearby Section */}
-                <Animated.View entering={FadeInDown.duration(600).delay(500)} className="pl-4 mt-6">
-                    <View className="flex-row items-center justify-between pr-4 mb-4">
-                        <Text className="text-[#101828] text-[16px] font-inter-bold">Explore localities nearby</Text>
+                <Animated.View entering={FadeInDown.duration(600).delay(500)} style={{ paddingLeft: wp('4.3%'), marginTop: hp('3%') }}>
+                    <View className="flex-row items-center justify-between" style={{ paddingRight: wp('4.3%'), marginBottom: hp('2%') }}>
+                        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%') }} className="text-[#101828]">Explore localities nearby</Text>
                         <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')}>
-                            <Text className="text-[#008E96] text-[13px] font-inter-medium">See all</Text>
+                            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }} className="text-[#008E96]">See all</Text>
                         </TouchableOpacity>
                     </View>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingRight: 16 }}
+                        contentContainerStyle={{ paddingRight: wp('4.3%') }}
                     >
                         {nearbyLocalities.length > 0 ? nearbyLocalities.map((item, index) => (
-                            <View key={`locality-${index}`} className="mr-4">
+                            <View key={`locality-${index}`} style={{ marginRight: wp('4.3%') }}>
                                 <LocalityExploreCard 
                                     title={item.localityName || item.locality}
                                     rating={item.rating || (4 + Math.random()).toFixed(1)}
@@ -383,77 +385,20 @@ const Insights = () => {
                                 />
                             </View>
                         )) : localityMockData.map((item, index) => (
-                            <View key={`locality-${index}`} className="mr-4">
+                            <View key={`locality-${index}`} style={{ marginRight: wp('4.3%') }}>
                                 <LocalityExploreCard {...item} />
                             </View>
                         ))}
                     </ScrollView>
                 </Animated.View>
 
-                {/* Top Rated Projects Section */}
-                {/* <Animated.View entering={FadeInDown.duration(600).delay(600)} className="px-4 mt-6">
-                    <View className="flex-row items-center justify-between mb-4">
-                        <Text className="text-[#101828] text-[18px] font-inter-semibold">Top rated projects</Text>
-                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedProject')}>
-                            <Text className="text-[#008E96] text-[14px] font-inter-medium">See all</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        {topRatedProjects.map((project) => (
-                            <TopRatedProjectCard key={project.id} {...project} />
-                        ))}
-                    </View>
-                </Animated.View> */}
-
-                {/* Highest Growth Projects Section */}
-                {/* <Animated.View entering={FadeInDown.duration(600).delay(700)} className="pl-4 mt-6">
-                    <View className="flex-row items-center justify-between pr-4 mb-4">
-                        <Text className="text-[#101828] text-[18px] font-inter-semibold">Highest growth projects</Text>
-                        <TouchableOpacity>
-                            <Text className="text-[#008E96] text-[14px] font-inter-medium">See all</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingRight: 16 }}
-                    >
-                        {highestGrowthProjects.map((project) => (
-                            <View key={project.id} className="mr-4">
-                                <HighestGrowthCard {...project} />
-                            </View>
-                        ))}
-                    </ScrollView>
-                </Animated.View> */}
-
-                {/* Projects with Unique Amenities Section */}
-                {/* <Animated.View entering={FadeInDown.duration(600).delay(800)} className="pl-4 mt-6 pb-6">
-                    <View className="flex-row items-center justify-between pr-4 mb-4">
-                        <Text className="text-[#101828] text-[18px] font-inter-semibold">Projects with unique amenities</Text>
-                        <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/UniqueAmenities')}>
-                            <Text className="text-[#008E96] text-[14px] font-inter-medium">See all</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingRight: 16 }}
-                    >
-                        {uniqueAmenities.map((amenity) => (
-                            <View key={amenity.id} className="mr-4">
-                                <UniqueAmenityCard {...amenity} />
-                            </View>
-                        ))}
-                    </ScrollView>
-                </Animated.View> */}
-
                 {/* Explore by your preferences Section */}
-                <Animated.View entering={FadeInDown.duration(600).delay(900)} className="px-4 ">
-                    <View className="mb-6">
-                        <Text className="text-[#101828] text-[16px] font-inter-semibold leading-[30px]">Explore by what matters to you</Text>
-                        <Text className="text-[#6A7282] text-[14px] font-inter-regular leading-[21px]">See properties based on your top preferences</Text>
+                <Animated.View entering={FadeInDown.duration(600).delay(900)} style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3%') }}>
+                    <View style={{ marginBottom: hp('3%') }}>
+                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%'), lineHeight: hp('3.7%') }} className="text-[#101828]">Explore by what matters to you</Text>
+                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: hp('2.6%') }} className="text-[#6A7282]">See properties based on your top preferences</Text>
                     </View>
-                    <View className="flex-row ml-2 flex-wrap gap-x-4">
+                    <View className="flex-row flex-wrap" style={{ marginLeft: wp('2.1%'), columnGap: wp('4.3%') }}>
                         {preferencesData.map((pref) => (
                             <PreferenceCard key={pref.id} {...pref} />
                         ))}
@@ -461,7 +406,6 @@ const Insights = () => {
                 </Animated.View>
 
             </ScrollView>
-            {/* <BottomTabBar activeTab="Insights" /> */}
         </SafeAreaView>
     );
 };

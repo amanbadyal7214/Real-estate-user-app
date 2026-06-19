@@ -1,16 +1,17 @@
 import { router } from 'expo-router';
 import { ChevronRight, History } from 'lucide-react-native';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const ContinueCards = ({ data = [] }) => {
   if (data.length === 0) return null;
 
   return (
     <>
-    <View className="px-4 mt-6">
-      <View className="flex-row items-center gap-2 mb-4">
-        <History size={20} color="#667085" />
-        <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#4A5565]">
+    <View style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3%') }}>
+      <View className="flex-row items-center" style={{ gap: wp('2.1%'), marginBottom: hp('2%') }}>
+        <History size={wp('5.3%')} color="#667085" />
+        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#4A5565]">
           Pick up where you left off
         </Text>
       </View>
@@ -29,37 +30,38 @@ const ContinueCards = ({ data = [] }) => {
                 router.push('/screens/PropertyDetails');
               }
             }}
-            className="bg-white border border-[#EAECF0] p-3 rounded-2xl w-[224px] mr-3 flex-row items-center justify-between"
+            className="bg-white border border-[#EAECF0] flex-row items-center justify-between"
+            style={{ padding: wp('3.2%'), borderRadius: wp('4.3%'), width: wp('59.7%'), marginRight: wp('3.2%') }}
           >
-            <View className="flex-1 mr-2">
+            <View className="flex-1" style={{ marginRight: wp('2.1%') }}>
               <Text 
                 numberOfLines={1} 
-                style={{ fontFamily: 'Inter-Bold' }} 
-                className="text-[15px] text-[#101828]"
+                style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} 
+                className="text-[#101828]"
               >
                 {item.title}
               </Text>
               <Text 
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{ fontFamily: 'Inter-Regular' }} 
-                className="text-[13px] text-[#667085] mt-1"
+                style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginTop: hp('0.5%') }} 
+                className="text-[#667085]"
               >
                 {item.subtitle}
               </Text>
             </View>
-            <ChevronRight size={20} color="#008E96" />
+            <ChevronRight size={wp('5.3%')} color="#008E96" />
           </TouchableOpacity>
         ))}
       </ScrollView>
       
     </View>
      {/* Locality Banner */}
-        {/* <View className="mx-4 mt-6 p-4 rounded-2xl bg-[#F0FBFA] flex-row items-center justify-between">
-          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#344054]">Not sure about locality?</Text>
+        {/* <View className="bg-[#F0FBFA] flex-row items-center justify-between" style={{ marginHorizontal: wp('4.3%'), marginTop: hp('3%'), padding: wp('4.3%'), borderRadius: wp('4.3%') }}>
+          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#344054]">Not sure about locality?</Text>
           <TouchableOpacity className="flex-row items-center">
-            <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[14px] text-[#101828] underline mr-1">Explore options</Text>
-            <ChevronRight size={16} color="#101828" />
+            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), marginRight: wp('1.1%') }} className="text-[#101828] underline">Explore options</Text>
+            <ChevronRight size={wp('4.3%')} color="#101828" />
           </TouchableOpacity>
         </View> */}
     </>
