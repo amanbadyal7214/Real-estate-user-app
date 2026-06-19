@@ -101,12 +101,12 @@ export default function Index() {
       <Animated.View className="absolute inset-0 bg-white/35" style={animatedOverlayStyle} />
 
       {/* Ellipse (Icon) */}
-      <Animated.View 
-        className="absolute justify-center items-center shadow-black/20 shadow-[0_10px_20px_rgba(0,0,0,0.2)] elevation-[8]" 
+      <Animated.View
+        className="absolute justify-center items-center shadow-black/20 shadow-[0_10px_20px_rgba(0,0,0,0.2)] elevation-[8]"
         style={[{ width: 144 * scale, height: 136 * scale }, animatedEllipseStyle]}
       >
         <Image
-          source={require('../assets/images/Frame1.png')}
+          source={require('../assets/images/icon.png')}
           className="w-full h-full"
           resizeMode="contain"
         />

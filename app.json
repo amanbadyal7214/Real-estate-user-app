@@ -4,7 +4,7 @@
     "slug": "REALESTATE-USER",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/Frame1.png",
+    "icon": "./assets/images/icon_fixed.png",
     "scheme": "realestateuser",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,12 +12,12 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/Frame1.png",
-        "backgroundImage": "./assets/images/Frame1.png",
-        "monochromeImage": "./assets/images/Frame1.png"
+        "foregroundImage": "./assets/images/icon_fixed.png",
+        "backgroundImage": "./assets/images/icon_fixed.png",
+        "monochromeImage": "./assets/images/icon_fixed.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -29,14 +29,14 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/Frame1.png"
+      "favicon": "./assets/images/icon_fixed.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/Frame1.png",
+          "image": "./assets/images/icon_fixed.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
