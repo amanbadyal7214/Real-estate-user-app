@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 /**
  * ServicesCalculatorCard
@@ -22,21 +23,27 @@ const ServicesCalculatorCard = ({
         <TouchableOpacity
             onPress={onPress}
             activeOpacity={0.85}
-            className="w-[250px] h-[160px] bg-white rounded-2xl mr-4 overflow-hidden"
-            style={{ borderWidth: 0.667, borderColor: '#E4E7EC' }}
+            className="bg-white mr-4 overflow-hidden"
+            style={{
+                width: wp('66.7%'),
+                height: hp('19.7%'),
+                borderWidth: 0.667,
+                borderColor: '#E4E7EC',
+                borderRadius: wp('4.3%'),
+            }}
         >
             {/* Title + Subtitle */}
-            <View className="absolute gap-1" style={{ left: 16, top: 22 }}>
+            <View className="absolute gap-1" style={{ left: wp('4.3%'), top: hp('2.7%') }}>
                 <Text
                     className="font-inter-semibold text-[#101828] leading-[22px]"
-                    style={{ fontSize: 18 }}
+                    style={{ fontSize: wp('4.8%') }}
                     numberOfLines={2}
                 >
                     {title}
                 </Text>
                 <Text
                     className="font-inter-medium text-[#6A7282] leading-[16px]"
-                    style={{ fontSize: 13, maxWidth: 140 }}
+                    style={{ fontSize: wp('3.5%'), maxWidth: wp('37.3%') }}
                     numberOfLines={2}
                 >
                     {subtitle}
@@ -45,10 +52,17 @@ const ServicesCalculatorCard = ({
 
             {/* Arrow Button */}
             <View
-                className="absolute w-9 h-9 rounded-full justify-center items-center"
-                style={{ backgroundColor: '#FFA726', right: 14, top: 22 }}
+                className="absolute justify-center items-center"
+                style={{
+                    backgroundColor: iconColor,
+                    right: wp('3.7%'),
+                    top: hp('2.7%'),
+                    width: wp('9.6%'),
+                    height: wp('9.6%'),
+                    borderRadius: wp('4.8%'),
+                }}
             >
-                <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+                <Ionicons name="arrow-forward" size={wp('4.8%')} color="#FFFFFF" />
             </View>
 
             {/* Background Illustration */}
@@ -56,7 +70,7 @@ const ServicesCalculatorCard = ({
                 <Image
                     source={{ uri: image }}
                     className="absolute"
-                    style={{ width: 92, height: 92, right: 0, bottom: 0 }}
+                    style={{ width: wp('24.5%'), height: wp('24.5%'), right: 0, bottom: 0 }}
                     resizeMode="cover"
                 />
             ) : null}

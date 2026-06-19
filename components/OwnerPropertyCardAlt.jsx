@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { formatPrice } from '../app/utils/formatPrice';
 
 const OwnerPropertyCardAlt = ({ id, image, price, title, area, location, onContact }) => {
@@ -11,8 +12,8 @@ const OwnerPropertyCardAlt = ({ id, image, price, title, area, location, onConta
       >
         <ImageBackground
           source={{ uri: image }}
-          style={{ width: 220, height: 160, borderRadius: 14, overflow: 'hidden', justifyContent: 'flex-end' }}
-          imageStyle={{ borderRadius: 14 }}
+          style={{ width: wp('58.6%'), height: hp('19.7%'), borderRadius: wp('3.7%'), overflow: 'hidden', justifyContent: 'flex-end' }}
+          imageStyle={{ borderRadius: wp('3.7%') }}
         >
           <View style={{ backgroundColor: 'rgba(0,0,0,0.36)', padding: 8 }}>
             <Text className="font-inter-bold text-white" style={{ fontSize: 14 }} numberOfLines={1}>
@@ -24,7 +25,7 @@ const OwnerPropertyCardAlt = ({ id, image, price, title, area, location, onConta
 
       </TouchableOpacity>
 
-      <View className="mt-2 bg-white px-3 py-2 w-64 rounded-[12px]" style={{ borderWidth: 0.67, borderColor: '#F3F4F6' }}>
+      <View className="mt-2 bg-white px-3 py-2 rounded-[12px]" style={{ width: wp('68.2%'), borderWidth: 0.67, borderColor: '#F3F4F6' }}>
         <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 12 }}>{area}</Text>
         <Text className="font-inter-regular text-[#6A7282] mt-1" style={{ fontSize: 12 }} numberOfLines={1}>{location}</Text>
 

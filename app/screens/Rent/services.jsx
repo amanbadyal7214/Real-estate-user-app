@@ -2,12 +2,11 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ServicesArticleCard from '../../../components/ServicesArticleCard';
 import ServicesBenefitItem from '../../../components/ServicesBenefitItem';
 import ServicesCalculatorCard from '../../../components/ServicesCalculatorCard';
-
-const { width } = Dimensions.get('window');
 
 const Services = () => {
     const [expandedFaq, setExpandedFaq] = useState(0);
@@ -154,24 +153,26 @@ const Services = () => {
                 colors={['#008E96', '#1CB2A9']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                className="h-[240px] rounded-b-[24px] overflow-hidden"
+                style={{ height: hp('29.5%'), borderBottomLeftRadius: wp('6.4%'), borderBottomRightRadius: wp('6.4%') }}
+                className="overflow-hidden"
             >
                 {/* Back Button */}
                 <TouchableOpacity
                     onPress={() => router.back()}
-                    className="absolute left-4 top-12 w-10 h-10 justify-center items-center"
+                    className="absolute justify-center items-center"
+                    style={{ left: wp('4.3%'), top: hp('6%'), width: wp('10.6%'), height: wp('10.6%') }}
                 >
-                    <Ionicons name="arrow-back" size={24} color="white" />
+                    <Ionicons name="arrow-back" size={wp('6.4%')} color="white" />
                 </TouchableOpacity>
 
                 {/* Text Container */}
-                <View className="absolute left-4 gap-1" style={{ top: 120 }}>
-                    <Text className="text-white text-[14px] font-inter-medium tracking-[0.7px] leading-[21px]">HOUSING</Text>
-                    <Text className="text-white text-[40px] font-inter-bold leading-[40px] -mt-1" style={{ letterSpacing: -1 }}>EDGE</Text>
+                <View className="absolute gap-1" style={{ left: wp('4.3%'), top: hp('14.8%') }}>
+                    <Text className="text-white font-inter-medium tracking-[0.7px]" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%') }}>HOUSING</Text>
+                    <Text className="text-white font-inter-bold -mt-1" style={{ fontSize: wp('10.6%'), lineHeight: wp('10.6%'), letterSpacing: -1 }}>EDGE</Text>
                 </View>
 
                 {/* Abstract Illustration – Buildings */}
-                <View className="absolute top-0 w-[200px] h-[200px] opacity-20" style={{ right: -10 }}>
+                <View className="absolute top-0 opacity-20" style={{ right: -wp('2.7%'), width: wp('53.3%'), height: wp('53.3%') }}>
 
                     {/* Building 3 – Small (leftmost) */}
                     <View className="absolute bg-white rounded-sm opacity-[0.15]" style={{ left: '37.5%', right: '52.5%', top: '60%', bottom: '10%' }} />
@@ -198,46 +199,49 @@ const Services = () => {
             </LinearGradient>
 
             <Animated.View
-                className="flex-1 mt-[-20px]"
+                className="flex-1"
                 style={[
                     {
+                        marginTop: -wp('5.3%'),
                         opacity: fadeAnim,
                         transform: [{ translateY: translateY }]
                     }
                 ]}
             >
                 <ScrollView
-                    className="flex-1 mt-[23px]"
+                    className="flex-1"
+                    style={{ marginTop: wp('6.1%') }}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 60 }}
+                    contentContainerStyle={{ paddingBottom: hp('7.4%') }}
                 >
                     {/* All Services Section */}
-                    <View className="px-4 pt-6 gap-4">
+                    <View className="gap-4" style={{ paddingHorizontal: wp('4.3%'), paddingTop: hp('3%') }}>
                         {/* Heading */}
-                        <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">All Services (1)</Text>
+                        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>All Services (1)</Text>
 
                         {/* Service Cards Row */}
-                        <View className="flex-row items-start gap-6">
+                        <View className="flex-row items-start" style={{ gap: wp('6.4%') }}>
                             {/* ServiceCard – Home Loans */}
                             <TouchableOpacity
                                 onPress={() => router.push('/screens/ComingSoon')}
-                                className="w-[100px] items-center gap-3"
+                                className="items-center"
+                                style={{ width: wp('26.7%'), gap: wp('3.2%') }}
                             >
-                                <View className="w-[100px] h-[100px] bg-[#EEF2FF] rounded-2xl justify-center items-center">
-                                    <MaterialCommunityIcons name="home-city-outline" size={40} color="#6366F1" />
+                                <View className="bg-[#EEF2FF] rounded-2xl justify-center items-center" style={{ width: wp('26.7%'), height: wp('26.7%') }}>
+                                    <MaterialCommunityIcons name="home-city-outline" size={wp('10.6%')} color="#6366F1" />
                                 </View>
-                                <Text className="text-[14px] font-inter-medium text-[#101828] text-center leading-[18px]">Home Loans</Text>
+                                <Text className="font-inter-medium text-[#101828] text-center" style={{ fontSize: wp('3.7%'), lineHeight: wp('4.8%') }}>Home Loans</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
 
                     {/* Calculators Section */}
-                    <View className="px-4 gap-4 mt-8">
-                        <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Home Loan Calculators</Text>
+                    <View className="gap-4" style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3.9%') }}>
+                        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Home Loan Calculators</Text>
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={{ paddingRight: 8 }}
+                            contentContainerStyle={{ paddingRight: wp('2.1%') }}
                         >
                             {calculators.map((calc) => (
                                 <ServicesCalculatorCard
@@ -258,20 +262,20 @@ const Services = () => {
 
                     {/* Benefits Section */}
                     {/* Benefits Section */}
-                    <View className="mt-8 px-4">
+                    <View style={{ marginTop: hp('3.9%'), paddingHorizontal: wp('4.3%') }}>
                         {/* Header */}
-                        <View className="gap-1 mb-4">
-                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>BENEFITS</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Why to choose Housing Edge</Text>
+                        <View className="gap-1" style={{ marginBottom: hp('2%') }}>
+                            <Text className="font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>BENEFITS</Text>
+                            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Why to choose Housing Edge</Text>
                         </View>
 
                         {/* Divider */}
-                        <View className="items-center mb-4">
-                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        <View className="items-center" style={{ marginBottom: hp('2%') }}>
+                            <View style={{ width: wp('10.6%'), height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
                         </View>
 
                         {/* Benefit Items */}
-                        <View className="gap-6">
+                        <View style={{ gap: hp('2.9%') }}>
                             {benefits.map((benefit, index) => (
                                 <ServicesBenefitItem
                                     key={benefit.id}
@@ -315,23 +319,23 @@ const Services = () => {
                     {/* </View> */}
 
                     {/* Articles Section */}
-                    <View className="mt-8">
+                    <View style={{ marginTop: hp('3.9%') }}>
                         {/* Header */}
-                        <View className="px-4 gap-1 mb-4">
-                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>ARTICLES</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Read more about our services</Text>
+                        <View className="gap-1" style={{ paddingHorizontal: wp('4.3%'), marginBottom: hp('2%') }}>
+                            <Text className="font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>ARTICLES</Text>
+                            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Read more about our services</Text>
                         </View>
 
                         {/* Divider */}
-                        <View className="items-center mb-4">
-                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        <View className="items-center" style={{ marginBottom: hp('2%') }}>
+                            <View style={{ width: wp('10.6%'), height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
                         </View>
 
                         {/* Cards */}
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
+                            contentContainerStyle={{ paddingLeft: wp('4.3%'), paddingRight: wp('2.1%') }}
                         >
                             {articles.map((article) => (
                                 <ServicesArticleCard
@@ -346,69 +350,69 @@ const Services = () => {
                     </View>
 
                     {/* FAQ Section */}
-                    <View className="mt-8">
+                    <View style={{ marginTop: hp('3.9%') }}>
                         {/* Header */}
-                        <View className="px-4 gap-1 mb-4">
-                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>SUPPORT</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">Frequently asked questions</Text>
+                        <View className="gap-1" style={{ paddingHorizontal: wp('4.3%'), marginBottom: hp('2%') }}>
+                            <Text className="font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>SUPPORT</Text>
+                            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Frequently asked questions</Text>
                         </View>
 
                         {/* Divider */}
-                        <View className="items-center mb-4">
-                            <View style={{ width: 40, height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
+                        <View className="items-center" style={{ marginBottom: hp('2%') }}>
+                            <View style={{ width: wp('10.6%'), height: 2, backgroundColor: '#E4E7EC', borderRadius: 2 }} />
                         </View>
 
                         {/* Tab Buttons */}
-                        <View className="flex-row px-4 gap-2 mb-5">
+                        <View className="flex-row gap-2 mb-5" style={{ paddingHorizontal: wp('4.3%'), gap: wp('2.1%') }}>
                             <TouchableOpacity
-                                className="rounded-[10px] px-4 justify-center items-center"
-                                style={{ height: 58, backgroundColor: '#F3F4F6' }}
+                                className="justify-center items-center"
+                                style={{ height: hp('7.1%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('2.7%'), backgroundColor: '#F3F4F6' }}
                             >
-                                <Text className="font-inter-medium text-[#6A7282] text-center" style={{ fontSize: 14, lineHeight: 21 }}>
+                                <Text className="font-inter-medium text-[#6A7282] text-center" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%') }}>
                                     Questions{'\n'}about
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                className="rounded-[10px] px-4 justify-center items-center"
-                                style={{ height: 58, backgroundColor: 'rgba(0, 142, 150, 0.1)' }}
+                                className="justify-center items-center"
+                                style={{ height: hp('7.1%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('2.7%'), backgroundColor: 'rgba(0, 142, 150, 0.1)' }}
                             >
-                                <Text className="font-inter-medium text-center" style={{ fontSize: 14, lineHeight: 21, color: '#008E96' }}>
+                                <Text className="font-inter-medium text-center" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%'), color: '#008E96' }}>
                                     Home{'\n'}Loans
                                 </Text>
                             </TouchableOpacity>
                         </View>
 
                         {/* FAQ Accordion */}
-                        <View className="px-4 gap-3">
+                        <View style={{ paddingHorizontal: wp('4.3%'), gap: hp('1.5%') }}>
                             {faqs.map((faq) => (
                                 <TouchableOpacity
                                     key={faq.id}
-                                    className="bg-white rounded-xl overflow-hidden"
+                                    className="bg-white overflow-hidden"
                                     style={{
                                         borderWidth: 0.667,
                                         borderColor: expandedFaq === faq.id ? '#008E96' : '#E4E7EC',
-                                        borderRadius: 12,
+                                        borderRadius: wp('3.2%'),
                                     }}
                                     onPress={() => setExpandedFaq(expandedFaq === faq.id ? -1 : faq.id)}
                                     activeOpacity={0.8}
                                 >
-                                    <View className="flex-row justify-between items-center px-4" style={{ minHeight: 56 }}>
+                                    <View className="flex-row justify-between items-center" style={{ minHeight: hp('6.9%'), paddingHorizontal: wp('4.3%') }}>
                                         <Text
                                             className="font-inter-medium text-[#101828] flex-1 mr-4"
-                                            style={{ fontSize: 15, lineHeight: 22 }}
+                                            style={{ fontSize: wp('4%'), lineHeight: wp('5.9%') }}
                                         >
                                             {faq.question}
                                         </Text>
                                         <Ionicons
                                             name={expandedFaq === faq.id ? 'remove' : 'add'}
-                                            size={20}
+                                            size={wp('5.3%')}
                                             color="#6A7282"
                                         />
                                     </View>
                                     {expandedFaq === faq.id && (
                                         <Text
-                                            className="font-inter-regular text-[#4A5565] px-4 pb-4"
-                                            style={{ fontSize: 14, lineHeight: 22 }}
+                                            className="font-inter-regular text-[#4A5565]"
+                                            style={{ fontSize: wp('3.7%'), lineHeight: wp('5.9%'), paddingHorizontal: wp('4.3%'), paddingBottom: hp('2%') }}
                                         >
                                             {faq.answer}
                                         </Text>

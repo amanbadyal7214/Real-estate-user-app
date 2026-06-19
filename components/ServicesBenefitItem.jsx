@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 /* ─────────────────────────────────────────────
    Illustration: purple circle background + vectors
@@ -6,7 +7,7 @@ import { Text, View } from 'react-native';
 
 /** PremiumProductsIllustration – benefit 1 */
 const PremiumProductsIllustration = () => (
-    <View className="w-[100px] h-[100px] rounded-full overflow-hidden" style={{ backgroundColor: '#8B5CF6' }}>
+    <View className="rounded-full overflow-hidden" style={{ width: wp('26.7%'), height: wp('26.7%'), backgroundColor: '#8B5CF6' }}>
         {/* bag body */}
         <View className="absolute bg-[#FBBF24]" style={{ left: '35%', right: '35%', top: '38%', bottom: '27%' }} />
         {/* bag top/handle frame */}
@@ -26,7 +27,7 @@ const PremiumProductsIllustration = () => (
 
 /** RewardsIllustration – benefit 2 */
 const RewardsIllustration = () => (
-    <View className="w-[100px] h-[100px] rounded-full overflow-hidden" style={{ backgroundColor: '#8B5CF6' }}>
+    <View className="rounded-full overflow-hidden" style={{ width: wp('26.7%'), height: wp('26.7%'), backgroundColor: '#8B5CF6' }}>
         {/* gift box body */}
         <View className="absolute bg-[#EC4899]" style={{ left: '30%', right: '30%', top: '45%', bottom: '25%' }} />
         {/* ribbon vertical */}
@@ -50,7 +51,7 @@ const RewardsIllustration = () => (
 
 /** CustomerSupportIllustration – benefit 3 */
 const CustomerSupportIllustration = () => (
-    <View className="w-[100px] h-[100px] rounded-full overflow-hidden" style={{ backgroundColor: '#8B5CF6' }}>
+    <View className="rounded-full overflow-hidden" style={{ width: wp('26.7%'), height: wp('26.7%'), backgroundColor: '#8B5CF6' }}>
         {/* face */}
         <View className="absolute bg-[#FBBF24]" style={{ left: '38%', right: '38%', top: '23%', bottom: '53%' }} />
         {/* torso */}
@@ -68,9 +69,9 @@ const CustomerSupportIllustration = () => (
         {/* mic connector */}
         <View className="absolute" style={{ left: '43%', right: '43%', top: '39%', bottom: '59.5%', borderWidth: 2, borderColor: '#1F2937' }} />
         {/* note left */}
-        <Text className="absolute text-[#60A5FA]" style={{ left: '24%', top: '20%', fontSize: 10, lineHeight: 12 }}>♪</Text>
+        <Text className="absolute text-[#60A5FA]" style={{ left: '24%', top: '20%', fontSize: wp('2.7%'), lineHeight: wp('3.2%') }}>♪</Text>
         {/* note right */}
-        <Text className="absolute text-[#60A5FA]" style={{ left: '72%', top: '22%', fontSize: 10, lineHeight: 12 }}>♪</Text>
+        <Text className="absolute text-[#60A5FA]" style={{ left: '72%', top: '22%', fontSize: wp('2.7%'), lineHeight: wp('3.2%') }}>♪</Text>
         {/* left sparkle */}
         <View className="absolute bg-[#FCD34D]" style={{ left: '25%', right: '69%', top: '57%', bottom: '37%' }} />
         {/* right sparkle */}
@@ -95,16 +96,16 @@ const ServicesBenefitItem = ({ index = 0, text }) => {
     const Illustration = illustrations[index] || PremiumProductsIllustration;
 
     return (
-        <View className="flex-row items-center py-4 gap-6 self-stretch">
+        <View className="flex-row items-center self-stretch" style={{ paddingVertical: hp('2%'), gap: wp('6.4%') }}>
             {/* Illustration */}
-            <View className="w-[100px] h-[100px]">
+            <View style={{ width: wp('26.7%'), height: wp('26.7%') }}>
                 <Illustration />
             </View>
 
             {/* Text */}
             <Text
                 className="font-inter-regular text-[#4A5565] flex-1"
-                style={{ fontSize: 16, lineHeight: 26 }}
+                style={{ fontSize: wp('4.3%'), lineHeight: wp('6.9%') }}
             >
                 {text}
             </Text>

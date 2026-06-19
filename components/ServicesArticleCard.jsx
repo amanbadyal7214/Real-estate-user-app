@@ -1,4 +1,5 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 /**
  * ServicesArticleCard
@@ -17,26 +18,26 @@ const ServicesArticleCard = ({ title, date, excerpt, image, onPress }) => {
             activeOpacity={0.85}
             className="bg-white overflow-hidden mr-4"
             style={{
-                width: 290,
+                width: wp('77.3%'),
                 borderWidth: 0.667,
                 borderColor: '#E4E7EC',
-                borderRadius: 16,
+                borderRadius: wp('4.3%'),
             }}
         >
             {/* Article Image */}
             <Image
                 source={{ uri: image }}
                 className="w-full"
-                style={{ height: 140 }}
+                style={{ height: hp('17.2%') }}
                 resizeMode="cover"
             />
 
             {/* Content */}
-            <View className="px-4 pt-4 pb-4 gap-1">
+            <View style={{ paddingHorizontal: wp('4.3%'), paddingTop: hp('2%'), paddingBottom: hp('2%'), gap: hp('0.5%') }}>
                 {/* Title */}
                 <Text
                     className="font-inter-semibold text-[#101828]"
-                    style={{ fontSize: 16, lineHeight: 20 }}
+                    style={{ fontSize: wp('4.3%'), lineHeight: wp('5.3%') }}
                     numberOfLines={2}
                 >
                     {title}
@@ -45,7 +46,7 @@ const ServicesArticleCard = ({ title, date, excerpt, image, onPress }) => {
                 {/* Date */}
                 <Text
                     className="font-inter-medium text-[#6A7282]"
-                    style={{ fontSize: 12, lineHeight: 18, marginTop: 3 }}
+                    style={{ fontSize: wp('3.2%'), lineHeight: wp('4.8%'), marginTop: hp('0.4%') }}
                 >
                     {date}
                 </Text>
@@ -53,7 +54,7 @@ const ServicesArticleCard = ({ title, date, excerpt, image, onPress }) => {
                 {/* Excerpt */}
                 <Text
                     className="font-inter-medium text-[#4A5565]"
-                    style={{ fontSize: 14, lineHeight: 23, marginTop: 3 }}
+                    style={{ fontSize: wp('3.7%'), lineHeight: wp('6.1%'), marginTop: hp('0.4%') }}
                     numberOfLines={2}
                 >
                     {excerpt}

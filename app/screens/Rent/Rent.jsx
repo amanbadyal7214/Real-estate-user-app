@@ -5,6 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CalculatorCard from '../../../components/CalculatorCard';
 import ContinueCards from '../../../components/ContinueCards';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
@@ -68,8 +69,6 @@ const fallbackSuggestions = [
     config: '2, 3 BHK Flats',
   },
 ];
-
-const SUGGESTION_CARD_INTERVAL = 272;
 
 const normalizeSuggestionText = (value, fallback = '') => {
   if (value === null || value === undefined) return fallback;
@@ -169,6 +168,7 @@ const getPropertyLocation = (property) => {
 
 const Rent = () => {
   const isFocused = useIsFocused();
+  const SUGGESTION_CARD_INTERVAL = wp('56.5%');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { fetchRecentlyViewed, recentlyViewed } = useUserActivity();
 
@@ -479,7 +479,8 @@ const Rent = () => {
             {suggestions.map((_, index) => (
               <View
                 key={index}
-                className={`w-10 h-1 rounded-full ${index === activeIndex ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'}`}
+                className={`rounded-full ${index === activeIndex ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'}`}
+                style={{ width: wp('10.6%'), height: hp('0.5%') }}
               />
             ))}
           </View>
@@ -546,8 +547,8 @@ const Rent = () => {
         <View className="px-4 pt-6 mb-6 items-center">
           <View
             style={{
-              width: 320,
-              height: 154,
+              width: wp('85%'),
+              height: hp('19%'),
               backgroundColor: '#FFFFFF',
               borderRadius: 24,
               padding: 16,
@@ -570,18 +571,18 @@ const Rent = () => {
                 onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')}
                 className="items-center"
               >
-                <View className="w-10 h-10 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="bulb-outline" size={24} color="#008E96" />
+                <View className="bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('10.6%'), height: wp('10.6%') }}>
+                  <Ionicons name="bulb-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153]">Suggestions</Text>
+                <Text className="font-inter-medium text-[#364153]" style={{ fontSize: wp('3.2%') }}>Suggestions</Text>
               </TouchableOpacity>
 
               {/* News */}
               <TouchableOpacity className="items-center">
-                <View className="w-10 h-10 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
-                  <Ionicons name="newspaper-outline" size={24} color="#008E96" />
+                <View className="bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('10.6%'), height: wp('10.6%') }}>
+                  <Ionicons name="newspaper-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153]">News</Text>
+                <Text className="font-inter-medium text-[#364153]" style={{ fontSize: wp('3.2%') }}>News</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -657,7 +658,7 @@ const Rent = () => {
           </View>
 
           {localityLoading ? (
-            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: 132 }}>
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6]" style={{ height: hp('16.2%') }}>
               <Text className="font-inter-medium text-[13px] text-[#6A7282]">Loading localities...</Text>
             </View>
           ) : localityError ? (

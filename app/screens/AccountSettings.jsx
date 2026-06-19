@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { ArrowLeft, ChevronRight, UserMinus, UserX } from 'lucide-react-native';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AccountSettings = () => {
@@ -9,66 +10,77 @@ const AccountSettings = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Top Header Back Button */}
-      <View className="px-5 pt-3">
-        <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 items-center justify-center -ml-2">
-          <ArrowLeft size={24} color="#101828" />
+      <View style={{ paddingHorizontal: wp('5.3%'), paddingTop: hp('1.5%') }}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="items-center justify-center"
+          style={{ width: wp('10.6%'), height: wp('10.6%'), marginLeft: -wp('2%') }}
+        >
+          <ArrowLeft size={wp('6.4%')} color="#101828" />
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
+      <ScrollView
+        className="flex-1"
+        style={{ paddingHorizontal: wp('5.3%') }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: hp('4.9%') }}
+      >
         {/* Title */}
         <Text
-          style={{ fontFamily: 'Inter-Bold' }}
-          className="text-[#101828] text-[28px]  mt-4 mb-8"
+          style={{ fontFamily: 'Inter-Bold', fontSize: wp('7.5%'), marginTop: hp('2%'), marginBottom: hp('3.9%') }}
+          className="text-[#101828]"
         >
           Account Settings
         </Text>
 
         {/* Deactivate Section */}
-        <View className="mb-8">
+        <View style={{ marginBottom: hp('3.9%') }}>
           <TouchableOpacity
-            className="flex-row items-center justify-between py-2"
+            className="flex-row items-center justify-between"
+            style={{ paddingVertical: hp('1%') }}
             activeOpacity={0.7}
           >
-            <View className="flex-row items-center gap-3">
-              <UserMinus size={22} color="#008E96" strokeWidth={2} />
+            <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
+              <UserMinus size={wp('5.9%')} color="#008E96" strokeWidth={2} />
               <Text
-                style={{ fontFamily: 'Inter-SemiBold' }}
-                className="text-[#008E96] text-[18px] font-semibold"
+                style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.8%') }}
+                className="text-[#008E96]"
               >
                 Deactivate my account
               </Text>
             </View>
-            <ChevronRight size={20} color="#008E96" />
+            <ChevronRight size={wp('5.3%')} color="#008E96" />
           </TouchableOpacity>
           <Text
-            style={{ fontFamily: 'Inter-Regular', lineHeight: 22 }}
-            className="text-[#4A5565] text-[14px] mt-2 font-normal"
+            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginTop: hp('1%') }}
+            className="text-[#4A5565]"
           >
             Deactivating an account means temporarily disabling your account without permanently deleting it.Your profile and content may be hidden from other users.The platform usually keeps your data and account information stored.{"\n\n"}You can typically reactivate the account later by logging back in.
           </Text>
         </View>
 
         {/* Delete Section */}
-        <View className="mb-8">
+        <View style={{ marginBottom: hp('3.9%') }}>
           <TouchableOpacity
-            className="flex-row items-center justify-between py-2"
+            className="flex-row items-center justify-between"
+            style={{ paddingVertical: hp('1%') }}
             activeOpacity={0.7}
           >
-            <View className="flex-row items-center gap-3">
-              <UserX size={22} color="#008E96" strokeWidth={2} />
+            <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
+              <UserX size={wp('5.9%')} color="#008E96" strokeWidth={2} />
               <Text
-                style={{ fontFamily: 'Inter-SemiBold' }}
-                className="text-[#008E96] text-[18px] font-semibold"
+                style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.8%') }}
+                className="text-[#008E96]"
               >
                 Delete my account
               </Text>
             </View>
-            <ChevronRight size={20} color="#008E96" />
+            <ChevronRight size={wp('5.3%')} color="#008E96" />
           </TouchableOpacity>
           <Text
-            style={{ fontFamily: 'Inter-Regular', lineHeight: 22 }}
-            className="text-[#4A5565] text-[14px] mt-2 font-normal"
+            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginTop: hp('1%') }}
+            className="text-[#4A5565]"
           >
             Deleting an account means permanently removing your account from a platform.Once deleted, you may lose access to your profile, data, and settings.In many cases, deleted accounts cannot be recovered after a certain period.This action is usually irreversible and removes your presence from the service.
           </Text>
@@ -76,11 +88,11 @@ const AccountSettings = () => {
       </ScrollView>
 
       {/* Footer Terms & Conditions */}
-      <View className="py-6 items-center justify-center bg-white">
+      <View className="items-center justify-center bg-white" style={{ paddingVertical: hp('2.9%') }}>
         <TouchableOpacity activeOpacity={0.7}>
           <Text
-            style={{ fontFamily: 'Inter-Medium' }}
-            className="text-[#008E96] text-[14px] font-medium"
+            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }}
+            className="text-[#008E96]"
           >
             Terms & Conditions
           </Text>

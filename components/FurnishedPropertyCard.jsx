@@ -1,10 +1,11 @@
 import { Image, Text, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const FurnishedPropertyCard = ({ image, price, title, location, furnishedStatus, area }) => {
   return (
-    <View className="w-[180px] h-[301px] bg-white rounded-[14px] mr-2 overflow-hidden border border-[#F3F4F6] shadow-sm">
+    <View style={{ width: wp('48%'), height: hp('37%'), marginRight: wp('2.1%') }} className="bg-white rounded-[14px] overflow-hidden border border-[#F3F4F6] shadow-sm">
       {/* Property Image */}
-      <View className="w-[145px] h-[138px] mt-3 ml-3 rounded-[8px] overflow-hidden">
+      <View style={{ width: wp('38.6%'), height: hp('17%'), marginTop: hp('1.5%'), marginLeft: wp('3.2%') }} className="rounded-[8px] overflow-hidden">
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }} 
@@ -13,15 +14,15 @@ const FurnishedPropertyCard = ({ image, price, title, location, furnishedStatus,
       </View>
 
       {/* Content Container */}
-      <View className="mt-2 px-3 flex-1">
-        <Text numberOfLines={1} className="font-inter-bold text-[#101828] text-[15px] leading-[22px]">{price}</Text>
-        <Text numberOfLines={1} className="font-inter-regular text-[#364153] text-[12px] leading-[18px] mt-[2px]">{title}</Text>
-        <Text numberOfLines={2} className="font-inter-regular text-[#6A7282] text-[12px] leading-[17px] mt-[4px] h-[28px]">{location}</Text>
+      <View style={{ marginTop: hp('1%'), paddingHorizontal: wp('3.2%'), flex: 1 }}>
+        <Text numberOfLines={1} className="font-inter-bold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: hp('2.7%') }}>{price}</Text>
+        <Text numberOfLines={1} className="font-inter-regular text-[#364153]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginTop: hp('0.2%') }}>{title}</Text>
+        <Text numberOfLines={2} className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.1%'), marginTop: hp('0.5%'), height: hp('3.4%') }}>{location}</Text>
         
-        <View className="flex-row items-center mt-2 flex-wrap">
-          <Text className="font-inter-bold text-[#101828] text-[11px] leading-[16px]">{furnishedStatus}</Text>
-          <Text className="mx-1 text-[#99A1AF] text-[12px]">•</Text>
-          <Text className="font-inter-bold text-[#101828] text-[11px] leading-[16px]">{area}</Text>
+        <View className="flex-row items-center flex-wrap" style={{ marginTop: hp('1%') }}>
+          <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>{furnishedStatus}</Text>
+          <Text className="text-[#99A1AF]" style={{ marginHorizontal: wp('1.1%'), fontSize: wp('3.2%') }}>•</Text>
+          <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>{area}</Text>
         </View>
       </View>
     </View>

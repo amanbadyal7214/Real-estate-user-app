@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { ArrowLeft, ChevronRight, MapPin, Search, TrendingUp } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import api from '../../api';
 import { useLocation } from '../../context/LocationContext';
@@ -61,22 +62,24 @@ const RentSearch = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center px-4 py-3 justify-between">
-        <View className="flex-row items-center gap-3">
+      <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.5%') }}>
+        <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
           <TouchableOpacity 
             onPress={() => router.replace('/screens/Rent/Rent')}
-            className="w-10 h-10 items-center justify-center rounded-full border border-gray-100"
+            className="items-center justify-center rounded-full border border-gray-100"
+            style={{ width: wp('10.6%'), height: wp('10.6%') }}
           >
-            <ArrowLeft size={20} color="#101828" />
+            <ArrowLeft size={wp('5.3%')} color="#101828" />
           </TouchableOpacity>
-          <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[18px] text-[#101828]">Rent</Text>
+          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%') }} className="text-[#101828]">Rent</Text>
         </View>
         
         <View 
-          className="flex-row items-center bg-gray-50/50 px-3 py-1.5 rounded-xl border border-gray-100 gap-1.5"
+          className="flex-row items-center bg-gray-50/50 border border-gray-100"
+          style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.7%'), borderRadius: wp('3%'), gap: wp('1.6%') }}
         >
-          <MapPin size={14} color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#4A5565]">
+          <MapPin size={wp('3.7%')} color="#008E96" />
+          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#4A5565]">
             {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
@@ -84,16 +87,16 @@ const RentSearch = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         {/* Search Section */}
-        <View className="mx-4 my-2 p-4 bg-white border border-gray-100 rounded-[24px] shadow-sm">
-          <View className="gap-3">
+        <View className="bg-white border border-gray-100 shadow-sm" style={{ marginHorizontal: wp('4.3%'), marginVertical: hp('1%'), padding: wp('4.3%'), borderRadius: wp('6.4%') }}>
+          <View style={{ gap: hp('1.5%') }}>
             {/* City Input */}
-            <View className="h-12 px-4 flex-row items-center bg-[#F2F4F7] rounded-xl">
-              <MapPin size={18} color="#008E96" />
+            <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('6%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('3.2%') }}>
+              <MapPin size={wp('4.8%')} color="#008E96" />
               <TextInput 
                 placeholder="Enter City"
                 placeholderTextColor="#6A7282"
-                style={{ fontFamily: 'Inter-Medium' }}
-                className="flex-1 ml-3 text-[14px] text-[#101828]"
+                style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), flex: 1, marginLeft: wp('3.2%') }}
+                className="text-[#101828]"
                 value={city}
                 onChangeText={setCity}
               />
@@ -101,13 +104,13 @@ const RentSearch = () => {
 
             {/* Locality Input */}
             <View style={{ zIndex: 50 }}>
-              <View className="h-12 px-4 flex-row items-center bg-[#F2F4F7] rounded-xl">
-                <Search size={18} color="#667085" />
+              <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('6%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('3.2%') }}>
+                <Search size={wp('4.8%')} color="#667085" />
                 <TextInput 
                   placeholder="Enter Locality"
                   placeholderTextColor="#6A7282"
-                  style={{ fontFamily: 'Inter-Medium' }}
-                  className="flex-1 ml-3 text-[14px] text-[#101828]"
+                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), flex: 1, marginLeft: wp('3.2%') }}
+                  className="text-[#101828]"
                   value={locality}
                   onChangeText={setLocality}
                   onSubmitEditing={handleSearchSubmit}
@@ -116,7 +119,7 @@ const RentSearch = () => {
               </View>
 
               {suggestions.length > 0 && (
-                <View className="mt-2 bg-white border border-gray-100 rounded-xl shadow-sm max-h-48 overflow-hidden">
+                <View className="mt-2 bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ borderRadius: wp('3.2%'), maxHeight: hp('24%') }}>
                   <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
                     {suggestions.map((item) => (
                       <TouchableOpacity 
@@ -125,10 +128,11 @@ const RentSearch = () => {
                           setLocality(item.name);
                           setSuggestions([]);
                         }}
-                        className="px-4 py-3 border-b border-gray-50 flex-row items-center gap-2"
+                        className="border-b border-gray-50 flex-row items-center"
+                        style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.5%'), gap: wp('2.1%') }}
                       >
-                        <MapPin size={14} color="#667085" />
-                        <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#101828]">
+                        <MapPin size={wp('3.7%')} color="#667085" />
+                        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">
                           {item.name}
                         </Text>
                       </TouchableOpacity>
@@ -141,21 +145,22 @@ const RentSearch = () => {
             {/* Search Button */}
             <TouchableOpacity 
               onPress={handleSearchSubmit}
-              className="h-12 bg-[#008E96] items-center justify-center rounded-xl mt-1 shadow-sm shadow-[#008E96]/20"
+              className="bg-[#008E96] items-center justify-center shadow-sm shadow-[#008E96]/20"
+              style={{ height: hp('6%'), borderRadius: wp('3.2%'), marginTop: hp('0.5%') }}
             >
-              <View className="flex-row items-center gap-2">
-                <Search size={18} color="white" />
-                <Text style={{ fontFamily: 'Inter-Bold' }} className="text-white text-[15px]">Search Properties</Text>
+              <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
+                <Search size={wp('4.8%')} color="white" />
+                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-white">Search Properties</Text>
               </View>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Popular Localities Section */}
-        <View className="mx-4 mt-4 p-4 rounded-3xl bg-[#EDFBFA]">
-          <View className="flex-row items-center gap-2 mb-3">
-            <TrendingUp size={16} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Popular Localities</Text>
+        <View className="bg-[#EDFBFA]" style={{ marginHorizontal: wp('4.3%'), marginTop: hp('2%'), padding: wp('4.3%'), borderRadius: wp('6.4%') }}>
+          <View className="flex-row items-center" style={{ gap: wp('2.1%'), marginBottom: hp('1.5%') }}>
+            <TrendingUp size={wp('4.3%')} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#101828]">Popular Localities</Text>
           </View>
           
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
@@ -167,33 +172,35 @@ const RentSearch = () => {
             ].map((locality, index) => (
               <TouchableOpacity 
                 key={index}
-                className="w-[140px] p-3 mr-3 bg-[#F7F9FA] border border-[#E4E7EC] rounded-2xl shadow-sm"
+                className="bg-[#F7F9FA] border border-[#E4E7EC] shadow-sm"
+                style={{ width: wp('37.3%'), padding: wp('3.2%'), marginRight: wp('3.2%'), borderRadius: wp('4.3%') }}
               >
-                <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[15px] text-[#101828] mb-1">{locality.name}</Text>
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#6A7282]">{locality.price}</Text>
+                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%'), marginBottom: hp('0.5%') }} className="text-[#101828]">{locality.name}</Text>
+                <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%') }} className="text-[#6A7282]">{locality.price}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
 
         {/* Popular Landmarks Section */}
-        <View className="mt-6">
-          <View className="flex-row items-center px-4 gap-2 mb-4">
-            <MapPin size={16} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Popular Landmarks</Text>
+        <View style={{ marginTop: hp('3%') }}>
+          <View className="flex-row items-center" style={{ paddingHorizontal: wp('4.3%'), gap: wp('2.1%'), marginBottom: hp('2%') }}>
+            <MapPin size={wp('4.3%')} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#101828]">Popular Landmarks</Text>
           </View>
           
-          <View className="flex-row flex-wrap px-4 gap-2">
+          <View className="flex-row flex-wrap" style={{ paddingHorizontal: wp('4.3%'), gap: wp('2.1%') }}>
             {[
               'City Heart', 'Maxim Merry School', 'Mohali Stadium', 
               'Phase 11 Market', 'ISB Campus'
             ].map((landmark, index) => (
               <TouchableOpacity 
                 key={index}
-                className="flex-row items-center px-4 py-2.5 bg-white border border-[#E4E7EC] rounded-full gap-2"
+                className="flex-row items-center bg-white border border-[#E4E7EC] rounded-full"
+                style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.2%'), gap: wp('2.1%') }}
               >
-                <MapPin size={14} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[13px] text-[#4A5565]">{landmark}</Text>
+                <MapPin size={wp('3.7%')} color="#008E96" />
+                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }} className="text-[#4A5565]">{landmark}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -204,15 +211,16 @@ const RentSearch = () => {
         {/* Explore Nearby Properties Button */}
         <TouchableOpacity 
           onPress={() => router.push('/screens/Rent/Rent')}
-          className="mx-4 my-10 p-4 flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20 rounded-2xl"
+          className="flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20"
+          style={{ marginHorizontal: wp('4.3%'), marginVertical: hp('5%'), padding: wp('4.3%'), borderRadius: wp('4.3%') }}
         >
-          <View className="flex-row items-center gap-3">
-            <View className="w-9 h-9 bg-white items-center justify-center rounded-full border border-gray-100">
-               <ArrowLeft size={16} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
+          <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
+            <View className="bg-white items-center justify-center rounded-full border border-gray-100" style={{ width: wp('9.6%'), height: wp('9.6%') }}>
+               <ArrowLeft size={wp('4.3%')} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
             </View>
-            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[15px] text-[#101828]">Explore nearby properties</Text>
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }} className="text-[#101828]">Explore nearby properties</Text>
           </View>
-          <ChevronRight size={20} color="#008E96" />
+          <ChevronRight size={wp('5.3%')} color="#008E96" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
