@@ -103,7 +103,7 @@ export default function Index() {
       {/* Ellipse (Icon) */}
       <Animated.View style={[styles.ellipse, animatedEllipseStyle]}>
         <Image
-          source={require('../assets/images/realeasteapplogocolor.png')}
+          source={require('../assets/images/icon1.png')}
           style={styles.fullImage}
           resizeMode="contain"
         />
