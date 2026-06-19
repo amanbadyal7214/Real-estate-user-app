@@ -1,4 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -6,7 +7,6 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Dimensions,
   Image,
   Modal,
   SafeAreaView,
@@ -20,7 +20,7 @@ import api from '../../api';
 
 // Custom Label Component
 const SectionLabel = ({ children, required }) => (
-  <Text style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: 13, marginBottom: 6 }}>
+  <Text style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: wp('3.5%'), marginBottom: hp('0.7%') }}>
     {children}
     {required ? <Text style={{ color: '#EF4444' }}> *</Text> : null}
   </Text>
@@ -45,16 +45,17 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
           setSearchQuery('');
           setModalVisible(true);
         }}
-        className={`flex-row justify-between items-center h-12 rounded-xl border border-gray-200 px-3 bg-white ${disabled ? 'opacity-50 bg-gray-50' : ''
+        style={{ height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%') }}
+        className={`flex-row justify-between items-center border border-gray-200 bg-white ${disabled ? 'opacity-50 bg-gray-50' : ''
           }`}
       >
         <Text
-          style={{ fontFamily: 'Inter-Regular' }}
-          className={`text-sm ${selectedOption ? 'text-[#101828]' : 'text-gray-400'}`}
+          style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%') }}
+          className={`${selectedOption ? 'text-[#101828]' : 'text-gray-400'}`}
         >
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
-        <Ionicons name="chevron-down" size={16} color="#6B7280" />
+        <Ionicons name="chevron-down" size={wp('4%')} color="#6B7280" />
       </TouchableOpacity>
 
       <Modal
@@ -69,25 +70,25 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
             onPress={() => setModalVisible(false)}
             className="absolute inset-0"
           />
-          <View className="bg-white rounded-t-3xl h-[60%] p-5 pb-8 shadow-2xl">
-            <View className="flex-row justify-between items-center mb-4">
-              <Text style={{ fontFamily: 'Inter-Bold' }} className="text-base text-[#101828]">
+          <View style={{ padding: wp('5%'), paddingBottom: hp('3%'), borderTopLeftRadius: wp('7%'), borderTopRightRadius: wp('7%'), height: '60%' }} className="bg-white shadow-2xl">
+            <View style={{ marginBottom: hp('1.8%') }} className="flex-row justify-between items-center">
+              <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828]">
                 Select {label || 'Option'}
               </Text>
-              <TouchableOpacity onPress={() => setModalVisible(false)} className="p-1">
-                <Ionicons name="close" size={24} color="#6B7280" />
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={{ padding: wp('1%') }}>
+                <Ionicons name="close" size={wp('6%')} color="#6B7280" />
               </TouchableOpacity>
             </View>
 
-            <View className="flex-row items-center border border-gray-200 rounded-xl bg-gray-50 px-3 h-11 mb-4">
-              <Ionicons name="search-outline" size={16} color="#9CA3AF" />
+            <View style={{ height: hp('5.5%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), marginBottom: hp('1.8%') }} className="flex-row items-center border border-gray-200 bg-gray-50">
+              <Ionicons name="search-outline" size={wp('4%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Search options..."
                 placeholderTextColor="#9CA3AF"
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                style={{ fontFamily: 'Inter-Regular' }}
-                className="flex-1 text-sm text-[#101828] h-full ml-2"
+                style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginLeft: wp('2%') }}
+                className="flex-1 text-[#101828] h-full"
               />
             </View>
 
@@ -100,16 +101,17 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
                       onSelect(item.value);
                       setModalVisible(false);
                     }}
-                    className="py-3.5 border-b border-gray-50 flex-row justify-between items-center"
+                    style={{ paddingVertical: hp('1.6%') }}
+                    className="border-b border-gray-50 flex-row justify-between items-center"
                   >
                     <Text
-                      style={{ fontFamily: item.value === value ? 'Inter-SemiBold' : 'Inter-Medium' }}
-                      className={`text-sm ${item.value === value ? 'text-[#008E96]' : 'text-gray-700'}`}
+                      style={{ fontFamily: item.value === value ? 'Inter-SemiBold' : 'Inter-Medium', fontSize: wp('3.5%') }}
+                      className={`${item.value === value ? 'text-[#008E96]' : 'text-gray-700'}`}
                     >
                       {item.label}
                     </Text>
                     {item.value === value && (
-                      <Ionicons name="checkmark" size={18} color="#008E96" />
+                      <Ionicons name="checkmark" size={wp('4.5%')} color="#008E96" />
                     )}
                   </TouchableOpacity>
                 ))
@@ -582,41 +584,43 @@ export default function PropertySummary() {
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
       {/* Header bar */}
-      <LinearGradient colors={['#006B73', '#008E96']} className="px-4 pt-10 pb-5 rounded-b-[28px] shadow-sm">
-        <View className="flex-row items-center gap-3">
-          <TouchableOpacity onPress={() => router.back()} className="p-1">
-            <Ionicons name="arrow-back" size={24} color="white" />
+      <LinearGradient colors={['#006B73', '#008E96']} style={{ paddingHorizontal: wp('4%'), paddingTop: hp('5%'), paddingBottom: hp('2.5%'), borderBottomLeftRadius: wp('7%'), borderBottomRightRadius: wp('7%') }} className="shadow-sm">
+        <View style={{ gap: wp('3%') }} className="flex-row items-center">
+          <TouchableOpacity onPress={() => router.back()} style={{ padding: wp('1%') }}>
+            <Ionicons name="arrow-back" size={wp('6%')} color="white" />
           </TouchableOpacity>
           <View className="flex-1">
-            <Text style={{ fontFamily: 'Inter-Bold' }} className="text-white text-lg leading-snug">
+            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%'), lineHeight: wp('6%') }} className="text-white">
               Property Specifications
             </Text>
-            <Text style={{ fontFamily: 'Inter-Regular' }} className="text-white/85 text-xs">
+            <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-white/85">
               Project: {projectName || 'N/A'}
             </Text>
           </View>
         </View>
 
         {/* Tab switcher */}
-        <View className="flex-row bg-black/15 rounded-xl p-1 mt-4">
+        <View style={{ borderRadius: wp('3%'), padding: wp('1%'), marginTop: hp('1.8%') }} className="flex-row bg-black/15">
           <TouchableOpacity
             onPress={() => setActiveTab('add')}
-            className={`flex-1 py-2 rounded-lg items-center ${activeTab === 'add' ? 'bg-white shadow-sm' : ''}`}
+            style={{ paddingVertical: hp('1%'), borderRadius: wp('2%') }}
+            className={`flex-1 items-center ${activeTab === 'add' ? 'bg-white shadow-sm' : ''}`}
           >
             <Text
-              style={{ fontFamily: activeTab === 'add' ? 'Inter-SemiBold' : 'Inter-Medium' }}
-              className={`text-xs ${activeTab === 'add' ? 'text-[#008E96]' : 'text-white'}`}
+              style={{ fontFamily: activeTab === 'add' ? 'Inter-SemiBold' : 'Inter-Medium', fontSize: wp('3.2%') }}
+              className={`${activeTab === 'add' ? 'text-[#008E96]' : 'text-white'}`}
             >
               Add Summary
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab('view')}
-            className={`flex-1 py-2 rounded-lg items-center ${activeTab === 'view' ? 'bg-white shadow-sm' : ''}`}
+            style={{ paddingVertical: hp('1%'), borderRadius: wp('2%') }}
+            className={`flex-1 items-center ${activeTab === 'view' ? 'bg-white shadow-sm' : ''}`}
           >
             <Text
-              style={{ fontFamily: activeTab === 'view' ? 'Inter-SemiBold' : 'Inter-Medium' }}
-              className={`text-xs ${activeTab === 'view' ? 'text-[#008E96]' : 'text-white'}`}
+              style={{ fontFamily: activeTab === 'view' ? 'Inter-SemiBold' : 'Inter-Medium', fontSize: wp('3.2%') }}
+              className={`${activeTab === 'view' ? 'text-[#008E96]' : 'text-white'}`}
             >
               View Summaries
             </Text>
@@ -625,24 +629,24 @@ export default function PropertySummary() {
       </LinearGradient>
 
       {loadingMetadata ? (
-        <View className="flex-1 items-center justify-center py-20">
+        <View style={{ paddingVertical: hp('8%') }} className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Medium' }} className="mt-4 text-gray-500">
+          <Text style={{ fontFamily: 'Inter-Medium', marginTop: hp('1.8%'), fontSize: wp('3.5%') }} className="text-gray-500">
             Loading summaries context data...
           </Text>
         </View>
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
+          contentContainerStyle={{ padding: wp('4%'), paddingBottom: hp('5%') }}
           className="flex-1"
         >
           {activeTab === 'add' ? (
             /* --- ADD SUMMARY TAB --- */
             <View>
               {/* Category selections */}
-              <View className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm mb-4">
-                <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#008E96] text-xs uppercase tracking-wider mb-3">
+              <View style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('1.8%') }} className="bg-white border border-gray-100 shadow-sm">
+                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), marginBottom: hp('1.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
                   Category Selections
                 </Text>
 
@@ -667,7 +671,7 @@ export default function PropertySummary() {
                 />
 
                 {isGroupTower && (
-                  <View className="flex-row gap-3 pt-2 mt-2 border-t border-gray-50">
+                  <View style={{ gap: wp('3%'), paddingTop: hp('0.8%'), marginTop: hp('0.8%') }} className="flex-row border-t border-gray-50">
                     <View className="flex-1">
                       <SectionLabel required>Total Towers</SectionLabel>
                       <TextInput
@@ -675,8 +679,8 @@ export default function PropertySummary() {
                         keyboardType="numeric"
                         value={totalTowers}
                         onChangeText={setTotalTowers}
-                        style={{ fontFamily: 'Inter-Regular' }}
-                        className="h-12 border border-gray-200 rounded-xl px-3 bg-white text-sm text-[#101828]"
+                        style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                        className="border border-gray-200 bg-white text-[#101828]"
                       />
                     </View>
                     <View className="flex-1">
@@ -686,8 +690,8 @@ export default function PropertySummary() {
                         keyboardType="numeric"
                         value={floorsPerTower}
                         onChangeText={setFloorsPerTower}
-                        style={{ fontFamily: 'Inter-Regular' }}
-                        className="h-12 border border-gray-200 rounded-xl px-3 bg-white text-sm text-[#101828]"
+                        style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                        className="border border-gray-200 bg-white text-[#101828]"
                       />
                     </View>
                   </View>
@@ -695,31 +699,32 @@ export default function PropertySummary() {
               </View>
 
               {/* Dynamic rows */}
-              <View className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm mb-4">
-                <View className="flex-row justify-between items-center border-b border-gray-100 pb-3 mb-4">
-                  <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#008E96] text-xs uppercase tracking-wider">
+              <View style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('1.8%') }} className="bg-white border border-gray-100 shadow-sm">
+                <View style={{ paddingBottom: hp('1.2%'), marginBottom: hp('1.8%') }} className="flex-row justify-between items-center border-b border-gray-100">
+                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
                     Inventory Specification Lines
                   </Text>
                   <TouchableOpacity
                     onPress={handleAddRow}
-                    className="flex-row items-center bg-[#E6F7F6] px-3 py-1.5 rounded-lg border border-[#008E96]/20"
+                    style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.7%'), borderRadius: wp('2%') }}
+                    className="flex-row items-center bg-[#E6F7F6] border border-[#008E96]/20"
                   >
-                    <Ionicons name="add" size={14} color="#008E96" />
-                    <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#008E96] text-xs ml-1">
+                    <Ionicons name="add" size={wp('3.5%')} color="#008E96" />
+                    <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginLeft: wp('1%') }} className="text-[#008E96]">
                       Add Row
                     </Text>
                   </TouchableOpacity>
                 </View>
 
                 {rows.map((row, index) => (
-                  <View key={row.id} className={`pb-6 mb-6 border-b border-gray-100 ${index === rows.length - 1 ? 'border-b-0 pb-0 mb-0' : ''}`}>
-                    <View className="flex-row justify-between items-center mb-3">
-                      <Text style={{ fontFamily: 'Inter-Bold' }} className="text-gray-500 text-xs bg-gray-100 px-2 py-0.5 rounded-md">
+                  <View key={row.id} style={{ paddingBottom: index === rows.length - 1 ? 0 : hp('2.5%'), marginBottom: index === rows.length - 1 ? 0 : hp('2.5%') }} className={`border-b border-gray-100 ${index === rows.length - 1 ? 'border-b-0' : ''}`}>
+                    <View style={{ marginBottom: hp('1.2%') }} className="flex-row justify-between items-center">
+                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%'), borderRadius: wp('1.5%') }} className="text-gray-500 bg-gray-100">
                         Specification #{index + 1}
                       </Text>
                       {rows.length > 1 && (
                         <TouchableOpacity onPress={() => handleRemoveRow(row.id)}>
-                          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-red-500 text-xs">
+                          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-red-500">
                             Remove Line
                           </Text>
                         </TouchableOpacity>
@@ -737,7 +742,7 @@ export default function PropertySummary() {
                       />
                     )}
 
-                    <View className="flex-row gap-3 mb-3">
+                    <View style={{ gap: wp('3%'), marginBottom: hp('1.2%') }} className="flex-row">
                       <View className="flex-1">
                         <SectionLabel required>Area</SectionLabel>
                         <TextInput
@@ -745,11 +750,11 @@ export default function PropertySummary() {
                           keyboardType="numeric"
                           value={row.area}
                           onChangeText={val => handleRowChange(row.id, 'area', val)}
-                          style={{ fontFamily: 'Inter-Regular' }}
-                          className="h-12 border border-gray-200 rounded-xl px-3 bg-white text-sm text-[#101828]"
+                          style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                          className="border border-gray-200 bg-white text-[#101828]"
                         />
                       </View>
-                      <View style={{ width: 100 }}>
+                      <View style={{ width: wp('26%') }}>
                         <CustomPicker
                           label="Unit *"
                           placeholder="Unit"
@@ -761,16 +766,16 @@ export default function PropertySummary() {
                     </View>
 
                     {showBhk && (
-                      <View className="flex-row gap-3 mb-3">
-                        <View style={{ width: 100 }}>
+                      <View style={{ gap: wp('3%'), marginBottom: hp('1.2%') }} className="flex-row">
+                        <View style={{ width: wp('26%') }}>
                           <SectionLabel required>Value</SectionLabel>
                           <TextInput
                             placeholder="e.g. 3"
                             keyboardType="numeric"
                             value={row.structureValue}
                             onChangeText={val => handleRowChange(row.id, 'structureValue', val)}
-                            style={{ fontFamily: 'Inter-Regular' }}
-                            className="h-12 border border-gray-200 rounded-xl px-3 bg-white text-sm text-[#101828]"
+                            style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                            className="border border-gray-200 bg-white text-[#101828]"
                           />
                         </View>
                         <View className="flex-1">
@@ -785,7 +790,7 @@ export default function PropertySummary() {
                       </View>
                     )}
 
-                    <View className="flex-row gap-3 mb-3">
+                    <View style={{ gap: wp('3%'), marginBottom: hp('1.2%') }} className="flex-row">
                       <View className="flex-1">
                         <SectionLabel required>Quantity (Units)</SectionLabel>
                         <TextInput
@@ -793,14 +798,14 @@ export default function PropertySummary() {
                           keyboardType="numeric"
                           value={row.quantity}
                           onChangeText={val => handleRowChange(row.id, 'quantity', val)}
-                          style={{ fontFamily: 'Inter-Regular' }}
-                          className="h-12 border border-gray-200 rounded-xl px-3 bg-white text-sm text-[#101828]"
+                          style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                          className="border border-gray-200 bg-white text-[#101828]"
                         />
                       </View>
                       <View className="flex-1">
                         <SectionLabel>Price (₹)</SectionLabel>
-                        <View className="flex-row items-center border border-gray-200 rounded-xl bg-white px-3 h-12">
-                          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-gray-500 text-sm mr-1.5">
+                        <View style={{ height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%') }} className="flex-row items-center border border-gray-200 bg-white">
+                          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%'), marginRight: wp('1.5%') }} className="text-gray-500">
                             ₹
                           </Text>
                           <TextInput
@@ -808,36 +813,38 @@ export default function PropertySummary() {
                             keyboardType="numeric"
                             value={row.price}
                             onChangeText={val => handleRowChange(row.id, 'price', val)}
-                            style={{ fontFamily: 'Inter-Regular' }}
-                            className="flex-1 text-sm text-[#101828] h-full"
+                            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%') }}
+                            className="flex-1 text-[#101828] h-full"
                           />
                         </View>
                       </View>
                     </View>
 
                     {/* Image selection */}
-                    <View className="mt-2">
+                    <View style={{ marginTop: hp('0.8%') }}>
                       <SectionLabel>Images (Photos of this Row)</SectionLabel>
                       <TouchableOpacity
                         onPress={() => handlePickRowImages(row.id)}
-                        className="h-11 border border-dashed border-gray-300 rounded-xl bg-gray-50 flex-row items-center justify-center gap-2"
+                        style={{ height: hp('5.5%'), borderRadius: wp('3%'), gap: wp('2%') }}
+                        className="border border-dashed border-gray-300 bg-gray-50 flex-row items-center justify-center"
                       >
-                        <Ionicons name="camera-outline" size={16} color="#008E96" />
-                        <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#008E96] text-xs">
+                        <Ionicons name="camera-outline" size={wp('4%')} color="#008E96" />
+                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%') }} className="text-[#008E96]">
                           Choose Photos
                         </Text>
                       </TouchableOpacity>
 
                       {row.images && row.images.length > 0 && (
-                        <ScrollView horizontal className="flex-row mt-3" showsHorizontalScrollIndicator={false}>
+                        <ScrollView horizontal style={{ marginTop: hp('1.2%') }} className="flex-row" showsHorizontalScrollIndicator={false}>
                           {row.images.map((base64, bIdx) => (
-                            <View key={bIdx} className="w-16 h-16 rounded-xl mr-3 border border-gray-200 overflow-hidden relative bg-gray-50">
+                            <View key={bIdx} style={{ width: wp('16%'), height: wp('16%'), borderRadius: wp('3%'), marginRight: wp('3%') }} className="border border-gray-200 overflow-hidden relative bg-gray-50">
                               <Image source={{ uri: base64 }} className="w-full h-full" resizeMode="cover" />
                               <TouchableOpacity
                                 onPress={() => handleRemoveRowImage(row.id, bIdx)}
-                                className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-600/90 items-center justify-center shadow-md"
+                                style={{ top: wp('1%'), right: wp('1%'), width: wp('5%'), height: wp('5%') }}
+                                className="absolute rounded-full bg-red-600/90 items-center justify-center shadow-md"
                               >
-                                <Ionicons name="close" size={12} color="white" />
+                                <Ionicons name="close" size={wp('3%')} color="white" />
                               </TouchableOpacity>
                             </View>
                           ))}
@@ -850,27 +857,28 @@ export default function PropertySummary() {
 
               {/* Amenities block */}
               {fetchedAmenities.length > 0 && (
-                <View className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm mb-6">
-                  <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#008E96] text-xs uppercase tracking-wider mb-3">
+                <View style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('2.5%') }} className="bg-white border border-gray-100 shadow-sm">
+                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), marginBottom: hp('1.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
                     Include Category Amenities
                   </Text>
-                  <View className="flex-row flex-wrap gap-2">
+                  <View style={{ gap: wp('2%') }} className="flex-row flex-wrap">
                     {fetchedAmenities.map(am => {
                       const isSelected = selectedAmenities.includes(am._id);
                       return (
                         <TouchableOpacity
                           key={am._id}
                           onPress={() => handleAmenityToggle(am._id)}
-                          className={`px-3 py-2.5 rounded-xl border flex-row items-center gap-1.5 mr-1 mb-1 bg-white ${isSelected ? 'bg-[#E6F7F6] border-[#008E96]' : 'border-gray-200'
+                          style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), gap: wp('1.5%'), marginRight: wp('1%'), marginBottom: hp('0.5%') }}
+                          className={`border flex-row items-center bg-white ${isSelected ? 'bg-[#E6F7F6] border-[#008E96]' : 'border-gray-200'
                             }`}
                         >
                           <Text
-                            style={{ fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular' }}
-                            className={`text-xs ${isSelected ? 'text-[#008E96]' : 'text-gray-600'}`}
+                            style={{ fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular', fontSize: wp('3.2%') }}
+                            className={`${isSelected ? 'text-[#008E96]' : 'text-gray-600'}`}
                           >
                             {am.label || am.name}
                           </Text>
-                          {isSelected && <Ionicons name="checkmark" size={12} color="#008E96" />}
+                          {isSelected && <Ionicons name="checkmark" size={wp('3%')} color="#008E96" />}
                         </TouchableOpacity>
                       );
                     })}
@@ -879,22 +887,24 @@ export default function PropertySummary() {
               )}
 
               {/* Submission control */}
-              <View className="flex-row gap-4 mb-10">
+              <View style={{ gap: wp('4%'), marginBottom: hp('4%') }} className="flex-row">
                 <TouchableOpacity
                   disabled={submitting}
                   onPress={handleSubmit}
-                  className="flex-1 h-12 bg-[#008E96] rounded-xl items-center justify-center shadow-md shadow-[#008E96]/20 flex-row gap-2"
+                  style={{ height: hp('6%'), borderRadius: wp('3%'), gap: wp('2%') }}
+                  className="flex-1 bg-[#008E96] items-center justify-center shadow-md shadow-[#008E96]/20 flex-row"
                 >
                   {submitting && <ActivityIndicator size="small" color="white" />}
-                  <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-white text-sm">
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%') }} className="text-white">
                     Submit Setup
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={handleResetForm}
-                  className="w-28 h-12 bg-gray-200 rounded-xl items-center justify-center"
+                  style={{ width: wp('28%'), height: hp('6%'), borderRadius: wp('3%') }}
+                  className="bg-gray-200 items-center justify-center"
                 >
-                  <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-gray-700 text-sm">
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%') }} className="text-gray-700">
                     Clear
                   </Text>
                 </TouchableOpacity>
@@ -904,21 +914,22 @@ export default function PropertySummary() {
             /* --- VIEW SUMMARIES TAB --- */
             <View>
               {Object.keys(groupedByPropertyType).length === 0 ? (
-                <View className="items-center justify-center py-20 px-8">
-                  <View className="w-16 h-16 rounded-full bg-[#E6F7F6] items-center justify-center mb-4">
-                    <MaterialCommunityIcons name="home-city" size={32} color="#008E96" />
+                <View style={{ paddingVertical: hp('8%'), paddingHorizontal: wp('8%') }} className="items-center justify-center">
+                  <View style={{ width: wp('16%'), height: wp('16%'), marginBottom: hp('1.8%') }} className="rounded-full bg-[#E6F7F6] items-center justify-center">
+                    <MaterialCommunityIcons name="home-city" size={wp('8%')} color="#008E96" />
                   </View>
-                  <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#101828] text-base text-center">
+                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828] text-center">
                     No specifications added yet
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-gray-500 text-xs text-center mt-2">
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), marginTop: hp('0.8%') }} className="text-gray-500 text-center">
                     Add configurations, sizes, prices, and photos for the property types inside this project.
                   </Text>
                   <TouchableOpacity
                     onPress={() => setActiveTab('add')}
-                    className="mt-6 bg-[#008E96] px-5 py-3 rounded-xl shadow-md"
+                    style={{ marginTop: hp('2.5%'), paddingHorizontal: wp('5%'), paddingVertical: hp('1.5%'), borderRadius: wp('3%') }}
+                    className="bg-[#008E96] shadow-md"
                   >
-                    <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-white text-xs uppercase tracking-wider">
+                    <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), letterSpacing: 1 }} className="text-white uppercase">
                       Add First Setup
                     </Text>
                   </TouchableOpacity>
@@ -945,7 +956,7 @@ export default function PropertySummary() {
                   }, 0);
 
                   return (
-                    <View key={ptId} className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden mb-4">
+                    <View key={ptId} style={{ borderRadius: wp('4%'), marginBottom: hp('1.8%') }} className="bg-white border border-gray-100 shadow-sm overflow-hidden">
                       {/* Accordion header */}
                       <TouchableOpacity
                         onPress={() => {
@@ -954,30 +965,31 @@ export default function PropertySummary() {
                             setActiveSubPtId(subPts[0]._id || subPts[0]);
                           }
                         }}
-                        className="bg-[#008E96]/5 px-4 py-4 flex-row justify-between items-center border-b border-gray-50"
+                        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.8%') }}
+                        className="bg-[#008E96]/5 flex-row justify-between items-center border-b border-gray-50"
                       >
-                        <View className="flex-row items-center gap-2">
-                          <Ionicons name="business" size={16} color="#008E96" />
-                          <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#101828] text-sm truncate max-w-[200px]">
+                        <View style={{ gap: wp('2%') }} className="flex-row items-center">
+                          <Ionicons name="business" size={wp('4%')} color="#008E96" />
+                          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%'), maxWidth: wp('50%') }} className="text-[#101828]" numberOfLines={1}>
                             {pt.details?.label || pt.details?.name || 'Property Group'}
                           </Text>
-                          <View className="bg-[#E6F7F6] border border-[#008E96]/20 px-2 py-0.5 rounded-full">
-                            <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#008E96] text-[10px]">
+                          <View style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%') }} className="bg-[#E6F7F6] border border-[#008E96]/20 rounded-full">
+                            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }} className="text-[#008E96]">
                               {ptTotalUnits} Units
                             </Text>
                           </View>
                         </View>
                         <Ionicons
                           name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                          size={18}
+                          size={wp('4.5%')}
                           color="#6B7280"
                         />
                       </TouchableOpacity>
 
                       {isExpanded && (
-                        <View className="p-4">
+                        <View style={{ padding: wp('4%') }}>
                           {/* Horizontal tabs */}
-                          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row border-b border-gray-100 pb-3 mb-4">
+                          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingBottom: hp('1.2%'), marginBottom: hp('1.8%') }} className="flex-row border-b border-gray-100">
                             {subPts.map(subPt => {
                               const subId = subPt._id || subPt;
                               const isActive = activeSubPtId === subId;
@@ -994,19 +1006,20 @@ export default function PropertySummary() {
                                 <TouchableOpacity
                                   key={subId}
                                   onPress={() => setActiveSubPtId(subId)}
-                                  className={`px-3 py-1.5 rounded-lg border mr-2 flex-row items-center gap-1.5 ${isActive ? 'bg-[#008E96] border-[#008E96]' : 'bg-white border-gray-200'
+                                  style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.7%'), borderRadius: wp('2%'), marginRight: wp('2%'), gap: wp('1.5%') }}
+                                  className={`border flex-row items-center ${isActive ? 'bg-[#008E96] border-[#008E96]' : 'bg-white border-gray-200'
                                     }`}
                                 >
                                   <Text
-                                    style={{ fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium' }}
-                                    className={`text-xs ${isActive ? 'text-white' : 'text-gray-500'}`}
+                                    style={{ fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium', fontSize: wp('3.2%') }}
+                                    className={`${isActive ? 'text-white' : 'text-gray-500'}`}
                                   >
                                     {subPt.label || subPt.name}
                                   </Text>
-                                  <View className={`px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white/20' : 'bg-gray-100'}`}>
+                                  <View style={{ paddingHorizontal: wp('1.5%'), paddingVertical: hp('0.25%') }} className={`rounded-full ${isActive ? 'bg-white/20' : 'bg-gray-100'}`}>
                                     <Text
-                                      style={{ fontFamily: 'Inter-Bold' }}
-                                      className={`text-[9px] ${isActive ? 'text-white' : 'text-gray-600'}`}
+                                      style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.4%') }}
+                                      className={`${isActive ? 'text-white' : 'text-gray-600'}`}
                                     >
                                       {subTotalUnits}
                                     </Text>
@@ -1018,8 +1031,8 @@ export default function PropertySummary() {
 
                           {/* Specification Items list */}
                           {activeSummaries.length === 0 ? (
-                            <View className="py-6 items-center">
-                              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-gray-400 text-xs">
+                            <View style={{ paddingVertical: hp('2.5%') }} className="items-center">
+                              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-gray-400">
                                 Select a sub-category tab above to view specification rows.
                               </Text>
                             </View>
@@ -1028,46 +1041,46 @@ export default function PropertySummary() {
                               const totalQty = summaryGroup.summaries?.reduce((sum, r) => sum + (r.quantity || 0), 0) || 0;
 
                               return (
-                                <View key={summaryGroup._id} className="mb-4">
+                                <View key={summaryGroup._id} style={{ marginBottom: hp('1.8%') }}>
                                   {summaryGroup.summaries?.map((row, rIdx) => {
                                     const structText = row.structure?.id
                                       ? `${row.structure.value} ${row.structure.id?.name || row.structure.id?.label || ''}`
                                       : null;
 
                                     return (
-                                      <View key={row._id || rIdx} className="p-3 border border-gray-100 rounded-xl bg-gray-50/50 mb-3">
-                                        <View className="flex-row justify-between items-start mb-2">
-                                          <View className="flex-row items-center gap-1.5">
-                                            <View className="w-5 h-5 rounded-full bg-gray-200 items-center justify-center">
-                                              <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[10px] text-gray-600">
+                                      <View key={row._id || rIdx} style={{ padding: wp('3%'), borderRadius: wp('3%'), marginBottom: hp('1.2%') }} className="border border-gray-100 bg-gray-50/50">
+                                        <View style={{ marginBottom: hp('0.8%') }} className="flex-row justify-between items-start">
+                                          <View style={{ gap: wp('1.5%') }} className="flex-row items-center">
+                                            <View style={{ width: wp('5%'), height: wp('5%') }} className="rounded-full bg-gray-200 items-center justify-center">
+                                              <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }} className="text-gray-600">
                                                 {rIdx + 1}
                                               </Text>
                                             </View>
-                                            <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#101828] text-sm">
+                                            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%') }} className="text-[#101828]">
                                               {structText || row.propertyItem?.label || row.propertyItem?.name || 'Specification'}
                                             </Text>
                                             {structText && row.propertyItem && (
-                                              <Text style={{ fontFamily: 'Inter-Regular' }} className="text-gray-400 text-xs">
+                                              <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-400">
                                                 ({row.propertyItem?.label})
                                               </Text>
                                             )}
                                           </View>
-                                          <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#008E96] text-sm">
+                                          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%') }} className="text-[#008E96]">
                                             {row.price ? `₹${row.price.toLocaleString('en-IN')}` : 'Price on Request'}
                                           </Text>
                                         </View>
 
                                         <View className="flex-row justify-between items-center">
-                                          <View className="flex-row items-center gap-4">
-                                            <View className="flex-row items-center gap-1">
-                                              <Ionicons name="expand-outline" size={13} color="#6B7280" />
-                                              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-gray-500 text-xs">
+                                          <View style={{ gap: wp('4%') }} className="flex-row items-center">
+                                            <View style={{ gap: wp('1%') }} className="flex-row items-center">
+                                              <Ionicons name="expand-outline" size={wp('3.5%')} color="#6B7280" />
+                                              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-gray-500">
                                                 {row.area} {row.areaUnit?.label || 'Sq. Ft.'}
                                               </Text>
                                             </View>
-                                            <View className="flex-row items-center gap-1">
-                                              <Ionicons name="grid-outline" size={13} color="#6B7280" />
-                                              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-gray-500 text-xs">
+                                            <View style={{ gap: wp('1%') }} className="flex-row items-center">
+                                              <Ionicons name="grid-outline" size={wp('3.5%')} color="#6B7280" />
+                                              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-gray-500">
                                                 {row.quantity} Units
                                               </Text>
                                             </View>
@@ -1079,7 +1092,8 @@ export default function PropertySummary() {
                                                 <TouchableOpacity
                                                   key={iIdx}
                                                   onPress={() => setLightboxImage(img)}
-                                                  className="w-7 h-7 rounded border border-gray-200 overflow-hidden ml-1"
+                                                  style={{ width: wp('7%'), height: wp('7%'), borderRadius: wp('1%'), marginLeft: wp('1%') }}
+                                                  className="border border-gray-200 overflow-hidden"
                                                 >
                                                   <Image source={{ uri: img }} className="w-full h-full" resizeMode="cover" />
                                                 </TouchableOpacity>
@@ -1093,17 +1107,18 @@ export default function PropertySummary() {
 
                                   {/* Summary group amenities */}
                                   {summaryGroup.amenities && summaryGroup.amenities.length > 0 && (
-                                    <View className="p-3 bg-teal-50/40 rounded-xl border border-teal-100/50 mb-3">
-                                      <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[10px] text-teal-800 uppercase tracking-widest mb-1.5">
+                                    <View style={{ padding: wp('3%'), borderRadius: wp('3%'), marginBottom: hp('1.2%') }} className="bg-teal-50/40 border border-teal-100/50">
+                                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%'), marginBottom: hp('0.7%'), letterSpacing: 1.5 }} className="text-teal-800 uppercase">
                                         Included Amenities
                                       </Text>
-                                      <View className="flex-row flex-wrap gap-1.5">
+                                      <View style={{ gap: wp('1.5%') }} className="flex-row flex-wrap">
                                         {summaryGroup.amenities.map(am => (
                                           <View
                                             key={am._id || am}
-                                            className="bg-white border border-teal-100 px-2 py-0.5 rounded shadow-sm"
+                                            style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%'), borderRadius: wp('1%') }}
+                                            className="bg-white border border-teal-100 shadow-sm"
                                           >
-                                            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[10px] text-teal-700">
+                                            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%') }} className="text-teal-700">
                                               {am.label || am.name || 'Amenity'}
                                             </Text>
                                           </View>
@@ -1113,21 +1128,22 @@ export default function PropertySummary() {
                                   )}
 
                                   {/* Delete specification row group card */}
-                                  <View className="flex-row justify-between items-center bg-gray-50 px-4 py-3 rounded-xl border border-gray-100">
-                                    <View className="flex-row items-center gap-1.5">
-                                      <Text style={{ fontFamily: 'Inter-Bold' }} className="text-gray-700 text-xs">
+                                  <View style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }} className="flex-row justify-between items-center bg-gray-50 border border-gray-100">
+                                    <View style={{ gap: wp('1.5%') }} className="flex-row items-center">
+                                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%') }} className="text-gray-700">
                                         Group Total:
                                       </Text>
-                                      <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#101828] text-xs">
+                                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%') }} className="text-[#101828]">
                                         {totalQty} Units
                                       </Text>
                                     </View>
                                     <TouchableOpacity
                                       onPress={() => handleDeleteSummary(summaryGroup._id)}
-                                      className="flex-row items-center bg-red-50 border border-red-100 px-3 py-1.5 rounded-lg"
+                                      style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.7%'), borderRadius: wp('2%') }}
+                                      className="flex-row items-center bg-red-50 border border-red-100"
                                     >
-                                      <Ionicons name="trash-outline" size={13} color="#EF4444" />
-                                      <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[#EF4444] text-xs ml-1">
+                                      <Ionicons name="trash-outline" size={wp('3.5%')} color="#EF4444" />
+                                      <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginLeft: wp('1%') }} className="text-[#EF4444]">
                                         Delete Group
                                       </Text>
                                     </TouchableOpacity>
@@ -1155,16 +1171,17 @@ export default function PropertySummary() {
           animationType="fade"
           onRequestClose={() => setLightboxImage(null)}
         >
-          <View className="flex-1 bg-black/90 justify-center items-center p-4">
+          <View style={{ padding: wp('4%') }} className="flex-1 bg-black/90 justify-center items-center">
             <TouchableOpacity
               onPress={() => setLightboxImage(null)}
-              className="absolute top-10 right-5 w-10 h-10 rounded-full bg-white/20 items-center justify-center z-50"
+              style={{ top: hp('5%'), right: wp('5%'), width: wp('10%'), height: wp('10%') }}
+              className="absolute rounded-full bg-white/20 items-center justify-center z-50"
             >
-              <Ionicons name="close" size={24} color="white" />
+              <Ionicons name="close" size={wp('6%')} color="white" />
             </TouchableOpacity>
             <Image
               source={{ uri: lightboxImage }}
-              style={{ width: Dimensions.get('window').width - 32, height: Dimensions.get('window').height * 0.7 }}
+              style={{ width: wp('92%'), height: hp('70%') }}
               resizeMode="contain"
             />
           </View>

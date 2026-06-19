@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import NoDataFound from '../../../components/NoDataFound';
 import PerfectMatchCard from '../../../components/PerfectMatchCard';
 import { useProject } from '../../../hooks/useProject';
@@ -13,8 +14,8 @@ const ProjectMatchedHome = () => {
   const { fetchProjects, loading: projectsLoading } = useProject();
   const { currentLocation } = useLocation();
   const searchParams = useLocalSearchParams();
+  const searchQuery = searchParams.city || currentLocation?.city || '';
   const [properties, setProperties] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(searchParams.city || currentLocation?.city || '');
   const [tabs, setTabs] = useState([
     { id: 1, label: 'Perfectly Matches Homes' },
     { id: 2, label: 'Smart Deals' },
@@ -28,34 +29,34 @@ const ProjectMatchedHome = () => {
   const loading = projectsLoading;
 
   useEffect(() => {
-    fetchMatches();
-  }, [searchQuery]);
+    const fetchMatches = async () => {
+      try {
+        const params = { limit: 20 };
+        const effectiveCity = searchParams.city || currentLocation?.city;
 
-  const fetchMatches = async () => {
-    try {
-      const params = { limit: 20 };
-      const effectiveCity = searchParams.city || currentLocation?.city;
-
-      if (effectiveCity) {
-        params.city = effectiveCity;
-      }
-
-      if (searchQuery.trim().length > 0) {
-        if (/^\d{6}$/.test(searchQuery)) {
-          params.pincode = searchQuery;
-          delete params.city;
-        } else {
-          params.city = searchQuery;
+        if (effectiveCity) {
+          params.city = effectiveCity;
         }
-      }
 
-      const res = await fetchProjects(params);
-      const data = Array.isArray(res) ? res : (res?.data || []);
-      setProperties(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error('Match Fetch Error:', err);
-    }
-  };
+        if (searchQuery.trim().length > 0) {
+          if (/^\d{6}$/.test(searchQuery)) {
+            params.pincode = searchQuery;
+            delete params.city;
+          } else {
+            params.city = searchQuery;
+          }
+        }
+
+        const res = await fetchProjects(params);
+        const data = Array.isArray(res) ? res : (res?.data || []);
+        setProperties(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Match Fetch Error:', err);
+      }
+    };
+
+    fetchMatches();
+  }, [searchQuery, fetchProjects, searchParams.city, currentLocation?.city]);
 
   const handleTabPress = (clickedTab) => {
     setActiveTab(clickedTab.label);
@@ -69,18 +70,37 @@ const ProjectMatchedHome = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
-      <View className="px-4 py-4 flex-row items-center gap-3">
-        <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center items-center">
-          <ArrowLeft size={28} color="#4A5565" />
+      <View 
+        className="flex-row items-center"
+        style={{
+          paddingHorizontal: wp('4.3%'),
+          paddingVertical: hp('2%'),
+          gap: wp('3%')
+        }}
+      >
+        <TouchableOpacity 
+          onPress={() => router.back()} 
+          className="justify-center items-center"
+          style={{ width: wp('9.6%'), height: wp('9.6%') }}
+        >
+          <ArrowLeft size={wp('6.4%')} color="#4A5565" />
         </TouchableOpacity>
-        <Text className="font-inter-bold text-[20px] text-[#101828]">Perfectly Matched Projects</Text>
+        <Text 
+          className="font-inter-bold text-[#101828]"
+          style={{ fontSize: wp('5.3%') }}
+        >Perfectly Matched Projects</Text>
       </View>
 
-      <View className="mb-4">
+      <View style={{ marginBottom: hp('2%') }}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 4, height: 95, alignItems: 'center' }}
+          contentContainerStyle={{
+            paddingHorizontal: wp('4.3%'),
+            gap: wp('1.1%'),
+            height: hp('11.7%'),
+            alignItems: 'center',
+          }}
         >
           {tabs.map((tab) => {
             const isActive = activeTab === tab.label;
@@ -89,16 +109,25 @@ const ProjectMatchedHome = () => {
                 key={tab.id}
                 onPress={() => handleTabPress(tab)}
                 className="justify-center items-center"
-                style={{ height: 64, marginHorizontal: 2 }}
+                style={{ height: hp('7.9%'), marginHorizontal: wp('0.5%') }}
               >
                 {isActive ? (
-                  <View className="relative h-full justify-center items-center px-6">
-                    <View className="absolute inset-0 rounded-[20px] bg-[#008E96]/8 border border-[#008E96]" />
+                  <View 
+                    className="relative h-full justify-center items-center"
+                    style={{ paddingHorizontal: wp('6.4%') }}
+                  >
+                    <View 
+                      className="absolute inset-0 border border-[#008E96]" 
+                      style={{
+                        borderRadius: wp('5.3%'),
+                        backgroundColor: 'rgba(0, 142, 150, 0.08)',
+                      }}
+                    />
                     <Text
                       style={{
                         fontFamily: 'Inter-SemiBold',
-                        fontSize: 14,
-                        lineHeight: 21,
+                        fontSize: wp('3.7%'),
+                        lineHeight: hp('2.5%'),
                         textAlign: 'center',
                         color: '#008E96',
                       }}
@@ -108,14 +137,19 @@ const ProjectMatchedHome = () => {
                   </View>
                 ) : (
                   <View
-                    className="border border-[#E4E7EC] rounded-[20px] px-5 py-3 justify-center items-center"
-                    style={{ height: 56 }}
+                    className="border border-[#E4E7EC] justify-center items-center"
+                    style={{
+                      borderRadius: wp('5.3%'),
+                      paddingHorizontal: wp('5.3%'),
+                      paddingVertical: hp('1.5%'),
+                      height: hp('6.9%'),
+                    }}
                   >
                     <Text
                       style={{
                         fontFamily: 'Inter-SemiBold',
-                        fontSize: 14,
-                        lineHeight: 21,
+                        fontSize: wp('3.7%'),
+                        lineHeight: hp('2.5%'),
                         textAlign: 'center',
                         color: '#6A7282',
                       }}
@@ -130,11 +164,20 @@ const ProjectMatchedHome = () => {
         </ScrollView>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={{ paddingHorizontal: wp('4.3%'), paddingBottom: hp('3%') }}
+      >
         {loading ? (
-          <View className="py-20 items-center justify-center">
+          <View 
+            className="items-center justify-center"
+            style={{ paddingVertical: hp('10%') }}
+          >
             <ActivityIndicator size="large" color="#008E96" />
-            <Text className="mt-4 text-[#6A7282] font-inter-medium">Searching...</Text>
+            <Text 
+              className="text-[#6A7282] font-inter-medium"
+              style={{ marginTop: hp('1.8%'), fontSize: wp('3.7%') }}
+            >Searching...</Text>
           </View>
         ) : properties.length > 0 ? (
           properties.map((property, index) => {

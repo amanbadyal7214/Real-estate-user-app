@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Camera, Heart, MessageSquare, Phone } from 'lucide-react-native';
-import { Image, ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import api from '../app/api';
 
 const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
@@ -26,8 +27,8 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
       const nextState = !isSaved;
       setIsSaved(nextState);
       const res = nextState 
-        ? await api.post(`/properties/wishlist/${id}`)
-        : await api.delete(`/properties/wishlist/${id}`);
+          ? await api.post(`/properties/wishlist/${id}`)
+          : await api.delete(`/properties/wishlist/${id}`);
       if (res.data?.success) {
         showToast(res.data.message || (nextState ? "Property added to wishlist" : "Property removed from wishlist"));
       }
@@ -45,19 +46,28 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
       params: { propertyId: property.id }
     });
   };
+
+  const IMG_WIDTH = wp('45.3%');
+  const IMG_HEIGHT = hp('18.5%');
+  const IMG_GAP = wp('2.7%');
+  const SNAP_INTERVAL = IMG_WIDTH + IMG_GAP;
+
   return (
     <TouchableOpacity 
       activeOpacity={0.9}
       onPress={onPress || navigateToDetails}
-      className="bg-white rounded-[16px] mb-6 p-3"
+      className="bg-white"
       style={{ 
+        borderRadius: wp('4.3%'),
+        marginBottom: hp('3%'),
+        padding: wp('3.2%'),
         borderWidth: 0.667,
         borderColor: '#F3F4F6',
         backgroundColor: '#FFFFFF',
         shadowColor: '#000', 
-        shadowOffset: { width: 0, height: 4 }, 
+        shadowOffset: { width: 0, height: hp('0.5%') }, 
         shadowOpacity: 0.06, 
-        shadowRadius: 16, 
+        shadowRadius: wp('4.3%'), 
         elevation: 3 
       }}
     >
@@ -67,15 +77,15 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
           horizontal 
           showsHorizontalScrollIndicator={false} 
           decelerationRate="fast"
-          snapToInterval={213} // 203 (width) + 10 (gap)
+          snapToInterval={SNAP_INTERVAL}
           snapToAlignment="start"
-          contentContainerStyle={{ gap: 10, paddingRight: 20 }}
+          contentContainerStyle={{ gap: IMG_GAP, paddingRight: wp('5.3%') }}
         >
           {property.images?.map((img, index) => (
             <View 
               key={index} 
-              className="rounded-[14px] overflow-hidden"
-              style={{ width: 170, height: 150 }}
+              className="overflow-hidden"
+              style={{ width: IMG_WIDTH, height: IMG_HEIGHT, borderRadius: wp('3.7%') }}
             >
               <Image 
                 source={{ uri: img }} 
@@ -87,41 +97,74 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
         </ScrollView>
         
         {/* Badges Left */}
-        <View className="absolute top-2 left-2 flex-row gap-1.5" pointerEvents="none">
+        <View 
+          className="absolute flex-row" 
+          style={{ top: hp('1%'), left: wp('2.1%'), gap: wp('1.5%') }}
+          pointerEvents="none"
+        >
           {property.zeroBrokerage && (
-            <View className="bg-black/65 px-3 py-1 rounded-[8px]">
-              <Text className="text-white font-inter-semibold text-[12px]">Zero Brokerage</Text>
+            <View 
+              className="bg-black/65"
+              style={{
+                paddingHorizontal: wp('3%'),
+                paddingVertical: hp('0.5%'),
+                borderRadius: wp('2.1%'),
+              }}
+            >
+              <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.2%') }}>Zero Brokerage</Text>
             </View>
           )}
           {property.isRera && (
-            <View className="bg-[#22C55EE6] px-3 py-1 rounded-[8px] flex-row items-center gap-1">
-              <View className="w-1.5 h-1.5 rounded-full bg-white" />
-              <Text className="text-white font-inter-bold text-[11px]">RERA</Text>
+            <View 
+              className="bg-[#22C55EE6] flex-row items-center"
+              style={{
+                paddingHorizontal: wp('3%'),
+                paddingVertical: hp('0.5%'),
+                borderRadius: wp('2.1%'),
+                gap: wp('1%'),
+              }}
+            >
+              <View 
+                className="rounded-full bg-white"
+                style={{ width: wp('1.5%'), height: wp('1.5%') }}
+              />
+              <Text className="text-white font-inter-bold" style={{ fontSize: wp('2.9%') }}>RERA</Text>
             </View>
           )}
         </View>
 
         {/* Photo Count Bottom Left */}
-        <View className="absolute bottom-2 left-2 bg-black/65 px-2 py-1 rounded-[8px] flex-row items-center gap-1" pointerEvents="none">
-          <Camera size={14} color="white" />
-          <Text className="text-white font-inter-semibold text-[12px]">{property.images?.length || 0}</Text>
+        <View 
+          className="absolute bg-black/65 flex-row items-center"
+          style={{
+            bottom: hp('1%'),
+            left: wp('2.1%'),
+            paddingHorizontal: wp('2%'),
+            paddingVertical: hp('0.5%'),
+            borderRadius: wp('2.1%'),
+            gap: wp('1%'),
+          }}
+          pointerEvents="none"
+        >
+          <Camera size={wp('3.7%')} color="white" />
+          <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.2%') }}>{property.images?.length || 0}</Text>
         </View>
 
         {/* Heart Button Right */}
         {showWishlist && (
-          <View className="absolute" style={{ right: 8, top: 8 }}>
+          <View className="absolute" style={{ right: wp('2.1%'), top: hp('1%') }}>
             <TouchableOpacity 
               onPress={toggleWishlist}
               className="bg-black/50 items-center justify-center"
               style={{ 
-                width: 40, 
-                height: 40, 
-                borderRadius: 20,
+                width: wp('9.6%'), 
+                height: wp('9.6%'), 
+                borderRadius: wp('4.8%'),
                 zIndex: 10 
               }}
             >
               <Heart 
-                size={20} 
+                size={wp('5.3%')} 
                 color={isSaved ? "#F04438" : "white"} 
                 fill={isSaved ? "#F04438" : "transparent"} 
               />
@@ -131,43 +174,68 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
       </View>
 
       {/* Content Section */}
-      <View className="px-1">
-        <Text className="font-inter-semibold text-[16px] text-[#101828] mb-1">{property.price}</Text>
-      <Text className="font-inter-semibold text-[14px] text-[#101828] mb-0.5">{property.name}</Text>
-      <Text className="font-inter-regular text-[12px] text-[#6A7282]">{property.developer}</Text>
-      <Text className="font-inter-regular text-[12px] text-[#6A7282] mb-2">{property.location}</Text>
+      <View style={{ paddingHorizontal: wp('1%') }}>
+        <Text 
+          className="font-inter-semibold text-[#101828]" 
+          style={{ fontSize: wp('4.3%'), marginBottom: hp('0.5%') }}
+        >{property.price}</Text>
+        <Text 
+          className="font-inter-semibold text-[#101828]"
+          style={{ fontSize: wp('3.7%'), marginBottom: hp('0.2%') }}
+        >{property.name}</Text>
+        <Text 
+          className="font-inter-regular text-[#6A7282]"
+          style={{ fontSize: wp('3.2%') }}
+        >{property.developer}</Text>
+        <Text 
+          className="font-inter-regular text-[#6A7282]"
+          style={{ fontSize: wp('3.2%'), marginBottom: hp('1%') }}
+        >{property.location}</Text>
         
-        <View className="pt-2 border-b border-[#E4E7EC] mb-4">
-          <Text className="font-inter-regular text-[12px] text-[#6A7282] pb-3">{property.details}</Text>
+        <View 
+          className="border-b border-[#E4E7EC]"
+          style={{ paddingTop: hp('1%'), marginBottom: hp('2%') }}
+        >
+          <Text 
+            className="font-inter-regular text-[#6A7282]" 
+            style={{ fontSize: wp('3.2%'), paddingBottom: hp('1.5%') }}
+          >{property.details}</Text>
         </View>
 
-
-
         {/* Actions */}
-        <View className="flex-row gap-2.5">
-          <TouchableOpacity className="w-10 h-10 bg-[#008E960D] border border-[#E4E7EC] rounded-[12px] items-center justify-center">
-            <MessageSquare size={20} color="#008E96" />
+        <View className="flex-row" style={{ gap: wp('2.7%') }}>
+          <TouchableOpacity 
+            className="bg-[#008E960D] border border-[#E4E7EC] items-center justify-center"
+            style={{ width: wp('10.7%'), height: wp('10.7%'), borderRadius: wp('3.2%') }}
+          >
+            <MessageSquare size={wp('5.3%')} color="#008E96" />
           </TouchableOpacity>
-          <TouchableOpacity className="w-10 h-10 bg-[#25D36614] border border-[#E4E7EC] rounded-[12px] items-center justify-center">
-            <Phone size={20} color="#25D366" />
+          <TouchableOpacity 
+            className="bg-[#25D36614] border border-[#E4E7EC] items-center justify-center"
+            style={{ width: wp('10.7%'), height: wp('10.7%'), borderRadius: wp('3.2%') }}
+          >
+            <Phone size={wp('5.3%')} color="#25D366" />
           </TouchableOpacity>
           <TouchableOpacity className="flex-1">
             <LinearGradient
               colors={['#008E96', '#1CB2A9']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-                style={{
-                borderRadius: 12,
-                paddingVertical: 10,
-                paddingHorizontal: 22,
+              style={{
+                borderRadius: wp('3.2%'),
+                paddingVertical: hp('1.4%'),
+                paddingHorizontal: wp('5.8%'),
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                gap: 6
+                gap: wp('1.6%'),
               }}
             >
-              <Phone size={16} color="white" />
-              <Text className="text-white font-inter-semibold text-[13px] leading-[18px]">Contact</Text>
+              <Phone size={wp('4.3%')} color="white" />
+              <Text 
+                className="text-white font-inter-semibold"
+                style={{ fontSize: wp('3.5%'), lineHeight: hp('2.4%') }}
+              >Contact</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -176,24 +244,24 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
         <View 
           style={{
             position: 'absolute',
-            bottom: 60,
-            left: 20,
-            right: 20,
+            bottom: hp('7.5%'),
+            left: wp('5.3%'),
+            right: wp('5.3%'),
             backgroundColor: '#1E293B',
-            paddingVertical: 10,
-            paddingHorizontal: 16,
-            borderRadius: 25,
+            paddingVertical: hp('1.2%'),
+            paddingHorizontal: wp('4.3%'),
+            borderRadius: wp('6.7%'),
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 999,
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
+            shadowOffset: { width: 0, height: hp('0.2%') },
             shadowOpacity: 0.25,
-            shadowRadius: 3.84,
+            shadowRadius: wp('1%'),
             elevation: 5,
           }}
         >
-          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: 13, textAlign: 'center' }}>
+          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: wp('3.5%'), textAlign: 'center' }}>
             {toast}
           </Text>
         </View>

@@ -3,6 +3,7 @@ import { ArrowLeft, Share2 } from 'lucide-react-native';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropertyCard from '../../../components/PropertyCard';
 import { useProject } from '../../../hooks/useProject';
 import api from '../../api';
@@ -75,22 +76,22 @@ const Suggestions = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-row items-center justify-between px-4 pb-5 border-b border-[#E4E7EC] bg-white">
-        <TouchableOpacity onPress={() => router.back()} className="w-9 h-9 justify-center items-center rounded-full">
-          <ArrowLeft size={24} color="#4A5565" />
+      <View style={{ paddingHorizontal: wp('4%'), paddingBottom: hp('2.2%') }} className="flex-row items-center justify-between border-b border-[#E4E7EC] bg-white">
+        <TouchableOpacity onPress={() => router.back()} style={{ width: wp('9%'), height: wp('9%') }} className="justify-center items-center rounded-full">
+          <ArrowLeft size={wp('6%')} color="#4A5565" />
         </TouchableOpacity>
 
         <View className="items-center flex-1">
-          <Text className="text-[19px] font-inter-bold text-[#101828] leading-[24px] text-center">
+          <Text style={{ fontSize: wp('5%'), lineHeight: wp('6.4%') }} className="font-inter-bold text-[#101828] text-center">
             {suggestionsData.length > 0 ? `${suggestionsData.length} Smart Suggestions` : 'Smart Suggestions'}
           </Text>
-          <Text className="text-[13px] text-[#6A7282] font-inter-regular leading-[16px] text-center mt-0.5">
+          <Text style={{ fontSize: wp('3.5%'), lineHeight: wp('4.3%'), marginTop: hp('0.3%') }} className="text-[#6A7282] font-inter-regular text-center">
             Based on your last search in {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
 
-        <TouchableOpacity className="w-9 h-9 justify-center items-center rounded-full">
-          <Share2 size={24} color="#4A5565" />
+        <TouchableOpacity style={{ width: wp('9%'), height: wp('9%') }} className="justify-center items-center rounded-full">
+          <Share2 size={wp('6%')} color="#4A5565" />
         </TouchableOpacity>
       </View>
 
@@ -100,7 +101,7 @@ const Suggestions = () => {
         </View>
       ) : (
         <ScrollView
-          contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 30 }}
+          contentContainerStyle={{ paddingHorizontal: wp('4%'), paddingTop: hp('2.2%'), paddingBottom: hp('3.5%') }}
           showsVerticalScrollIndicator={false}
           className="flex-1"
         >
@@ -109,8 +110,8 @@ const Suggestions = () => {
               <PropertyCard key={item.id} property={item} />
             ))
           ) : (
-            <View className="flex-1 items-center justify-center mt-10">
-              <Text className="font-inter-medium text-[#6A7282]">No suggestions found for this location.</Text>
+            <View style={{ marginTop: hp('4%') }} className="flex-1 items-center justify-center">
+              <Text style={{ fontSize: wp('3.7%') }} className="font-inter-medium text-[#6A7282]">No suggestions found for this location.</Text>
             </View>
           )}
         </ScrollView>

@@ -18,6 +18,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import api from '../../api';
 import { useLookup } from '../../../hooks/useLookup';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -71,7 +72,7 @@ const EMPTY_FORM = {
 // ─── Helper Components ────────────────────────────────────────────────────────
 
 const SectionLabel = ({ children, required }) => (
-  <Text style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: 13, marginBottom: 6 }}>
+  <Text style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: wp('3.5%'), marginBottom: hp('0.7%') }}>
     {children}
     {required ? <Text style={{ color: '#EF4444' }}> *</Text> : null}
   </Text>
@@ -92,19 +93,19 @@ const StyledInput = ({
       alignItems: multiline ? 'flex-start' : 'center',
       borderWidth: 1.5,
       borderColor: '#E5E7EB',
-      borderRadius: 12,
+      borderRadius: wp('3.2%'),
       backgroundColor: '#F9FAFB',
-      paddingHorizontal: 14,
-      paddingVertical: multiline ? 12 : 0,
-      marginBottom: 14,
+      paddingHorizontal: wp('3.7%'),
+      paddingVertical: multiline ? hp('1.5%') : 0,
+      marginBottom: hp('1.7%'),
     }}
   >
     {icon && (
       <MaterialIcons
         name={icon}
-        size={18}
+        size={wp('4.8%')}
         color="#9CA3AF"
-        style={{ marginRight: 8, marginTop: multiline ? 2 : 0 }}
+        style={{ marginRight: wp('2.1%'), marginTop: multiline ? hp('0.25%') : 0 }}
       />
     )}
     <TextInput
@@ -118,9 +119,9 @@ const StyledInput = ({
       style={{
         flex: 1,
         fontFamily: 'Inter-Regular',
-        fontSize: 14,
+        fontSize: wp('3.7%'),
         color: '#111827',
-        minHeight: multiline ? 90 : 48,
+        minHeight: multiline ? hp('11%') : hp('6%'),
         textAlignVertical: multiline ? 'top' : 'center',
       }}
     />
@@ -129,7 +130,7 @@ const StyledInput = ({
 
 // Chip selector — options = [{ label, value }]
 const ChipSelector = ({ options, selected, onSelect }) => (
-  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
+  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: wp('2.1%'), marginBottom: hp('1.7%') }}>
     {options.map((opt) => {
       const isActive = selected === opt.value;
       return (
@@ -137,9 +138,9 @@ const ChipSelector = ({ options, selected, onSelect }) => (
           key={opt.value}
           onPress={() => onSelect(opt.value)}
           style={{
-            paddingHorizontal: 14,
-            paddingVertical: 8,
-            borderRadius: 20,
+            paddingHorizontal: wp('3.7%'),
+            paddingVertical: hp('1%'),
+            borderRadius: wp('5.3%'),
             borderWidth: 1.5,
             borderColor: isActive ? '#008E96' : '#E5E7EB',
             backgroundColor: isActive ? '#E6F7F6' : '#FFFFFF',
@@ -149,7 +150,7 @@ const ChipSelector = ({ options, selected, onSelect }) => (
             style={{
               fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Regular',
               color: isActive ? '#008E96' : '#6B7280',
-              fontSize: 13,
+              fontSize: wp('3.5%'),
             }}
           >
             {opt.label}
@@ -167,22 +168,22 @@ const CheckboxItem = ({ label, checked, onToggle }) => (
     style={{
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 14,
-      paddingVertical: 12,
-      borderRadius: 12,
+      paddingHorizontal: wp('3.7%'),
+      paddingVertical: hp('1.5%'),
+      borderRadius: wp('3.2%'),
       borderWidth: 1.5,
       borderColor: checked ? '#008E96' : '#E5E7EB',
       backgroundColor: checked ? '#E6F7F6' : '#FFFFFF',
       flex: 1,
-      gap: 10,
+      gap: wp('2.7%'),
     }}
     activeOpacity={0.7}
   >
     <View
       style={{
-        width: 20,
-        height: 20,
-        borderRadius: 5,
+        width: wp('5.3%'),
+        height: wp('5.3%'),
+        borderRadius: wp('1.3%'),
         borderWidth: 2,
         borderColor: checked ? '#008E96' : '#D1D5DB',
         backgroundColor: checked ? '#008E96' : 'transparent',
@@ -190,12 +191,12 @@ const CheckboxItem = ({ label, checked, onToggle }) => (
         justifyContent: 'center',
       }}
     >
-      {checked && <MaterialIcons name="check" size={13} color="white" />}
+      {checked && <MaterialIcons name="check" size={wp('3.5%')} color="white" />}
     </View>
     <Text
       style={{
         fontFamily: checked ? 'Inter-SemiBold' : 'Inter-Regular',
-        fontSize: 13,
+        fontSize: wp('3.5%'),
         color: checked ? '#008E96' : '#374151',
       }}
     >
@@ -213,27 +214,27 @@ const DateInput = ({ placeholder, value, onPress, icon }) => (
       alignItems: 'center',
       borderWidth: 1.5,
       borderColor: '#E5E7EB',
-      borderRadius: 12,
+      borderRadius: wp('3.2%'),
       backgroundColor: '#F9FAFB',
-      paddingHorizontal: 14,
-      height: 48,
-      marginBottom: 14,
+      paddingHorizontal: wp('3.7%'),
+      height: hp('6%'),
+      marginBottom: hp('1.7%'),
     }}
     activeOpacity={0.7}
   >
     {icon && (
       <MaterialIcons
         name={icon}
-        size={18}
+        size={wp('4.8%')}
         color="#9CA3AF"
-        style={{ marginRight: 8 }}
+        style={{ marginRight: wp('2.1%') }}
       />
     )}
     <Text
       style={{
         flex: 1,
         fontFamily: 'Inter-Regular',
-        fontSize: 14,
+        fontSize: wp('3.7%'),
         color: value ? '#111827' : '#9CA3AF',
       }}
     >
@@ -253,11 +254,11 @@ const SelectModal = ({ visible, onClose, title, options = [], onSelect }) => {
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
-        <View style={{ backgroundColor: '#FFFFFF', borderTopLeftRadius: 24, borderTopRightRadius: 24, height: '60%', padding: 20 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <Text style={{ fontFamily: 'Inter-Bold', fontSize: 16, color: '#111827' }}>{title}</Text>
+        <View style={{ backgroundColor: '#FFFFFF', borderTopLeftRadius: wp('6.4%'), borderTopRightRadius: wp('6.4%'), height: '60%', padding: wp('5.3%') }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: hp('2%') }}>
+            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%'), color: '#111827' }}>{title}</Text>
             <TouchableOpacity onPress={onClose}>
-              <MaterialIcons name="close" size={24} color="#6B7280" />
+              <MaterialIcons name="close" size={wp('6.4%')} color="#6B7280" />
             </TouchableOpacity>
           </View>
           
@@ -265,14 +266,14 @@ const SelectModal = ({ visible, onClose, title, options = [], onSelect }) => {
             placeholder="Search..."
             placeholderTextColor="#9CA3AF"
             style={{
-              height: 44,
+              height: hp('5.5%'),
               borderWidth: 1.5,
               borderColor: '#E5E7EB',
-              borderRadius: 10,
-              paddingHorizontal: 12,
+              borderRadius: wp('2.7%'),
+              paddingHorizontal: wp('3.2%'),
               fontFamily: 'Inter-Regular',
-              fontSize: 14,
-              marginBottom: 16,
+              fontSize: wp('3.7%'),
+              marginBottom: hp('2%'),
               backgroundColor: '#F9FAFB',
             }}
             value={searchQuery}
@@ -289,16 +290,16 @@ const SelectModal = ({ visible, onClose, title, options = [], onSelect }) => {
                   onClose();
                 }}
                 style={{
-                  paddingVertical: 14,
+                  paddingVertical: hp('1.7%'),
                   borderBottomWidth: 1,
                   borderBottomColor: '#F3F4F6',
                 }}
               >
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: '#374151' }}>{opt.label}</Text>
+                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), color: '#374151' }}>{opt.label}</Text>
               </TouchableOpacity>
             ))}
             {filteredOptions.length === 0 && (
-              <Text style={{ textAlign: 'center', color: '#9CA3AF', marginTop: 20, fontFamily: 'Inter-Regular' }}>No results found</Text>
+              <Text style={{ textAlign: 'center', color: '#9CA3AF', marginTop: hp('2.5%'), fontFamily: 'Inter-Regular' }}>No results found</Text>
             )}
           </ScrollView>
         </View>
@@ -312,11 +313,11 @@ const SectionCard = ({ title, icon, children }) => (
   <View
     style={{
       backgroundColor: '#FFFFFF',
-      borderRadius: 16,
+      borderRadius: wp('4.3%'),
       borderWidth: 1,
       borderColor: '#E5E7EB',
-      padding: 16,
-      marginBottom: 16,
+      padding: wp('4.3%'),
+      marginBottom: hp('2%'),
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.04,
@@ -324,20 +325,20 @@ const SectionCard = ({ title, icon, children }) => (
       elevation: 1,
     }}
   >
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: wp('2.7%'), marginBottom: hp('1.7%') }}>
       <View
         style={{
-          width: 34,
-          height: 34,
-          borderRadius: 10,
+          width: wp('9.1%'),
+          height: wp('9.1%'),
+          borderRadius: wp('2.7%'),
           backgroundColor: '#E6F7F6',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <MaterialIcons name={icon} size={18} color="#008E96" />
+        <MaterialIcons name={icon} size={wp('4.8%')} color="#008E96" />
       </View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: 15, color: '#111827' }}>{title}</Text>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%'), color: '#111827' }}>{title}</Text>
     </View>
     {children}
   </View>
@@ -564,7 +565,7 @@ const AddProject = () => {
 
     if (Platform.OS === 'ios') {
       return (
-        <View style={{ backgroundColor: '#FFFFFF', padding: 10, borderRadius: 12, borderWidth: 1, borderColor: '#E5E7EB', marginBottom: 14 }}>
+        <View style={{ backgroundColor: '#FFFFFF', padding: wp('2.7%'), borderRadius: wp('3.2%'), borderWidth: 1, borderColor: '#E5E7EB', marginBottom: hp('1.7%') }}>
           <DateTimePicker
             value={parseDate(form[field])}
             mode="date"
@@ -575,13 +576,13 @@ const AddProject = () => {
             onPress={() => setShow(false)}
             style={{
               backgroundColor: '#008E96',
-              padding: 10,
-              borderRadius: 8,
+              padding: wp('2.7%'),
+              borderRadius: wp('2.1%'),
               alignItems: 'center',
-              marginTop: 10,
+              marginTop: hp('1.2%'),
             }}
           >
-            <Text style={{ fontFamily: 'Inter-SemiBold', color: '#FFFFFF', fontSize: 14 }}>Done</Text>
+            <Text style={{ fontFamily: 'Inter-SemiBold', color: '#FFFFFF', fontSize: wp('3.7%') }}>Done</Text>
           </TouchableOpacity>
         </View>
       );
@@ -735,7 +736,7 @@ const AddProject = () => {
 
   // ─── Progress Bar ────────────────────────────────────────────────────────────
   const renderProgressBar = () => (
-    <View style={{ paddingHorizontal: 20, paddingTop: 20, paddingBottom: 8 }}>
+    <View style={{ paddingHorizontal: wp('5.3%'), paddingTop: hp('2.5%'), paddingBottom: hp('1%') }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {STEPS.map((step, idx) => {
           const isDone = currentStep > step.id;
@@ -747,17 +748,17 @@ const AddProject = () => {
                   <View
                     style={{
                       flex: 1,
-                      height: 2,
+                      height: hp('0.25%'),
                       backgroundColor: isDone || isActive ? '#008E96' : '#E5E7EB',
-                      borderRadius: 1,
+                      borderRadius: wp('0.25%'),
                     }}
                   />
                 )}
                 <View
                   style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 15,
+                    width: wp('8%'),
+                    height: wp('8%'),
+                    borderRadius: wp('4%'),
                     backgroundColor: isDone ? '#008E96' : isActive ? '#008E96' : '#E5E7EB',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -769,18 +770,18 @@ const AddProject = () => {
                   }}
                 >
                   {isDone ? (
-                    <MaterialIcons name="check" size={15} color="white" />
+                    <MaterialIcons name="check" size={wp('4%')} color="white" />
                   ) : (
-                    <MaterialIcons name={step.icon} size={13} color={isActive ? 'white' : '#9CA3AF'} />
+                    <MaterialIcons name={step.icon} size={wp('3.5%')} color={isActive ? 'white' : '#9CA3AF'} />
                   )}
                 </View>
                 {idx < STEPS.length - 1 && (
                   <View
                     style={{
                       flex: 1,
-                      height: 2,
+                      height: hp('0.25%'),
                       backgroundColor: isDone ? '#008E96' : '#E5E7EB',
-                      borderRadius: 1,
+                      borderRadius: wp('0.25%'),
                     }}
                   />
                 )}
@@ -788,9 +789,9 @@ const AddProject = () => {
               <Text
                 style={{
                   fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Regular',
-                  fontSize: 9,
+                  fontSize: wp('2.4%'),
                   color: isActive ? '#008E96' : isDone ? '#059669' : '#9CA3AF',
-                  marginTop: 4,
+                  marginTop: hp('0.5%'),
                   textAlign: 'center',
                 }}
               >
@@ -806,10 +807,10 @@ const AddProject = () => {
   // ─── Step 1: Project Details ─────────────────────────────────────────────────
   const renderStep1 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Create New Project
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
+      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Enter the project name, possession status, and description below.
       </Text>
 
@@ -824,9 +825,9 @@ const AddProject = () => {
 
         <SectionLabel required>Possession Status</SectionLabel>
         {lookupLoading && !(apiPossessionStatus && apiPossessionStatus.length > 0) ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: wp('2.1%'), marginBottom: hp('1.7%') }}>
             <ActivityIndicator size="small" color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#9CA3AF' }}>Loading...</Text>
+            <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#9CA3AF' }}>Loading...</Text>
           </View>
         ) : (
           <ChipSelector
@@ -847,7 +848,7 @@ const AddProject = () => {
         />
 
         {/* Checkboxes */}
-        <View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap', marginTop: 2 }}>
+        <View style={{ flexDirection: 'row', gap: wp('2.7%'), flexWrap: 'wrap', marginTop: hp('0.25%') }}>
           <CheckboxItem
             label="Gated Community"
             checked={form.gatedCommunity}
@@ -861,7 +862,7 @@ const AddProject = () => {
         </View>
 
         {form.reraApproved && (
-          <View style={{ marginTop: 14 }}>
+          <View style={{ marginTop: hp('1.7%') }}>
             <SectionLabel required>RERA Number</SectionLabel>
             <StyledInput
               placeholder="e.g. XRFDD-dfg-IJHGB"
@@ -878,16 +879,16 @@ const AddProject = () => {
   // ─── Step 2: Schedule & Approvals + Area & Pricing ──────────────────────────
   const renderStep2 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Schedule & Area
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
+      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Timeline, legal approvals, and space metrics.
       </Text>
 
       {/* Schedule & Approvals */}
       <SectionCard title="Schedule & Approvals" icon="event-note">
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6B7280', marginBottom: 14 }}>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6B7280', marginBottom: hp('1.7%') }}>
           Timeline and legal approvals.
         </Text>
 
@@ -912,11 +913,11 @@ const AddProject = () => {
 
       {/* Area & Pricing */}
       <SectionCard title="Area & Pricing" icon="straighten">
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6B7280', marginBottom: 14 }}>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6B7280', marginBottom: hp('1.7%') }}>
           Space metrics and price rates.
         </Text>
 
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={{ flexDirection: 'row', gap: wp('2.7%') }}>
           <View style={{ flex: 1 }}>
             <SectionLabel required>Total Area</SectionLabel>
             <StyledInput
@@ -937,7 +938,7 @@ const AddProject = () => {
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={{ flexDirection: 'row', gap: wp('2.7%') }}>
           <View style={{ flex: 1 }}>
             <SectionLabel required>Avg Price Rate</SectionLabel>
             <StyledInput
@@ -964,10 +965,10 @@ const AddProject = () => {
   // ─── Step 3: Location Details ────────────────────────────────────────────────
   const renderStep3 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Location Details
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
+      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Exact address and locality information.
       </Text>
 
@@ -1018,10 +1019,10 @@ const AddProject = () => {
   // ─── Step 4: Project Media ────────────────────────────────────────────────────
   const renderStep4 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
+      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Project Media
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
+      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Upload images, brochures, or documents.
       </Text>
 
@@ -1033,40 +1034,40 @@ const AddProject = () => {
             borderWidth: 1.5,
             borderStyle: 'dashed',
             borderColor: '#008E96',
-            borderRadius: 14,
-            paddingVertical: 28,
+            borderRadius: wp('3.7%'),
+            paddingVertical: hp('3.5%'),
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: '#F0FFFE',
-            marginBottom: 16,
-            gap: 8,
+            marginBottom: hp('2%'),
+            gap: hp('1%'),
           }}
         >
           <View
             style={{
-              width: 48,
-              height: 48,
-              borderRadius: 24,
+              width: wp('12.8%'),
+              height: wp('12.8%'),
+              borderRadius: wp('6.4%'),
               backgroundColor: '#E6F7F6',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: 4,
+              marginBottom: hp('0.5%'),
             }}
           >
-            <MaterialIcons name="cloud-upload" size={26} color="#008E96" />
+            <MaterialIcons name="cloud-upload" size={wp('6.9%')} color="#008E96" />
           </View>
-          <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 14, color: '#008E96' }}>
+          <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%'), color: '#008E96' }}>
             Tap to Upload Images
           </Text>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#9CA3AF' }}>
+          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#9CA3AF' }}>
             JPG, PNG • Multiple selection supported
           </Text>
         </TouchableOpacity>
 
         {/* Selected images list with labels */}
         {form.media.length > 0 && (
-          <View style={{ marginBottom: 10 }}>
-            <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 13, color: '#374151', marginBottom: 10 }}>
+          <View style={{ marginBottom: hp('1.2%') }}>
+            <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%'), color: '#374151', marginBottom: hp('1.2%') }}>
               Selected ({form.media.length})
             </Text>
             {form.media.map((item) => (
@@ -1078,20 +1079,20 @@ const AddProject = () => {
                   backgroundColor: '#F9FAFB',
                   borderWidth: 1,
                   borderColor: '#E5E7EB',
-                  borderRadius: 12,
-                  padding: 10,
-                  marginBottom: 10,
-                  gap: 12,
+                  borderRadius: wp('3.2%'),
+                  padding: wp('2.7%'),
+                  marginBottom: hp('1.2%'),
+                  gap: wp('3.2%'),
                 }}
               >
                 <Image
                   source={{ uri: item.uri }}
-                  style={{ width: 60, height: 60, borderRadius: 8 }}
+                  style={{ width: wp('16%'), height: wp('16%'), borderRadius: wp('2.1%') }}
                   resizeMode="cover"
                 />
                 
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 13, color: '#374151' }} numberOfLines={1}>
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%'), color: '#374151' }} numberOfLines={1}>
                     {item.name}
                   </Text>
                   {/* Label input field */}
@@ -1101,14 +1102,14 @@ const AddProject = () => {
                     value={item.label}
                     onChangeText={(text) => updateMediaLabel(item.uri, text)}
                     style={{
-                      height: 36,
+                      height: hp('4.5%'),
                       borderWidth: 1,
                       borderColor: '#D1D5DB',
-                      borderRadius: 8,
-                      paddingHorizontal: 10,
+                      borderRadius: wp('2.1%'),
+                      paddingHorizontal: wp('2.7%'),
                       fontFamily: 'Inter-Regular',
-                      fontSize: 12,
-                      marginTop: 6,
+                      fontSize: wp('3.2%'),
+                      marginTop: hp('0.7%'),
                       backgroundColor: '#FFFFFF',
                       color: '#374151',
                     }}
@@ -1118,15 +1119,15 @@ const AddProject = () => {
                 <TouchableOpacity
                   onPress={() => removeMedia(item.uri)}
                   style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 14,
+                    width: wp('7.5%'),
+                    height: wp('7.5%'),
+                    borderRadius: wp('3.7%'),
                     backgroundColor: '#FEE2E2',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  <MaterialIcons name="delete" size={16} color="#EF4444" />
+                  <MaterialIcons name="delete" size={wp('4.3%')} color="#EF4444" />
                 </TouchableOpacity>
               </View>
             ))}
@@ -1137,18 +1138,18 @@ const AddProject = () => {
         <View
           style={{
             backgroundColor: '#EFF6FF',
-            borderRadius: 10,
-            padding: 12,
-            marginTop: 14,
+            borderRadius: wp('2.7%'),
+            padding: wp('3.2%'),
+            marginTop: hp('1.7%'),
             flexDirection: 'row',
             alignItems: 'flex-start',
-            gap: 8,
+            gap: wp('2.1%'),
             borderWidth: 1,
             borderColor: '#BFDBFE',
           }}
         >
-          <MaterialIcons name="info" size={16} color="#3B82F6" style={{ marginTop: 1 }} />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#1E40AF', flex: 1, lineHeight: 18 }}>
+          <MaterialIcons name="info" size={wp('4.3%')} color="#3B82F6" style={{ marginTop: hp('0.12%') }} />
+          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#1E40AF', flex: 1, lineHeight: hp('2.2%') }}>
             Projects with high-quality images receive{' '}
             <Text style={{ fontFamily: 'Inter-Bold' }}>2× more enquiries.</Text>{' '}
             Brochures and floor plans also help buyers decide faster.
@@ -1167,17 +1168,17 @@ const AddProject = () => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
-          paddingVertical: 10,
+          paddingVertical: hp('1.2%'),
           borderBottomWidth: 1,
           borderBottomColor: '#F3F4F6',
-          gap: 8,
+          gap: wp('2.1%'),
         }}
       >
-        <Text style={{ fontFamily: 'Inter-Medium', fontSize: 13, color: '#6B7280', flex: 1 }}>
+        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%'), color: '#6B7280', flex: 1 }}>
           {label}
         </Text>
         <Text
-          style={{ fontFamily: 'Inter-SemiBold', fontSize: 13, color: '#111827', flex: 2, textAlign: 'right' }}
+          style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%'), color: '#111827', flex: 2, textAlign: 'right' }}
           numberOfLines={3}
         >
           {value}
@@ -1254,10 +1255,10 @@ const AddProject = () => {
 
     return (
       <View>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: '#111827', marginBottom: 4 }}>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
           Review & Submit
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: 13, color: '#6B7280', marginBottom: 20 }}>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
           Double-check your project details before publishing.
         </Text>
 
@@ -1266,11 +1267,11 @@ const AddProject = () => {
             key={section.title}
             style={{
               backgroundColor: '#FFFFFF',
-              borderRadius: 16,
+              borderRadius: wp('4.3%'),
               borderWidth: 1,
               borderColor: '#E5E7EB',
-              padding: 16,
-              marginBottom: 14,
+              padding: wp('4.3%'),
+              marginBottom: hp('1.7%'),
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.04,
@@ -1278,27 +1279,27 @@ const AddProject = () => {
               elevation: 1,
             }}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: wp('2.1%'), marginBottom: hp('1%') }}>
               <View
                 style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 8,
+                  width: wp('8%'),
+                  height: wp('8%'),
+                  borderRadius: wp('2.1%'),
                   backgroundColor: '#E6F7F6',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <MaterialIcons name={section.icon} size={16} color="#008E96" />
+                <MaterialIcons name={section.icon} size={wp('4.3%')} color="#008E96" />
               </View>
-              <Text style={{ fontFamily: 'Inter-Bold', fontSize: 14, color: '#374151' }}>
+              <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), color: '#374151' }}>
                 {section.title}
               </Text>
               <TouchableOpacity
                 onPress={() => { setCurrentStep(section.step); scrollToTop(); }}
                 style={{ marginLeft: 'auto' }}
               >
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 12, color: '#008E96' }}>Edit</Text>
+                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), color: '#008E96' }}>Edit</Text>
               </TouchableOpacity>
             </View>
             {section.rows.map((row) => (
@@ -1310,18 +1311,18 @@ const AddProject = () => {
         <View
           style={{
             backgroundColor: '#FFFBEB',
-            borderRadius: 12,
-            padding: 14,
+            borderRadius: wp('3.2%'),
+            padding: wp('3.7%'),
             flexDirection: 'row',
             alignItems: 'flex-start',
-            gap: 10,
+            gap: wp('2.7%'),
             borderWidth: 1,
             borderColor: '#FDE68A',
-            marginBottom: 8,
+            marginBottom: hp('1%'),
           }}
         >
-          <MaterialIcons name="warning" size={18} color="#D97706" style={{ marginTop: 1 }} />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#92400E', flex: 1, lineHeight: 18 }}>
+          <MaterialIcons name="warning" size={wp('4.8%')} color="#D97706" style={{ marginTop: hp('0.12%') }} />
+          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#92400E', flex: 1, lineHeight: hp('2.2%') }}>
             Once submitted, your project will be reviewed by our team before appearing in search results.
           </Text>
         </View>
@@ -1346,44 +1347,44 @@ const AddProject = () => {
       <LinearGradient
         colors={['#006B73', '#008E96']}
         style={{
-          paddingTop: Platform.OS === 'android' ? 48 : 16,
-          paddingBottom: 20,
-          paddingHorizontal: 20,
+          paddingTop: Platform.OS === 'android' ? hp('6%') : hp('2%'),
+          paddingBottom: hp('2.5%'),
+          paddingHorizontal: wp('5.3%'),
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 12,
+          gap: wp('3.2%'),
         }}
       >
         <TouchableOpacity
           onPress={goBack}
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
+            width: wp('9.6%'),
+            height: wp('9.6%'),
+            borderRadius: wp('4.8%'),
             backgroundColor: 'rgba(255,255,255,0.2)',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <Ionicons name="arrow-back" size={20} color="white" />
+          <Ionicons name="arrow-back" size={wp('5.3%')} color="white" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: 18, color: 'white' }}>
+          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%'), color: 'white' }}>
             {editProjectId ? 'Edit Project' : 'Add New Project'}
           </Text>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 1 }}>
+          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: 'rgba(255,255,255,0.75)', marginTop: hp('0.12%') }}>
             Step {currentStep} of {STEPS.length} — {STEPS[currentStep - 1].title}
           </Text>
         </View>
         <View
           style={{
             backgroundColor: 'rgba(255,255,255,0.25)',
-            paddingHorizontal: 10,
-            paddingVertical: 4,
-            borderRadius: 20,
+            paddingHorizontal: wp('2.7%'),
+            paddingVertical: hp('0.5%'),
+            borderRadius: wp('5.3%'),
           }}
         >
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: 12, color: 'white' }}>
+          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), color: 'white' }}>
             {currentStep}/{STEPS.length}
           </Text>
         </View>
@@ -1402,7 +1403,7 @@ const AddProject = () => {
         <ScrollView
           ref={scrollRef}
           style={{ flex: 1 }}
-          contentContainerStyle={{ padding: 20, paddingBottom: 120 }}
+          contentContainerStyle={{ padding: wp('5.3%'), paddingBottom: hp('15%') }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
@@ -1461,9 +1462,9 @@ const AddProject = () => {
             backgroundColor: 'white',
             borderTopWidth: 1,
             borderTopColor: '#E5E7EB',
-            padding: 16,
+            padding: wp('4.3%'),
             flexDirection: 'row',
-            gap: 10,
+            gap: wp('2.7%'),
           }}
         >
           {currentStep > 1 && (
@@ -1471,18 +1472,18 @@ const AddProject = () => {
               onPress={goBack}
               style={{
                 flex: 1,
-                height: 50,
-                borderRadius: 12,
+                height: hp('6.2%'),
+                borderRadius: wp('3.2%'),
                 borderWidth: 1.5,
                 borderColor: '#E5E7EB',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'row',
-                gap: 6,
+                gap: wp('1.6%'),
               }}
             >
-              <Ionicons name="arrow-back" size={16} color="#6B7280" />
-              <Text style={{ fontFamily: 'Inter-SemiBold', color: '#6B7280', fontSize: 14 }}>Back</Text>
+              <Ionicons name="arrow-back" size={wp('4.3%')} color="#6B7280" />
+              <Text style={{ fontFamily: 'Inter-SemiBold', color: '#6B7280', fontSize: wp('3.7%') }}>Back</Text>
             </TouchableOpacity>
           )}
 
@@ -1492,13 +1493,13 @@ const AddProject = () => {
               disabled={!canProceed()}
               style={{
                 flex: 2,
-                height: 50,
-                borderRadius: 12,
+                height: hp('6.2%'),
+                borderRadius: wp('3.2%'),
                 backgroundColor: canProceed() ? '#008E96' : '#E5E7EB',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'row',
-                gap: 8,
+                gap: wp('2.1%'),
                 shadowColor: canProceed() ? '#008E96' : 'transparent',
                 shadowOffset: { width: 0, height: 4 },
                 shadowOpacity: 0.3,
@@ -1506,10 +1507,10 @@ const AddProject = () => {
                 elevation: canProceed() ? 4 : 0,
               }}
             >
-              <Text style={{ fontFamily: 'Inter-Bold', color: canProceed() ? 'white' : '#9CA3AF', fontSize: 15 }}>
+              <Text style={{ fontFamily: 'Inter-Bold', color: canProceed() ? 'white' : '#9CA3AF', fontSize: wp('4%') }}>
                 Continue
               </Text>
-              <Ionicons name="arrow-forward" size={16} color={canProceed() ? 'white' : '#9CA3AF'} />
+              <Ionicons name="arrow-forward" size={wp('4.3%')} color={canProceed() ? 'white' : '#9CA3AF'} />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -1517,13 +1518,13 @@ const AddProject = () => {
               disabled={submitting}
               style={{
                 flex: 2,
-                height: 50,
-                borderRadius: 12,
+                height: hp('6.2%'),
+                borderRadius: wp('3.2%'),
                 backgroundColor: '#008E96',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'row',
-                gap: 8,
+                gap: wp('2.1%'),
                 shadowColor: '#008E96',
                 shadowOffset: { width: 0, height: 4 },
                 shadowOpacity: 0.35,
@@ -1535,8 +1536,8 @@ const AddProject = () => {
                 <ActivityIndicator color="white" size="small" />
               ) : (
                 <>
-                  <MaterialIcons name="rocket-launch" size={18} color="white" />
-                  <Text style={{ fontFamily: 'Inter-Bold', color: 'white', fontSize: 15 }}>
+                  <MaterialIcons name="rocket-launch" size={wp('4.8%')} color="white" />
+                  <Text style={{ fontFamily: 'Inter-Bold', color: 'white', fontSize: wp('4%') }}>
                     {editProjectId ? 'Update Project' : 'Publish Project'}
                   </Text>
                 </>

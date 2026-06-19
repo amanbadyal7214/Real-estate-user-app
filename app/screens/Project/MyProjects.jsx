@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useProject } from '../../../hooks/useProject';
 import api from '../../api';
 
@@ -261,24 +262,28 @@ const MyProjects = () => {
         onPress={() => {
           setActiveFilterDropdown(type);
         }}
-        className="px-3 py-1.5 rounded-full border flex-row items-center gap-1 bg-white"
+        className="flex-row items-center bg-white border"
         style={{
           borderColor: isActive ? '#008E96' : '#E5E7EB',
-          backgroundColor: isActive ? '#E6F7F6' : '#FFFFFF'
+          backgroundColor: isActive ? '#E6F7F6' : '#FFFFFF',
+          paddingHorizontal: wp('3%'),
+          paddingVertical: hp('0.8%'),
+          borderRadius: wp('5%'),
+          gap: wp('1%'),
         }}
       >
         <Text
           style={{
             fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium',
-            color: isActive ? '#008E96' : '#4B5563'
+            color: isActive ? '#008E96' : '#4B5563',
+            fontSize: wp('3.2%')
           }}
-          className="text-xs text-gray-700"
         >
           {label}
         </Text>
         <Ionicons
           name="chevron-down"
-          size={12}
+          size={wp('3.2%')}
           color={isActive ? '#008E96' : '#6B7280'}
         />
       </TouchableOpacity>
@@ -330,17 +335,56 @@ const MyProjects = () => {
             className="absolute inset-0"
             onPress={() => setActiveFilterDropdown(null)}
           />
-          <View className="bg-white rounded-t-[24px] pb-10 max-h-[70%]">
-            <View className="items-center py-3">
-              <View className="w-10 h-1 bg-gray-200 rounded-full" />
+          <View 
+            className="bg-white"
+            style={{
+              borderTopLeftRadius: wp('6%'),
+              borderTopRightRadius: wp('6%'),
+              paddingBottom: hp('4.5%'),
+              maxHeight: hp('70%'),
+            }}
+          >
+            <View style={{ alignItems: 'center', paddingVertical: hp('1.5%') }}>
+              <View 
+                className="bg-gray-200"
+                style={{
+                  width: wp('10%'),
+                  height: hp('0.5%'),
+                  borderRadius: wp('1%'),
+                }}
+              />
             </View>
-            <View className="px-5 pb-3 border-b border-gray-100 flex-row justify-between items-center">
-              <Text className="text-[#101828] font-inter-bold text-[18px]">{title}</Text>
+            <View 
+              className="border-b border-gray-100 flex-row justify-between items-center"
+              style={{
+                paddingHorizontal: wp('5%'),
+                paddingBottom: hp('1.5%'),
+              }}
+            >
+              <Text 
+                className="text-[#101828]"
+                style={{
+                  fontFamily: 'Inter-Bold',
+                  fontSize: wp('4.8%'),
+                }}
+              >{title}</Text>
               <TouchableOpacity onPress={() => setActiveFilterDropdown(null)}>
-                <Text className="text-[#6A7282] font-inter-medium text-[14px]">Cancel</Text>
+                <Text 
+                  className="text-[#6A7282]"
+                  style={{
+                    fontFamily: 'Inter-Medium',
+                    fontSize: wp('3.7%'),
+                  }}
+                >Cancel</Text>
               </TouchableOpacity>
             </View>
-            <ScrollView className="px-5 mt-2" showsVerticalScrollIndicator={false}>
+            <ScrollView 
+              showsVerticalScrollIndicator={false}
+              style={{
+                paddingHorizontal: wp('5%'),
+                marginTop: hp('1%'),
+              }}
+            >
               {options.length > 0 ? (
                 options.map((option) => {
                   const isSelected = selectedValue === option.key;
@@ -348,27 +392,42 @@ const MyProjects = () => {
                     <TouchableOpacity
                       key={option.key}
                       onPress={() => onSelect(option)}
-                      className="py-4 border-b border-gray-50 flex-row justify-between items-center"
+                      className="border-b border-gray-50 flex-row justify-between items-center"
+                      style={{
+                        paddingVertical: hp('1.8%'),
+                      }}
                     >
                       <Text
                         style={{
                           fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular',
-                          color: isSelected ? '#008E96' : '#344054'
+                          color: isSelected ? '#008E96' : '#344054',
+                          fontSize: wp('4%'),
                         }}
-                        className="text-[15px]"
                       >
                         {option.label}
                       </Text>
                       {isSelected && (
-                        <View className="w-5 h-5 rounded-full bg-[#008E96] items-center justify-center">
-                          <Ionicons name="checkmark" size={12} color="white" />
+                        <View 
+                          className="bg-[#008E96] items-center justify-center"
+                          style={{
+                            width: wp('5%'),
+                            height: wp('5%'),
+                            borderRadius: wp('2.5%'),
+                          }}
+                        >
+                          <Ionicons name="checkmark" size={wp('3%')} color="white" />
                         </View>
                       )}
                     </TouchableOpacity>
                   );
                 })
               ) : (
-                <View className="py-10 items-center justify-center">
+                <View 
+                  className="items-center justify-center"
+                  style={{
+                    paddingVertical: hp('5%'),
+                  }}
+                >
                   <Text className="text-gray-400 font-inter-medium">No options available</Text>
                 </View>
               )}
@@ -385,11 +444,26 @@ const MyProjects = () => {
     const hasPhotos = item.images && item.images.length > 0;
 
     return (
-      <View className="bg-white border border-[#E5E7EB] rounded-2xl p-4 mb-4 shadow-sm">
+      <View 
+        className="bg-white border border-[#E5E7EB] shadow-sm"
+        style={{
+          borderRadius: wp('4%'),
+          padding: wp('4%'),
+          marginBottom: hp('1.8%'),
+        }}
+      >
         {/* Top Section: Image and Details */}
         <View className="flex-row">
           {/* Project Image with overlays */}
-          <View className="w-[110px] h-[110px] rounded-xl overflow-hidden bg-gray-100 relative">
+          <View 
+            className="bg-gray-100 relative"
+            style={{
+              width: wp('28%'),
+              height: wp('28%'),
+              borderRadius: wp('3%'),
+              overflow: 'hidden',
+            }}
+          >
             <Image
               source={{
                 uri: hasPhotos
@@ -400,19 +474,48 @@ const MyProjects = () => {
               resizeMode="cover"
             />
             {/* Status Badge */}
-            <View className="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded-full flex-row items-center gap-1 shadow-sm">
+            <View 
+              className="absolute bg-white/95 flex-row items-center shadow-sm"
+              style={{
+                top: hp('1%'),
+                left: wp('2%'),
+                paddingHorizontal: wp('2%'),
+                paddingVertical: hp('0.5%'),
+                borderRadius: wp('4%'),
+                gap: wp('1%'),
+              }}
+            >
               <View
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: item.isActive ? '#10B981' : '#F97316' }}
+                style={{ 
+                  width: wp('1.5%'), 
+                  height: wp('1.5%'), 
+                  borderRadius: wp('0.75%'),
+                  backgroundColor: item.isActive ? '#10B981' : '#F97316',
+                }}
               />
-              <Text className="text-[10px] font-inter-semibold text-gray-700 uppercase">
+              <Text 
+                className="font-inter-semibold text-gray-700 uppercase"
+                style={{ fontSize: wp('2.6%') }}
+              >
                 {item.isActive ? 'Active' : 'Reviewing'}
               </Text>
             </View>
             {/* Photo Count */}
             {hasPhotos && (
-              <View className="absolute top-2 right-2 bg-black/60 px-1.5 py-0.5 rounded-md">
-                <Text className="text-[9px] font-inter-bold text-white">
+              <View 
+                className="absolute bg-black/60"
+                style={{
+                  top: hp('1%'),
+                  right: wp('2%'),
+                  paddingHorizontal: wp('1.5%'),
+                  paddingVertical: hp('0.5%'),
+                  borderRadius: wp('1%'),
+                }}
+              >
+                <Text 
+                  className="font-inter-bold text-white"
+                  style={{ fontSize: wp('2.4%') }}
+                >
                   {item.images.length} imgs
                 </Text>
               </View>
@@ -420,38 +523,81 @@ const MyProjects = () => {
             {/* Delete button */}
             <TouchableOpacity
               onPress={() => handleDelete(item._id)}
-              className="absolute bottom-2 left-2 w-8 h-8 rounded-full bg-white items-center justify-center shadow-md border border-gray-100"
+              className="absolute bg-white items-center justify-center shadow-md border border-gray-100"
+              style={{
+                bottom: hp('1%'),
+                left: wp('2%'),
+                width: wp('8%'),
+                height: wp('8%'),
+                borderRadius: wp('4%'),
+              }}
             >
-              <Ionicons name="trash" size={16} color="#EF4444" />
+              <Ionicons name="trash" size={wp('4%')} color="#EF4444" />
             </TouchableOpacity>
           </View>
 
           {/* Text details */}
-          <View className="flex-1 ml-4 justify-between">
+          <View 
+            className="flex-1 justify-between"
+            style={{ marginLeft: wp('4%') }}
+          >
             <View>
-              <View className="flex-row items-center gap-1 mb-1">
-                <Text className="text-[10px] font-inter-bold text-blue-600 uppercase tracking-wider">
+              <View 
+                className="flex-row items-center"
+                style={{ gap: wp('1%'), marginBottom: hp('0.4%') }}
+              >
+                <Text 
+                  className="font-inter-bold text-blue-600 uppercase tracking-wider"
+                  style={{ fontSize: wp('2.6%') }}
+                >
                   Featured Project
                 </Text>
-                <Text className="text-gray-400 text-[10px]">•</Text>
-                <Text className="text-gray-500 text-[10px] font-inter-semibold uppercase">
+                <Text className="text-gray-400" style={{ fontSize: wp('2.6%') }}>•</Text>
+                <Text 
+                  className="text-gray-500 font-inter-semibold uppercase"
+                  style={{ fontSize: wp('2.6%') }}
+                >
                   {item.projectType}
                 </Text>
               </View>
-              <Text className="text-[#101828] text-base font-inter-bold" numberOfLines={1}>
+              <Text 
+                className="text-[#101828] font-inter-bold" 
+                style={{ fontSize: wp('4.2%') }}
+                numberOfLines={1}
+              >
                 {item.projectName || item.title || 'Project'}
               </Text>
-              <Text className="text-gray-400 text-xs mt-0.5" numberOfLines={1}>
+              <Text 
+                className="text-gray-400" 
+                style={{ fontSize: wp('3.2%'), marginTop: hp('0.2%') }}
+                numberOfLines={1}
+              >
                 by {item.builderName || "Developer"}
               </Text>
             </View>
-            <View className="flex-row items-center gap-2 mt-2">
-              <Text className="text-gray-500 text-xs font-inter-regular">
+            <View 
+              className="flex-row items-center"
+              style={{ gap: wp('2%'), marginTop: hp('0.8%') }}
+            >
+              <Text 
+                className="text-gray-500 font-inter-regular"
+                style={{ fontSize: wp('3.2%') }}
+              >
                 {item.completionDate ? `Date: ${formatDateOnly(item.completionDate)}` : 'Completion N/A'}
               </Text>
               <Text className="text-gray-300">|</Text>
-              <View className="bg-gray-100 px-2 py-0.5 rounded-md">
-                <Text className="text-[10px] font-inter-medium text-gray-600 uppercase">
+              <View 
+                className="bg-gray-100"
+                style={{
+                  paddingHorizontal: wp('2%'),
+                  paddingVertical: hp('0.5%'),
+                  borderRadius: wp('1%'),
+                }}
+              >
+                <Text 
+                  className="font-inter-medium text-gray-600 uppercase"
+                  style={{ fontSize: wp('2.6%') }}
+                >
                   {getCityName(item.city)}
                 </Text>
               </View>
@@ -460,8 +606,14 @@ const MyProjects = () => {
         </View>
 
         {/* Action Buttons Row */}
-        {/* Action Buttons Row */}
-        <View className="flex-row items-center justify-end gap-5 mt-4 border-t border-[#F2F4F7] pt-4 relative z-50">
+        <View 
+          className="flex-row items-center justify-end border-t border-[#F2F4F7] relative z-50"
+          style={{
+            gap: wp('5%'),
+            marginTop: hp('1.8%'),
+            paddingTop: hp('1.8%'),
+          }}
+        >
           <TouchableOpacity
             onPress={() =>
               router.push({
@@ -474,31 +626,29 @@ const MyProjects = () => {
             }
             className="p-1"
           >
-            <Ionicons name="eye-outline" size={20} color="#2563EB" />
+            <Ionicons name="eye-outline" size={wp('5%')} color="#2563EB" />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => handleEdit(item)}
             className="p-1"
           >
-            <Ionicons name="create-outline" size={20} color="#D97706" />
+            <Ionicons name="create-outline" size={wp('5%')} color="#D97706" />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => handleDelete(item._id)}
             className="p-1"
           >
-            <Ionicons name="trash-outline" size={20} color="#DC2626" />
+            <Ionicons name="trash-outline" size={wp('5%')} color="#DC2626" />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => toggleProjectMenu(item._id, item)}
             className="p-1"
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
+            <Ionicons name="ellipsis-vertical" size={wp('5%')} color="#6B7280" />
           </TouchableOpacity>
-
-          {/* Dropdown Menu Popup - rendered via Modal to avoid clipping */}
         </View>
       </View>
     );
@@ -507,35 +657,73 @@ const MyProjects = () => {
   return (
     <SafeAreaView className="flex-1 bg-[#F9FAFB]">
       {/* Header Bar */}
-      <LinearGradient colors={['#006B73', '#008E96']} className="px-4 pt-10 pb-6 rounded-b-[32px] shadow-md">
-        <View className="flex-row justify-between items-center mb-4">
-          <View className="flex-row items-center gap-2">
+      <LinearGradient 
+        colors={['#006B73', '#008E96']} 
+        className="shadow-md"
+        style={{
+          paddingHorizontal: wp('4%'),
+          paddingTop: hp('5%'),
+          paddingBottom: hp('3%'),
+          borderBottomLeftRadius: wp('8%'),
+          borderBottomRightRadius: wp('8%'),
+        }}
+      >
+        <View 
+          className="flex-row justify-between items-center"
+          style={{ marginBottom: hp('1.5%') }}
+        >
+          <View 
+            className="flex-row items-center"
+            style={{ gap: wp('2%') }}
+          >
             <TouchableOpacity
               onPress={() => {
                 router.replace('/screens/Buy/Buy');
               }}
-              className="mr-1"
+              style={{ marginRight: wp('1%') }}
             >
-              <Ionicons name="arrow-back" size={24} color="white" />
+              <Ionicons name="arrow-back" size={wp('6%')} color="white" />
             </TouchableOpacity>
-            <Text className="text-white text-lg font-inter-bold">{userName ? `${userName}'s Console` : "My Projects"}</Text>
+            <Text 
+              className="text-white font-inter-bold"
+              style={{ fontSize: wp('4.8%') }}
+            >
+              {userName ? `${userName}'s Console` : "My Projects"}
+            </Text>
           </View>
           <TouchableOpacity
             onPress={handleCreateProject}
-            className="bg-white/25 px-3 py-1.5 rounded-full flex-row items-center gap-1"
+            className="bg-white/25 flex-row items-center"
+            style={{
+              paddingHorizontal: wp('3%'),
+              paddingVertical: hp('1%'),
+              borderRadius: wp('5%'),
+              gap: wp('1%'),
+            }}
           >
-            <Ionicons name="add" size={16} color="white" />
-            <Text className="text-white text-xs font-inter-semibold">Add New</Text>
+            <Ionicons name="add" size={wp('4%')} color="white" />
+            <Text 
+              className="text-white font-inter-semibold"
+              style={{ fontSize: wp('3.2%') }}
+            >
+              Add New
+            </Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
 
       {/* Filter Options */}
-      <View className="px-4 py-3 bg-white border-b border-[#F2F4F7] flex-row justify-between items-center">
+      <View 
+        className="bg-white border-b border-[#F2F4F7] flex-row justify-between items-center"
+        style={{
+          paddingHorizontal: wp('4%'),
+          paddingVertical: hp('1.5%'),
+        }}
+      >
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 8 }}
+          contentContainerStyle={{ gap: wp('2%') }}
           className="flex-1 mr-4"
         >
           {renderFilterPill(
@@ -555,8 +743,17 @@ const MyProjects = () => {
           )}
         </ScrollView>
         {(selectedCity || selectedStatus || selectedProjectType) && (
-          <TouchableOpacity onPress={clearFilters} className="px-2 py-1">
-            <Text className="text-[#EF4444] text-[11px] font-inter-bold uppercase tracking-wider">
+          <TouchableOpacity 
+            onPress={clearFilters} 
+            style={{
+              paddingHorizontal: wp('2%'),
+              paddingVertical: hp('0.5%'),
+            }}
+          >
+            <Text 
+              className="text-[#EF4444] font-inter-bold uppercase tracking-wider"
+              style={{ fontSize: wp('3%') }}
+            >
               Reset
             </Text>
           </TouchableOpacity>
@@ -564,11 +761,25 @@ const MyProjects = () => {
       </View>
 
       {/* Projects List */}
-      <View className="flex-1 px-4 mt-4">
+      <View 
+        className="flex-1"
+        style={{
+          paddingHorizontal: wp('4%'),
+          marginTop: hp('1.8%'),
+        }}
+      >
         {loading || apiLoading ? (
-          <View className="flex-1 items-center justify-center py-20">
+          <View 
+            className="flex-1 items-center justify-center"
+            style={{ paddingVertical: hp('10%') }}
+          >
             <ActivityIndicator size="large" color="#008E96" />
-            <Text className="mt-4 text-gray-500 font-inter-medium">Loading your projects...</Text>
+            <Text 
+              className="text-gray-500 font-inter-medium"
+              style={{ marginTop: hp('1.8%'), fontSize: wp('3.7%') }}
+            >
+              Loading your projects...
+            </Text>
           </View>
         ) : filteredProjects.length > 0 ? (
           <FlatList
@@ -576,24 +787,47 @@ const MyProjects = () => {
             keyExtractor={item => item._id}
             renderItem={renderProjectCard}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 24 }}
+            contentContainerStyle={{ paddingBottom: hp('3%') }}
             refreshing={refreshing}
             onRefresh={handleRefresh}
             ListHeaderComponent={() => (
-              <Text className="text-gray-500 text-xs font-inter-medium mb-3">
+              <Text 
+                className="text-gray-500 font-inter-medium"
+                style={{ fontSize: wp('3.2%'), marginBottom: hp('1.2%') }}
+              >
                 Showing {filteredProjects.length} out of {projects.length} projects
               </Text>
             )}
           />
         ) : (
-          <View className="flex-1 items-center justify-center py-20 px-8">
-            <View className="w-16 h-16 rounded-full bg-[#E6F7F7] items-center justify-center mb-4">
-              <Ionicons name="business-outline" size={32} color="#008E96" />
+          <View 
+            className="flex-1 items-center justify-center"
+            style={{
+              paddingVertical: hp('10%'),
+              paddingHorizontal: wp('8%'),
+            }}
+          >
+            <View 
+              className="rounded-full bg-[#E6F7F7] items-center justify-center"
+              style={{
+                width: wp('16%'),
+                height: wp('16%'),
+                borderRadius: wp('8%'),
+                marginBottom: hp('1.8%'),
+              }}
+            >
+              <Ionicons name="business-outline" size={wp('8%')} color="#008E96" />
             </View>
-            <Text className="text-[#101828] text-lg font-inter-bold text-center">
+            <Text 
+              className="text-[#101828] font-inter-bold text-center"
+              style={{ fontSize: wp('4.8%') }}
+            >
               No Projects Found
             </Text>
-            <Text className="text-gray-500 text-sm font-inter-regular text-center mt-2">
+            <Text 
+              className="text-gray-500 font-inter-regular text-center"
+              style={{ fontSize: wp('3.7%'), marginTop: hp('0.8%') }}
+            >
               {projects.length > 0
                 ? 'Try resetting or changing your search filters.'
                 : "You haven't posted any builder projects yet. Click below to post."}
@@ -601,9 +835,20 @@ const MyProjects = () => {
             {projects.length === 0 && (
               <TouchableOpacity
                 onPress={handleCreateProject}
-                className="mt-6 bg-[#008E96] px-6 py-3 rounded-xl shadow-md"
+                className="bg-[#008E96] shadow-md"
+                style={{
+                  marginTop: hp('2.5%'),
+                  paddingHorizontal: wp('6%'),
+                  paddingVertical: hp('1.5%'),
+                  borderRadius: wp('3%'),
+                }}
               >
-                <Text className="text-white font-inter-semibold">Post Project for FREE</Text>
+                <Text 
+                  className="text-white font-inter-semibold"
+                  style={{ fontSize: wp('3.7%') }}
+                >
+                  Post Project for FREE
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -628,10 +873,10 @@ const MyProjects = () => {
           <TouchableOpacity activeOpacity={1}>
             <View style={{
               backgroundColor: '#FFFFFF',
-              borderTopLeftRadius: 28,
-              borderTopRightRadius: 28,
-              paddingBottom: 36,
-              paddingTop: 8,
+              borderTopLeftRadius: wp('7%'),
+              borderTopRightRadius: wp('7%'),
+              paddingBottom: hp('4.5%'),
+              paddingTop: hp('1%'),
               shadowColor: '#000',
               shadowOffset: { width: 0, height: -4 },
               shadowOpacity: 0.12,
@@ -639,17 +884,17 @@ const MyProjects = () => {
               elevation: 20,
             }}>
               {/* Handle */}
-              <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-                <View style={{ width: 40, height: 4, backgroundColor: '#E5E7EB', borderRadius: 999 }} />
+              <View style={{ alignItems: 'center', paddingVertical: hp('1.5%') }}>
+                <View style={{ width: wp('10%'), height: hp('0.5%'), backgroundColor: '#E5E7EB', borderRadius: 999 }} />
               </View>
 
               {/* Project Name Header */}
               {menuProject && (
-                <View style={{ paddingHorizontal: 24, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#F3F4F6' }}>
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: 16, color: '#101828' }} numberOfLines={1}>
+                <View style={{ paddingHorizontal: wp('6%'), paddingBottom: hp('2%'), borderBottomWidth: 1, borderBottomColor: '#F3F4F6' }}>
+                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.2%'), color: '#101828' }} numberOfLines={1}>
                     {menuProject.projectName || menuProject.title || 'Project'}
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#6B7280', marginTop: 2 }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6B7280', marginTop: hp('0.2%') }}>
                     Manage project content
                   </Text>
                 </View>
@@ -662,32 +907,32 @@ const MyProjects = () => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingHorizontal: 24,
-                  paddingVertical: 18,
+                  paddingHorizontal: wp('6%'),
+                  paddingVertical: hp('2.2%'),
                   borderBottomWidth: 1,
                   borderBottomColor: '#F9FAFB',
                 }}
               >
                 <View style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 14,
+                  width: wp('11%'),
+                  height: wp('11%'),
+                  borderRadius: wp('3.5%'),
                   backgroundColor: '#ECFDF5',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginRight: 16,
+                  marginRight: wp('4%'),
                 }}>
-                  <Ionicons name="add-circle-outline" size={22} color="#059669" />
+                  <Ionicons name="add-circle-outline" size={wp('5.5%')} color="#059669" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 15, color: '#0F172A' }}>
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), color: '#0F172A' }}>
                     Add Property Summary
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#9CA3AF', marginTop: 2 }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#9CA3AF', marginTop: hp('0.2%') }}>
                     Write a description for this project
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color="#D1D5DB" />
+                <Ionicons name="chevron-forward" size={wp('4.5%')} color="#D1D5DB" />
               </TouchableOpacity>
 
               {/* Action: View Property Summary */}
@@ -697,30 +942,30 @@ const MyProjects = () => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingHorizontal: 24,
-                  paddingVertical: 18,
+                  paddingHorizontal: wp('6%'),
+                  paddingVertical: hp('2.2%'),
                 }}
               >
                 <View style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 14,
+                  width: wp('11%'),
+                  height: wp('11%'),
+                  borderRadius: wp('3.5%'),
                   backgroundColor: '#EFF6FF',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginRight: 16,
+                  marginRight: wp('4%'),
                 }}>
-                  <Ionicons name="document-text-outline" size={22} color="#2563EB" />
+                  <Ionicons name="document-text-outline" size={wp('5.5%')} color="#2563EB" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 15, color: '#0F172A' }}>
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), color: '#0F172A' }}>
                     View Property Summary
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: '#9CA3AF', marginTop: 2 }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#9CA3AF', marginTop: hp('0.2%') }}>
                     Preview the existing summary
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color="#D1D5DB" />
+                <Ionicons name="chevron-forward" size={wp('4.5%')} color="#D1D5DB" />
               </TouchableOpacity>
 
               {/* Cancel */}
@@ -728,15 +973,15 @@ const MyProjects = () => {
                 onPress={() => { setActiveMenuProjectId(null); setMenuProject(null); }}
                 activeOpacity={0.7}
                 style={{
-                  marginHorizontal: 24,
-                  marginTop: 12,
+                  marginHorizontal: wp('6%'),
+                  marginTop: hp('1.5%'),
                   backgroundColor: '#F9FAFB',
-                  borderRadius: 14,
-                  paddingVertical: 14,
+                  borderRadius: wp('3.5%'),
+                  paddingVertical: hp('1.8%'),
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 15, color: '#4B5563' }}>Cancel</Text>
+                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), color: '#4B5563' }}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>

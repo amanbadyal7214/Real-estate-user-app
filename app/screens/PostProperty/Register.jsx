@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DashboardSelectorModal from '../../../components/DashboardSelectorModal';
 import Toast from '../../../components/Toast';
 import { performRoleBasedRedirect, useRegister } from '../../../hooks/Register';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const PostProperty = () => {
 
   const {
@@ -181,7 +182,7 @@ const PostProperty = () => {
               </TouchableOpacity>
               <Image
                 source={require('../../../assets/images/hori-tpw-green.png')}
-                style={{ width: 140, height: 35 }}
+                style={{ width: wp('37.3%'), height: hp('4.4%') }}
                 resizeMode="contain"
               />
             </View>
@@ -679,15 +680,15 @@ const PostProperty = () => {
             <View className="mt-6 bg-[#008E96] rounded-2xl p-4 flex-row justify-between items-center">
               <View className="items-center flex-1">
                 <Text className="text-white text-lg" style={{ fontFamily: 'Inter-Bold' }}>No.1</Text>
-                <Text className="text-white opacity-90 text-[10px] text-center mt-1" style={{ fontFamily: 'Inter-Regular' }}>Property Destination</Text>
+                <Text className="text-white opacity-90 text-center mt-1" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%') }}>Property Destination</Text>
               </View>
               <View className="items-center flex-1 border-x border-white/20">
                 <Text className="text-white text-lg" style={{ fontFamily: 'Inter-Bold' }}>1 Lakh+</Text>
-                <Text className="text-white opacity-90 text-[10px] text-center mt-1" style={{ fontFamily: 'Inter-Regular' }}>Owners</Text>
+                <Text className="text-white opacity-90 text-center mt-1" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%') }}>Owners</Text>
               </View>
               <View className="items-center flex-1">
                 <Text className="text-white text-lg" style={{ fontFamily: 'Inter-Bold' }}>1.5 Cr+</Text>
-                <Text className="text-white opacity-90 text-[10px] text-center mt-1" style={{ fontFamily: 'Inter-Regular' }}>Tenants/Buyers</Text>
+                <Text className="text-white opacity-90 text-center mt-1" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%') }}>Tenants/Buyers</Text>
               </View>
             </View>
 
@@ -696,7 +697,7 @@ const PostProperty = () => {
               <Text className="text-[#101828] text-xl mb-6" style={{ fontFamily: 'Inter-Bold' }}>Why should you list with us</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
                 {/* Card 1 */}
-                <View className="w-[280px] bg-white border border-[#E5E7EB] rounded-2xl p-4 mr-4">
+                <View className="bg-white border border-[#E5E7EB] rounded-2xl p-4 mr-4" style={{ width: wp('74.7%') }}>
                   <View className="flex-row items-center mb-4">
                     <View className="w-12 h-12 rounded-full bg-[#F3E8FF] items-center justify-center mr-3">
                       <Ionicons name="people-outline" size={24} color="#5E35B1" />
@@ -732,7 +733,7 @@ const PostProperty = () => {
                 </View>
 
                 {/* Card 2 */}
-                <View className="w-[280px] bg-white border border-[#E5E7EB] rounded-2xl p-4 mr-4">
+                <View className="bg-white border border-[#E5E7EB] rounded-2xl p-4 mr-4" style={{ width: wp('74.7%') }}>
                   <View className="flex-row items-center mb-4">
                     <View className="w-12 h-12 rounded-full bg-[#F3E8FF] items-center justify-center mr-3">
                       <Ionicons name="people-outline" size={24} color="#5E35B1" />
@@ -801,7 +802,7 @@ const PostProperty = () => {
                   <View className="items-center">
                     <View className="w-16 h-16 rounded-full border-2 border-[#5E35B1] bg-white items-center justify-center">
                       <View className="w-6 h-6 rounded-full bg-[#5E35B1] items-center justify-center mb-1">
-                        <Text className="text-white text-[10px]" style={{ fontFamily: 'Inter-Bold' }}>1</Text>
+                        <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }}>1</Text>
                       </View>
                       <Text className="text-lg">🏢</Text>
                     </View>
@@ -817,7 +818,7 @@ const PostProperty = () => {
                   <View className="items-center">
                     <View className="w-16 h-16 rounded-full border-2 border-[#5E35B1] bg-white items-center justify-center">
                       <View className="w-6 h-6 rounded-full bg-[#5E35B1] items-center justify-center mb-1">
-                        <Text className="text-white text-[10px]" style={{ fontFamily: 'Inter-Bold' }}>2</Text>
+                        <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }}>2</Text>
                       </View>
                       <Text className="text-lg">🏘️</Text>
                     </View>
@@ -833,7 +834,7 @@ const PostProperty = () => {
                   <View className="items-center">
                     <View className="w-16 h-16 rounded-full border-2 border-[#5E35B1] bg-white items-center justify-center">
                       <View className="w-6 h-6 rounded-full bg-[#5E35B1] items-center justify-center mb-1">
-                        <Text className="text-white text-[10px]" style={{ fontFamily: 'Inter-Bold' }}>3</Text>
+                        <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }}>3</Text>
                       </View>
                       <Text className="text-lg">🔍</Text>
                     </View>

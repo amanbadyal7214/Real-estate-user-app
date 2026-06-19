@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Heart } from 'lucide-react-native';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const PropertySuggestionCard = ({
   image,
@@ -24,7 +25,7 @@ const PropertySuggestionCard = ({
         <View style={styles.imageBackground}>
           <Image
             source={typeof image === 'string' ? { uri: image } : image}
-            style={[StyleSheet.absoluteFill, { borderRadius: 20 }]}
+            style={[StyleSheet.absoluteFill, { borderRadius: wp('5.3%') }]}
             contentFit="cover"
             transition={800}
             cachePolicy="memory-disk"
@@ -33,7 +34,7 @@ const PropertySuggestionCard = ({
             colors={['rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
             style={styles.fullGradient}
           >
-            {/* Developer Badge Container - Positioned precisely at 16,16 */}
+            {/* Developer Badge Container */}
             <View style={styles.devBadge}>
               <LinearGradient
                 colors={['#008E96', '#1CB2A9']}
@@ -48,22 +49,22 @@ const PropertySuggestionCard = ({
               </Text>
             </View>
 
-            {/* Favorite/Heart Button - Positioned precisely at 224,16 */}
+            {/* Favorite/Heart Button */}
             <View style={styles.favButton}>
-              <Heart size={20} color="#4A5565" strokeWidth={1.5} />
+              <Heart size={wp('5.3%')} color="#4A5565" strokeWidth={1.5} />
             </View>
 
-            {/* Pricing - Positioned precisely at 20, 292.5 */}
+            {/* Pricing */}
             <View style={styles.priceContainer}>
               <Text style={styles.priceLabel}>{price}</Text>
             </View>
 
-            {/* Project Title - Positioned precisely at 20, 328.5 */}
+            {/* Project Title */}
             <View style={styles.titleContainer}>
               <Text style={styles.titleLabel}>{title}</Text>
             </View>
 
-            {/* Location & Config Details - Positioned precisely at 20, 358 */}
+            {/* Location & Config Details */}
             <View style={styles.detailsContainer}>
               <Text style={styles.detailText}>{location}</Text>
               <Text style={styles.detailText}>{config}</Text>
@@ -78,11 +79,11 @@ const PropertySuggestionCard = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: 200,
-    height: 320,
-    borderRadius: 20,
+    width: wp('53.3%'),
+    height: hp('39.4%'),
+    borderRadius: wp('5.3%'),
     overflow: 'hidden',
-    marginRight: 12,
+    marginRight: wp('3.2%'),
   },
   imageBackground: {
     flex: 1,
@@ -93,90 +94,91 @@ const styles = StyleSheet.create({
   },
   devBadge: {
     position: 'absolute',
-    left: 16,
-    top: 16,
-    width: 120,
-    height: 36,
+    left: wp('4.3%'),
+    top: hp('2%'),
+    width: wp('32%'),
+    height: hp('4.4%'),
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 20,
+    borderRadius: wp('5.3%'),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 6,
+    paddingHorizontal: wp('1.6%'),
   },
   initialBubble: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: wp('6.4%'),
+    height: wp('6.4%'),
+    borderRadius: wp('3.2%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 8,
+    marginRight: wp('2.1%'),
   },
   initialText: {
     color: '#FFFFFF',
     fontFamily: 'Inter-Bold',
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: wp('3.2%'),
+    lineHeight: hp('2.2%'),
   },
   devNameText: {
     color: '#101828',
     fontFamily: 'Inter-Bold',
-    fontSize: 10,
-    lineHeight: 16,
+    fontSize: wp('2.7%'),
+    lineHeight: hp('2%'),
     letterSpacing: 0.3,
     textTransform: 'uppercase',
+    flex: 1,
   },
   favButton: {
     position: 'absolute',
-    left: 164,
-    top: 12,
-    width: 36,
-    height: 36,
+    left: wp('41.5%'),
+    top: hp('1.5%'),
+    width: wp('9.6%'),
+    height: wp('9.6%'),
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 18,
+    borderRadius: wp('4.8%'),
     justifyContent: 'center',
     alignItems: 'center',
   },
   priceContainer: {
     position: 'absolute',
-    left: 16,
-    top: 218,
-    width: 168,
+    left: wp('4.3%'),
+    top: hp('26.8%'),
+    width: wp('44.8%'),
   },
   priceLabel: {
     color: '#FFFFFF',
     fontFamily: 'Inter-Bold',
-    fontSize: 18,
-    lineHeight: 26,
+    fontSize: wp('4.8%'),
+    lineHeight: hp('3.2%'),
     textShadowColor: 'rgba(0, 0, 0, 0.15)',
     textShadowOffset: { width: 0, height: 4 },
     textShadowRadius: 8,
   },
   titleContainer: {
     position: 'absolute',
-    left: 16,
-    top: 246,
-    width: 168,
+    left: wp('4.3%'),
+    top: hp('30.3%'),
+    width: wp('44.8%'),
   },
   titleLabel: {
     color: '#FFFFFF',
     fontFamily: 'Inter-Bold',
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: wp('3.7%'),
+    lineHeight: hp('2.5%'),
     textShadowColor: 'rgba(0, 0, 0, 0.15)',
     textShadowOffset: { width: 0, height: 4 },
     textShadowRadius: 8,
   },
   detailsContainer: {
     position: 'absolute',
-    left: 16,
-    top: 270,
-    width: 168,
+    left: wp('4.3%'),
+    top: hp('33.3%'),
+    width: wp('44.8%'),
   },
   detailText: {
     color: 'rgba(255, 255, 255, 0.9)',
     fontFamily: 'Inter-Medium',
-    fontSize: 11,
-    lineHeight: 16,
+    fontSize: wp('2.9%'),
+    lineHeight: hp('2%'),
     textShadowColor: 'rgba(0, 0, 0, 0.15)',
     textShadowOffset: { width: 0, height: 4 },
     textShadowRadius: 8,

@@ -13,6 +13,7 @@ import AdvancedDetailsStep from './AdvancedDetailsStep';
 import PhotosStep from './PhotosStep';
 import PriceDetailsSection from './PriceDetailsSection';
 import VerifyPropertyStep from './VerifyPropertyStep';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 
@@ -533,7 +534,7 @@ const PropertyDetails = () => {
         </View>
       )}
       {/* Header Background */}
-      <View className="absolute top-0 left-0 right-0 h-[230px] bg-[#008E96]">
+      <View className="absolute top-0 left-0 right-0 bg-[#008E96]" style={{ height: hp('28%') }}>
         <View className="flex-row items-center px-4 mt-12 justify-between">
           <TouchableOpacity
             onPress={() => {
@@ -550,7 +551,7 @@ const PropertyDetails = () => {
           >
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-[27px]" style={{ fontFamily: 'Inter-Bold' }}>Post Property</Text>
+          <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('7.2%') }}>Post Property</Text>
           <View style={{ width: 24 }} />
         </View>
 
@@ -577,14 +578,14 @@ const PropertyDetails = () => {
                   </Text>
                 )}
               </View>
-              <Text className={`text-[9px] mt-2 ${step.id <= currentStep ? 'text-white' : 'text-white/50'}`} style={{ fontFamily: 'Inter-Medium' }}>{step.label}</Text>
+              <Text className={`mt-2 ${step.id <= currentStep ? 'text-white' : 'text-white/50'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.4%') }}>{step.label}</Text>
             </View>
           ))}
         </View>
       </View>
 
       {/* Main Card */}
-      <View className={`flex-1 ${currentStep === 3 ? 'mt-[180px]' : 'mt-[200px]'} bg-white rounded-t-[32px] mx-4 shadow-xl overflow-hidden mb-2`}>
+      <View className={`flex-1 bg-white rounded-t-[32px] mx-4 shadow-xl overflow-hidden mb-2`} style={{ marginTop: currentStep === 3 ? hp('22%') : hp('24.6%') }}>
         <ScrollView 
           className="flex-1"
           showsVerticalScrollIndicator={false}
@@ -616,10 +617,10 @@ const PropertyDetails = () => {
                       <TouchableOpacity 
                         key={item.id}
                         onPress={() => setSelectedPropertyType(item.label)}
-                        className={`w-[100px] h-[100px] rounded-2xl items-center justify-center border-2 ${selectedPropertyType === item.label ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
+                        className={`rounded-2xl items-center justify-center border-2 ${selectedPropertyType === item.label ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`} style={{ width: wp('26.7%'), height: wp('26.7%') }}
                       >
                         <Ionicons name={item.icon} size={28} color={selectedPropertyType === item.label ? '#008E96' : '#99A1AF'} />
-                        <Text className={`text-[11px] text-center mt-1.5 px-1 ${selectedPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>{item.label}</Text>
+                        <Text className={`text-center mt-1.5 px-1 ${selectedPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.9%') }}>{item.label}</Text>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -635,10 +636,10 @@ const PropertyDetails = () => {
                           <TouchableOpacity 
                             key={item.id}
                             onPress={() => setSelectedSubPropertyType(item.label)}
-                            className={`w-[100px] h-[100px] rounded-2xl items-center justify-center border-2 ${selectedSubPropertyType === item.label ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
+                            className={`rounded-2xl items-center justify-center border-2 ${selectedSubPropertyType === item.label ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`} style={{ width: wp('26.7%'), height: wp('26.7%') }}
                           >
                             <Ionicons name={item.icon} size={28} color={selectedSubPropertyType === item.label ? '#008E96' : '#99A1AF'} />
-                            <Text className={`text-[11px] text-center mt-1.5 px-1 ${selectedSubPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>{item.label}</Text>
+                            <Text className={`text-center mt-1.5 px-1 ${selectedSubPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.9%') }}>{item.label}</Text>
                           </TouchableOpacity>
                         ))}
                       </View>
@@ -674,7 +675,7 @@ const PropertyDetails = () => {
                       <Ionicons name={showCountryDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
                     </TouchableOpacity>
                     {showCountryDropdown && (
-                      <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[80] overflow-hidden">
+                      <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[80] overflow-hidden" style={{ top: hp('5.5%') }}>
                         {countries.map((c) => (
                           <TouchableOpacity
                             key={c._id || c.id || c.name}
@@ -722,7 +723,7 @@ const PropertyDetails = () => {
                           <Ionicons name={showStateDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
                         </TouchableOpacity>
                         {showStateDropdown && (
-                          <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[85] overflow-hidden">
+                          <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[85] overflow-hidden" style={{ top: hp('5.5%') }}>
                             {(availableStates.length > 0 ? availableStates : []).map((s) => (
                               <TouchableOpacity
                                 key={s._id || s.id || s.name}
@@ -754,7 +755,7 @@ const PropertyDetails = () => {
                           <Ionicons name={showCityDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
                         </TouchableOpacity>
                         {showCityDropdown && (
-                          <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[90] overflow-hidden">
+                          <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[90] overflow-hidden" style={{ top: hp('5.5%') }}>
                             {(availableCities.length > 0 ? availableCities : []).map((c) => (
                               <TouchableOpacity
                                 key={c._id || c.id || c.name}
@@ -789,7 +790,7 @@ const PropertyDetails = () => {
                   </View>
 
                   {projectSuggestions.length > 0 && (
-                    <View className="absolute top-[40px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[120] max-h-48 overflow-hidden">
+                    <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[120] max-h-48 overflow-hidden" style={{ top: hp('5%') }}>
                       <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
                         {projectSuggestions.map((item) => (
                           <TouchableOpacity 
@@ -809,7 +810,7 @@ const PropertyDetails = () => {
                                 {item.projectName || item.name}
                               </Text>
                               {item.locality && (
-                                <Text className="text-[11px] text-[#6A7282]" style={{ fontFamily: 'Inter-Regular' }}>
+                                <Text className="text-[#6A7282]" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%') }}>
                                   {item.locality?.name || item.locality}
                                 </Text>
                               )}
@@ -835,7 +836,7 @@ const PropertyDetails = () => {
                     </View>
 
                     {localitySuggestions.length > 0 && (
-                      <View className="absolute top-[40px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[110] max-h-48 overflow-hidden">
+                      <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[110] max-h-48 overflow-hidden" style={{ top: hp('5%') }}>
                         <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
                           {localitySuggestions.map((item) => (
                             <TouchableOpacity 
@@ -888,7 +889,7 @@ const PropertyDetails = () => {
                         </TouchableOpacity>
 
                         {showStructureDropdown && (
-                          <View className="absolute top-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[70] overflow-hidden">
+                          <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[70] overflow-hidden" style={{ top: hp('5.5%') }}>
                             {(apiStructures && apiStructures.length > 0 ? apiStructures : apiPropertyTypes).map((type) => (
                               <TouchableOpacity
                                 key={type._id}
@@ -946,7 +947,7 @@ const PropertyDetails = () => {
                       </TouchableOpacity>
 
                       {showStatusDropdown && (
-                        <View className="absolute top-[50px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[55] overflow-hidden">
+                        <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[55] overflow-hidden" style={{ top: hp('6%') }}>
                           {constructionStatus.map((status) => (
                             <TouchableOpacity
                               key={status._id}
@@ -978,7 +979,7 @@ const PropertyDetails = () => {
                         <Ionicons name={showStatusDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
                       </TouchableOpacity>
                       {showStatusDropdown && (
-                        <View className="absolute top-[50px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[85] overflow-hidden">
+                        <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[85] overflow-hidden" style={{ top: hp('6%') }}>
                           {possessionStatus.map((status) => (
                             <TouchableOpacity
                               key={status._id}
@@ -1032,7 +1033,7 @@ const PropertyDetails = () => {
                           <Ionicons name={showZoneDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
                         </TouchableOpacity>
                         {showZoneDropdown && (
-                          <View className="absolute top-[70px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[90] overflow-hidden">
+                          <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[90] overflow-hidden" style={{ top: hp('8.6%') }}>
                             {zoneTypes.map((zone) => (
                               <TouchableOpacity
                                 key={zone._id}
@@ -1060,7 +1061,7 @@ const PropertyDetails = () => {
                           <Ionicons name={showHubDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
                         </TouchableOpacity>
                         {showHubDropdown && (
-                          <View className="absolute top-[70px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[95] overflow-hidden">
+                          <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[95] overflow-hidden" style={{ top: hp('8.6%') }}>
                             {locationHubs.map((hub) => (
                               <TouchableOpacity
                                 key={hub._id}
@@ -1091,7 +1092,7 @@ const PropertyDetails = () => {
                           onChangeText={(val) => updatePropertyDetails({ builtUpArea: val })}
                         />
                       </View>
-                      <View className="w-[120px]">
+                      <View style={{ width: wp('32%') }}>
                         <TouchableOpacity 
                           onPress={() => setShowUnitDropdown(!showUnitDropdown)}
                           className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-2 rounded-lg border border-[#E5E7EB]"
@@ -1103,7 +1104,7 @@ const PropertyDetails = () => {
                         </TouchableOpacity>
 
                         {showUnitDropdown && (
-                          <View className="absolute bottom-[45px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[65] overflow-hidden">
+                          <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[65] overflow-hidden" style={{ bottom: hp('5.5%') }}>
                             {measurementUnits.map((unit) => (
                               <TouchableOpacity
                                 key={unit._id}
@@ -1133,7 +1134,7 @@ const PropertyDetails = () => {
                         <Ionicons name={showOwnershipDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
                       </TouchableOpacity>
                       {showOwnershipDropdown && (
-                        <View className="absolute top-[50px] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[75] overflow-hidden">
+                        <View className="absolute left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-xl z-[75] overflow-hidden" style={{ top: hp('6%') }}>
                           {ownershipTypes.map((type) => (
                             <TouchableOpacity
                               key={type._id}
@@ -1182,7 +1183,7 @@ const PropertyDetails = () => {
                         value > 0 && (
                           <View key={key} className="flex-row items-center bg-[#F0F9F9] border border-[#008E96] px-3 py-1.5 rounded-full">
                             <RenderIcon name={key} size={14} color="#008E96" apiAmenities={apiAmenities} />
-                            <Text className="text-[#008E96] text-[12px] ml-1.5" style={{ fontFamily: 'Inter-Medium' }}>
+                            <Text className="text-[#008E96] ml-1.5" style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}>
                               {key} ({value})
                             </Text>
                           </View>
@@ -1193,7 +1194,7 @@ const PropertyDetails = () => {
                       {postData.furnishings.selectedItems.map((item, index) => (
                         <View key={index} className="flex-row items-center bg-[#F0F9F9] border border-[#008E96] px-3 py-1.5 rounded-full">
                           <RenderIcon name={item} size={14} color="#008E96" apiAmenities={apiAmenities} />
-                          <Text className="text-[#008E96] text-[12px] ml-1.5" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-[#008E96] ml-1.5" style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}>
                             {item}
                           </Text>
                         </View>
