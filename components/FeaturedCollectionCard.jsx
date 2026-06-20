@@ -1,5 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, Text, View, Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = Math.max(132, width * 0.32);
+const CARD_HEIGHT = CARD_WIDTH * 0.94; // roughly 124/132 aspect ratio
 
 const defaultCollections = [
   {
@@ -21,11 +25,11 @@ const FeaturedCollectionCard = ({
 }) => {
   return (
     <View style={{ gap: 12 }}>
-      <View className="px-4" style={{ gap: 4 }}>
-        <Text className="font-inter-semibold text-[22px] leading-[33px] text-[#101828]">
+      <View className="px-4 sm:px-6" style={{ gap: 4 }}>
+        <Text className="font-inter-semibold text-[22px] sm:text-[26px] leading-[33px] text-[#101828]">
           {title}
         </Text>
-        <Text className="font-inter-regular text-[13px] leading-5 text-[#6A7282]">
+        <Text className="font-inter-regular text-[13px] sm:text-[15px] leading-5 text-[#6A7282]">
           {subtitle}
         </Text>
       </View>
@@ -33,14 +37,14 @@ const FeaturedCollectionCard = ({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 30, gap: 27 }}
+        contentContainerStyle={{ paddingHorizontal: 20, gap: 20 }}
       >
         {collections.map((item) => (
           <View
             key={item.id}
-            style={{ width: 132, height: 124, borderRadius: 14, overflow: 'hidden' }}
+            style={{ width: CARD_WIDTH, height: CARD_HEIGHT, borderRadius: 14, overflow: 'hidden' }}
           >
-            <Image source={item.image} style={{ width: 132, height: 124 }} resizeMode="cover" />
+            <Image source={item.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
             <LinearGradient
               colors={['rgba(229, 167, 22, 0.55)', 'rgba(127, 92, 12, 0.55)']}
               start={{ x: 0, y: 0 }}
@@ -51,7 +55,7 @@ const FeaturedCollectionCard = ({
                 left: 0,
                 right: 0,
                 bottom: 0,
-                borderRadius: 16,
+                borderRadius: 14,
               }}
             />
             <View
@@ -59,11 +63,15 @@ const FeaturedCollectionCard = ({
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                top: 102,
+                bottom: 12,
                 alignItems: 'center',
+                paddingHorizontal: 8,
               }}
             >
-              <Text className="font-inter-bold text-[16px] leading-4 text-white text-center">
+              <Text 
+                numberOfLines={2} 
+                className="font-inter-bold text-[14px] sm:text-[16px] text-white text-center"
+              >
                 {item.title}
               </Text>
             </View>
