@@ -4,7 +4,7 @@
     "slug": "REALESTATE-USER",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/icon_fixed.png",
+    "icon": "./assets/images/icon3.jpeg",
     "scheme": "realestateuser",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -15,9 +15,9 @@
       "versionCode": 4,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/icon_fixed.png",
-        "backgroundImage": "./assets/images/icon_fixed.png",
-        "monochromeImage": "./assets/images/icon_fixed.png"
+        "foregroundImage": "./assets/images/icon3.jpeg",
+        "backgroundImage": "./assets/images/icon3.jpeg",
+        "monochromeImage": "./assets/images/icon3.jpeg"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -29,14 +29,14 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/icon_fixed.png"
+      "favicon": "./assets/images/icon3.jpeg"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/icon_fixed.png",
+          "image": "./assets/images/icon3.jpeg",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",

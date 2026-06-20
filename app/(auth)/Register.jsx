@@ -192,7 +192,7 @@ const Register = () => {
 
         <View className=" mb-8">
           <Image
-            source={require('../../assets/images/realeasteapphorizontal11(1).png')}
+            source={require('../../assets/images/icon3.jpeg')}
             style={{ width: 220, height: 60 }}
             resizeMode="contain"
             className="mb-3"

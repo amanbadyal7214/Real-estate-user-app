@@ -21,7 +21,7 @@ const OnboardSelection = () => {
         {/* Top Content: Logo & Illustration */}
         <View className="items-center  flex-1 justify-center">
           <Image 
-            source={require('../../assets/images/realeasteapp.png')}
+            source={require('../../assets/images/icon3.jpeg')}
             style={{ width: width * 0.7, height: 200 }}
             resizeMode="contain"
           />

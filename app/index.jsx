@@ -11,15 +11,20 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-// Design Constants from CSS
-const DESIGN_WIDTH = 393;
-const scale = SCREEN_WIDTH / DESIGN_WIDTH;
+// Calculate responsive icon dimensions (max 144 width)
+const ICON_WIDTH = Math.min(144, SCREEN_WIDTH * 0.35);
+const ICON_HEIGHT = ICON_WIDTH; // 1:1 aspect ratio for perfect circle
+
+// Calculate relative positions
+const INITIAL_TOP = SCREEN_HEIGHT * 0.42; // roughly equivalent to 358 out of 852
+const TARGET_TOP = SCREEN_HEIGHT * 0.37; // roughly equivalent to 316 out of 852
+const CENTERED_LEFT = (SCREEN_WIDTH - ICON_WIDTH) / 2;
 
 export default function Index() {
-  const ellipseTop = useSharedValue(358 * scale);
-  const ellipseLeft = useSharedValue(((DESIGN_WIDTH - 144) / 2 - 0.5) * scale);
+  const ellipseTop = useSharedValue(INITIAL_TOP);
+  const ellipseLeft = useSharedValue(CENTERED_LEFT - 0.5);
   const ellipseOpacity = useSharedValue(0);
   const bgOpacity = useSharedValue(0); // For transition from solid to gradient
   const overlayOpacity = useSharedValue(0);
@@ -34,8 +39,8 @@ export default function Index() {
     // Fade in
     ellipseOpacity.value = withDelay(800, withTiming(1, { duration: 800 }));
 
-    // Move up from 358 to 316 and shift 0.5px right (total 1px shift from start)
-    ellipseTop.value = withDelay(1500, withTiming(316 * scale, {
+    // Move up and shift slightly
+    ellipseTop.value = withDelay(1500, withTiming(TARGET_TOP, {
       duration: 1200,
       easing: Easing.bezier(0.25, 0.1, 0.25, 1)
     }, (finished) => {
@@ -44,7 +49,7 @@ export default function Index() {
       }
     }));
 
-    ellipseLeft.value = withDelay(1500, withTiming(((DESIGN_WIDTH - 144) / 2 + 0.5) * scale, {
+    ellipseLeft.value = withDelay(1500, withTiming(CENTERED_LEFT + 0.5, {
       duration: 1200
     }));
 
@@ -64,7 +69,7 @@ export default function Index() {
       left: ellipseLeft.value,
       opacity: ellipseOpacity.value,
       transform: [
-        { scale: withTiming(ellipseTop.value <= 316 * scale ? 1.1 : 1, { duration: 500 }) }
+        { scale: withTiming(ellipseTop.value <= TARGET_TOP ? 1.1 : 1, { duration: 500 }) }
       ]
     };
   });
@@ -102,13 +107,13 @@ export default function Index() {
 
       {/* Ellipse (Icon) */}
       <Animated.View
-        className="absolute justify-center items-center shadow-black/20 shadow-[0_10px_20px_rgba(0,0,0,0.2)] elevation-[8]"
-        style={[{ width: 144 * scale, height: 136 * scale }, animatedEllipseStyle]}
+        className="absolute justify-center items-center shadow-black/20 shadow-[0_10px_20px_rgba(0,0,0,0.2)] elevation-[8] rounded-xl overflow-hidden"
+        style={[{ width: ICON_WIDTH, height: ICON_HEIGHT }, animatedEllipseStyle]}
       >
         <Image
-          source={require('../assets/images/icon.png')}
-          className="w-full h-full"
-          resizeMode="contain"
+          source={require('../assets/images/icon3.jpeg')}
+          className="w-full h-full rounded-xl"
+          resizeMode="cover"
         />
         {/* Inner shadow/border glow simulation */}
         <View className="absolute inset-0 rounded-full border border-white/20" />

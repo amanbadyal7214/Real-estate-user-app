@@ -181,7 +181,7 @@ const PostProperty = () => {
                 <Ionicons name="arrow-back" size={24} color="white" />
               </TouchableOpacity>
               <Image
-                source={require('../../../assets/images/hori-tpw-green.png')}
+                source={require('../../../assets/images/icon3.jpeg')}
                 style={{ width: wp('37.3%'), height: hp('4.4%') }}
                 resizeMode="contain"
               />
