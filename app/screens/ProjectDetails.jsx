@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ProjectConfigCard from '../../components/ProjectConfigCard';
 import ProjectContactFormCard from '../../components/ProjectContactFormCard';
 import ProjectDisclaimerCard from '../../components/ProjectDisclaimerCard';
@@ -167,7 +168,7 @@ const ProjectDetails = () => {
     return (
       <SafeAreaView className="flex-1 bg-white items-center justify-center" edges={['top']}>
         <ActivityIndicator size="large" color="#008E96" />
-        <Text className="text-[#6A7282] mt-4">Loading project details...</Text>
+        <Text className="text-[#6A7282]" style={{ marginTop: hp('2%'), fontSize: wp('4%') }}>Loading project details...</Text>
       </SafeAreaView>
     );
   }
@@ -176,9 +177,9 @@ const ProjectDetails = () => {
   if (error || (!loading && !rawProjectData)) {
     return (
       <SafeAreaView className="flex-1 bg-white items-center justify-center" edges={['top']}>
-        <Text className="text-red-600 text-center px-4 mb-4">{error || 'Failed to load project'}</Text>
-        <TouchableOpacity onPress={() => router.back()} className="bg-[#008E96] px-6 py-3 rounded-lg">
-          <Text className="text-white font-inter-medium">Go Back</Text>
+        <Text className="text-red-600 text-center" style={{ paddingHorizontal: wp('4%'), marginBottom: hp('2%'), fontSize: wp('4%') }}>{error || 'Failed to load project'}</Text>
+        <TouchableOpacity onPress={() => router.back()} className="bg-[#008E96]" style={{ paddingHorizontal: wp('6%'), paddingVertical: hp('1.5%'), borderRadius: wp('2%') }}>
+          <Text className="text-white font-inter-medium" style={{ fontSize: wp('3.5%') }}>Go Back</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -189,7 +190,7 @@ const ProjectDetails = () => {
       <View className="flex-1 bg-[#F9FAFB]">
         <ScrollView showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
           <View className="bg-white">
-            <View className="w-full h-[320px] rounded-b-[40px] overflow-hidden bg-gray-200">
+            <View className="w-full overflow-hidden bg-gray-200" style={{ height: hp('40%'), borderBottomLeftRadius: wp('10%'), borderBottomRightRadius: wp('10%') }}>
               <FlatList
                 ref={flatListRef}
                 data={images}
@@ -201,53 +202,53 @@ const ProjectDetails = () => {
                 renderItem={({ item }) => (
                   <Image
                     source={{ uri: item }}
-                    style={{ width: Dimensions.get('window').width, height: 320 }}
+                    style={{ width: wp('100%'), height: hp('40%') }}
                     resizeMode="cover"
                   />
                 )}
               />
               <LinearGradient colors={['rgba(0,0,0,0.4)', 'transparent', 'rgba(0,0,0,0.6)']} className="absolute inset-0" />
-              <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center px-4 mt-4">
-                <TouchableOpacity onPress={() => router.back()} className="w-12 h-12 bg-black/40 rounded-full items-center justify-center">
-                  <Ionicons name="arrow-back" size={24} color="white" />
+              <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center" style={{ paddingHorizontal: wp('4%'), marginTop: hp('2%') }}>
+                <TouchableOpacity onPress={() => router.back()} className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('12%'), height: wp('12%') }}>
+                  <Ionicons name="arrow-back" size={wp('6%')} color="white" />
                 </TouchableOpacity>
-                <View className="flex-row gap-3">
-                  <TouchableOpacity className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
-                    <Ionicons name="share-social-outline" size={20} color="white" />
+                <View className="flex-row" style={{ gap: wp('3%') }}>
+                  <TouchableOpacity className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
+                    <Ionicons name="share-social-outline" size={wp('5%')} color="white" />
                   </TouchableOpacity>
-                  <TouchableOpacity className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
-                    <Ionicons name="heart-outline" size={20} color="white" />
+                  <TouchableOpacity className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
+                    <Ionicons name="heart-outline" size={wp('5%')} color="white" />
                   </TouchableOpacity>
-                  <TouchableOpacity className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
-                    <Ionicons name="chatbubble-outline" size={20} color="white" />
+                  <TouchableOpacity className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
+                    <Ionicons name="chatbubble-outline" size={wp('5%')} color="white" />
                   </TouchableOpacity>
                 </View>
               </View>
-              <View className="absolute bottom-10 left-4 gap-2">
-                <View className="bg-[#008E96] self-start px-2 py-1 rounded-[4px] flex-row items-center gap-1">
-                  <Ionicons name="checkmark" size={12} color="white" />
-                  <Text className="text-white text-[12px] font-inter-regular">
+              <View className="absolute" style={{ bottom: hp('4%'), left: wp('4%'), gap: hp('1%') }}>
+                <View className="bg-[#008E96] self-start flex-row items-center" style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.5%'), borderRadius: wp('1%'), gap: wp('1%') }}>
+                  <Ionicons name="checkmark" size={wp('3%')} color="white" />
+                  <Text className="text-white font-inter-regular" style={{ fontSize: wp('3%') }}>
                     {projectData.isReraApproved ? 'RERA' : 'NON-RERA'}
                   </Text>
                 </View>
-                <Text className="text-white text-[24px] font-inter-medium">{projectData.projectName}</Text>
-                <View className="flex-row justify-between items-center w-[358px]">
-                  <Text className="text-white text-[14px] font-inter-regular">{location}</Text>
-                  <TouchableOpacity className="bg-white/20 px-4 py-2 rounded-[10px] flex-row items-center gap-2">
-                    <Ionicons name="location-outline" size={16} color="white" />
-                    <Text className="text-white font-inter-medium text-[14px]">See on Map</Text>
+                <Text className="text-white font-inter-medium" style={{ fontSize: wp('6%') }}>{projectData.projectName}</Text>
+                <View className="flex-row justify-between items-center" style={{ width: wp('90%') }}>
+                  <Text className="text-white font-inter-regular flex-1" style={{ fontSize: wp('3.5%') }}>{location}</Text>
+                  <TouchableOpacity className="bg-white/20 flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%'), borderRadius: wp('2.5%'), gap: wp('2%') }}>
+                    <Ionicons name="location-outline" size={wp('4%')} color="white" />
+                    <Text className="text-white font-inter-medium" style={{ fontSize: wp('3.5%') }}>See on Map</Text>
                   </TouchableOpacity>
                 </View>
               </View>
-              <View className="absolute bottom-6 right-4 bg-black/60 px-3 py-1 rounded-full">
-                <Text className="text-white text-[14px] font-inter-regular">{currentImageIndex + 1}/{images.length || 1}</Text>
+              <View className="absolute bg-black/60 rounded-full" style={{ bottom: hp('3%'), right: wp('4%'), paddingHorizontal: wp('3%'), paddingVertical: hp('0.5%') }}>
+                <Text className="text-white font-inter-regular" style={{ fontSize: wp('3.5%') }}>{currentImageIndex + 1}/{images.length || 1}</Text>
               </View>
             </View>
-            <View className="flex-row gap-2 border-b border-[#E5E7EB] px-4 py-4">
+            <View className="flex-row border-b border-[#E5E7EB]" style={{ gap: wp('2%'), paddingHorizontal: wp('4%'), paddingVertical: hp('2%') }}>
               {/* Data Insights tab hidden for now */}
               {['Overview', 'Highlights', 'Property Tour'].map((tab) => (
-                <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} className={`flex-1 py-2 rounded-[14px] items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`}>
-                  <Text className={`text-[14px] font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{tab}</Text>
+                <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} className={`flex-1 items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`} style={{ paddingVertical: hp('1%'), borderRadius: wp('3.5%') }}>
+                  <Text className={`font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>{tab}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -604,16 +605,16 @@ const ProjectDetails = () => {
         </ScrollView>
       </View>
 
-      <View className="bg-white px-4 py-3 border-t border-[#E5E7EB] flex-row gap-2 items-center">
-        <TouchableOpacity className="flex-1 h-[48px] border border-[#008E96] rounded-[14px] flex-row items-center justify-center gap-2">
-          <Ionicons name="chatbubble-outline" size={20} color="#008E96" />
-          <Text className="text-[#008E96] font-inter-medium text-[16px]">Chat</Text>
+      <View className="bg-white border-t border-[#E5E7EB] flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%'), gap: wp('2%') }}>
+        <TouchableOpacity className="flex-1 border border-[#008E96] flex-row items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%'), gap: wp('2%') }}>
+          <Ionicons name="chatbubble-outline" size={wp('5%')} color="#008E96" />
+          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>Chat</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex-1 h-[48px] border border-[#008E96] rounded-[14px] items-center justify-center">
-          <Text className="text-[#008E96] font-inter-medium text-[16px]">View phone</Text>
+        <TouchableOpacity className="flex-1 border border-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}>
+          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>View phone</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex-[1.5] h-[48px] bg-[#008E96] rounded-[14px] items-center justify-center">
-          <Text className="text-white font-inter-medium text-[16px]">Contact Seller</Text>
+        <TouchableOpacity className="flex-[1.5] bg-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}>
+          <Text className="text-white font-inter-medium" style={{ fontSize: wp('4%') }}>Contact Seller</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

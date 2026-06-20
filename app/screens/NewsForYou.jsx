@@ -2,6 +2,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Dimensions, Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -189,55 +190,57 @@ const NewsForYou = () => {
       {/* Static Header & Tabs Section */}
       <View>
         {/* Header */}
-        <View className="flex-row items-center px-[16px] h-[40px]">
+        <View className="flex-row items-center" style={{ paddingHorizontal: wp('4%'), height: hp('5%') }}>
           <TouchableOpacity 
             onPress={() => router.back()}
-            className="w-[40px] h-[40px] items-center justify-center"
+            className="items-center justify-center"
+            style={{ width: wp('10%'), height: wp('10%') }}
           >
-            <Ionicons name="arrow-back" size={24} color="#101828" />
+            <Ionicons name="arrow-back" size={wp('6%')} color="#101828" />
           </TouchableOpacity>
         </View>
 
         {/* Featured News Card */}
-        <View className="mx-[16px]  bg-white border border-[#E4E7EC] rounded-[16px] overflow-hidden" 
-              style={{ width: SCREEN_WIDTH - 32 }}>
+        <View className="bg-white border border-[#E4E7EC] overflow-hidden" 
+              style={{ marginHorizontal: wp('4%'), borderRadius: wp('4%'), width: SCREEN_WIDTH - wp('8%') }}>
           <Image 
             source={{ uri: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000' }}
-            className="w-full h-[160px]"
+            className="w-full"
+            style={{ height: hp('20%') }}
           />
-          <View className="p-[16px]">
-            <Text className="text-[#101828] font-inter-semibold text-[16px] leading-[20px]">
+          <View style={{ padding: wp('4%') }}>
+            <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('5%') }}>
               Commercial Real Estate Trends 2025
             </Text>
-            <Text className="text-[#6A7282] font-inter-medium text-[14px] leading-[23px] mt-[8px]">
+            <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.5%'), lineHeight: wp('5.5%'), marginTop: hp('1%') }}>
               Explore the latest market trends and investment opportunities in commercial properties.
             </Text>
-            <View className="flex-row items-center mt-[12px] gap-[12px]">
-              <Text className="text-[#6A7282] font-inter-medium text-[12px]">Apr 14, 2026</Text>
-              <Text className="text-[#6A7282] font-inter-medium text-[12px]">•</Text>
-              <View className="flex-row items-center gap-[4px]">
-                <Feather name="clock" size={12} color="#6A7282" />
-                <Text className="text-[#6A7282] font-inter-medium text-[12px]">5 min read</Text>
+            <View className="flex-row items-center" style={{ marginTop: hp('1.5%'), gap: wp('3%') }}>
+              <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3%') }}>Apr 14, 2026</Text>
+              <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3%') }}>•</Text>
+              <View className="flex-row items-center" style={{ gap: wp('1%') }}>
+                <Feather name="clock" size={wp('3%')} color="#6A7282" />
+                <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3%') }}>5 min read</Text>
               </View>
             </View>
           </View>
         </View>
 
         {/* Tabs */}
-        <View className="mt-[12px]">
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-[16px]">
-            <View className="flex-row gap-[20px]">
+        <View style={{ marginTop: hp('1.5%') }}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: wp('4%') }}>
+            <View className="flex-row" style={{ gap: wp('5%') }}>
               {tabs.map((tab) => (
                 <TouchableOpacity 
                   key={tab} 
                   onPress={() => setActiveTab(tab)}
-                  className="pb-[8px]"
+                  style={{ paddingBottom: hp('1%') }}
                 >
-                  <Text className={`font-inter-medium text-[14px] ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>
+                  <Text className={`font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>
                     {tab}
                   </Text>
                   {activeTab === tab && (
-                    <View className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#008E96] rounded-t-[2px]" />
+                    <View className="absolute bottom-0 left-0 right-0 bg-[#008E96]" style={{ height: hp('0.3%'), borderTopLeftRadius: wp('0.5%'), borderTopRightRadius: wp('0.5%') }} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -246,34 +249,34 @@ const NewsForYou = () => {
         </View>
 
         {/* Section Title moved to Static area */}
-        <View className="px-[16px] mt-[12px]">
-          <Text className="text-[#101828] font-inter-semibold text-[20px] leading-[30px]">News for you</Text>
+        <View style={{ paddingHorizontal: wp('4%'), marginTop: hp('1.5%') }}>
+          <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5%'), lineHeight: wp('7.5%') }}>News for you</Text>
         </View>
       </View>
 
       {/* Scrollable News Items Section */}
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* News Items List */}
-        <View className="px-[16px] mt-[16px] gap-[16px] mb-[40px]">
+        <View style={{ paddingHorizontal: wp('4%'), marginTop: hp('2%'), gap: hp('2%'), marginBottom: hp('5%') }}>
           {newsData[activeTab].map((item) => (
-            <View key={item.id} className="flex-row items-start pb-[16px] border-bottom border-[#F2F4F7]" style={{ borderBottomWidth: 0.67, borderBottomColor: '#F2F4F7' }}>
+            <View key={item.id} className="flex-row items-start border-bottom border-[#F2F4F7]" style={{ paddingBottom: hp('2%'), borderBottomWidth: 0.67, borderBottomColor: '#F2F4F7' }}>
               <Image 
                 source={{ uri: item.image }}
-                className="w-[72px] h-[72px] rounded-[12px]"
+                style={{ width: wp('18%'), height: wp('18%'), borderRadius: wp('3%') }}
               />
-              <View className="flex-1 ml-[12px]">
-                <Text className="text-[#101828] font-inter-semibold text-[16px] leading-[22px]" numberOfLines={2}>
+              <View className="flex-1" style={{ marginLeft: wp('3%') }}>
+                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('5.5%') }} numberOfLines={2}>
                   {item.title}
                 </Text>
-                <Text className="text-[#6A7282] font-inter-regular text-[13px] leading-[18px] mt-[4px]" numberOfLines={2}>
+                <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.3%'), lineHeight: wp('4.5%'), marginTop: hp('0.5%') }} numberOfLines={2}>
                   {item.description}
                 </Text>
-                <View className="flex-row justify-between items-center mt-[8px]">
-                  <Text className="text-[#98A2B3] font-inter-regular text-[12px]">
+                <View className="flex-row justify-between items-center" style={{ marginTop: hp('1%') }}>
+                  <Text className="text-[#98A2B3] font-inter-regular" style={{ fontSize: wp('3%') }}>
                     {item.category} • {item.date}
                   </Text>
-                  <TouchableOpacity className="w-[32px] h-[32px] rounded-full bg-[#F2F4F7] items-center justify-center">
-                    <Feather name="share-2" size={16} color="#6A7282" />
+                  <TouchableOpacity className="rounded-full bg-[#F2F4F7] items-center justify-center" style={{ width: wp('8%'), height: wp('8%') }}>
+                    <Feather name="share-2" size={wp('4%')} color="#6A7282" />
                   </TouchableOpacity>
                 </View>
               </View>

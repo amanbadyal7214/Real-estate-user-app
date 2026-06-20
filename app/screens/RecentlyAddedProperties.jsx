@@ -3,6 +3,7 @@ import { ArrowLeft, ChevronDown, ChevronUp, X } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import NoDataFound from '../../components/NoDataFound';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
@@ -224,17 +225,18 @@ const RecentlyAddedProperties = () => {
       <TouchableOpacity
         key={type}
         onPress={() => setActiveFilterDropdown(isDropdownOpen ? null : type)}
-        className={`flex-row items-center border rounded-full px-4 py-2 justify-center gap-1.5 ${
+        className={`flex-row items-center border rounded-full justify-center ${
           isActive 
             ? 'bg-[#008E96] border-[#008E96]' 
             : isDropdownOpen
               ? 'bg-[#008E96]/10 border-[#008E96]'
               : 'bg-white border-[#E4E7EC]'
         }`}
+        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%'), gap: wp('1.5%') }}
       >
         <Text 
-          style={{ fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium' }}
-          className={`text-[13px] leading-5 ${
+          style={{ fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium', fontSize: wp('3.3%'), lineHeight: wp('5%') }}
+          className={`${
             isActive 
               ? 'text-white' 
               : isDropdownOpen
@@ -251,16 +253,17 @@ const RecentlyAddedProperties = () => {
               clearFilter(type);
             }}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            className="ml-1 w-4 h-4 rounded-full bg-white/20 items-center justify-center"
+            className="rounded-full bg-white/20 items-center justify-center"
+            style={{ marginLeft: wp('1%'), width: wp('4%'), height: wp('4%') }}
           >
-            <X size={10} color="white" strokeWidth={3} />
+            <X size={wp('2.5%')} color="white" strokeWidth={3} />
           </TouchableOpacity>
         ) : null}
         
         {isDropdownOpen ? (
-          <ChevronUp size={14} color={isActive ? 'white' : '#008E96'} />
+          <ChevronUp size={wp('3.5%')} color={isActive ? 'white' : '#008E96'} />
         ) : (
-          <ChevronDown size={14} color={isActive ? 'white' : '#6A7282'} />
+          <ChevronDown size={wp('3.5%')} color={isActive ? 'white' : '#6A7282'} />
         )}
       </TouchableOpacity>
     );
@@ -276,17 +279,18 @@ const RecentlyAddedProperties = () => {
       <TouchableOpacity
         key={type}
         onPress={() => setActiveFilterDropdown(isDropdownOpen ? null : type)}
-        className={`flex-row items-center border rounded-full px-4 py-2 justify-center gap-1.5 ${
+        className={`flex-row items-center border rounded-full justify-center ${
           isActive 
             ? 'bg-[#008E96] border-[#008E96]' 
             : isDropdownOpen
               ? 'bg-[#008E96]/10 border-[#008E96]'
               : 'bg-white border-[#E4E7EC]'
         }`}
+        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%'), gap: wp('1.5%') }}
       >
         <Text 
-          style={{ fontFamily: 'Inter-SemiBold' }}
-          className="text-[13px] leading-5 text-white"
+          style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.3%'), lineHeight: wp('5%') }}
+          className="text-white"
         >
           {label}
         </Text>
@@ -296,14 +300,15 @@ const RecentlyAddedProperties = () => {
             clearFilter('city');
           }}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          className="ml-1 w-4 h-4 rounded-full bg-white/20 items-center justify-center"
+          className="rounded-full bg-white/20 items-center justify-center"
+          style={{ marginLeft: wp('1%'), width: wp('4%'), height: wp('4%') }}
         >
-          <X size={10} color="white" strokeWidth={3} />
+          <X size={wp('2.5%')} color="white" strokeWidth={3} />
         </TouchableOpacity>
         {isDropdownOpen ? (
-          <ChevronUp size={14} color="white" />
+          <ChevronUp size={wp('3.5%')} color="white" />
         ) : (
-          <ChevronDown size={14} color="white" />
+          <ChevronDown size={wp('3.5%')} color="white" />
         )}
       </TouchableOpacity>
     );
@@ -396,21 +401,21 @@ const RecentlyAddedProperties = () => {
             onPress={() => setActiveFilterDropdown(null)}
           />
           
-          <View className="bg-white rounded-t-[24px] pb-10 max-h-[70%]">
-            <View className="items-center py-3">
-              <View className="w-10 h-1 bg-gray-200 rounded-full" />
+          <View className="bg-white max-h-[70%]" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), paddingBottom: hp('5%') }}>
+            <View className="items-center" style={{ paddingVertical: hp('1.5%') }}>
+              <View className="bg-gray-200 rounded-full" style={{ width: wp('10%'), height: hp('0.5%') }} />
             </View>
 
-            <View className="px-5 pb-3 border-b border-gray-100 flex-row justify-between items-center">
-              <Text className="text-[#101828] font-inter-bold text-[18px]">{title}</Text>
+            <View className="border-b border-gray-100 flex-row justify-between items-center" style={{ paddingHorizontal: wp('5%'), paddingBottom: hp('1.5%') }}>
+              <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.5%') }}>{title}</Text>
               <TouchableOpacity onPress={() => setActiveFilterDropdown(null)}>
-                <Text className="text-[#6A7282] font-inter-medium text-[14px]">Cancel</Text>
+                <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.5%') }}>Cancel</Text>
               </TouchableOpacity>
             </View>
 
-            <ScrollView className="px-5 mt-2" showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingHorizontal: wp('5%'), marginTop: hp('1%') }}>
               {activeFilterDropdown === 'locality' && loadingLocalities ? (
-                <View className="py-10 items-center justify-center">
+                <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
                   <ActivityIndicator size="small" color="#008E96" />
                 </View>
               ) : options.length > 0 ? (
@@ -422,25 +427,26 @@ const RecentlyAddedProperties = () => {
                     <TouchableOpacity
                       key={option.key}
                       onPress={() => onSelect(option)}
-                      className="py-4 border-b border-gray-50 flex-row justify-between items-center"
+                      className="border-b border-gray-50 flex-row justify-between items-center"
+                      style={{ paddingVertical: hp('2%') }}
                     >
                       <Text 
-                        style={{ fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular' }}
-                        className={`text-[15px] ${isSelected ? 'text-[#008E96]' : 'text-[#344054]'}`}
+                        style={{ fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular', fontSize: wp('3.8%') }}
+                        className={isSelected ? 'text-[#008E96]' : 'text-[#344054]'}
                       >
                         {option.label}
                       </Text>
                       {isSelected && (
-                        <View className="w-5 h-5 rounded-full bg-[#008E96] items-center justify-center">
-                          <Text className="text-white text-[10px] font-bold">✓</Text>
+                        <View className="rounded-full bg-[#008E96] items-center justify-center" style={{ width: wp('5%'), height: wp('5%') }}>
+                          <Text className="text-white font-bold" style={{ fontSize: wp('2.5%') }}>✓</Text>
                         </View>
                       )}
                     </TouchableOpacity>
                   );
                 })
               ) : (
-                <View className="py-10 items-center justify-center">
-                  <Text className="text-gray-400 font-inter-medium">No options available</Text>
+                <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
+                  <Text className="text-gray-400 font-inter-medium" style={{ fontSize: wp('3.5%') }}>No options available</Text>
                 </View>
               )}
             </ScrollView>
@@ -479,19 +485,19 @@ const RecentlyAddedProperties = () => {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
       {/* Header */}
-      <View className="px-4 py-4 flex-row items-center">
-        <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center items-center">
-          <ArrowLeft size={28} color="#101828" />
+      <View className="flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('2%') }}>
+        <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%') }}>
+          <ArrowLeft size={wp('7%')} color="#101828" />
         </TouchableOpacity>
-        <Text className="ml-2 text-[20px] text-[#101828] font-inter-semibold">Recently Added Properties</Text>
+        <Text className="text-[#101828] font-inter-semibold" style={{ marginLeft: wp('2%'), fontSize: wp('5%') }}>Recently Added Properties</Text>
       </View>
 
       {/* Scrollable Filter Bar */}
-      <View className="mb-4 bg-white border-b border-[#F2F4F7] pb-3">
+      <View className="bg-white border-b border-[#F2F4F7]" style={{ marginBottom: hp('2%'), paddingBottom: hp('1.5%') }}>
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 8, alignItems: 'center' }}
+          contentContainerStyle={{ paddingHorizontal: wp('4%'), gap: wp('2%'), alignItems: 'center' }}
         >
           {/* Property Type Pill */}
           {renderFilterPill(
@@ -529,20 +535,21 @@ const RecentlyAddedProperties = () => {
 
       {/* Property List */}
       {loading && properties.length === 0 ? (
-        <View className="flex-1 items-center justify-center py-20">
+        <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
           <ActivityIndicator size="large" color="#008E96" />
-          <Text className="mt-4 text-[#6A7282] font-inter-medium">Searching...</Text>
+          <Text className="text-[#6A7282] font-inter-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Searching...</Text>
         </View>
       ) : properties.length > 0 ? (
         <FlatList
-          className="flex-1 px-4"
+          className="flex-1"
+          style={{ paddingHorizontal: wp('4%') }}
           data={formattedProperties}
           keyExtractor={(item) => item.id}
           renderItem={({ item: property }) => (
             <PerfectMatchCard property={property} />
           )}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 24 }}
+          contentContainerStyle={{ paddingBottom: hp('3%') }}
           onEndReached={() => {
             if (hasMore && !loadingMore && !loading) {
               fetchMatches(page + 1, true);
@@ -550,13 +557,13 @@ const RecentlyAddedProperties = () => {
           }}
           onEndReachedThreshold={0.2}
           ListEmptyComponent={
-            <View className="flex-1 items-center justify-center py-20">
-              <Text className="font-inter-medium text-[#6A7282]">No properties found.</Text>
+            <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
+              <Text className="font-inter-medium text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>No properties found.</Text>
             </View>
           }
           ListFooterComponent={
             loadingMore ? (
-              <View className="py-4 items-center justify-center">
+              <View className="items-center justify-center" style={{ paddingVertical: hp('2%') }}>
                 <ActivityIndicator size="small" color="#008E96" />
               </View>
             ) : null

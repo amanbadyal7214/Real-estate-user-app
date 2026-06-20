@@ -4,6 +4,7 @@ import { ArrowLeft , Search } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import NoDataFound from '../../components/NoDataFound';
 import Svg, { Path } from 'react-native-svg';
@@ -108,46 +109,46 @@ const TopRatedDevelopers = () => {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
       {/* Header with Search */}
-      <View className="px-4 py-2 flex-row items-center gap-3">
-        <TouchableOpacity onPress={() => router.back()} className="w-10 h-10 justify-center items-center">
-          <ArrowLeft size={28} color="#4A5565" />
+      <View className="flex-row items-center gap-3" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
+        <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%') }}>
+          <ArrowLeft size={wp('7%')} color="#4A5565" />
         </TouchableOpacity>
         
         <TouchableOpacity 
           onPress={() => router.push('/screens/LocationSelection')}
-          className="flex-row items-center border border-[#008E9633] bg-white h-[50px] px-5 rounded-[40px] flex-1"
-          style={{ borderWidth: 1.5, borderColor: '#B2E0E2' }}
+          className="flex-row items-center bg-white flex-1"
+          style={{ borderWidth: 1.5, borderColor: '#B2E0E2', height: hp('6%'), paddingHorizontal: wp('5%'), borderRadius: wp('10%') }}
         >
-          <Search size={22} color="#6A7282" />
-          <Text className="ml-3 flex-1 text-[#6A7282] text-[16px]" style={{ fontFamily: 'Inter-Regular' }}>
+          <Search size={wp('5.5%')} color="#6A7282" />
+          <Text className="ml-3 flex-1 text-[#6A7282]" style={{ fontFamily: 'Inter-Regular', fontSize: wp('4%') }}>
             Locality, Landmark, Project...
           </Text>
         </TouchableOpacity>
       </View>
 
       {/* Filter Buttons */}
-      <View className="flex-row px-4 gap-2 ">
-        <TouchableOpacity className="flex-row items-center border border-[#6A7282] rounded-[24px] px-4 py-2 bg-white">
-          <Text className="text-[#101828] text-[16px] mr-2" style={{ fontFamily: 'Inter-Medium' }}>Budget in Rs.</Text>
-          <Svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+      <View className="flex-row gap-2" style={{ paddingHorizontal: wp('4%') }}>
+        <TouchableOpacity className="flex-row items-center border border-[#6A7282] bg-white" style={{ borderRadius: wp('6%'), paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
+          <Text className="text-[#101828] mr-2" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }}>Budget in Rs.</Text>
+          <Svg width={wp('2.5%')} height={wp('1.5%')} viewBox="0 0 10 6" fill="none">
             <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </Svg>
         </TouchableOpacity>
         
-        <TouchableOpacity className="flex-row items-center border border-[#6A7282] rounded-[24px] px-4 py-2 bg-white">
-          <Text className="text-[#101828] text-[16px] mr-2" style={{ fontFamily: 'Inter-Medium' }}>BHK type</Text>
-          <Svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+        <TouchableOpacity className="flex-row items-center border border-[#6A7282] bg-white" style={{ borderRadius: wp('6%'), paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
+          <Text className="text-[#101828] mr-2" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }}>BHK type</Text>
+          <Svg width={wp('2.5%')} height={wp('1.5%')} viewBox="0 0 10 6" fill="none">
             <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </Svg>
         </TouchableOpacity>
       </View>
 
       {/* Filter Tabs */}
-      <View className="mb-4">
+      <View style={{ marginBottom: hp('2%') }}>
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 4, height: 95, alignItems: 'center' }}
+          contentContainerStyle={{ paddingHorizontal: wp('4%'), gap: wp('1%'), height: hp('12%'), alignItems: 'center' }}
         >
           {tabs.map((tab) => {
             const isActive = activeTab === tab.label;
@@ -156,12 +157,12 @@ const TopRatedDevelopers = () => {
                 key={tab.id}
                 onPress={() => handleTabPress(tab)}
                 className="justify-center items-center"
-                style={{ height: 64, marginHorizontal: 2 }}
+                style={{ height: hp('8%'), marginHorizontal: wp('0.5%') }}
               >
                 {isActive ? (
-                  <View className="relative h-full justify-center items-center px-6">
+                  <View className="relative h-full justify-center items-center" style={{ paddingHorizontal: wp('6%') }}>
                     <View className="absolute inset-0">
-                      <Svg width="100%" height="64" viewBox="0 0 191 64" preserveAspectRatio="none">
+                      <Svg width="100%" height={hp('8%')} viewBox="0 0 191 64" preserveAspectRatio="none">
                         <Path
                           d="M16.25 1H174.25C182.534 1 189.25 7.716 189.25 16V40C189.25 44.5 187.75 47.5 185.25 50C183.25 52 180.917 53.8333 178.25 55.5C175.583 57.1667 172.583 58.5 169.25 59.5C165.917 60.5 162.25 61.3333 158.25 62C154.25 62.6667 150.25 63 146.25 63H44.25C40.25 63 36.25 62.6667 32.25 62C28.25 61.3333 24.5833 60.5 21.25 59.5C17.9167 58.5 14.9167 57.1667 12.25 55.5C9.58333 53.8333 7.25 52 5.25 50C2.75 47.5 1.25 44.5 1.25 40V16C1.25 7.716 7.966 1 16.25 1Z"
                           fill="#008E96"
@@ -175,8 +176,8 @@ const TopRatedDevelopers = () => {
                     <Text
                       style={{
                         fontFamily: 'Inter-SemiBold',
-                        fontSize: 14,
-                        lineHeight: 21,
+                        fontSize: wp('3.5%'),
+                        lineHeight: wp('5.5%'),
                         textAlign: 'center',
                         color: '#008E96',
                       }}
@@ -186,14 +187,14 @@ const TopRatedDevelopers = () => {
                   </View>
                 ) : (
                   <View
-                    className="border border-[#E4E7EC] rounded-[20px] px-5 py-3 justify-center items-center"
-                    style={{ height: 56 }}
+                    className="border border-[#E4E7EC] justify-center items-center"
+                    style={{ height: hp('7%'), borderRadius: wp('5%'), paddingHorizontal: wp('5%'), paddingVertical: hp('1.5%') }}
                   >
                     <Text
                       style={{
                         fontFamily: 'Inter-SemiBold',
-                        fontSize: 14,
-                        lineHeight: 21,
+                        fontSize: wp('3.5%'),
+                        lineHeight: wp('5.5%'),
                         textAlign: 'center',
                         color: '#6A7282',
                       }}
@@ -209,7 +210,7 @@ const TopRatedDevelopers = () => {
       </View>
 
       {/* Property List */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: wp('4%'), paddingBottom: hp('3%') }}>
         {activeTab === 'Top Rated Developers' || activeTab === 'Smart Deals' ? (
           matchedProperties.map((property) => (
             <PerfectMatchCard key={property.id} property={property} />

@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const LocationSelection = () => {
   const router = useRouter();
@@ -98,61 +99,63 @@ const LocationSelection = () => {
   ];
 
   return (
-    <SafeAreaView className="flex-1 px-2 bg-white">
+    <SafeAreaView className="flex-1 bg-white" style={{ paddingHorizontal: wp('2%') }}>
       {/* Header */}
-      <View className="px-4 py-4 mt-12 flex-row items-center border-b border-gray-50">
+      <View className="flex-row items-center border-b border-gray-50" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('2%'), marginTop: hp('5%') }}>
         <TouchableOpacity onPress={() => router.back()} className="p-1">
-          <Ionicons name="arrow-back" size={24} color="#4A5565" />
+          <Ionicons name="arrow-back" size={wp('6%')} color="#4A5565" />
         </TouchableOpacity>
-        <Text className="ml-4 text-[22px] font-inter-medium text-[#101828]">
+        <Text className="font-inter-medium text-[#101828]" style={{ marginLeft: wp('4%'), fontSize: wp('5.5%') }}>
           Where do you want to Buy?
         </Text>
       </View>
 
-      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
-        <Text className="text-[#6A7282] text-sm font-inter-regular mb-6">
+      <ScrollView className="flex-1" style={{ paddingHorizontal: wp('4%') }} showsVerticalScrollIndicator={false}>
+        <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.5%'), marginBottom: hp('3%') }}>
           Choose a city which can be changed later
         </Text>
 
         {/* Search Input */}
-        <View className="flex-row items-center bg-[#F9FAFB] border border-[#008E96] rounded-xl px-4 h-12 mb-4">
+        <View className="flex-row items-center bg-[#F9FAFB] border border-[#008E96]" style={{ borderRadius: wp('3%'), paddingHorizontal: wp('4%'), height: hp('6%'), marginBottom: hp('2%') }}>
           <TextInput
             placeholder="Type city here..."
             placeholderTextColor="rgba(16, 24, 40, 0.5)"
-            className="flex-1 text-sm font-inter-regular"
+            className="flex-1 font-inter-regular"
+            style={{ fontSize: wp('3.5%') }}
             value={search}
             onChangeText={setSearch}
           />
           <TouchableOpacity onPress={handleVoiceSearch}>
             <Ionicons
               name={isListening ? "stop-circle-outline" : "mic-outline"}
-              size={20}
+              size={wp('5%')}
               color={isListening ? "#EF4444" : "#008E96"}
             />
           </TouchableOpacity>
         </View>
 
         {/* Current Location Button */}
-        <TouchableOpacity className="flex-row items-center mb-8 gap-2">
-          <Ionicons name="locate-outline" size={20} color="#008E96" />
-          <Text className="text-[#008E96] text-sm font-inter-medium">
+        <TouchableOpacity className="flex-row items-center" style={{ marginBottom: hp('4%'), gap: wp('2%') }}>
+          <Ionicons name="locate-outline" size={wp('5%')} color="#008E96" />
+          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.5%') }}>
             Use my current location
           </Text>
         </TouchableOpacity>
 
         {/* Popular Cities */}
-        <Text className="text-[#6A7282] text-base font-inter-medium mb-4">
+        <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('4%'), marginBottom: hp('2%') }}>
           Popular Cities
         </Text>
-        <View className="flex-row flex-wrap justify-between gap-y-3 mb-8">
+        <View className="flex-row flex-wrap justify-between" style={{ gap: hp('1.5%'), marginBottom: hp('4%') }}>
           {popularCities.map((city, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => handleCitySelect(city.name)}
-              className="w-[48%] flex-row items-center bg-[#F9FAFB] border border-[#E4E7EC] rounded-xl px-3 py-3"
+              className="flex-row items-center bg-[#F9FAFB] border border-[#E4E7EC]"
+              style={{ width: '48%', borderRadius: wp('3%'), paddingHorizontal: wp('3%'), paddingVertical: hp('1.5%') }}
             >
-              <Text className="text-xl mr-2">{city.icon}</Text>
-              <Text className="text-[#101828] text-sm font-inter-medium">
+              <Text style={{ fontSize: wp('5%'), marginRight: wp('2%') }}>{city.icon}</Text>
+              <Text className="text-[#101828] font-inter-medium" style={{ fontSize: wp('3.5%') }}>
                 {city.name}
               </Text>
             </TouchableOpacity>
@@ -160,22 +163,24 @@ const LocationSelection = () => {
         </View>
 
         {/* Alphabet Search */}
-        <Text className="text-[#6A7282] text-sm font-inter-regular mb-4">
+        <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.5%'), marginBottom: hp('2%') }}>
           Search in 330+ other cities
         </Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="bg-[#F9FAFB] border border-[#008E96] rounded-xl py-2 px-3 mb-6"
+          className="bg-[#F9FAFB] border border-[#008E96]"
+          style={{ borderRadius: wp('3%'), paddingVertical: hp('1%'), paddingHorizontal: wp('3%'), marginBottom: hp('3%') }}
         >
           {alphabet.map((letter) => (
-            <TouchableOpacity key={letter} className="px-3">
+            <TouchableOpacity key={letter} style={{ paddingHorizontal: wp('3%') }}>
               <Text
-                className={`text-sm ${
+                className={
                   letter === "D"
                     ? "text-[#008E96] font-inter-bold"
                     : "text-[#6A7282] font-inter-medium"
-                }`}
+                }
+                style={{ fontSize: wp('3.5%') }}
               >
                 {letter}
               </Text>
@@ -184,22 +189,22 @@ const LocationSelection = () => {
         </ScrollView>
 
         {/* Cities List */}
-        <View className="pb-10">
+        <View style={{ paddingBottom: hp('5%') }}>
           {citiesList.map((row, index) => (
-            <View key={index} className="flex-row justify-between mb-4">
+            <View key={index} className="flex-row justify-between" style={{ marginBottom: hp('2%') }}>
               <TouchableOpacity
-                className="w-[48%]"
+                style={{ width: '48%' }}
                 onPress={() => handleCitySelect(row[0])}
               >
-                <Text className="text-[#4A5565] text-[15px] font-inter-medium">
+                <Text className="text-[#4A5565] font-inter-medium" style={{ fontSize: wp('3.8%') }}>
                   {row[0]}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="w-[48%]"
+                style={{ width: '48%' }}
                 onPress={() => handleCitySelect(row[1])}
               >
-                <Text className="text-[#4A5565] text-[15px] font-inter-medium">
+                <Text className="text-[#4A5565] font-inter-medium" style={{ fontSize: wp('3.8%') }}>
                   {row[1]}
                 </Text>
               </TouchableOpacity>

@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ProjectPropertiesSection from '../../components/ProjectPropertiesSection';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
 import api from '../api';
@@ -359,7 +360,7 @@ const PropertyDetails = () => {
     return (
       <SafeAreaView className="flex-1 bg-white items-center justify-center">
         <ActivityIndicator size="large" color="#008E96" />
-        <Text className="text-[#6A7282] mt-4 font-inter-medium">Loading property details...</Text>
+        <Text className="text-[#6A7282] font-inter-medium" style={{ marginTop: hp('2%'), fontSize: wp('4%') }}>Loading property details...</Text>
       </SafeAreaView>
     );
   }
@@ -367,9 +368,9 @@ const PropertyDetails = () => {
   if (!propertyData && !fetching) {
     return (
       <SafeAreaView className="flex-1 bg-white items-center justify-center">
-        <Text className="text-red-500 font-inter-medium mb-4">No property data found</Text>
-        <TouchableOpacity onPress={() => router.back()} className="bg-[#008E96] px-6 py-2 rounded-lg">
-          <Text className="text-white">Go Back</Text>
+        <Text className="text-red-500 font-inter-medium" style={{ marginBottom: hp('2%'), fontSize: wp('4%') }}>No property data found</Text>
+        <TouchableOpacity onPress={() => router.back()} className="bg-[#008E96]" style={{ paddingHorizontal: wp('6%'), paddingVertical: hp('1.5%'), borderRadius: wp('2%') }}>
+          <Text className="text-white" style={{ fontSize: wp('3.5%') }}>Go Back</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -381,7 +382,7 @@ const PropertyDetails = () => {
         <ScrollView showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
           {/* Header Section */}
           <View className="bg-white">
-            <View className="w-full h-[320px] rounded-b-[40px] overflow-hidden bg-gray-200">
+            <View className="w-full overflow-hidden bg-gray-200" style={{ height: hp('40%'), borderBottomLeftRadius: wp('10%'), borderBottomRightRadius: wp('10%') }}>
               <FlatList
                 ref={flatListRef}
                 data={heroImages}
@@ -391,7 +392,7 @@ const PropertyDetails = () => {
                 onScroll={handleScroll}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                  <View style={{ width: Dimensions.get('window').width, height: 320 }}>
+                  <View style={{ width: wp('100%'), height: hp('40%') }}>
                     <Image
                       source={{ uri: item.startsWith('data:') ? item : item }}
                       style={{ width: '100%', height: '100%' }}
@@ -403,56 +404,57 @@ const PropertyDetails = () => {
               <LinearGradient colors={['rgba(0,0,0,0.4)', 'transparent', 'rgba(0,0,0,0.6)']} className="absolute inset-0" />
 
               {/* Top Controls */}
-              <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center px-4 mt-4">
-                <TouchableOpacity onPress={() => router.back()} className="w-12 h-12 bg-black/40 rounded-full items-center justify-center">
-                  <Ionicons name="arrow-back" size={24} color="white" />
+              <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center" style={{ paddingHorizontal: wp('4%'), marginTop: hp('2%') }}>
+                <TouchableOpacity onPress={() => router.back()} className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('12%'), height: wp('12%') }}>
+                  <Ionicons name="arrow-back" size={wp('6%')} color="white" />
                 </TouchableOpacity>
-                <View className="flex-row gap-3">
-                  <TouchableOpacity className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
-                    <Ionicons name="share-social-outline" size={20} color="white" />
+                <View className="flex-row" style={{ gap: wp('3%') }}>
+                  <TouchableOpacity className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
+                    <Ionicons name="share-social-outline" size={wp('5%')} color="white" />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={toggleWishlist} className="w-10 h-10 bg-black/40 rounded-full items-center justify-center">
-                    <Ionicons name={isWishlisted ? "heart" : "heart-outline"} size={20} color={isWishlisted ? "#F04438" : "white"} />
+                  <TouchableOpacity onPress={toggleWishlist} className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
+                    <Ionicons name={isWishlisted ? "heart" : "heart-outline"} size={wp('5%')} color={isWishlisted ? "#F04438" : "white"} />
                   </TouchableOpacity>
                 </View>
               </View>
 
               {/* Bottom Left Content */}
-              <View className="absolute bottom-10 left-4 gap-1">
-                <View className="bg-[#008E96] self-start px-2 py-0.5 rounded-[4px] flex-row items-center gap-1">
-                  <Ionicons name="flash" size={10} color="white" />
-                  <Text className="text-white text-[10px] font-inter-bold uppercase">
+              <View className="absolute" style={{ bottom: hp('4%'), left: wp('4%'), gap: hp('0.5%') }}>
+                <View className="bg-[#008E96] self-start flex-row items-center" style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.5%'), borderRadius: wp('1%'), gap: wp('1%') }}>
+                  <Ionicons name="flash" size={wp('2.5%')} color="white" />
+                  <Text className="text-white font-inter-bold uppercase" style={{ fontSize: wp('2.5%') }}>
                     {capitalize(getDisplayValue(normalizedProperty.propertyType)) || 'Residential'}
                   </Text>
                 </View>
-                <Text className="text-white text-[20px] font-inter-semibold" numberOfLines={2}>
+                <Text className="text-white font-inter-semibold" numberOfLines={2} style={{ fontSize: wp('5%') }}>
                   {normalizedProperty.title || 'Spacious Property'}
                 </Text>
-                <View className="flex-row items-center gap-1">
-                  <Ionicons name="location" size={12} color="white" />
-                  <Text className="text-white text-[13px] font-inter-regular">
+                <View className="flex-row items-center" style={{ gap: wp('1%') }}>
+                  <Ionicons name="location" size={wp('3%')} color="white" />
+                  <Text className="text-white font-inter-regular" style={{ fontSize: wp('3.5%') }}>
                     {getDisplayValue(normalizedProperty.city)}, {getDisplayValue(normalizedProperty.state)}
                   </Text>
                 </View>
               </View>
 
               {/* Image Counter */}
-              <View className="absolute bottom-6 right-4 bg-black/60 px-3 py-1 rounded-full">
-                <Text className="text-white text-[12px] font-inter-regular">
+              <View className="absolute bg-black/60 rounded-full" style={{ bottom: hp('3%'), right: wp('4%'), paddingHorizontal: wp('3%'), paddingVertical: hp('0.5%') }}>
+                <Text className="text-white font-inter-regular" style={{ fontSize: wp('3%') }}>
                   {currentImageIndex + 1}/{heroImages.length}
                 </Text>
               </View>
             </View>
 
             {/* Tabs Row */}
-            <View className="flex-row gap-2 border-b border-[#E5E7EB] px-4 py-4">
+            <View className="flex-row border-b border-[#E5E7EB]" style={{ gap: wp('2%'), paddingHorizontal: wp('4%'), paddingVertical: hp('2%') }}>
               {['Overview', 'Highlights', 'Property Tour'].map((tab) => (
                 <TouchableOpacity
                   key={tab}
                   onPress={() => setActiveTab(tab)}
-                  className={`flex-1 py-2 rounded-[14px] items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`}
+                  className={`flex-1 items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`}
+                  style={{ paddingVertical: hp('1%'), borderRadius: wp('3.5%') }}
                 >
-                  <Text className={`text-[14px] font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{tab}</Text>
+                  <Text className={`font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>{tab}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -677,22 +679,22 @@ const PropertyDetails = () => {
       </View>
 
       {/* Sticky Bottom Bar */}
-      <View className="bg-white px-4 py-3 border-t border-[#E5E7EB] flex-row gap-2 items-center">
+      <View className="bg-white border-t border-[#E5E7EB] flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%'), gap: wp('2%') }}>
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/screens/Chat', params: { propertyId } })}
-          className="flex-1 h-[48px] border border-[#008E96] rounded-[14px] flex-row items-center justify-center gap-2"
+          className="flex-1 border border-[#008E96] flex-row items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%'), gap: wp('2%') }}
         >
-          <Ionicons name="chatbubble-outline" size={20} color="#008E96" />
-          <Text className="text-[#008E96] font-inter-medium text-[16px]">Chat</Text>
+          <Ionicons name="chatbubble-outline" size={wp('5%')} color="#008E96" />
+          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>Chat</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex-1 h-[48px] border border-[#008E96] rounded-[14px] items-center justify-center">
-          <Text className="text-[#008E96] font-inter-medium text-[16px]">View phone</Text>
+        <TouchableOpacity className="flex-1 border border-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}>
+          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>View phone</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/screens/ContactSeller', params: { propertyId } })}
-          className="flex-[1.5] h-[48px] bg-[#008E96] rounded-[14px] items-center justify-center"
+          className="flex-[1.5] bg-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}
         >
-          <Text className="text-white font-inter-medium text-[16px]">Contact Seller</Text>
+          <Text className="text-white font-inter-medium" style={{ fontSize: wp('4%') }}>Contact Seller</Text>
         </TouchableOpacity>
       </View>
       {toast && (

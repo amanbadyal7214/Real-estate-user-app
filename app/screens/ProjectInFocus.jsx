@@ -3,6 +3,7 @@ import { ArrowLeft, RefreshCcw } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { useProject } from '../../hooks/useProject';
 import { formatPrice } from '../utils/formatPrice';
@@ -102,38 +103,40 @@ const ProjectInFocus = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="px-4 pb-5 flex-row items-center pt-4">
+      <View className="flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('2%'), paddingBottom: hp('2.5%') }}>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="p-1"
+          style={{ padding: wp('1%') }}
         >
-          <ArrowLeft size={24} color="#101828" />
+          <ArrowLeft size={wp('6%')} color="#101828" />
         </TouchableOpacity>
-        <Text className="text-[24px] font-inter-bold text-[#101828] ml-2">
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('6%'), marginLeft: wp('2%') }}>
           Project in Focus
         </Text>
       </View>
 
       {/* Content */}
       {loading && projectsList.length === 0 ? (
-        <View className="flex-1 items-center justify-center py-20">
+        <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
           <ActivityIndicator size="large" color="#008E96" />
-          <Text className="mt-4 font-inter-medium text-[#6A7282]">Fetching focus projects...</Text>
+          <Text className="font-inter-medium text-[#6A7282]" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Fetching focus projects...</Text>
         </View>
       ) : error ? (
-        <View className="flex-1 items-center justify-center py-20 px-10">
-          <Text className="text-red-500 font-inter-semibold text-center mb-4">{error}</Text>
+        <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%'), paddingHorizontal: wp('10%') }}>
+          <Text className="text-red-500 font-inter-semibold text-center" style={{ marginBottom: hp('2%'), fontSize: wp('3.5%') }}>{error}</Text>
           <TouchableOpacity
             onPress={() => loadFocusProjects(1, false)}
-            className="flex-row items-center gap-2 bg-[#008E96] px-6 py-3 rounded-xl"
+            className="flex-row items-center bg-[#008E96]"
+            style={{ gap: wp('2%'), paddingHorizontal: wp('6%'), paddingVertical: hp('1.5%'), borderRadius: wp('3%') }}
           >
-            <RefreshCcw size={18} color="white" />
-            <Text className="text-white font-inter-bold">Retry</Text>
+            <RefreshCcw size={wp('4.5%')} color="white" />
+            <Text className="text-white font-inter-bold" style={{ fontSize: wp('3.5%') }}>Retry</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <FlatList
-          className="flex-1 px-4"
+          className="flex-1"
+          style={{ paddingHorizontal: wp('4%') }}
           data={projectsList}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
@@ -147,7 +150,7 @@ const ProjectInFocus = () => {
             />
           )}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 20 }}
+          contentContainerStyle={{ paddingBottom: hp('2.5%') }}
           onEndReached={() => {
             if (hasMore && !loadingMore && !loading) {
               loadFocusProjects(page + 1, true);
@@ -155,13 +158,13 @@ const ProjectInFocus = () => {
           }}
           onEndReachedThreshold={0.2}
           ListEmptyComponent={
-            <View className="flex-1 items-center justify-center py-20">
-              <Text className="font-inter-medium text-[#6A7282]">No focus projects found.</Text>
+            <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
+              <Text className="font-inter-medium text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>No focus projects found.</Text>
             </View>
           }
           ListFooterComponent={
             loadingMore ? (
-              <View className="py-4 items-center justify-center">
+              <View className="items-center justify-center" style={{ paddingVertical: hp('2%') }}>
                 <ActivityIndicator size="small" color="#008E96" />
               </View>
             ) : null

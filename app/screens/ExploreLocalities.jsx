@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalityAveragePrice } from '../../hooks/useLocalityAveragePrice';
 import { useLocation } from '../context/LocationContext';
@@ -60,10 +61,12 @@ const ExploreLocalities = () => {
   const LocalityCard = ({ item, isHotspot = false }) => (
     <TouchableOpacity
       activeOpacity={0.9}
-      className="bg-white rounded-[16px] overflow-hidden mb-[16px]"
+      className="bg-white overflow-hidden"
       style={{
-        width: isHotspot ? '100%' : 240,
-        marginRight: isHotspot ? 0 : 12,
+        borderRadius: wp('4%'),
+        marginBottom: hp('2%'),
+        width: isHotspot ? '100%' : wp('60%'),
+        marginRight: isHotspot ? 0 : wp('3%'),
         shadowColor: "#008E96",
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.08,
@@ -76,30 +79,29 @@ const ExploreLocalities = () => {
       {/* Visual Header */}
       <LinearGradient
         colors={['#F9FAFB', '#F2F4F7']}
-        className="h-[64px] justify-center px-[12px] relative overflow-hidden"
+        className="justify-center relative overflow-hidden"
+        style={{ height: hp('8%'), paddingHorizontal: wp('3%') }}
       >
-        <View style={{ position: 'absolute', right: -10, top: -10, opacity: 0.05 }}>
-          <MaterialCommunityIcons name="city-variant-outline" size={80} color="#008E96" />
+        <View style={{ position: 'absolute', right: -wp('2.5%'), top: -hp('1.2%'), opacity: 0.05 }}>
+          <MaterialCommunityIcons name="city-variant-outline" size={wp('20%')} color="#008E96" />
         </View>
-        <Text className="text-[#101828] font-inter-bold text-[16px] tracking-tight">{item.name}</Text>
-        <Text className="text-[#667085] font-inter-regular text-[11px]">{item.location}</Text>
+        <Text className="text-[#101828] font-inter-bold tracking-tight" style={{ fontSize: wp('4%') }}>{item.name}</Text>
+        <Text className="text-[#667085] font-inter-regular" style={{ fontSize: wp('2.8%') }}>{item.location}</Text>
       </LinearGradient>
 
       {/* Content Section */}
-      <View className="px-[12px] py-[12px]">
+      <View style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.5%') }}>
         <View className="flex-row items-center justify-between">
           <View>
-            <Text className="text-[#98A2B3] font-inter-medium text-[10px] uppercase tracking-wider mb-[2px]">Avg. Price</Text>
+            <Text className="text-[#98A2B3] font-inter-medium uppercase tracking-wider" style={{ fontSize: wp('2.5%'), marginBottom: hp('0.3%') }}>Avg. Price</Text>
             <View className="flex-row items-center">
-              <View className="bg-[#F0F9F9] w-[20px] h-[20px] rounded-full items-center justify-center mr-[6px]">
-                <FontAwesome5 name="rupee-sign" size={8} color="#008E96" />
+              <View className="bg-[#F0F9F9] rounded-full items-center justify-center" style={{ width: wp('5%'), height: wp('5%'), marginRight: wp('1.5%') }}>
+                <FontAwesome5 name="rupee-sign" size={wp('2%')} color="#008E96" />
               </View>
-              <Text className="text-[#101828] font-inter-semibold text-[14px]">{item.price}</Text>
+              <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('3.5%') }}>{item.price}</Text>
             </View>
           </View>
         </View>
-
-
       </View>
     </TouchableOpacity>
   );
@@ -115,44 +117,46 @@ const ExploreLocalities = () => {
         colors={['#008E96', '#007A82']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        className="px-[20px] rounded-b-[24px] justify-center pt-[15px] pb-[20px]"
+        className="justify-center"
+        style={{ paddingHorizontal: wp('5%'), borderBottomLeftRadius: wp('6%'), borderBottomRightRadius: wp('6%'), paddingTop: hp('2%'), paddingBottom: hp('2.5%') }}
       >
         <View className="flex-row items-center justify-between">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-[36px] h-[36px] bg-white/20 rounded-full items-center justify-center"
+            className="bg-white/20 rounded-full items-center justify-center"
+            style={{ width: wp('9%'), height: wp('9%') }}
           >
-            <Ionicons name="chevron-back" size={20} color="white" />
+            <Ionicons name="chevron-back" size={wp('5%')} color="white" />
           </TouchableOpacity>
 
-          <View className="items-center flex-1 pt-2 pr-[36px]">
-            <Text className="text-white font-inter-bold text-[16px]">Explore Localities</Text>
-            <Text className="text-white/80 font-inter-regular text-[11px]">Premium Investment Zones in {currentLocation?.city || 'Mohali'}</Text>
+          <View className="items-center flex-1" style={{ paddingTop: hp('1%'), paddingRight: wp('9%') }}>
+            <Text className="text-white font-inter-bold" style={{ fontSize: wp('4%') }}>Explore Localities</Text>
+            <Text className="text-white/80 font-inter-regular" style={{ fontSize: wp('2.8%') }}>Premium Investment Zones in {currentLocation?.city || 'Mohali'}</Text>
           </View>
         </View>
       </LinearGradient>
 
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1 mt-[-15px]">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1" style={{ marginTop: -hp('2%') }}>
         {/* Popular Section */}
-        <View className="pt-[10px]">
-          <View className="flex-row items-center justify-between px-[20px] mb-[12px]">
+        <View style={{ paddingTop: hp('1.2%') }}>
+          <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('5%'), marginBottom: hp('1.5%') }}>
             <View>
-              <Text className="text-[#101828] font-inter-bold text-[18px]">Popular Areas</Text>
-              <View className="h-[2px] w-[24px] bg-[#008E96] mt-[2px] rounded-full" />
+              <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.5%') }}>Popular Areas</Text>
+              <View className="bg-[#008E96] rounded-full" style={{ height: hp('0.3%'), width: wp('6%'), marginTop: hp('0.3%') }} />
             </View>
             <TouchableOpacity>
-              <Text className="text-[#008E96] font-inter-semibold text-[13px]">See all</Text>
+              <Text className="text-[#008E96] font-inter-semibold" style={{ fontSize: wp('3.3%') }}>See all</Text>
             </TouchableOpacity>
           </View>
 
           {loading ? (
-            <View className="py-10">
+            <View style={{ paddingVertical: hp('5%') }}>
               <ActivityIndicator color="#008E96" />
             </View>
           ) : localities.length > 0 ? (
             <ScrollView
               horizontal
-              contentContainerStyle={{ paddingLeft: 20, paddingRight: 4, paddingBottom: 8 }}
+              contentContainerStyle={{ paddingLeft: wp('5%'), paddingRight: wp('1%'), paddingBottom: hp('1%') }}
               showsHorizontalScrollIndicator={false}
             >
               {localities.map((item) => (
@@ -160,21 +164,21 @@ const ExploreLocalities = () => {
               ))}
             </ScrollView>
           ) : (
-            <View className="px-5 py-6 items-center">
-              <Text className="text-gray-400 font-inter-medium">No localities found for {currentLocation?.city}</Text>
+            <View className="items-center" style={{ paddingHorizontal: wp('5%'), paddingVertical: hp('3%') }}>
+              <Text className="text-gray-400 font-inter-medium" style={{ fontSize: wp('3.5%') }}>No localities found for {currentLocation?.city}</Text>
             </View>
           )}
         </View>
 
         {/* Investment Hotspot Section */}
-        <View className="mt-[24px] px-[20px] mb-[40px]">
-          <View className="mb-[16px]">
-            <Text className="text-[#101828] font-inter-bold text-[18px]">Investment Hotspots</Text>
-            <Text className="text-[#667085] font-inter-regular text-[12px] mt-[2px]">Top performing localities this month</Text>
+        <View style={{ marginTop: hp('3%'), paddingHorizontal: wp('5%'), marginBottom: hp('5%') }}>
+          <View style={{ marginBottom: hp('2%') }}>
+            <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.5%') }}>Investment Hotspots</Text>
+            <Text className="text-[#667085] font-inter-regular" style={{ fontSize: wp('3%'), marginTop: hp('0.3%') }}>Top performing localities this month</Text>
           </View>
 
           {loading ? (
-            <View className="py-10">
+            <View style={{ paddingVertical: hp('5%') }}>
               <ActivityIndicator color="#008E96" />
             </View>
           ) : localities.length > 0 ? (

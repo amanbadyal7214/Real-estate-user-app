@@ -28,6 +28,7 @@ import {
 import React from 'react';
 import { ActivityIndicator, Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Svg, { Circle, Path } from 'react-native-svg';
 import PropertyCardSmall from '../../components/PropertyCardSmall';
 import { useUserActivity } from '../../hooks/useUserActivity';
@@ -39,21 +40,21 @@ const ProfileHeader = ({ userData }) => {
   const initialLetter = name.charAt(0).toUpperCase();
 
   return (
-    <View className="bg-white px-4 py-3 flex-row items-start justify-between">
-      <View className="flex-row gap-3">
+    <View className="bg-white flex-row items-start justify-between" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%') }}>
+      <View className="flex-row" style={{ gap: wp('3%') }}>
         {/* Avatar Container - Double-Ring Teal/White Circle */}
         <View
-          className="w-[68px] h-[68px] items-center justify-center bg-white border-2 border-[#008E96]"
-          style={{ borderRadius: 68 / 2 }}
+          className="items-center justify-center bg-white border-2 border-[#008E96]"
+          style={{ width: wp('18%'), height: wp('18%'), borderRadius: wp('9%') }}
         >
           {/* Inner Circle - 52x52 Teal Circle */}
           <View
-            className="w-[52px] h-[52px] items-center justify-center bg-[#008E96]"
-            style={{ borderRadius: 52 / 2 }}
+            className="items-center justify-center bg-[#008E96]"
+            style={{ width: wp('14%'), height: wp('14%'), borderRadius: wp('7%') }}
           >
             <Text
-              className="text-white text-[24px] font-semibold"
-              style={{ fontFamily: 'Inter-SemiBold', marginTop: -2 }}
+              className="text-white font-semibold"
+              style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('6%'), marginTop: -2 }}
             >
               {initialLetter}
             </Text>
@@ -61,22 +62,22 @@ const ProfileHeader = ({ userData }) => {
         </View>
 
         {/* User Info */}
-        <View className="ml-1">
+        <View style={{ marginLeft: wp('1%'), justifyContent: 'center' }}>
           <Text
-            className="text-[#101828] text-[18px] font-semibold"
-            style={{ fontFamily: 'Inter-SemiBold' }}
+            className="text-[#101828] font-semibold"
+            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.5%') }}
           >
             Hello {name}!
           </Text>
           <Text
-            className="text-[#4A5565] text-[13px] font-normal mt-0.5"
-            style={{ fontFamily: 'Inter-Regular' }}
+            className="text-[#4A5565] font-normal"
+            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.3%'), marginTop: hp('0.5%') }}
           >
             {email}
           </Text>
           <Text
-            className="text-[#4A5565] text-[13px] font-normal"
-            style={{ fontFamily: 'Inter-Regular' }}
+            className="text-[#4A5565] font-normal"
+            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.3%') }}
           >
             {phone}
           </Text>
@@ -86,12 +87,13 @@ const ProfileHeader = ({ userData }) => {
 
       {/* Edit Button */}
       <TouchableOpacity
-        className="px-4 py-2 border border-[#E4E7EC] rounded-full"
+        className="border border-[#E4E7EC] rounded-full"
+        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}
         activeOpacity={0.7}
       >
         <Text
-          className="text-[#101828] text-[14px] font-medium"
-          style={{ fontFamily: 'Inter-Medium' }}
+          className="text-[#101828] font-medium"
+          style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }}
         >
           Edit
         </Text>
@@ -102,24 +104,26 @@ const ProfileHeader = ({ userData }) => {
 
 const ActivityTabCard = ({ id, label1, label2, count, icon: Icon, isActive, onPress }) => {
   return (
-    <View className="items-center mr-3">
+    <View className="items-center" style={{ marginRight: wp('3%') }}>
       <TouchableOpacity
         onPress={() => onPress(id)}
-        className={`w-[95px] h-[110px] rounded-[13px] items-center justify-center border-2 ${isActive ? 'bg-[#008E9614] border-[#008E96]' : 'bg-white border-[#E4E7EC]'
+        className={`items-center justify-center border-2 ${isActive ? 'bg-[#008E9614] border-[#008E96]' : 'bg-white border-[#E4E7EC]'
           }`}
+        style={{ width: wp('24%'), height: hp('13%'), borderRadius: wp('3.5%') }}
         activeOpacity={0.7}
       >
         {/* Icon & Badge Container */}
-        <View className="relative w-[28px] h-[28px] mb-4">
-          <Icon size={28} color={isActive ? "#008E96" : "#6A7282"} strokeWidth={1.5} />
+        <View className="relative" style={{ width: wp('7%'), height: wp('7%'), marginBottom: hp('2%') }}>
+          <Icon size={wp('7%')} color={isActive ? "#008E96" : "#6A7282"} strokeWidth={1.5} />
           {count !== undefined && count !== null && (
             <View
-              className={`absolute -top-2.5 -right-3.5 px-1.5 py-0.5 rounded-full items-center justify-center h-[24px] min-w-[24px] border-2 border-white ${isActive ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'
+              className={`absolute rounded-full items-center justify-center border-2 border-white ${isActive ? 'bg-[#008E96]' : 'bg-[#E4E7EC]'
                 }`}
+              style={{ top: -wp('2.5%'), right: -wp('3.5%'), paddingHorizontal: wp('1.5%'), paddingVertical: hp('0.2%'), minWidth: wp('6%'), height: wp('6%') }}
             >
               <Text
-                className={`text-[10px] font-bold ${isActive ? 'text-white' : 'text-[#6A7282]'}`}
-                style={{ fontFamily: 'Inter-Bold' }}
+                className={`font-bold ${isActive ? 'text-white' : 'text-[#6A7282]'}`}
+                style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.5%') }}
               >
                 {count}
               </Text>
@@ -130,16 +134,16 @@ const ActivityTabCard = ({ id, label1, label2, count, icon: Icon, isActive, onPr
         {/* Labels */}
         <View className="items-center px-1">
           <Text
-            className={`text-[13px] font-medium leading-[16px] text-center ${isActive ? 'text-[#101828]' : 'text-[#6A7282]'
+            className={`font-medium text-center ${isActive ? 'text-[#101828]' : 'text-[#6A7282]'
               }`}
-            style={{ fontFamily: 'Inter-Medium' }}
+            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.3%'), lineHeight: wp('4%') }}
           >
             {label1}
           </Text>
           <Text
-            className={`text-[13px] font-medium leading-[16px] text-center ${isActive ? 'text-[#101828]' : 'text-[#6A7282]'
+            className={`font-medium text-center ${isActive ? 'text-[#101828]' : 'text-[#6A7282]'
               }`}
-            style={{ fontFamily: 'Inter-Medium' }}
+            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.3%'), lineHeight: wp('4%') }}
           >
             {label2}
           </Text>
@@ -158,45 +162,47 @@ const ActivityTabCard = ({ id, label1, label2, count, icon: Icon, isActive, onPr
 
 const SellRentBanner = () => {
   return (
-    <View className="px-4 py-4">
+    <View style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('2%') }}>
       <LinearGradient
         colors={['#FFF8E7', '#FFE8D6']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={{ borderRadius: 16, borderWeight: 0.67, borderColor: '#E4E7EC', borderWidth: 0.67 }}
-        className="flex-row items-center p-5 gap-4 h-[133.33px]"
+        style={{ borderRadius: wp('4%'), borderWeight: 0.67, borderColor: '#E4E7EC', borderWidth: 0.67, padding: wp('5%'), gap: wp('4%'), minHeight: hp('15%') }}
+        className="flex-row items-center"
       >
         {/* House Illustration */}
-        <View className="w-[90px] h-[90px] items-center justify-center relative">
+        <View className="items-center justify-center relative" style={{ width: wp('22%'), height: wp('22%') }}>
           <View className="absolute inset-0 items-center justify-center">
-            <Building size={60} color="#D4A574" opacity={0.6} />
+            <Building size={wp('15%')} color="#D4A574" opacity={0.6} />
           </View>
-          <View className="absolute top-2 right-2 w-8 h-8 rounded-full border-2 border-[#F4A261] opacity-60" />
+          <View className="absolute rounded-full border-2 border-[#F4A261] opacity-60" style={{ top: wp('2%'), right: wp('2%'), width: wp('8%'), height: wp('8%') }} />
         </View>
 
         {/* Content */}
         <View className="flex-1 justify-center">
           <Text
-            className="text-[#101828] text-[16px] font-semibold leading-[20px] mb-3"
-            style={{ fontFamily: 'Inter-SemiBold' }}
+            className="text-[#101828] font-semibold"
+            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), lineHeight: wp('5%'), marginBottom: hp('1.5%') }}
           >
             Looking to sell/rent{"\n"}your property?
           </Text>
 
           <TouchableOpacity
-            className="bg-white px-3 py-2 rounded-[10px] self-start items-center justify-center"
+            className="bg-white rounded-[10px] self-start items-center justify-center"
             style={{
+              paddingHorizontal: wp('3%'),
+              paddingVertical: hp('1%'),
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.1,
               shadowRadius: 3,
               elevation: 2,
-              width: 140
+              width: wp('35%')
             }}
           >
             <Text
-              className="text-[#101828] text-[14px] font-medium"
-              style={{ fontFamily: 'Inter-Medium' }}
+              className="text-[#101828] font-medium"
+              style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }}
             >
               Post property for
             </Text>
@@ -213,44 +219,45 @@ const MenuItem = ({ label, icon: Icon, isNew = false, indicator = 'ChevronRight'
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex-row items-center px-4 h-[52px] gap-[12px]"
+      className="flex-row items-center"
+      style={{ paddingHorizontal: wp('4%'), height: hp('6.5%'), gap: wp('3%') }}
       activeOpacity={0.7}
     >
-      <View className="w-6 h-6 items-center justify-center">
-        <Icon size={24} color="#4A5565" strokeWidth={1.5} />
+      <View className="items-center justify-center" style={{ width: wp('6%'), height: wp('6%') }}>
+        <Icon size={wp('6%')} color="#4A5565" strokeWidth={1.5} />
       </View>
 
       <View className="flex-1">
         <Text
-          className="text-[#101828] text-[15px] font-medium leading-[22px]"
-          style={{ fontFamily: 'Inter-Medium' }}
+          className="text-[#101828] font-medium"
+          style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.8%'), lineHeight: wp('5.5%') }}
         >
           {label}
         </Text>
       </View>
 
-      <View className="flex-row items-center gap-2">
+      <View className="flex-row items-center" style={{ gap: wp('2%') }}>
         {count && (
-          <View className="bg-[#E4E7EC] px-2.5 py-0.5 rounded-full items-center justify-center">
+          <View className="bg-[#E4E7EC] rounded-full items-center justify-center" style={{ paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.2%') }}>
             <Text
-              className="text-[#6A7282] text-[13px] font-semibold"
-              style={{ fontFamily: 'Inter-SemiBold', lineHeight: 20 }}
+              className="text-[#6A7282] font-semibold"
+              style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.3%'), lineHeight: wp('5%') }}
             >
               {count}
             </Text>
           </View>
         )}
         {isNew && (
-          <View className="bg-[#008E96] px-2 py-0.5 rounded-[4px] items-center justify-center">
+          <View className="bg-[#008E96] rounded-[4px] items-center justify-center" style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.2%') }}>
             <Text
-              className="text-white text-[11px] font-bold uppercase"
-              style={{ fontFamily: 'Inter-Bold', lineHeight: 16 }}
+              className="text-white font-bold uppercase"
+              style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.8%'), lineHeight: wp('4%') }}
             >
               NEW
             </Text>
           </View>
         )}
-        <IndicatorIcon size={20} color="#6A7282" />
+        <IndicatorIcon size={wp('5%')} color="#6A7282" />
       </View>
     </TouchableOpacity>
   );
@@ -259,41 +266,42 @@ const MenuItem = ({ label, icon: Icon, isNew = false, indicator = 'ChevronRight'
 const QuickLinks = () => {
   const router = useRouter();
   return (
-    <View className="mt-8 border-t border-[#E4E7EC] pt-4">
+    <View className="border-t border-[#E4E7EC]" style={{ marginTop: hp('4%'), paddingTop: hp('2%') }}>
       {/* Header Row */}
-      <View className="flex-row items-center px-4 mb-4 gap-3">
-        <HandCoins size={24} color="#101828" strokeWidth={1.5} />
+      <View className="flex-row items-center mb-4 gap-3" style={{ paddingHorizontal: wp('4%') }}>
+        <HandCoins size={wp('6%')} color="#101828" strokeWidth={1.5} />
         <Text
-          className="flex-1 text-[#101828] text-[18px] font-semibold"
-          style={{ fontFamily: 'Inter-SemiBold' }}
+          className="flex-1 text-[#101828] font-semibold"
+          style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.5%') }}
         >
           Quick Links
         </Text>
-        <ChevronDown size={20} color="#6A7282" />
+        <ChevronDown size={wp('5%')} color="#6A7282" />
       </View>
 
       {/* Grid of Cards */}
-      <View className="flex-row px-4 justify-between gap-3">
+      <View className="flex-row justify-between gap-3" style={{ paddingHorizontal: wp('4%') }}>
         {/* Sell/Rent Property Card */}
         <TouchableOpacity
           onPress={() => router.push('/screens/PostProperty/PropertyDetails')}
-          className="flex-1 h-[100px] bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2 relative"
+          className="flex-1 bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2 relative"
+          style={{ height: hp('12%') }}
           activeOpacity={0.7}
         >
           {/* FREE Badge */}
-          <View className="absolute top-2 right-2 bg-[#008E96] px-2 py-0.5 rounded-[4px]">
+          <View className="absolute bg-[#008E96] rounded-[4px]" style={{ top: hp('1%'), right: wp('2%'), paddingHorizontal: wp('2%'), paddingVertical: hp('0.2%') }}>
             <Text
-              className="text-white text-[11px] font-bold uppercase"
-              style={{ fontFamily: 'Inter-Bold', lineHeight: 16 }}
+              className="text-white font-bold uppercase"
+              style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.8%'), lineHeight: wp('4%') }}
             >
               FREE
             </Text>
           </View>
 
-          <HandCoins size={32} color="#008E96" strokeWidth={1.5} />
+          <HandCoins size={wp('8%')} color="#008E96" strokeWidth={1.5} />
           <Text
-            className="text-[#101828] text-[14px] font-medium"
-            style={{ fontFamily: 'Inter-Medium' }}
+            className="text-[#101828] font-medium"
+            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }}
           >
             Sell/Rent property
           </Text>
@@ -562,9 +570,9 @@ const Profile = () => {
 
     // Default Empty State
     return (
-      <View className="items-center justify-center pt-8 pb-8 px-16">
-        <View className="w-[200px] h-[140px] items-center justify-center relative mb-6">
-          <Svg width="180" height="140" viewBox="0 0 180 140">
+      <View className="items-center justify-center" style={{ paddingTop: hp('4%'), paddingBottom: hp('4%'), paddingHorizontal: wp('16%') }}>
+        <View className="items-center justify-center relative" style={{ width: wp('50%'), height: wp('35%'), marginBottom: hp('3%') }}>
+          <Svg width={wp('45%')} height={wp('35%')} viewBox="0 0 180 140">
             {/* Left sparkles/dots */}
             <Circle cx="22" cy="78" r="3" fill="#B2E0E2" />
             <Circle cx="12" cy="65" r="2" fill="#B2E0E2" />
@@ -616,12 +624,13 @@ const Profile = () => {
         </View>
 
         <TouchableOpacity
-          className="h-[48.5px] w-[176.18px] items-center justify-center bg-[#E6F4F5] rounded-full"
+          className="items-center justify-center bg-[#E6F4F5] rounded-full"
+          style={{ height: hp('6%'), width: wp('45%') }}
           activeOpacity={0.7}
         >
           <Text
-            className="text-[#008E96] text-[15px] font-semibold text-center"
-            style={{ fontFamily: 'Inter-SemiBold' }}
+            className="text-[#008E96] font-semibold text-center"
+            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%') }}
           >
             Start new search
           </Text>
@@ -633,9 +642,9 @@ const Profile = () => {
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
       {/* Navigator Back Header */}
-      <View className="px-4  justify-center">
+      <View className="justify-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
         <TouchableOpacity onPress={() => router.back()}>
-          <ArrowLeft size={24} color="#101828" />
+          <ArrowLeft size={wp('6%')} color="#101828" />
         </TouchableOpacity>
       </View>
 
@@ -645,8 +654,8 @@ const Profile = () => {
         {/* My Activity Section */}
         <View>
           <Text
-            className="text-[#101828] text-[18px] font-semibold mb-5 px-4"
-            style={{ fontFamily: 'Inter-SemiBold' }}
+            className="text-[#101828] font-semibold"
+            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.5%'), marginBottom: hp('2%'), paddingHorizontal: wp('4%') }}
           >
             My Activity
           </Text>
@@ -698,7 +707,7 @@ const Profile = () => {
         <QuickLinks />
 
         {/* Menu Items Section 2 */}
-        <View className="mt-8 border-t border-[#E4E7EC] pt-2">
+        <View className="border-t border-[#E4E7EC]" style={{ marginTop: hp('4%'), paddingTop: hp('1%') }}>
           <MenuItem 
             label="Home Search" 
             icon={Home} 
@@ -706,17 +715,18 @@ const Profile = () => {
             onPress={() => setIsHomeSearchExpanded(!isHomeSearchExpanded)}
           />
           {isHomeSearchExpanded && (
-            <View className="flex-row px-4 justify-between gap-3 my-3">
+            <View className="flex-row justify-between" style={{ paddingHorizontal: wp('4%'), gap: wp('3%'), marginVertical: hp('1.5%') }}>
               {/* Buy Property Card */}
               <TouchableOpacity
                 onPress={() => router.push('/screens/Buy/BuySearch')}
-                className="flex-1 h-[100px] bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2"
+                className="flex-1 bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2"
+                style={{ height: hp('12%') }}
                 activeOpacity={0.7}
               >
-                <Home size={32} color="#008E96" strokeWidth={1.5} />
+                <Home size={wp('8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
-                  className="text-[#101828] text-[14px] font-medium"
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  className="text-[#101828] font-medium"
+                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }}
                 >
                   Buy Property
                 </Text>
@@ -725,13 +735,14 @@ const Profile = () => {
               {/* Rent Property Card */}
               <TouchableOpacity
                 onPress={() => router.push('/screens/Rent/Rentsearch')}
-                className="flex-1 h-[100px] bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2"
+                className="flex-1 bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2"
+                style={{ height: hp('12%') }}
                 activeOpacity={0.7}
               >
-                <Building size={32} color="#008E96" strokeWidth={1.5} />
+                <Building size={wp('8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
-                  className="text-[#101828] text-[14px] font-medium"
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  className="text-[#101828] font-medium"
+                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }}
                 >
                   Rent Property
                 </Text>
@@ -745,18 +756,18 @@ const Profile = () => {
             onPress={() => setIsToolsExpanded(!isToolsExpanded)}
           />
           {isToolsExpanded && (
-            <View className="flex-row px-4 flex-wrap justify-between gap-3 my-3">
+            <View className="flex-row flex-wrap justify-between" style={{ paddingHorizontal: wp('4%'), gap: wp('3%'), marginVertical: hp('1.5%') }}>
               {/* EMI Calculator */}
               <TouchableOpacity
                 onPress={() => router.push('/screens/EMICalculator')}
                 className="bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2"
-                style={{ width: '48%', height: 100 }}
+                style={{ width: '48%', height: hp('12%') }}
                 activeOpacity={0.7}
               >
-                <Calculator size={32} color="#008E96" strokeWidth={1.5} />
+                <Calculator size={wp('8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
-                  className="text-[#101828] text-[13px] font-medium text-center"
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  className="text-[#101828] font-medium text-center"
+                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.3%') }}
                 >
                   EMI Calculator
                 </Text>
@@ -766,13 +777,13 @@ const Profile = () => {
               <TouchableOpacity
                 onPress={() => router.push('/screens/ECalculator')}
                 className="bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2"
-                style={{ width: '48%', height: 100 }}
+                style={{ width: '48%', height: hp('12%') }}
                 activeOpacity={0.7}
               >
-                <Percent size={32} color="#008E96" strokeWidth={1.5} />
+                <Percent size={wp('8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
-                  className="text-[#101828] text-[13px] font-medium text-center"
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  className="text-[#101828] font-medium text-center"
+                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.3%') }}
                 >
                   Eligibility Calculator
                 </Text>
@@ -782,13 +793,13 @@ const Profile = () => {
               <TouchableOpacity
                 onPress={() => router.push('/screens/AffordabilityCalculator')}
                 className="bg-[#F7F9FA] border border-[#E4E7EC] rounded-[12px] items-center justify-center gap-2"
-                style={{ width: '100%', height: 100 }}
+                style={{ width: '100%', height: hp('12%') }}
                 activeOpacity={0.7}
               >
-                <HandCoins size={32} color="#008E96" strokeWidth={1.5} />
+                <HandCoins size={wp('8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
-                  className="text-[#101828] text-[13px] font-medium text-center"
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  className="text-[#101828] font-medium text-center"
+                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.3%') }}
                 >
                   Affordability Calculator
                 </Text>
@@ -803,7 +814,7 @@ const Profile = () => {
         </View>
 
         {/* Menu Items Section 3 */}
-        <View className="mt-8 border-t border-[#E4E7EC] pt-2">
+        <View className="border-t border-[#E4E7EC]" style={{ marginTop: hp('4%'), paddingTop: hp('1%') }}>
           <MenuItem 
             label="Recommended Properties" 
             icon={Home} 
@@ -819,15 +830,16 @@ const Profile = () => {
         </View>
 
         {/* Help Centre Section */}
-        <View className="px-4 mt-4">
+        <View style={{ paddingHorizontal: wp('4%'), marginTop: hp('2%') }}>
           <TouchableOpacity
-            className="flex-row items-center px-4 h-[56px] bg-[#F7F9FA] rounded-[12px] gap-[12px]"
+            className="flex-row items-center bg-[#F7F9FA] rounded-[12px]"
+            style={{ paddingHorizontal: wp('4%'), height: hp('7%'), gap: wp('3%') }}
             activeOpacity={0.7}
           >
-            <CircleHelp size={24} color="#4A5565" strokeWidth={1.5} />
+            <CircleHelp size={wp('6%')} color="#4A5565" strokeWidth={1.5} />
             <Text
-              className="text-[#101828] text-[15px] font-medium"
-              style={{ fontFamily: 'Inter-Medium' }}
+              className="text-[#101828] font-medium"
+              style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.8%') }}
             >
               Help Centre
             </Text>
@@ -835,16 +847,17 @@ const Profile = () => {
         </View>
 
         {/* Log Out Section */}
-        <View className="px-4 mt-4 mb-5">
+        <View style={{ paddingHorizontal: wp('4%'), marginTop: hp('2%'), marginBottom: hp('2.5%') }}>
           <TouchableOpacity
             onPress={isLoggedIn ? handleLogout : () => router.push('/screens/PostProperty/Register')}
-            className="flex-row items-center justify-center h-[50.5px] border-2 border-[#E4E7EC] rounded-[12px] gap-[8px]"
+            className="flex-row items-center justify-center border-2 border-[#E4E7EC] rounded-[12px]"
+            style={{ height: hp('6.5%'), gap: wp('2%') }}
             activeOpacity={0.7}
           >
-            <LogOut size={20} color="#4A5565" strokeWidth={1.5} />
+            <LogOut size={wp('5%')} color="#4A5565" strokeWidth={1.5} />
             <Text
-              className="text-[#101828] text-[15px] font-medium text-center"
-              style={{ fontFamily: 'Inter-Medium' }}
+              className="text-[#101828] font-medium text-center"
+              style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.8%') }}
             >
               {isLoggedIn ? "Log Out" : "Login"}
             </Text>

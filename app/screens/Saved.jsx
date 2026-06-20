@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { ArrowLeft, Folder, Heart, Search } from 'lucide-react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import ActivityTabs from '../navigation/ActivityTabs';
@@ -78,7 +79,7 @@ const Saved = () => {
 
     if (activeTab === 'saved' && wishlistProperties && wishlistProperties.length > 0) {
       return (
-        <View className="flex-row flex-wrap px-4 pt-5 gap-3 pb-24">
+        <View className="flex-row flex-wrap" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('2.5%'), gap: wp('3%'), paddingBottom: hp('12%') }}>
           {wishlistProperties.map((item, index) => {
             const property = item.property || item;
             const id = property._id || property.id;
@@ -116,7 +117,7 @@ const Saved = () => {
 
     if (activeTab === 'seen' && recentlyViewed && recentlyViewed.length > 0) {
       return (
-        <View className="flex-row flex-wrap px-4 pt-5 gap-3 pb-24">
+        <View className="flex-row flex-wrap" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('2.5%'), gap: wp('3%'), paddingBottom: hp('12%') }}>
           {recentlyViewed.map((item, index) => {
             const property = item.property || item;
             const id = property._id || property.id;
@@ -157,7 +158,7 @@ const Saved = () => {
 
     if (activeTab === 'contacted' && contactedProperties && contactedProperties.length > 0) {
       return (
-        <View className="flex-row flex-wrap px-4 pt-5 gap-3 pb-24">
+        <View className="flex-row flex-wrap" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('2.5%'), gap: wp('3%'), paddingBottom: hp('12%') }}>
           {contactedProperties.map((item, index) => {
             const property = item.property || item;
             const id = property._id || property.id;
@@ -198,7 +199,7 @@ const Saved = () => {
 
     if (activeTab === 'recent' && recentSearches && recentSearches.length > 0) {
       return (
-        <View className="px-4 pt-5 pb-24">
+        <View style={{ paddingHorizontal: wp('4%'), paddingTop: hp('2.5%'), paddingBottom: hp('12%') }}>
           {recentSearches.map((item, index) => {
             const name = item.searchName || item.name || `Search #${index + 1}`;
             const city = item.filters?.city || '';
@@ -206,15 +207,15 @@ const Saved = () => {
             const date = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '';
 
             return (
-              <View key={item._id || index} className="w-full bg-[#F7F9FA] border border-[#E4E7EC] rounded-2xl p-4 mb-3 flex-row justify-between items-center">
+              <View key={item._id || index} className="w-full bg-[#F7F9FA] border border-[#E4E7EC] flex-row justify-between items-center" style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('1.5%') }}>
                 <View className="flex-1">
-                  <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[15px] font-semibold text-[#101828] mb-1">{name}</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#6A7282]">
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%'), marginBottom: hp('0.5%') }} className="font-semibold text-[#101828]">{name}</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.3%') }} className="text-[#6A7282]">
                     {city && `City: ${city}`} {category && ` • Category: ${category}`}
                   </Text>
                 </View>
                 {date && (
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[12px] text-[#6A7282]">
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%') }} className="text-[#6A7282]">
                     {date}
                   </Text>
                 )}
@@ -227,31 +228,32 @@ const Saved = () => {
 
     // Default Empty State
     return (
-      <View className="flex-1 items-center justify-center px-16 -mt-20">
+      <View className="flex-1 items-center justify-center" style={{ paddingHorizontal: wp('16%'), marginTop: hp('-10%') }}>
         {/* Illustration Container */}
-        <View className="w-[200px] h-[200px] items-center justify-center relative mb-8">
+        <View className="items-center justify-center relative" style={{ width: wp('50%'), height: wp('50%'), marginBottom: hp('4%') }}>
           <View className="absolute inset-0 items-center justify-center">
-            <Folder size={120} color="#008E96" strokeWidth={1.5} fill="rgba(28, 178, 169, 0.15)" />
+            <Folder size={wp('30%')} color="#008E96" strokeWidth={1.5} fill="rgba(28, 178, 169, 0.15)" />
           </View>
-          <View className="absolute top-10 right-10 bg-white p-1 rounded-sm border border-[#008E96]">
-             <Heart size={16} color="#008E96" fill="#008E96" />
+          <View className="absolute bg-white p-1 rounded-sm border border-[#008E96]" style={{ top: wp('10%'), right: wp('10%') }}>
+             <Heart size={wp('4%')} color="#008E96" fill="#008E96" />
           </View>
-          <View className="absolute bottom-12 right-12">
-             <Search size={24} color="#008E96" strokeWidth={2.5} />
+          <View className="absolute" style={{ bottom: wp('12%'), right: wp('12%') }}>
+             <Search size={wp('6%')} color="#008E96" strokeWidth={2.5} />
           </View>
-          <View className="absolute left-6 top-1/2 w-2 h-2 rounded-full bg-[#008E961A]" />
-          <View className="absolute right-6 top-2/3 w-2 h-2 rounded-full bg-[#008E961A]" />
-          <View className="absolute left-10 bottom-1/3 w-2 h-2 rounded-full bg-[#008E961A]" />
+          <View className="absolute rounded-full bg-[#008E961A]" style={{ left: wp('6%'), top: '50%', width: wp('2%'), height: wp('2%') }} />
+          <View className="absolute rounded-full bg-[#008E961A]" style={{ right: wp('6%'), top: '66%', width: wp('2%'), height: wp('2%') }} />
+          <View className="absolute rounded-full bg-[#008E961A]" style={{ left: wp('10%'), bottom: '33%', width: wp('2%'), height: wp('2%') }} />
         </View>
 
         {/* Button */}
         <TouchableOpacity 
-          className="h-[48.5px] px-8 items-center justify-center bg-[#008E961A] rounded-[14px]"
+          className="items-center justify-center bg-[#008E961A]"
+          style={{ height: hp('6%'), paddingHorizontal: wp('8%'), borderRadius: wp('3.5%') }}
           activeOpacity={0.7}
         >
           <Text 
-            className="text-[#008E96] text-[15px] font-medium text-center"
-            style={{ fontFamily: 'Inter-Medium' }}
+            className="text-[#008E96] font-medium text-center"
+            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.8%') }}
           >
             Start new search
           </Text>
@@ -263,14 +265,15 @@ const Saved = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header - Based on ActivityPage Header CSS */}
-      <View className="flex-row items-center px-4 h-[68px] border-b border-[#E4E7EC]">
+      <View className="flex-row items-center border-b border-[#E4E7EC]" style={{ paddingHorizontal: wp('4%'), height: hp('8.5%') }}>
         <TouchableOpacity 
           onPress={() => router.back()}
-          className="w-9 h-9 items-center justify-center rounded-full mr-3"
+          className="items-center justify-center rounded-full"
+          style={{ width: wp('9%'), height: wp('9%'), marginRight: wp('3%') }}
         >
-          <ArrowLeft size={24} color="#101828" />
+          <ArrowLeft size={wp('6%')} color="#101828" />
         </TouchableOpacity>
-        <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[21px] font-semibold text-[#101828]">
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('5.3%') }} className="font-semibold text-[#101828]">
           My Activity
         </Text>
       </View>

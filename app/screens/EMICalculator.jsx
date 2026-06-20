@@ -3,7 +3,8 @@ import Slider from '@react-native-community/slider';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const EMICalculator = () => {
@@ -14,6 +15,10 @@ const EMICalculator = () => {
   const [showInfo, setShowInfo] = useState(true);
   const [emiResult, setEmiResult] = useState(null);
   const [showEmiResult, setShowEmiResult] = useState(false);
+
+  const [loanAmountInput, setLoanAmountInput] = useState('20000000');
+  const [tenureInput, setTenureInput] = useState('30');
+  const [interestRateInput, setInterestRateInput] = useState('7.25');
 
   const calculateEmi = () => {
     const principal = Number(loanAmount) || 0;
@@ -53,254 +58,323 @@ const EMICalculator = () => {
 
   const handleLoanAmountChange = (value) => {
     setLoanAmount(value);
+    setLoanAmountInput(value.toString());
     setShowEmiResult(false);
+  };
+
+  const handleLoanAmountText = (text) => {
+    const cleanText = text.replace(/[^0-9]/g, '');
+    setLoanAmountInput(cleanText);
+    const val = parseInt(cleanText, 10) || 0;
+    setLoanAmount(val);
+    setShowEmiResult(false);
+  };
+
+  const handleLoanAmountBlur = () => {
+    let val = loanAmount;
+    if (val < 100000) val = 100000;
+    if (val > 50000000) val = 50000000;
+    setLoanAmount(val);
+    setLoanAmountInput(val.toString());
   };
 
   const handleTenureChange = (value) => {
     setTenure(value);
+    setTenureInput(value.toString());
     setShowEmiResult(false);
+  };
+
+  const handleTenureText = (text) => {
+    const cleanText = text.replace(/[^0-9]/g, '');
+    setTenureInput(cleanText);
+    const val = parseInt(cleanText, 10) || 0;
+    setTenure(val);
+    setShowEmiResult(false);
+  };
+
+  const handleTenureBlur = () => {
+    let val = tenure;
+    if (val < 2) val = 2;
+    if (val > 30) val = 30;
+    setTenure(val);
+    setTenureInput(val.toString());
   };
 
   const handleInterestRateChange = (value) => {
     setInterestRate(value);
+    setInterestRateInput(value.toString());
     setShowEmiResult(false);
+  };
+
+  const handleInterestRateText = (text) => {
+    setInterestRateInput(text);
+    const parsed = parseFloat(text);
+    if (!isNaN(parsed)) {
+      setInterestRate(parsed);
+    } else {
+      setInterestRate(0);
+    }
+    setShowEmiResult(false);
+  };
+
+  const handleInterestRateBlur = () => {
+    let val = interestRate;
+    if (val < 7) val = 7;
+    if (val > 15) val = 15;
+    setInterestRate(val);
+    setInterestRateInput(val.toString());
   };
 
   return (
     <View className="flex-1 bg-[#F9FAFB]">
       <SafeAreaView className="flex-1">
-        <View className="flex-1">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className="flex-1"
+        >
           {/* TopBar */}
-          <View className="flex-row justify-between items-center px-[16px]  h-[64px]">
-          <TouchableOpacity onPress={() => router.back()} className="p-[8px]">
-            <Ionicons name="arrow-back" size={24} color="#101828" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity onPress={() => router.push('/screens/ComingSoon')} className="bg-[#008E96] flex-row items-center px-[16px] py-[8px] rounded-[14px]">
-            <Ionicons name="home-outline" size={16} color="#FFFFFF" />
-            <Text className="text-white font-inter-medium text-[14px] ml-[8px]">Home Loans</Text>
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView className="flex-1 px-[16px]" showsVerticalScrollIndicator={false}>
-          {/* Main Calculator Card */}
-          <View className="bg-white rounded-[16px] p-[16px] shadow-sm mb-[16px]">
-            <Text className="text-[#101828] font-inter-medium text-[18px] mb-[24px]">EMI Calculator</Text>
-
-            {/* Loan Amount */}
-            <View className="mb-[24px]">
-              <View className="flex-row justify-between items-center mb-[12px]">
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#101828] text-[16px]">Loan amount (INR)</Text>
-                <View className="bg-white border border-[#E5E7EB] rounded-[10px] px-[12px] py-[4px] min-w-[120px] flex-row items-center">
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#101828] text-[16px] mr-1">₹</Text>
-                  <TextInput
-                    style={{ fontFamily: 'Inter-Regular', fontSize: 16, color: '#101828', padding: 0, minWidth: 80 }}
-                    value={loanAmount.toString()}
-                    onChangeText={(text) => {
-                      const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                      handleLoanAmountChange(val);
-                    }}
-                    keyboardType="numeric"
-                  />
-                </View>
-              </View>
-              {/* Range Slider */}
-              <Slider
-                style={{ width: '100%', height: 40 }}
-                minimumValue={100000}
-                maximumValue={50000000}
-                step={100000}
-                value={loanAmount}
-                onValueChange={(value) => handleLoanAmountChange(value)}
-                minimumTrackTintColor="#008E96"
-                maximumTrackTintColor="#E5E7EB"
-                thumbTintColor="#008E96"
-              />
-              <View className="flex-row justify-between mt-[0px]">
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#6A7282] text-[12px]">₹1L</Text>
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#6A7282] text-[12px]">₹5 Cr</Text>
-              </View>
-            </View>
-
-            {/* Dropdown Placeholder */}
-            <TouchableOpacity className="border border-[#E5E7EB] rounded-[10px] p-[12px] flex-row justify-between items-center mb-[24px]">
-              <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#101828]">Select Loan Type</Text>
-              <Ionicons name="chevron-down" size={20} color="#98A2B3" />
+          <View className="flex-row justify-between items-center" style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.5%'), height: hp('7.9%') }}>
+            <TouchableOpacity onPress={() => router.back()} style={{ padding: wp('2.1%') }}>
+              <Ionicons name="arrow-back" size={wp('6.4%')} color="#101828" />
             </TouchableOpacity>
-
-            {/* Tenure */}
-            <View className="mb-[24px]">
-              <View className="flex-row justify-between items-center mb-[12px]">
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#101828] text-[16px]">Tenure (Years)</Text>
-                <View className="bg-white border border-[#E5E7EB] rounded-[10px] px-[12px] py-[4px] flex-row items-center">
-                  <TextInput
-                    style={{ fontFamily: 'Inter-Regular', fontSize: 16, color: '#101828', padding: 0, minWidth: 30, textAlign: 'center' }}
-                    value={tenure.toString()}
-                    onChangeText={(text) => {
-                      const val = parseInt(text.replace(/[^0-9]/g, '')) || 0;
-                      handleTenureChange(val);
-                    }}
-                    keyboardType="numeric"
-                  />
-                </View>
-              </View>
-              <Slider
-                style={{ width: '100%', height: 40 }}
-                minimumValue={2}
-                maximumValue={30}
-                step={1}
-                value={tenure}
-                onValueChange={(value) => handleTenureChange(value)}
-                minimumTrackTintColor="#008E96"
-                maximumTrackTintColor="#E5E7EB"
-                thumbTintColor="#008E96"
-              />
-              <View className="flex-row justify-between mt-[0px]">
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#6A7282] text-[12px]">2 Years</Text>
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#6A7282] text-[12px]">30 Years</Text>
-              </View>
-            </View>
-
-            {/* Interest Rate */}
-            <View className="mb-[24px]">
-              <View className="flex-row justify-between items-center mb-[12px]">
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#101828] text-[16px]">Interest Rates (% P.A.)</Text>
-                <View className="bg-white border border-[#E5E7EB] rounded-[10px] px-[12px] py-[4px] flex-row items-center">
-                  <TextInput
-                    style={{ fontFamily: 'Inter-Regular', fontSize: 16, color: '#101828', padding: 0, minWidth: 40, textAlign: 'center' }}
-                    value={interestRate.toString()}
-                    onChangeText={(text) => {
-                      const val = parseFloat(text) || 0;
-                      handleInterestRateChange(val);
-                    }}
-                    keyboardType="numeric"
-                  />
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: 16, color: '#101828', marginLeft: 2 }}>%</Text>
-                </View>
-              </View>
-              <Slider
-                style={{ width: '100%', height: 40 }}
-                minimumValue={7}
-                maximumValue={15}
-                step={0.05}
-                value={interestRate}
-                onValueChange={(value) => handleInterestRateChange(parseFloat(value.toFixed(2)))}
-                minimumTrackTintColor="#008E96"
-                maximumTrackTintColor="#E5E7EB"
-                thumbTintColor="#008E96"
-              />
-              <View className="flex-row justify-between mt-[0px]">
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#6A7282] text-[12px]">7%</Text>
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#6A7282] text-[12px]">15%</Text>
-              </View>
-            </View>
-
-            {/* Add Pre-Payment */}
-            <TouchableOpacity className="flex-row items-center mb-[24px]">
-              <View className="bg-[#008E96] rounded-[4px] p-[2px] mr-[8px]">
-                <Ionicons name="add" size={16} color="white" />
-              </View>
-              <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#008E96] font-inter-medium text-[16px]">Add Pre-Payment</Text>
-            </TouchableOpacity>
-
-            {/* Calculate Button */}
+            
             <TouchableOpacity
-              onPress={calculateEmi}
-              className="bg-[#008E96] h-[52px] rounded-[14px] items-center justify-center"
+              onPress={() => router.push('/screens/ComingSoon')}
+              className="bg-[#008E96] flex-row items-center"
+              style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1%'), borderRadius: wp('3.7%') }}
             >
-              <Text className="text-white font-inter-medium text-[16px]">Calculate EMI</Text>
+              <Ionicons name="home-outline" size={wp('4.3%')} color="#FFFFFF" />
+              <Text style={{ fontSize: wp('3.7%'), marginLeft: wp('2.1%') }} className="text-white font-inter-medium">Home Loans</Text>
             </TouchableOpacity>
+          </View>
 
-            {showEmiResult && emiResult && (
-              <View className="mt-[16px] rounded-[12px] border border-[#E5E7EB] bg-[#F9FAFB] p-[12px]">
-                <View className="flex-row justify-between mb-[8px]">
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Monthly EMI</Text>
-                  <Text className="text-[#101828] font-inter-semibold text-[14px]">{formatINR(emiResult.monthlyEmi)}</Text>
+          <ScrollView 
+            className="flex-1" 
+            style={{ paddingHorizontal: wp('4.3%') }} 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: hp('4%') }}
+          >
+            {/* Main Calculator Card */}
+            <View className="bg-white shadow-sm" style={{ borderRadius: wp('4.3%'), padding: wp('4.3%'), marginBottom: hp('2%') }}>
+              <Text className="text-[#101828] font-inter-medium" style={{ fontSize: wp('4.8%'), marginBottom: hp('3%') }}>EMI Calculator</Text>
+
+              {/* Loan Amount */}
+              <View style={{ marginBottom: hp('3%') }}>
+                <View className="flex-row justify-between items-center" style={{ marginBottom: hp('1.5%') }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828]">Loan amount (INR)</Text>
+                  <View className="bg-white border border-[#E5E7EB] flex-row items-center justify-end" style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.5%'), minWidth: wp('32%') }}>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828] mr-1">₹</Text>
+                    <TextInput
+                      style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', padding: 0, minWidth: wp('20%'), textAlign: 'right' }}
+                      value={loanAmountInput}
+                      onChangeText={handleLoanAmountText}
+                      onBlur={handleLoanAmountBlur}
+                      keyboardType="numeric"
+                    />
+                  </View>
                 </View>
-                <View className="flex-row justify-between mb-[8px]">
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Total Interest</Text>
-                  <Text className="text-[#101828] font-inter-semibold text-[14px]">{formatINR(emiResult.totalInterest)}</Text>
-                </View>
-                <View className="flex-row justify-between">
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px]">Total Amount</Text>
-                  <Text className="text-[#008E96] font-inter-semibold text-[14px]">{formatINR(emiResult.totalAmount)}</Text>
+                {/* Range Slider */}
+                <Slider
+                  style={{ width: '100%', height: hp('4.9%') }}
+                  minimumValue={100000}
+                  maximumValue={50000000}
+                  step={100000}
+                  value={loanAmount}
+                  onValueChange={handleLoanAmountChange}
+                  minimumTrackTintColor="#008E96"
+                  maximumTrackTintColor="#E5E7EB"
+                  thumbTintColor="#008E96"
+                />
+                <View className="flex-row justify-between" style={{ marginTop: 0 }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-[#6A7282]">₹1L</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-[#6A7282]">₹5 Cr</Text>
                 </View>
               </View>
-            )}
-          </View>
 
-          {/* Home Loans Promo Card */}
-          <LinearGradient
-            colors={['#008E96', '#1CB2A9']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className="rounded-[16px] p-[24px] mb-[16px] relative overflow-hidden"
-          >
-            <View className="z-10">
-              <Text className="text-white font-inter-medium text-[24px] mb-[8px]">Home Loans</Text>
-              <Text style={{ fontFamily: 'Inter-Regular' }} className="text-white/90 text-[14px] leading-[20px] w-[250px] mb-[24px]">
-                One place to compare offers from all the best bank
-              </Text>
-              <TouchableOpacity className="bg-[#1CB2A9] px-[24px] py-[12px] rounded-[14px] self-start">
-                <Text className="text-white font-inter-medium text-[16px]">Explore Home Loan</Text>
+              {/* Dropdown Placeholder */}
+              <TouchableOpacity 
+                className="border border-[#E5E7EB] flex-row justify-between items-center bg-white"
+                style={{ borderRadius: wp('2.7%'), padding: wp('3.2%'), marginBottom: hp('3%') }}
+              >
+                <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828' }}>Select Loan Type</Text>
+                <Ionicons name="chevron-down" size={wp('5.3%')} color="#98A2B3" />
               </TouchableOpacity>
-            </View>
-            {/* Decorative Circle Icon Placeholder */}
-            <View className="absolute -right-10 -top-10 bg-white/10 w-[200px] h-[200px] rounded-full items-center justify-center">
-               <View className="bg-white/20 w-[120px] h-[120px] rounded-full" />
-            </View>
-          </LinearGradient>
 
-          {/* Info Card */}
-          <View className="bg-white rounded-[16px] p-[16px] shadow-sm mb-[24px]">
-            <TouchableOpacity 
-              onPress={() => setShowInfo(!showInfo)}
-              className="flex-row justify-between items-center mb-[12px]"
+              {/* Tenure */}
+              <View style={{ marginBottom: hp('3%') }}>
+                <View className="flex-row justify-between items-center" style={{ marginBottom: hp('1.5%') }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828]">Tenure (Years)</Text>
+                  <View className="bg-white border border-[#E5E7EB] items-center justify-center" style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.5%'), minWidth: wp('12%') }}>
+                    <TextInput
+                      style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'center', minWidth: wp('8%') }}
+                      value={tenureInput}
+                      onChangeText={handleTenureText}
+                      onBlur={handleTenureBlur}
+                      keyboardType="numeric"
+                    />
+                  </View>
+                </View>
+                <Slider
+                  style={{ width: '100%', height: hp('4.9%') }}
+                  minimumValue={2}
+                  maximumValue={30}
+                  step={1}
+                  value={tenure}
+                  onValueChange={handleTenureChange}
+                  minimumTrackTintColor="#008E96"
+                  maximumTrackTintColor="#E5E7EB"
+                  thumbTintColor="#008E96"
+                />
+                <View className="flex-row justify-between" style={{ marginTop: 0 }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-[#6A7282]">2 Years</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-[#6A7282]">30 Years</Text>
+                </View>
+              </View>
+
+              {/* Interest Rate */}
+              <View style={{ marginBottom: hp('3%') }}>
+                <View className="flex-row justify-between items-center" style={{ marginBottom: hp('1.5%') }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828]">Interest Rates (% P.A.)</Text>
+                  <View className="bg-white border border-[#E5E7EB] flex-row items-center justify-center" style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.5%'), minWidth: wp('18%') }}>
+                    <TextInput
+                      style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'center', minWidth: wp('10%') }}
+                      value={interestRateInput}
+                      onChangeText={handleInterestRateText}
+                      onBlur={handleInterestRateBlur}
+                      keyboardType="numeric"
+                    />
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', marginLeft: 1 }}>%</Text>
+                  </View>
+                </View>
+                <Slider
+                  style={{ width: '100%', height: hp('4.9%') }}
+                  minimumValue={7}
+                  maximumValue={15}
+                  step={0.05}
+                  value={interestRate}
+                  onValueChange={handleInterestRateChange}
+                  minimumTrackTintColor="#008E96"
+                  maximumTrackTintColor="#E5E7EB"
+                  thumbTintColor="#008E96"
+                />
+                <View className="flex-row justify-between" style={{ marginTop: 0 }}>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-[#6A7282]">7%</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-[#6A7282]">15%</Text>
+                </View>
+              </View>
+
+              {/* Add Pre-Payment */}
+              <TouchableOpacity className="flex-row items-center" style={{ marginBottom: hp('3%') }}>
+                <View className="bg-[#008E96]" style={{ borderRadius: wp('1%'), padding: wp('0.5%'), marginRight: wp('2.1%') }}>
+                  <Ionicons name="add" size={wp('4.3%')} color="white" />
+                </View>
+                <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#008E96] font-inter-medium">Add Pre-Payment</Text>
+              </TouchableOpacity>
+
+              {/* Calculate Button */}
+              <TouchableOpacity
+                onPress={calculateEmi}
+                className="bg-[#008E96] items-center justify-center"
+                style={{ height: hp('6.4%'), borderRadius: wp('3.7%') }}
+              >
+                <Text style={{ fontSize: wp('4.3%') }} className="text-white font-inter-medium">Calculate EMI</Text>
+              </TouchableOpacity>
+
+              {showEmiResult && emiResult && (
+                <View className="border border-[#E5E7EB] bg-[#F9FAFB]" style={{ marginTop: hp('2%'), borderRadius: wp('3.2%'), padding: wp('3.2%') }}>
+                  <View className="flex-row justify-between" style={{ marginBottom: hp('1%') }}>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">Monthly EMI</Text>
+                    <Text style={{ fontSize: wp('3.7%') }} className="text-[#101828] font-inter-semibold">{formatINR(emiResult.monthlyEmi)}</Text>
+                  </View>
+                  <View className="flex-row justify-between" style={{ marginBottom: hp('1%') }}>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">Total Interest</Text>
+                    <Text style={{ fontSize: wp('3.7%') }} className="text-[#101828] font-inter-semibold">{formatINR(emiResult.totalInterest)}</Text>
+                  </View>
+                  <View className="flex-row justify-between">
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">Total Amount</Text>
+                    <Text style={{ fontSize: wp('3.7%') }} className="text-[#008E96] font-inter-semibold">{formatINR(emiResult.totalAmount)}</Text>
+                  </View>
+                </View>
+              )}
+            </View>
+
+            {/* Home Loans Promo Card */}
+            <LinearGradient
+              colors={['#008E96', '#1CB2A9']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="relative overflow-hidden"
+              style={{ borderRadius: wp('4.3%'), padding: wp('6.4%'), marginBottom: hp('2%') }}
             >
-              <Text className="text-[#101828] font-inter-medium text-[18px] flex-1">
-                What is an EMI? How is it Calculated?
-              </Text>
-              <Ionicons name={showInfo ? "chevron-up" : "chevron-down"} size={20} color="#008E96" />
-            </TouchableOpacity>
-
-            {showInfo && (
-              <>
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px] leading-[22px] mb-[16px]">
-                  If you are planning to get a home loan, the EMI or Equated Monthly Instalment is the fixed amount you pay back to the bank every month until the loan is fully repaid.
+              <View className="z-10">
+                <Text style={{ fontSize: wp('6.4%'), marginBottom: hp('1%') }} className="text-white font-inter-medium">Home Loans</Text>
+                <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.3%'), width: wp('66.7%'), marginBottom: hp('3%') }} className="text-white/90">
+                  One place to compare offers from all the best bank
                 </Text>
-                
-                <View className="pl-[4px] mb-[16px]">
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px] leading-[22px]">1) The amount of the loan</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px] leading-[22px]">2) The rate of interest</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px] leading-[22px]">3) The tenure of loan</Text>
-                </View>
-
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[14px] leading-[22px] mb-[16px]">
-                  The most popular method of computation is that of the reducing balance method.
-                </Text>
-
-                {/* Formula Box */}
-                <View className="bg-[#F9FAFB] rounded-[10px] p-[16px] mb-[16px]">
-                  <Text className="text-[#4A5565] font-inter-regular text-[12px] mb-[8px]">Home loan EMI =</Text>
-                  <Text className="text-[#4A5565] font-inter-regular text-[12px] mb-[12px]">(L×i) × (1+i) ^N / ((1+i) ^N)-1</Text>
-                  <Text className="text-[#4A5565] font-inter-regular text-[12px]">L = Loan amount</Text>
-                  <Text className="text-[#4A5565] font-inter-regular text-[12px]">i = Interest Rate (rate per annum divided by 12)</Text>
-                  <Text className="text-[#4A5565] font-inter-regular text-[12px]">^ = to the power of</Text>
-                  <Text className="text-[#4A5565] font-inter-regular text-[12px]">N = loan period in months</Text>
-                </View>
-
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#4A5565] text-[12px] leading-[16px] mb-[12px]">
-                  (It is to be noted that an increase in the tenure of a loan will result in a lower EMI but a higher total interest outgo.)
-                </Text>
-
-                <TouchableOpacity onPress={() => setShowInfo(false)}>
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[#008E96] font-inter-medium text-[14px]">Read Less</Text>
+                <TouchableOpacity 
+                  className="bg-[#1CB2A9] self-start"
+                  style={{ paddingHorizontal: wp('6.4%'), paddingVertical: hp('1.5%'), borderRadius: wp('3.7%') }}
+                >
+                  <Text style={{ fontSize: wp('4.3%') }} className="text-white font-inter-medium">Explore Home Loan</Text>
                 </TouchableOpacity>
-              </>
-            )}
-          </View>
-        </ScrollView>
-        </View>
+              </View>
+              {/* Decorative Circle Icon Placeholder */}
+              <View className="absolute bg-white/10 items-center justify-center" style={{ right: -wp('10.7%'), top: -wp('10.7%'), width: wp('53.3%'), height: wp('53.3%'), borderRadius: wp('26.7%') }}>
+                 <View className="bg-white/20" style={{ width: wp('32%'), height: wp('32%'), borderRadius: wp('16%') }} />
+              </View>
+            </LinearGradient>
+
+            {/* Info Card */}
+            <View className="bg-white shadow-sm" style={{ borderRadius: wp('4.3%'), padding: wp('4.3%'), marginBottom: hp('3%'), borderWidth: 1, borderColor: '#E5E7EB' }}>
+              <TouchableOpacity 
+                onPress={() => setShowInfo(!showInfo)}
+                className="flex-row justify-between items-center"
+                style={{ marginBottom: showInfo ? hp('1.5%') : 0 }}
+              >
+                <Text className="text-[#101828] font-inter-medium flex-1" style={{ fontSize: wp('4.8%'), lineHeight: wp('7.2%') }}>
+                  What is an EMI? How is it Calculated?
+                </Text>
+                <Ionicons name={showInfo ? "chevron-up" : "chevron-down"} size={wp('5.3%')} color="#008E96" />
+              </TouchableOpacity>
+
+              {showInfo && (
+                <>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginBottom: hp('2%') }} className="text-[#4A5565]">
+                    If you are planning to get a home loan, the EMI or Equated Monthly Instalment is the fixed amount you pay back to the bank every month until the loan is fully repaid.
+                  </Text>
+                  
+                  <View style={{ paddingLeft: wp('1%'), marginBottom: hp('2%') }}>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%') }} className="text-[#4A5565]">1) The amount of the loan</Text>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%') }} className="text-[#4A5565]">2) The rate of interest</Text>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%') }} className="text-[#4A5565]">3) The tenure of loan</Text>
+                  </View>
+
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginBottom: hp('2%') }} className="text-[#4A5565]">
+                    The most popular method of computation is that of the reducing balance method.
+                  </Text>
+
+                  {/* Formula Box */}
+                  <View className="bg-[#F9FAFB]" style={{ borderRadius: wp('2.7%'), padding: wp('4.3%'), marginBottom: hp('2%') }}>
+                    <Text className="text-[#4A5565] font-inter-regular" style={{ fontSize: wp('3.2%'), marginBottom: hp('1%') }}>Home loan EMI =</Text>
+                    <Text className="text-[#4A5565] font-inter-regular" style={{ fontSize: wp('3.2%'), marginBottom: hp('1.5%') }}>(L×i) × (1+i) ^N / ((1+i) ^N)-1</Text>
+                    <Text className="text-[#4A5565] font-inter-regular" style={{ fontSize: wp('3.2%') }}>L = Loan amount</Text>
+                    <Text className="text-[#4A5565] font-inter-regular" style={{ fontSize: wp('3.2%') }}>i = Interest Rate (rate per annum divided by 12)</Text>
+                    <Text className="text-[#4A5565] font-inter-regular" style={{ fontSize: wp('3.2%') }}>^ = to the power of</Text>
+                    <Text className="text-[#4A5565] font-inter-regular" style={{ fontSize: wp('3.2%') }}>N = loan period in months</Text>
+                  </View>
+
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: wp('4.3%'), marginBottom: hp('1.5%') }} className="text-[#4A5565]">
+                    (It is to be noted that an increase in the tenure of a loan will result in a lower EMI but a higher total interest outgo.)
+                  </Text>
+
+                  <TouchableOpacity onPress={() => setShowInfo(false)}>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#008E96] font-inter-medium">Read Less</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </View>
   );
