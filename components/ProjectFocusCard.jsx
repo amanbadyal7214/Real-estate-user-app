@@ -24,9 +24,9 @@ const ProjectFocusCard = ({ image, images: propImages, title, location, price, t
       entering={FadeInRight.duration(600).delay(200)}
       className="overflow-hidden bg-white shadow-sm"
       style={{
-        width: wp('69.3%'),
-        height: hp('22.2%'),
-        borderRadius: wp('5.3%'),
+        width: wp('59%'),
+        height: hp('19%'),
+        borderRadius: wp('4.3%'),
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: hp('0.2%') },
@@ -57,22 +57,22 @@ const ProjectFocusCard = ({ image, images: propImages, title, location, price, t
             <View
               style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('1.1%'), backgroundColor: badgeColor || '#155DFC' }}
             >
-              <Text className="text-white font-inter-bold tracking-wider" style={{ fontSize: wp('2.4%') }}>{badgeType || 'RERA'}</Text>
+              <Text className="text-white font-inter-bold tracking-wider" style={{ fontSize: wp('2.1%') }}>{badgeType || 'RERA'}</Text>
             </View>
             <View className="items-end bg-black/20" style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('2.1%') }}>
-              <Text className="text-white font-inter-bold uppercase tracking-wide" style={{ fontSize: wp('2.4%') }}>{tag}</Text>
-              <Text className="text-white/90 font-inter-medium uppercase" style={{ fontSize: wp('1.9%') }}>BY {developer}</Text>
+              <Text className="text-white font-inter-bold uppercase tracking-wide" style={{ fontSize: wp('2.1%') }}>{tag}</Text>
+              <Text className="text-white/90 font-inter-medium uppercase" style={{ fontSize: wp('1.7%') }}>BY {developer}</Text>
             </View>
           </View>
 
           {/* Bottom Row: Project Details */}
           <View>
-            <Text className="text-white font-inter-bold" style={{ fontSize: wp('4.3%'), marginBottom: hp('0.2%'), lineHeight: hp('2.5%') }} numberOfLines={2}>{title}</Text>
-            <View className="flex-row items-center" style={{ marginBottom: hp('1%') }}>
-              <Ionicons name="location-sharp" size={wp('2.4%')} color="rgba(255,255,255,0.8)" />
-              <Text className="text-white/80 font-inter-regular" style={{ fontSize: wp('2.9%'), marginLeft: wp('1.1%') }} numberOfLines={1}>{location}</Text>
+            <Text className="text-white font-inter-bold" style={{ fontSize: wp('3.6%'), marginBottom: hp('0.2%'), lineHeight: hp('2.2%') }} numberOfLines={2}>{title}</Text>
+            <View className="flex-row items-center" style={{ marginBottom: hp('0.8%') }}>
+              <Ionicons name="location-sharp" size={wp('2.1%')} color="rgba(255,255,255,0.8)" />
+              <Text className="text-white/80 font-inter-regular" style={{ fontSize: wp('2.5%'), marginLeft: wp('1.1%') }} numberOfLines={1}>{location}</Text>
             </View>
-            <Text className="text-white font-inter-bold tracking-tight" style={{ fontSize: wp('3.7%') }}>{price}</Text>
+            <Text className="text-white font-inter-bold tracking-tight" style={{ fontSize: wp('3.2%') }}>{price}</Text>
           </View>
         </LinearGradient>
       </TouchableOpacity>

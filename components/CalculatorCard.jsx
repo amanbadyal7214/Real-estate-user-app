@@ -8,29 +8,29 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
       onPress={onPress}
       activeOpacity={0.95}
       style={{
-        width: wp('49.6%'),
-        height: hp('29.5%'),
+        width: wp('42%'),
+        height: hp('25%'),
         backgroundColor: '#FFFFFF',
         borderWidth: 0.8,
         borderColor: '#D4A574',
-        borderRadius: wp('4.8%'),
+        borderRadius: wp('4%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: hp('0.7%') },
         shadowOpacity: 0.08,
         shadowRadius: wp('3.2%'),
         elevation: 3,
         marginRight: wp('3.2%'),
-        padding: wp('4.3%'),
-        paddingBottom: hp('2.5%'),
+        padding: wp('3.7%'),
+        paddingBottom: hp('2%'),
         overflow: 'visible'
       }}
     >
       <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%'), color: '#8B6F47', lineHeight: hp('2.5%') }}>{titlePrefix}</Text>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), color: '#8B6F47', marginTop: hp('0.2%') }}>Calculator</Text>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), color: '#8B6F47', lineHeight: hp('2.2%') }}>{titlePrefix}</Text>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), color: '#8B6F47', marginTop: hp('0.2%') }}>Calculator</Text>
       </View>
 
-      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6A7282', marginTop: hp('1.5%'), minHeight: hp('4.2%') }}>
+      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%'), color: '#6A7282', marginTop: hp('1.2%'), minHeight: hp('3.5%') }}>
         {description}
       </Text>
 
@@ -39,9 +39,9 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
         <View
           style={{
             position: 'absolute',
-            width: wp('40%'),
-            height: hp('7.9%'),
-            borderRadius: wp('10.7%'),
+            width: wp('34%'),
+            height: hp('6.8%'),
+            borderRadius: wp('9%'),
             backgroundColor: '#FCEFE2',
             bottom: hp('0.2%'),
             alignSelf: 'center'
@@ -73,23 +73,23 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
           );
         })}
       </View>
-      <View style={{ position: 'absolute', right: wp('3.2%'), bottom: hp('1.5%') }}>
+      <View style={{ position: 'absolute', right: wp('2.7%'), bottom: hp('1.2%') }}>
         <View
           style={{
-            width: wp('10.7%'),
-            height: wp('10.7%'),
-            borderRadius: wp('5.3%'),
+            width: wp('9%'),
+            height: wp('9%'),
+            borderRadius: wp('4.5%'),
             backgroundColor: '#D4A574',
             justifyContent: 'center',
             alignItems: 'center',
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: hp('0.4%') },
+            shadowOffset: { width: 0, height: hp('0.3%') },
             shadowOpacity: 0.1,
             shadowRadius: wp('1.6%'),
             elevation: 3
           }}
         >
-          <ChevronRight size={wp('4.3%')} color="#FFFFFF" strokeWidth={1.5} />
+          <ChevronRight size={wp('3.7%')} color="#FFFFFF" strokeWidth={1.5} />
         </View>
       </View>
     </TouchableOpacity>

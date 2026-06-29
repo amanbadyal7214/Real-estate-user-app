@@ -62,28 +62,28 @@ const SearchBox = ({
   };
 
   return (
-    <View className="bg-white" style={{ padding: wp('5.3%'), borderRadius: wp('6.4%') }}>
+    <View className="bg-white" style={{ padding: wp('4%'), borderRadius: wp('4.8%') }}>
       <TouchableOpacity 
         onPress={() => router.push('/screens/Buy/BuySearch')}
         className="flex-row items-center"
-        style={{ marginBottom: hp('2%') }}
+        style={{ marginBottom: hp('1.2%') }}
       >
-        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#101828]">
+        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">
           Currently looking in <Text className="font-inter-bold">{currentLocation?.display || currentLocation?.city || location}</Text>
         </Text>
-        <ChevronDown size={wp('5.3%')} color="#101828" style={{ marginLeft: wp('1.1%') }} />
+        <ChevronDown size={wp('4.5%')} color="#101828" style={{ marginLeft: wp('1.1%') }} />
       </TouchableOpacity>
 
       <TouchableOpacity
         onPress={onPress}
         className="flex-row items-center bg-[#F2F4F7] rounded-full"
-        style={{ height: hp('5.9%'), paddingHorizontal: wp('4.3%') }}
+        style={{ height: hp('5%'), paddingHorizontal: wp('3.5%') }}
       >
-        <Text className="font-inter-regular flex-1 text-[#667085]" style={{ fontSize: wp('3.7%') }}>
+        <Text className="font-inter-regular flex-1 text-[#667085]" style={{ fontSize: wp('3.2%') }}>
           {placeholder}
         </Text>
-        <View className="bg-primary rounded-full items-center justify-center" style={{ width: wp('9.6%'), height: wp('9.6%') }}>
-          <Search size={wp('4.8%')} color="white" />
+        <View className="bg-primary rounded-full items-center justify-center" style={{ width: wp('8%'), height: wp('8%') }}>
+          <Search size={wp('4%')} color="white" />
         </View>
       </TouchableOpacity>
     </View>

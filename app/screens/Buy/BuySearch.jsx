@@ -6,6 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import api from '../../api';
 import { useLocation } from '../../context/LocationContext';
+import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
+import { useProject } from '../../../hooks/useProject';
+import { formatPricePerSqft } from '../../utils/formatPrice';
 
 const BuySearch = () => {
   const { currentLocation, updateLocation } = useLocation();
@@ -13,6 +16,64 @@ const BuySearch = () => {
   const [locality, setLocality] = useState(currentLocation?.locality || "");
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  const { fetchAveragePriceByCity } = useLocalityAveragePrice();
+  const [popularLocalities, setPopularLocalities] = useState([]);
+
+  const { fetchProjects } = useProject();
+  const [trendingProjects, setTrendingProjects] = useState([]);
+
+  useEffect(() => {
+    const loadTrendingProjects = async () => {
+      try {
+        const selectedCity = city.trim() || currentLocation?.city || "Mohali";
+        const res = await fetchProjects({ city: selectedCity, limit: 5 });
+        let projectsList = [];
+        if (Array.isArray(res)) {
+          projectsList = res;
+        } else if (res) {
+          projectsList = res.data || res.projects || res.results || [];
+        }
+
+        const mapped = projectsList.map(project => ({
+          id: project._id || project.id,
+          name: project.projectName || project.title,
+          area: project.addressLine1 || project.locality || selectedCity,
+          price: project.priceRange || project.price || 'Price on request',
+          image: project.images?.[0] || project.media?.[0]?.fileUrl || 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400'
+        }));
+        setTrendingProjects(mapped);
+      } catch (err) {
+        console.error("Error loading trending projects:", err);
+        setTrendingProjects([]);
+      }
+    };
+
+    loadTrendingProjects();
+  }, [city, currentLocation?.city, fetchProjects]);
+
+  useEffect(() => {
+    const loadPopularLocalities = async () => {
+      try {
+        const selectedCity = city.trim() || currentLocation?.city || "Mohali";
+        const res = await fetchAveragePriceByCity(selectedCity);
+        if (res?.success && Array.isArray(res.data)) {
+          const mapped = res.data.map(item => ({
+            name: item.localityName || item.locality,
+            price: item.averagePricePerSqft ? formatPricePerSqft(item.averagePricePerSqft) : 'Price on request'
+          }));
+          setPopularLocalities(mapped);
+        } else {
+          setPopularLocalities([]);
+        }
+      } catch (err) {
+        console.error("Error loading popular localities:", err);
+        setPopularLocalities([]);
+      }
+    };
+
+    loadPopularLocalities();
+  }, [city, currentLocation?.city, fetchAveragePriceByCity]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,27 +132,40 @@ const BuySearch = () => {
     router.replace('/screens/Buy/Buy');
   };
 
+  const handleExploreNearby = () => {
+    // Use live currentLocation from LocationContext (GPS or last selected)
+    const nearbyCity = currentLocation?.city || city.trim() || "Mohali";
+    const nearbyLocality = currentLocation?.locality || "";
+
+    updateLocation({
+      city: nearbyCity,
+      locality: nearbyLocality,
+      display: nearbyLocality ? `${nearbyLocality}, ${nearbyCity}` : nearbyCity
+    });
+    router.replace('/screens/Buy/Buy');
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.5%') }}>
-        <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
+      <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('1.2%') }}>
+        <View className="flex-row items-center" style={{ gap: wp('2.5%') }}>
           <TouchableOpacity 
             onPress={() => router.push('/screens/Buy/Buy')}
             className="items-center justify-center rounded-full border border-gray-100"
-            style={{ width: wp('10.7%'), height: wp('10.7%') }}
+            style={{ width: wp('9%'), height: wp('9%') }}
           >
-            <ArrowLeft size={wp('5.3%')} color="#101828" />
+            <ArrowLeft size={wp('4.5%')} color="#101828" />
           </TouchableOpacity>
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%') }} className="text-[#101828]">Buy</Text>
+          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828]">Buy</Text>
         </View>
 
         <View 
           className="flex-row items-center bg-gray-50/50 border border-gray-100"
-          style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.7%'), borderRadius: wp('3.2%'), gap: wp('1.6%') }}
+          style={{ paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.5%'), borderRadius: wp('2.7%'), gap: wp('1.6%') }}
         >
-          <MapPin size={wp('3.7%')} color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#4A5565]">
+          <MapPin size={wp('3.2%')} color="#008E96" />
+          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-[#4A5565]">
             {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
@@ -99,15 +173,15 @@ const BuySearch = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         {/* Search Section */}
-        <View className="bg-white border border-gray-100 shadow-sm" style={{ marginHorizontal: wp('4.3%'), marginVertical: hp('1%'), padding: wp('4.3%'), borderRadius: wp('6.4%') }}>
-          <View style={{ gap: wp('3.2%') }}>
+        <View className="bg-white border border-gray-100 shadow-sm" style={{ marginHorizontal: wp('3.5%'), marginVertical: hp('0.8%'), padding: wp('3.5%'), borderRadius: wp('4.8%') }}>
+          <View style={{ gap: wp('2.5%') }}>
             {/* City Input */}
-            <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('5.9%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('3.2%') }}>
-              <MapPin size={wp('4.8%')} color="#008E96" />
+            <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('5%'), paddingHorizontal: wp('3.5%'), borderRadius: wp('2.7%') }}>
+              <MapPin size={wp('4%')} color="#008E96" />
               <TextInput 
                 placeholder="Enter City"
                 placeholderTextColor="#6A7282"
-                style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), marginLeft: wp('3.2%') }}
+                style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
                 className="flex-1 text-[#101828]"
                 value={city}
                 onChangeText={setCity}
@@ -116,12 +190,12 @@ const BuySearch = () => {
 
             {/* Locality Input */}
             <View style={{ zIndex: 50 }}>
-              <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('5.9%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('3.2%') }}>
-                <Search size={wp('4.8%')} color="#667085" />
+              <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('5%'), paddingHorizontal: wp('3.5%'), borderRadius: wp('2.7%') }}>
+                <Search size={wp('4%')} color="#667085" />
                 <TextInput 
                   placeholder="Enter Locality"
                   placeholderTextColor="#6A7282"
-                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), marginLeft: wp('3.2%') }}
+                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
                   className="flex-1 text-[#101828]"
                   value={locality}
                   onChangeText={(text) => {
@@ -133,7 +207,7 @@ const BuySearch = () => {
               </View>
 
               {suggestions.length > 0 && (
-                <View className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ marginTop: hp('1%'), borderRadius: wp('3.2%'), maxHeight: hp('23.6%') }}>
+                <View className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ marginTop: hp('1%'), borderRadius: wp('2.7%'), maxHeight: hp('23.6%') }}>
                   <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
                     {suggestions.map((item) => (
                       <TouchableOpacity 
@@ -143,10 +217,10 @@ const BuySearch = () => {
                           setSuggestions([]);
                         }}
                         className="border-b border-gray-50 flex-row items-center"
-                        style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.5%'), gap: wp('2.1%') }}
+                        style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('1.1%'), gap: wp('1.8%') }}
                       >
-                        <MapPin size={wp('3.7%')} color="#667085" />
-                        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">
+                        <MapPin size={wp('3.2%')} color="#667085" />
+                        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-[#101828]">
                           {item.name}
                         </Text>
                       </TouchableOpacity>
@@ -160,96 +234,74 @@ const BuySearch = () => {
             <TouchableOpacity 
               onPress={handleSearchSubmit}
               className="bg-[#008E96] items-center justify-center shadow-sm shadow-[#008E96]/20"
-              style={{ height: hp('5.9%'), borderRadius: wp('3.2%'), marginTop: hp('0.5%') }}
+              style={{ height: hp('5%'), borderRadius: wp('2.7%'), marginTop: hp('0.5%') }}
             >
-              <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
-                <Search size={wp('4.8%')} color="white" />
-                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-white">Search Properties</Text>
+              <View className="flex-row items-center" style={{ gap: wp('1.8%') }}>
+                <Search size={wp('4%')} color="white" />
+                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.4%') }} className="text-white">Search Properties</Text>
               </View>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Popular Localities Section */}
-        <View className="bg-[#EDFBFA]" style={{ marginHorizontal: wp('4.3%'), marginTop: hp('2%'), padding: wp('4.3%'), borderRadius: wp('6.4%') }}>
-          <View className="flex-row items-center" style={{ gap: wp('2.1%'), marginBottom: hp('1.5%') }}>
-            <TrendingUp size={wp('4.3%')} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#101828]">Popular Localities</Text>
+        <View className="bg-[#EDFBFA]" style={{ marginHorizontal: wp('3.5%'), marginTop: hp('1.5%'), padding: wp('3.5%'), borderRadius: wp('4.8%') }}>
+          <View className="flex-row items-center" style={{ gap: wp('1.8%'), marginBottom: hp('1%') }}>
+            <TrendingUp size={wp('3.7%')} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">Popular Localities</Text>
           </View>
           
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
-            {[
+            {(popularLocalities.length > 0 ? popularLocalities : [
               { name: 'Kharar', price: '₹6.2K/sq.ft.' },
               { name: 'Zirakpur', price: '₹7.5K/sq.ft.' },
               { name: 'Sector 125', price: '₹8.9K/sq.ft.' },
               { name: 'Derabassi', price: '₹5.4K/sq.ft.' },
-            ].map((locality, index) => (
+            ]).map((locality, index) => (
               <TouchableOpacity 
                 key={index}
                 onPress={() => handleLocalitySelect(locality.name)}
                 className="bg-[#F7F9FA] border border-[#E4E7EC] shadow-sm"
-                style={{ width: wp('37.3%'), padding: wp('3.2%'), marginRight: wp('3.2%'), borderRadius: wp('4.3%') }}
+                style={{ width: wp('32%'), padding: wp('2.8%'), marginRight: wp('2.8%'), borderRadius: wp('3.8%') }}
               >
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%'), marginBottom: hp('0.5%') }} className="text-[#101828]">{locality.name}</Text>
-                <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%') }} className="text-[#6A7282]">{locality.price}</Text>
+                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.4%'), marginBottom: hp('0.3%') }} className="text-[#101828]" numberOfLines={1}>{locality.name}</Text>
+                <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%') }} className="text-[#6A7282]">{locality.price}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
 
-        {/* Popular Landmarks Section */}
-        <View style={{ marginTop: hp('3%') }}>
-          <View className="flex-row items-center" style={{ paddingHorizontal: wp('4.3%'), gap: wp('2.1%'), marginBottom: hp('2%') }}>
-            <MapPin size={wp('4.3%')} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#101828]">Popular Landmarks</Text>
-          </View>
-          
-          <View className="flex-row flex-wrap" style={{ paddingHorizontal: wp('4.3%'), gap: wp('2.1%') }}>
-            {[
-              'City Heart', 'Maxim Merry School', 'Mohali Stadium', 
-              'Phase 11 Market', 'ISB Campus'
-            ].map((landmark, index) => (
-              <TouchableOpacity 
-                key={index}
-                onPress={() => handleLocalitySelect(landmark)}
-                className="flex-row items-center bg-white border border-[#E4E7EC]"
-                style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.2%'), borderRadius: wp('10%'), gap: wp('2.1%') }}
-              >
-                <MapPin size={wp('3.7%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }} className="text-[#4A5565]">{landmark}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+
 
         {/* Trending Projects Section */}
-        <View style={{ marginTop: hp('3.9%'), marginBottom: hp('3%') }}>
-          <View className="flex-row items-center" style={{ paddingHorizontal: wp('4.3%'), gap: wp('2.1%'), marginBottom: hp('2%') }}>
-            <LayoutGrid size={wp('4.3%')} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#101828]">Trending Projects</Text>
+        <View style={{ marginTop: hp('3%'), marginBottom: hp('2.5%') }}>
+          <View className="flex-row items-center" style={{ paddingHorizontal: wp('3.5%'), gap: wp('1.8%'), marginBottom: hp('1.5%') }}>
+            <LayoutGrid size={wp('3.7%')} color="#008E96" />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">Trending Projects</Text>
           </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row" style={{ paddingHorizontal: wp('4.3%') }}>
-            {[
-              { name: 'Woodland Heights', area: 'Sambalki, Mohali', price: '₹7.8K/sq.ft.' },
-              { name: 'Green Valley', area: 'Sector 117, Mohali', price: '₹9.2K/sq.ft.' },
-              { name: 'Palm Residency', area: 'Kharar Road', price: '₹6.5K/sq.ft.' },
-            ].map((project, index) => (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row" style={{ paddingHorizontal: wp('3.5%') }}>
+            {(trendingProjects.length > 0 ? trendingProjects : [
+              { name: 'Woodland Heights', area: 'Sambalki, Mohali', price: '₹7.8K/sq.ft.', image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Green Valley', area: 'Sector 117, Mohali', price: '₹9.2K/sq.ft.', image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Palm Residency', area: 'Kharar Road', price: '₹6.5K/sq.ft.', image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400' },
+            ]).map((project, index) => (
               <TouchableOpacity 
-                key={index}
+                key={project.id || index}
+                onPress={() => project.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: project.id } })}
                 className="bg-white border border-[#E4E7EC] overflow-hidden shadow-sm"
-                style={{ width: wp('45.3%'), marginRight: wp('3.2%'), borderRadius: wp('4.3%') }}
+                style={{ width: wp('39%'), marginRight: wp('2.8%'), borderRadius: wp('3.8%') }}
               >
-                <View className="w-full bg-gray-100" style={{ height: hp('11.8%') }}>
+                <View className="w-full bg-gray-100" style={{ height: hp('10%') }}>
                   <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400' }} 
+                    source={{ uri: project.image }} 
                     className="w-full h-full"
                   />
                 </View>
-                <View style={{ padding: wp('3.2%') }}>
-                  <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">{project.name}</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), marginTop: hp('0.2%') }} className="text-[#6A7282]">{project.area}</Text>
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%'), marginTop: hp('1%') }} className="text-[#008E96]">{project.price}</Text>
+                <View style={{ padding: wp('2.8%') }}>
+                  <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-[#101828]" numberOfLines={1}>{project.name}</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%'), marginTop: hp('0.2%') }} className="text-[#6A7282]" numberOfLines={1}>{project.area}</Text>
+                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3%'), marginTop: hp('0.8%') }} className="text-[#008E96]" numberOfLines={1}>{project.price}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -258,17 +310,17 @@ const BuySearch = () => {
 
         {/* Explore Nearby Properties Button */}
         <TouchableOpacity 
-          onPress={handleSearchSubmit}
+          onPress={handleExploreNearby}
           className="flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20"
-          style={{ marginHorizontal: wp('4.3%'), marginBottom: hp('4.9%'), padding: wp('4.3%'), borderRadius: wp('4.3%') }}
+          style={{ marginHorizontal: wp('3.5%'), marginBottom: hp('4%'), padding: wp('3.5%'), borderRadius: wp('3.8%') }}
         >
-          <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
-            <View className="bg-white items-center justify-center rounded-full border border-gray-100" style={{ width: wp('9.6%'), height: wp('9.6%') }}>
-               <ArrowLeft size={wp('4.3%')} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
+          <View className="flex-row items-center" style={{ gap: wp('2.5%') }}>
+            <View className="bg-white items-center justify-center rounded-full border border-gray-100" style={{ width: wp('8%'), height: wp('8%') }}>
+               <ArrowLeft size={wp('3.7%')} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
             </View>
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }} className="text-[#101828]">Explore nearby properties</Text>
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.4%') }} className="text-[#101828]">Explore nearby properties</Text>
           </View>
-          <ChevronRight size={wp('5.3%')} color="#008E96" />
+          <ChevronRight size={wp('4.5%')} color="#008E96" />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

@@ -31,12 +31,12 @@ const ContinueCards = ({ data = [] }) => {
               }
             }}
             className="bg-white border border-[#EAECF0] flex-row items-center justify-between"
-            style={{ padding: wp('3.2%'), borderRadius: wp('4.3%'), width: wp('59.7%'), marginRight: wp('3.2%') }}
+            style={{ padding: wp('3.2%'), borderRadius: wp('3.8%'), width: wp('52%'), marginRight: wp('3.2%') }}
           >
             <View className="flex-1" style={{ marginRight: wp('2.1%') }}>
               <Text 
                 numberOfLines={1} 
-                style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} 
+                style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%') }} 
                 className="text-[#101828]"
               >
                 {item.title}
@@ -44,7 +44,7 @@ const ContinueCards = ({ data = [] }) => {
               <Text 
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginTop: hp('0.5%') }} 
+                style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%'), marginTop: hp('0.3%') }} 
                 className="text-[#667085]"
               >
                 {item.subtitle}

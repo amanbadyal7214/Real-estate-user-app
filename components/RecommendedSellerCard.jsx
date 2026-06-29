@@ -7,9 +7,9 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
   return (
     <View 
       style={{
-        width: wp('72.5%'),
-        height: hp('22.2%'),
-        borderRadius: wp('4.3%'),
+        width: wp('62%'),
+        height: hp('19%'),
+        borderRadius: wp('3.8%'),
         marginRight: wp('3.2%'),
         backgroundColor: 'white',
         shadowColor: '#000',
@@ -46,8 +46,8 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
         style={{
           width: '100%',
           height: '100%',
-          borderRadius: wp('5.3%'),
-          padding: wp('4.3%'),
+          borderRadius: wp('3.8%'),
+          padding: wp('3.7%'),
           justifyContent: 'space-between'
         }}
       >
@@ -67,37 +67,37 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
           </View>
           
           <View className="flex-row items-center" style={{ marginLeft: wp('3.2%') }}>
-            <Text className="font-inter-bold text-white" style={{ fontSize: wp('4%') }}>{name}</Text>
-            <ChevronRight size={wp('4.3%')} color="white" style={{ marginLeft: wp('1.1%') }} />
+            <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.5%') }}>{name}</Text>
+            <ChevronRight size={wp('3.7%')} color="white" style={{ marginLeft: wp('1.1%') }} />
           </View>
         </View>
 
         {/* Info Section */}
         <View style={{ gap: wp('2.1%'), marginTop: hp('0.5%') }}>
           <View className="flex-row items-center" style={{ gap: wp('2.7%') }}>
-            <Text className="text-white" style={{ fontSize: wp('3.2%') }}>
+            <Text className="text-white" style={{ fontSize: wp('2.8%') }}>
               <Text className="font-inter-bold">{experienceYears} yrs </Text>
               <Text className="font-inter-regular">Experience</Text>
             </Text>
             
-            <View style={{ width: wp('0.3%'), height: hp('2%'), backgroundColor: 'rgba(255, 255, 255, 0.3)' }} />
+            <View style={{ width: wp('0.3%'), height: hp('1.7%'), backgroundColor: 'rgba(255, 255, 255, 0.3)' }} />
             
-            <Text className="text-white" style={{ fontSize: wp('3.2%') }}>
+            <Text className="text-white" style={{ fontSize: wp('2.8%') }}>
               <Text className="font-inter-bold">{propertiesCount} </Text>
               <Text className="font-inter-regular">Properties</Text>
             </Text>
           </View>
           
-          <Text className="font-inter-regular text-white" style={{ fontSize: wp('3.2%') }}>{location}</Text>
+          <Text className="font-inter-regular text-white" style={{ fontSize: wp('2.8%') }}>{location}</Text>
         </View>
 
         {/* Button */}
         <TouchableOpacity 
           className="bg-white flex-row items-center justify-center"
-          style={{ width: '100%', height: hp('4.7%'), borderRadius: 9999, gap: wp('2.1%'), marginTop: hp('1%') }}
+          style={{ width: '100%', height: hp('4.2%'), borderRadius: 9999, gap: wp('2.1%'), marginTop: hp('1%') }}
         >
-          <Phone size={wp('4.3%')} color="#008E96" />
-          <Text className="font-inter-medium text-[#008E96]" style={{ fontSize: wp('3.5%') }}>
+          <Phone size={wp('3.7%')} color="#008E96" />
+          <Text className="font-inter-medium text-[#008E96]" style={{ fontSize: wp('3.2%') }}>
             Show Contact
           </Text>
         </TouchableOpacity>

@@ -38,13 +38,13 @@ const ExploreLocalityCard = ({
     <TouchableOpacity
       activeOpacity={0.9}
       style={{
-        width: wp('45.3%'),
-        height: hp('14.8%'),
+        width: wp('39%'),
+        height: hp('12.5%'),
         backgroundColor: '#FFFFFF',
         borderWidth: 0.67,
         borderColor: '#F3F4F6',
-        borderBottomLeftRadius: wp('4.3%'),
-        borderBottomRightRadius: wp('4.3%'),
+        borderBottomLeftRadius: wp('3.8%'),
+        borderBottomRightRadius: wp('3.8%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: hp('0.1%') },
         shadowOpacity: 0.06,
@@ -55,42 +55,42 @@ const ExploreLocalityCard = ({
     >
       <View
         style={{
-          height: hp('3.9%'),
+          height: hp('3.2%'),
           backgroundColor: '#EBF9F8',
           justifyContent: 'center',
-          paddingHorizontal: wp('3.2%'),
+          paddingHorizontal: wp('2.7%'),
         }}
       >
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.7%') }} numberOfLines={2} ellipsizeMode="tail">
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%') }} numberOfLines={1} ellipsizeMode="tail">
           {title}
         </Text>
       </View>
 
       <View
-        style={{ paddingHorizontal: wp('3.7%'), paddingTop: hp('1.2%'), paddingBottom: hp('1.5%'), flex: 1, justifyContent: 'space-between' }}
+        style={{ paddingHorizontal: wp('3.2%'), paddingTop: hp('0.8%'), paddingBottom: hp('1%'), flex: 1, justifyContent: 'space-between' }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), flex: 0.4 }} numberOfLines={1} ellipsizeMode="tail">
+          <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.7%'), lineHeight: hp('1.8%'), flex: 0.4 }} numberOfLines={1} ellipsizeMode="tail">
              Avg. Price
           </Text>
           {String(displayPrice).includes('/') ? (
             <View style={{ flex: 0.6, alignItems: 'flex-end' }}>
-              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%') }} numberOfLines={1} ellipsizeMode="tail">
+              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} numberOfLines={1} ellipsizeMode="tail">
                 {displayPrice.split('/')[0]}
               </Text>
-              <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.9%'), lineHeight: hp('1.7%') }} numberOfLines={1} ellipsizeMode="tail">
+              <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.5%') }} numberOfLines={1} ellipsizeMode="tail">
                 /{displayPrice.split('/').slice(1).join('/')}
               </Text>
             </View>
           ) : (
-            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%'), flex: 0.6, textAlign: 'right' }} numberOfLines={1} ellipsizeMode="tail">
+            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), flex: 0.6, textAlign: 'right' }} numberOfLines={1} ellipsizeMode="tail">
               {displayPrice}
             </Text>
           )}
         </View>
 
         {!!secondaryText && (
-          <Text className="font-inter-semibold" style={{ fontSize: wp('3.5%'), color: secondaryTextColor }} numberOfLines={2} ellipsizeMode="tail">
+          <Text className="font-inter-semibold" style={{ fontSize: wp('3%'), color: secondaryTextColor }} numberOfLines={1} ellipsizeMode="tail">
             {secondaryText}
           </Text>
         )}

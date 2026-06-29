@@ -503,7 +503,7 @@ const Buy = () => {
         contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 100 : 80 }}
       >
         {/* Main Category Blue Container */}
-        <View className="mx-2 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
+        <View className="mx-2 mt-2 p-3 rounded-[24px] bg-[#E6F4F5]">
           <CategoryTabs
             activeTab={selectedTab}
             onTabPress={setSelectedTab}
@@ -520,7 +520,7 @@ const Buy = () => {
         {/* Matches Section */}
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
-            <Text className="font-inter-bold text-[18px] text-[#101828]">Top picks for you</Text>
+            <Text className="font-inter-bold text-[16px] text-[#101828]">Top picks for you</Text>
             <TouchableOpacity
               onPress={() => handleProtectedViewMore({
                 pathname: '/screens/PrefectlyMatchedHome',
@@ -531,10 +531,10 @@ const Buy = () => {
                 }
               })}
             >
-              <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
+              <Text className="font-inter-medium text-[12px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
-          <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[14px] text-[#667085] mb-4">Homes built by people you can trust</Text>
+          <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[12px] text-[#667085] mb-4">Homes built by people you can trust</Text>
 
           {discoveryLoading ? (
             <ActivityIndicator color="#008E96" />
@@ -560,8 +560,8 @@ const Buy = () => {
         <View className="px-4 mb-6">
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
-            <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
+            <Text className="text-[#FB2C36] text-[18px]">⭐</Text>
+            <Text className="font-inter-bold text-[15px] text-[#101828]">Popular on The Property Wall</Text>
           </View>
 
           {/* Tools Grid Card */}
@@ -653,7 +653,7 @@ const Buy = () => {
           >
             <View className="flex-1 pr-2" style={{ height: 117, gap: 12 }}>
               <Text
-                className="font-inter-bold text-[14px] text-[#101828] leading-[21px]"
+                className="font-inter-bold text-[12px] text-[#101828] leading-[18px]"
                 style={{ width: wp('51.5%'), height: hp('7.8%') }}
               >
                 Want to sell or rent out your place?
@@ -718,13 +718,13 @@ const Buy = () => {
             <View style={{ gap: 1 }}>
               <Text
                 className="font-inter-bold text-[#101828]"
-                style={{ fontSize: 17, lineHeight: 21 }}
+                style={{ fontSize: 15, lineHeight: 18 }}
               >
                 Most popular right now
               </Text>
               <Text
                 className="font-inter-regular text-[#6A7282]"
-                style={{ fontSize: 13, lineHeight: 20 }}
+                style={{ fontSize: 11, lineHeight: 16 }}
               >
                 Limited homes available — don&apos;t miss out
               </Text>
@@ -828,7 +828,7 @@ const Buy = () => {
         {/* Best Rated Localities Section */}
         <View className="px-4 mb-4 " >
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Top-rated neighborhoods</Text>
+            <Text className="font-inter-bold text-[15px] text-[#101828]">Top-rated neighborhoods</Text>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
@@ -868,8 +868,8 @@ const Buy = () => {
         <View className="px-4 ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-bold text-[17px] text-[#101828]">Trusted Home Builders</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282]">Builders with the best track record</Text>
+              <Text className="font-inter-bold text-[15px] text-[#101828]">Trusted Home Builders</Text>
+              <Text className="font-inter-regular text-[11px] text-[#6A7282]">Builders with the best track record</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
@@ -935,8 +935,8 @@ const Buy = () => {
         <View className="px-4 py-6">
           <View className="flex-row justify-between items-center mb-4">
             <View>
-              <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
-              <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
+              <Text className="font-inter-bold text-[16px] text-[#101828]">Handpicked for you</Text>
+              <Text className="font-inter-regular text-[12px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'sell' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
@@ -965,8 +965,8 @@ const Buy = () => {
         {/* Recommended Sellers Section */}
         <View className="px-4 mb-3">
           <View className="mb-4">
-            <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
-            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+            <Text className="font-inter-semibold text-[15px] text-[#101828]">Recommended Sellers</Text>
+            <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
           </View>
 
           <ScrollView
@@ -990,8 +990,8 @@ const Buy = () => {
         <View className="px-4 mb-3">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Better Priced Properties</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on properties you viewed</Text>
+              <Text className="font-inter-semibold text-[15px] text-[#101828]">Better Priced Properties</Text>
+              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Based on properties you viewed</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestPriceProperty')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
@@ -1022,8 +1022,8 @@ const Buy = () => {
           <View className="px-4 mb-1">
             <View className="flex-row items-center justify-between mb-4">
               <View className="flex-1 mr-4">
-                <Text className="font-inter-semibold text-[17px] text-[#101828]">Last Searched</Text>
-                <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Collection for Ready to Move-In, Buy, Mohali, ...</Text>
+                <Text className="font-inter-semibold text-[15px] text-[#101828]">Last Searched</Text>
+                <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Collection for Ready to Move-In, Buy, Mohali, ...</Text>
               </View>
               <TouchableOpacity onPress={() => router.push('/screens/LastSearched')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
                 <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
@@ -1052,8 +1052,8 @@ const Buy = () => {
         {/* Recommended Insights Section */}
         <View className="px-4 ">
           <View className="mb-4">
-            <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Insights</Text>
-            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Based on your Top Preference</Text>
+            <Text className="font-inter-semibold text-[15px] text-[#101828]">Recommended Insights</Text>
+            <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Based on your Top Preference</Text>
           </View>
 
           <View className="flex-row justify-center w-full" style={{ gap: 12 }}>
@@ -1204,8 +1204,8 @@ const Buy = () => {
         <View className="px-4  mt-6">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See insights and videos in {currentLocation?.city || 'Mohali'}</Text>
+              <Text className="font-inter-semibold text-[15px] text-[#101828]">Explore Localities</Text>
+              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">See insights and videos in {currentLocation?.city || 'Mohali'}</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
@@ -1248,8 +1248,8 @@ const Buy = () => {
         <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
+              <Text className="font-inter-semibold text-[15px] text-[#101828]">News For You</Text>
+              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
               <Text className="font-inter-medium text-[14px] text-primary">See all</Text>

@@ -19,9 +19,9 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
       style={{
         padding: wp('2.1%'),
         marginRight: wp('3.2%'),
-        width: wp('72.5%'),
-        height: hp('14.3%'),
-        borderRadius: wp('4.3%'),
+        width: wp('62%'),
+        height: hp('12.2%'),
+        borderRadius: wp('3.8%'),
         borderWidth: 0.67,
         borderColor: '#F3F4F6',
         shadowColor: '#000',
@@ -36,7 +36,7 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
       }}
     >
       {/* Image Container */}
-      <View style={{ width: wp('29.9%'), height: hp('11.8%'), borderRadius: wp('3.2%'), overflow: 'hidden' }}>
+      <View style={{ width: wp('25.5%'), height: hp('10%'), borderRadius: wp('3%'), overflow: 'hidden' }}>
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }}
@@ -45,8 +45,8 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
       </View>
 
       {/* Details Container */}
-      <View className="flex-col" style={{ flex: 1, height: hp('14.8%'), paddingTop: hp('1.5%'), paddingVertical: hp('0.5%') }}>
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('4.3%'), lineHeight: hp('3%') }}>
+      <View className="flex-col" style={{ flex: 1, height: hp('12.2%'), paddingTop: hp('0.8%'), paddingVertical: hp('0.2%') }}>
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%') }}>
           {(() => {
             const raw = price;
             if (raw === null || raw === undefined || raw === '') return 'View details';
@@ -69,13 +69,13 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
             return String(raw);
           })()}
         </Text>
-        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.7%'), lineHeight: hp('2.6%'), marginTop: hp('0.5%') }} numberOfLines={1}>
+        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginTop: hp('0.3%') }} numberOfLines={1}>
           {title}
         </Text>
-        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginTop: hp('0.5%') }}>
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.7%'), lineHeight: hp('1.8%'), marginTop: hp('0.3%') }}>
           {area}
         </Text>
-        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} numberOfLines={1}>
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.7%'), lineHeight: hp('1.8%') }} numberOfLines={1}>
           {location}
         </Text>
       </View>

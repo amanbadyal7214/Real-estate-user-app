@@ -52,8 +52,8 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
   useEffect(() => {
     const activeIndex = tabs.findIndex(tab => tab.id === activeTab);
     if (activeIndex !== -1 && scrollViewRef.current) {
-        // Tab width is wp('20%'), marginRight is wp('3.2%'). Total wp('23.2%') per tab.
-        const scrollToX = activeIndex * wp('23.2%');
+        // Tab width is wp('18%'), marginRight is wp('2.7%'). Total wp('20.7%') per tab.
+        const scrollToX = activeIndex * wp('20.7%');
         scrollViewRef.current.scrollTo({ x: scrollToX, animated: true });
     }
   }, [activeTab, tabs]);
@@ -65,24 +65,24 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingRight: wp('4.3%') }}
       className="flex-row"
-      style={{ marginBottom: hp('3%') }}
+      style={{ marginBottom: hp('1.5%') }}
     >
       {tabs.map((tab, index) => {
         const Icon = tab.icon;
         const isActive = activeTab === tab.id;
 
         return (
-          <View key={tab.id} style={{ width: wp('20%'), marginRight: wp('3.2%') }} className="relative">
+          <View key={tab.id} style={{ width: wp('18%'), marginRight: wp('2.7%') }} className="relative">
             <TouchableOpacity
               onPress={() => onTabPress?.(tab.id)}
-              style={{ height: hp('9.6%'), justifyContent: 'center', paddingHorizontal: wp('2.1%'), borderRadius: wp('4.3%') }}
+              style={{ height: hp('8.2%'), justifyContent: 'center', paddingHorizontal: wp('1.6%'), borderRadius: wp('3.5%') }}
               className={`items-center bg-white border-2 ${
                 isActive ? 'border-[#008E96]' : 'border-transparent'
               }`}
             >
-              <Icon size={wp('5.3%')} color={isActive ? '#008E96' : '#101828'} />
+              <Icon size={wp('4.5%')} color={isActive ? '#008E96' : '#101828'} />
               <Text
-                style={{ fontFamily: 'Inter-Medium', fontSize: tab.id === 'Commercial' ? wp('2.9%') : wp('3.5%'), marginTop: hp('1%') }}
+                style={{ fontFamily: 'Inter-Medium', fontSize: tab.id === 'Commercial' ? wp('2.5%') : wp('3%'), marginTop: hp('0.6%') }}
                 className={`text-center ${
                   isActive ? 'text-[#008E96]' : 'text-[#101828]'
                 }`}

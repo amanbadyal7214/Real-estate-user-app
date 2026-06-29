@@ -22,9 +22,9 @@ const DeveloperProjectCard = ({
       onPress={() => router.push({ pathname: '/screens/ProjectDetails', params: { projectId } })}
       className="bg-white overflow-hidden"
       style={{
-        width: wp('62.4%'),
-        height: hp('30.4%'),
-        borderRadius: wp('4.3%'),
+        width: wp('53%'),
+        height: hp('26%'),
+        borderRadius: wp('3.8%'),
         marginBottom: hp('1%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: hp('0.4%') },
@@ -36,7 +36,7 @@ const DeveloperProjectCard = ({
       {/* Property Image */}
       <Image 
         source={{ uri: image }} 
-        style={{ width: '100%', height: hp('15.8%') }}
+        style={{ width: '100%', height: hp('13.5%') }}
         resizeMode="cover"
       />
 
@@ -60,33 +60,33 @@ const DeveloperProjectCard = ({
 
           {/* Title & Developer Info */}
           <View className="flex-1">
-            <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: hp('2.7%') }} numberOfLines={1}>
+            <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.4%'), lineHeight: hp('2.3%') }} numberOfLines={1}>
               {title}
             </Text>
-            <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }} numberOfLines={1}>
+            <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }} numberOfLines={1}>
               rated by {developerName}
             </Text>
           </View>
 
           {/* Rating */}
           <View className="flex-row items-center" style={{ gap: wp('1.1%') }}>
-            <FontAwesome name="star" size={wp('3.2%')} color="#00A63E" />
-            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('2.9%') }}>{rating}</Text>
+            <FontAwesome name="star" size={wp('2.8%')} color="#00A63E" />
+            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('2.5%') }}>{rating}</Text>
           </View>
         </View>
 
         {/* Property Details */}
         <View style={{ gap: hp('0.2%') }}>
-          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>
+          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
             {config}
           </Text>
-          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>
+          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
             {location}
           </Text>
         </View>
 
         {/* Price Range */}
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: hp('2.7%') }}>
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.4%'), lineHeight: hp('2.3%') }}>
           {priceRange}
         </Text>
       </View>

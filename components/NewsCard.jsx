@@ -10,9 +10,9 @@ const NewsCard = ({ image, title, meta, description }) => {
         marginRight: wp('4.3%'),
         marginBottom: hp('1%'),
         marginTop: hp('0.5%'),
-        width: wp('72.5%'),
-        height: hp('29.5%'),
-        borderRadius: wp('4.3%'),
+        width: wp('62%'),
+        height: hp('25%'),
+        borderRadius: wp('3.8%'),
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: hp('0.4%') },
@@ -22,7 +22,7 @@ const NewsCard = ({ image, title, meta, description }) => {
         overflow: 'hidden'
       }}
     >
-      <View style={{ width: '100%', height: hp('15.8%') }}>
+      <View style={{ width: '100%', height: hp('13.5%') }}>
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }}
@@ -33,7 +33,7 @@ const NewsCard = ({ image, title, meta, description }) => {
       <View style={{ paddingHorizontal: wp('3.7%'), paddingTop: hp('1%'), paddingBottom: hp('1.5%') }}>
         <Text 
           className="font-inter-bold text-[#101828]" 
-          style={{ fontSize: wp('3.7%'), lineHeight: hp('2.2%'), marginBottom: hp('0.5%') }}
+          style={{ fontSize: wp('3.2%'), lineHeight: hp('2%'), marginBottom: hp('0.5%') }}
           numberOfLines={2}
         >
           {title}
@@ -41,14 +41,14 @@ const NewsCard = ({ image, title, meta, description }) => {
         
         <Text 
           className="font-inter-regular text-[#6A7282]" 
-          style={{ fontSize: wp('2.9%'), lineHeight: hp('2%'), marginBottom: hp('0.5%') }}
+          style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%'), marginBottom: hp('0.5%') }}
         >
           {meta}
         </Text>
         
         <Text 
           className="font-inter-regular text-[#4A5565]" 
-          style={{ fontSize: wp('2.9%'), lineHeight: hp('2.2%') }}
+          style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}
           numberOfLines={2}
         >
           {description}

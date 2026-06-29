@@ -10,10 +10,10 @@ const Spotlight = ({ data }) => {
     <View style={{ marginTop: hp('3%'), gap: wp('4.3%') }}>
       {/* Header Section */}
       <View>
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('4.5%') }}>
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.8%') }}>
           Featured Builder
         </Text>
-        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3.0%') }}>
           Highly rated builders in your area
         </Text>
       </View>
@@ -29,9 +29,9 @@ const Spotlight = ({ data }) => {
                 onPress={() => item.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.id } })}
                 className="bg-white elevation-2 z-[1] overflow-hidden"
                 style={{
-                  width: wp('74.1%'),
-                  height: hp('10.8%'),
-                  borderRadius: wp('4.8%'),
+                  width: wp('64%'),
+                  height: hp('9.2%'),
+                  borderRadius: wp('4%'),
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: hp('0.1%') },
                   shadowOpacity: 0.1,
@@ -57,42 +57,41 @@ const Spotlight = ({ data }) => {
                   </View>
 
                   {/* Stats Section */}
-                  <View style={{ width: wp('52.8%'), height: hp('7.1%'), gap: wp('2.1%') }}>
-                    <View className="flex-row items-center" style={{ gap: wp('6.4%'), height: hp('4.2%') }}>
-                      <View style={{ width: wp('14.1%'), height: hp('4.2%') }}>
-                        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>
+                  <View style={{ flex: 1, height: hp('6.2%'), gap: wp('1.5%') }}>
+                    <View className="flex-row items-center" style={{ gap: wp('5%'), height: hp('3.5%') }}>
+                      <View style={{ width: wp('14.1%'), height: hp('3.5%') }}>
+                        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('2.9%'), lineHeight: hp('1.8%') }}>
                           {item.developer.estd || '2024'}
                         </Text>
-                        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>
+                        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
                           Year estd.
                         </Text>
                       </View>
-                      <View style={{ width: wp('11.5%'), height: hp('4.2%') }}>
-                        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>
+                      <View style={{ width: wp('11.5%'), height: hp('3.5%') }}>
+                        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('2.9%'), lineHeight: hp('1.8%') }}>
                           {item.developer.projects || '1'}
                         </Text>
-                        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>
+                        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
                           Projects
                         </Text>
                       </View>
                     </View>
-                    <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.5%'), lineHeight: hp('2.2%') }}>
+                    <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2%') }} numberOfLines={1}>
                       {item.developer.name}
                     </Text>
                   </View>
                 </LinearGradient>
               </TouchableOpacity>
 
-              {/* Property Card - Clickable to ProjectDetails */}
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => item.property.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.property.id } })}
                 className="overflow-hidden bg-white elevation-5"
                 style={{
                   marginTop: hp('1.2%'),
-                  borderRadius: wp('4.8%'),
-                  width: wp('74.1%'),
-                  height: hp('19.7%'),
+                  borderRadius: wp('4%'),
+                  width: wp('64%'),
+                  height: hp('16.8%'),
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: hp('0.4%') },
                   shadowOpacity: 0.08,
@@ -110,17 +109,17 @@ const Spotlight = ({ data }) => {
                     locations={[0, 0.5, 1]}
                   />
 
-                  <View className="absolute" style={{ width: wp('65.6%'), height: hp('9.4%'), left: wp('4.3%'), top: hp('8.1%') }}>
-                    <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.7%'), height: hp('3%'), lineHeight: hp('2.5%') }}>
+                  <View className="absolute" style={{ width: wp('55.4%'), height: hp('8.2%'), left: wp('4.3%'), top: hp('6.2%') }}>
+                    <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.2%'), height: hp('2.5%'), lineHeight: hp('2%') }} numberOfLines={1}>
                       {item.property.title}
                     </Text>
-                    <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.9%'), height: hp('2%'), lineHeight: hp('2%'), marginTop: hp('0.5%') }}>
+                    <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.6%'), height: hp('1.8%'), lineHeight: hp('1.8%'), marginTop: hp('0.3%') }} numberOfLines={1}>
                       {item.property.location}
                     </Text>
-                    <Text className="font-inter-regular text-white/80" style={{ fontSize: wp('2.7%'), height: hp('1.7%'), lineHeight: hp('2%'), marginTop: hp('0.2%') }}>
+                    <Text className="font-inter-regular text-white/80" style={{ fontSize: wp('2.4%'), height: hp('1.5%'), lineHeight: hp('1.5%'), marginTop: hp('0.1%') }} numberOfLines={1}>
                       {item.property.config}
                     </Text>
-                    <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.7%'), height: hp('3%'), lineHeight: hp('2.5%'), marginTop: hp('1%') }}>
+                    <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.2%'), height: hp('2.5%'), lineHeight: hp('2%'), marginTop: hp('0.6%') }} numberOfLines={1}>
                       {item.property.priceRange}
                     </Text>
                   </View>
@@ -136,11 +135,12 @@ const Spotlight = ({ data }) => {
 
         {/* Fixed Triangle indicator in the center of the viewport */}
         <View
-          className="absolute left-1/2 z-[10]"
+          className="absolute z-[10]"
           pointerEvents="none"
           style={{
+            left: '50%',
             marginLeft: wp('-2.7%'),
-            top: hp('11.8%'),
+            top: hp('9.8%'),
             width: 0,
             height: 0,
             backgroundColor: 'transparent',

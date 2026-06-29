@@ -21,9 +21,9 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
       entering={FadeInDown.duration(600).springify().damping(12)}
       className="bg-white overflow-hidden"
       style={{
-        width: wp('72%'),
-        height: hp('28%'),
-        borderRadius: wp('4.3%'),
+        width: wp('62%'),
+        height: hp('24%'),
+        borderRadius: wp('3.8%'),
         marginBottom: hp('1%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: hp('0.4%') },
@@ -43,11 +43,11 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           className="flex-row items-center justify-center"
-          style={{ height: hp('15.8%'), paddingHorizontal: wp('3.2%') }}
+          style={{ height: hp('12.5%'), paddingHorizontal: wp('3.2%') }}
         >
           <View
             className="rounded-lg overflow-hidden"
-            style={{ width: wp('65.1%'), height: hp('12.6%') }}
+            style={{ width: wp('56%'), height: hp('10%') }}
           >
             {image ? (
               <Image
@@ -66,12 +66,12 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
         </LinearGradient>
 
         {/* Content Container */}
-        <View className="relative bg-white" style={{ height: hp('15.3%') }}>
+        <View className="relative bg-white" style={{ height: hp('11.5%') }}>
           {/* Price Range */}
-          <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('2%'), width: wp('62.9%'), height: hp('2.7%') }}>
+          <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('1.2%'), width: wp('53.4%'), height: hp('2.2%') }}>
             <Text
                 className="font-inter-bold text-[#101828]"
-                style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%') }}
+                style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}
               >
                 {(() => {
                   const raw = priceRange;
@@ -98,10 +98,10 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           </View>
 
           {/* Title */}
-            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('4.2%'), width: wp('62.9%'), height: hp('2.8%') }}>
+            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('3.2%'), width: wp('53.4%'), height: hp('2.2%') }}>
               <Text
                 className="font-inter-semibold text-[#101828]"
-                style={{ fontSize: wp('3.5%'), lineHeight: hp('2.5%') }}
+                style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -110,10 +110,10 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
             </View>
 
           {/* Developer */}
-            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('6.9%'), width: wp('62.9%') }}>
+            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('5.4%'), width: wp('53.4%') }}>
               <Text
                 className="font-inter-regular text-[#4A5565]"
-                style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}
+                style={{ fontSize: wp('2.3%'), lineHeight: hp('1.6%') }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -122,10 +122,10 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
             </View>
 
           {/* Location (allow wrapping, up to 2 lines) */}
-            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('9.4%'), width: wp('62.9%') }}>
+            <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('7.4%'), width: wp('53.4%') }}>
               <Text
                 className="font-inter-regular text-[#4A5565]"
-                style={{ fontSize: wp('2.9%'), lineHeight: hp('2%'), flexWrap: 'wrap' }}
+                style={{ fontSize: wp('2.3%'), lineHeight: hp('1.6%'), flexWrap: 'wrap' }}
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
