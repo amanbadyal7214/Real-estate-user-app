@@ -71,7 +71,7 @@ const PropertyCardSmall = ({
       style={{
         width: '100%',
         borderWidth: 0.6667,
-        minHeight: 257,
+        minHeight: 218,
         ...containerStyle,
       }}
     >
@@ -79,7 +79,7 @@ const PropertyCardSmall = ({
         <Image
           source={{ uri: image }}
           className="w-full"
-          style={[{ height: 140 }, imageStyle]}
+          style={[{ height: 118 }, imageStyle]}
           resizeMode="cover"
         />
         {showWishlist && (
@@ -87,16 +87,16 @@ const PropertyCardSmall = ({
             onPress={toggleWishlist}
             className="absolute bg-black/45 items-center justify-center"
             style={{ 
-              width: 32, 
-              height: 32, 
-              borderRadius: 16,
-              right: 8, 
-              top: 8,
+              width: 27, 
+              height: 27, 
+              borderRadius: 14,
+              right: 7, 
+              top: 7,
               zIndex: 10 
             }}
           >
             <Heart 
-              size={16} 
+              size={13} 
               color={isSaved ? "#F04438" : "white"} 
               fill={isSaved ? "#F04438" : "transparent"} 
             />
@@ -104,17 +104,17 @@ const PropertyCardSmall = ({
         )}
       </View>
 
-      <View className="px-3 pb-3 pt-[10px]">
-        <Text className="font-inter-semibold text-[16px] leading-6 text-[#101828]">
+      <View className="px-2.5 pb-2.5 pt-2">
+        <Text className="font-inter-semibold text-[14px] leading-5 text-[#101828]">
           {price}
         </Text>
-        <Text className="mt-1 font-inter-medium text-[15px] leading-[19px] text-[#101828]" numberOfLines={1}>
+        <Text className="mt-0.5 font-inter-medium text-[13px] leading-[17px] text-[#101828]" numberOfLines={1}>
           {title}
         </Text>
-        <Text className="mt-1 font-inter-medium text-[13px] leading-5 text-[#6A7282]">
+        <Text className="mt-0.5 font-inter-medium text-[11px] leading-[18px] text-[#6A7282]">
           {area}
         </Text>
-        <Text className="font-inter-medium text-[13px] leading-5 text-[#6A7282]" numberOfLines={1}>
+        <Text className="font-inter-medium text-[11px] leading-[18px] text-[#6A7282]" numberOfLines={1}>
           {location}
         </Text>
       </View>

@@ -119,22 +119,22 @@ const Suggestions = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center justify-between border-b border-[#E4E7EC] bg-white" style={{ paddingHorizontal: wp('4.3%'), paddingBottom: hp('2.5%') }}>
-        <TouchableOpacity onPress={() => router.back()} className="justify-center items-center rounded-full" style={{ width: wp('9.6%'), height: wp('9.6%') }}>
-          <ArrowLeft size={wp('6.4%')} color="#4A5565" />
+      <View className="flex-row items-center justify-between border-b border-[#E4E7EC] bg-white" style={{ paddingHorizontal: wp('3.7%'), paddingBottom: hp('2%') }}>
+        <TouchableOpacity onPress={() => router.back()} className="justify-center items-center rounded-full" style={{ width: wp('8.2%'), height: wp('8.2%') }}>
+          <ArrowLeft size={wp('5.5%')} color="#4A5565" />
         </TouchableOpacity>
 
         <View className="items-center flex-1">
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.1%'), lineHeight: hp('3%') }} className="text-[#101828] text-center">
+          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%'), lineHeight: hp('2.5%') }} className="text-[#101828] text-center">
             {suggestionsData.length > 0 ? `${suggestionsData.length} Smart Suggestions` : 'Smart Suggestions'}
           </Text>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2%'), marginTop: hp('0.2%') }} className="text-[#6A7282] text-center">
+          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%'), lineHeight: hp('1.7%'), marginTop: hp('0.2%') }} className="text-[#6A7282] text-center">
             Based on your last search in {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
 
-        <TouchableOpacity className="justify-center items-center rounded-full" style={{ width: wp('9.6%'), height: wp('9.6%') }}>
-          <Share2 size={wp('6.4%')} color="#4A5565" />
+        <TouchableOpacity className="justify-center items-center rounded-full" style={{ width: wp('8.2%'), height: wp('8.2%') }}>
+          <Share2 size={wp('5.5%')} color="#4A5565" />
         </TouchableOpacity>
       </View>
 

@@ -207,15 +207,15 @@ const Saved = () => {
             const date = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '';
 
             return (
-              <View key={item._id || index} className="w-full bg-[#F7F9FA] border border-[#E4E7EC] flex-row justify-between items-center" style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('1.5%') }}>
+              <View key={item._id || index} className="w-full bg-[#F7F9FA] border border-[#E4E7EC] flex-row justify-between items-center" style={{ borderRadius: wp('3.4%'), padding: wp('3.4%'), marginBottom: hp('1.2%') }}>
                 <View className="flex-1">
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%'), marginBottom: hp('0.5%') }} className="font-semibold text-[#101828]">{name}</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.3%') }} className="text-[#6A7282]">
+                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginBottom: hp('0.4%') }} className="font-semibold text-[#101828]">{name}</Text>
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%') }} className="text-[#6A7282]">
                     {city && `City: ${city}`} {category && ` • Category: ${category}`}
                   </Text>
                 </View>
                 {date && (
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%') }} className="text-[#6A7282]">
+                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.5%') }} className="text-[#6A7282]">
                     {date}
                   </Text>
                 )}
@@ -248,12 +248,12 @@ const Saved = () => {
         {/* Button */}
         <TouchableOpacity 
           className="items-center justify-center bg-[#008E961A]"
-          style={{ height: hp('6%'), paddingHorizontal: wp('8%'), borderRadius: wp('3.5%') }}
+          style={{ height: hp('5.1%'), paddingHorizontal: wp('6.8%'), borderRadius: wp('3%') }}
           activeOpacity={0.7}
         >
           <Text 
             className="text-[#008E96] font-medium text-center"
-            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.8%') }}
+            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}
           >
             Start new search
           </Text>
@@ -265,15 +265,15 @@ const Saved = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header - Based on ActivityPage Header CSS */}
-      <View className="flex-row items-center border-b border-[#E4E7EC]" style={{ paddingHorizontal: wp('4%'), height: hp('8.5%') }}>
+      <View className="flex-row items-center border-b border-[#E4E7EC]" style={{ paddingHorizontal: wp('4%'), height: hp('7.2%') }}>
         <TouchableOpacity 
           onPress={() => router.back()}
           className="items-center justify-center rounded-full"
-          style={{ width: wp('9%'), height: wp('9%'), marginRight: wp('3%') }}
+          style={{ width: wp('7.7%'), height: wp('7.7%'), marginRight: wp('2.5%') }}
         >
-          <ArrowLeft size={wp('6%')} color="#101828" />
+          <ArrowLeft size={wp('5.1%')} color="#101828" />
         </TouchableOpacity>
-        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('5.3%') }} className="font-semibold text-[#101828]">
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.5%') }} className="font-semibold text-[#101828]">
           My Activity
         </Text>
       </View>

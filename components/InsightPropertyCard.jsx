@@ -64,13 +64,13 @@ const InsightPropertyCard = ({
       onPress={navigateToDetails}
       className="bg-white border-[#E4E7EC]"
       style={{
-        marginRight: wp('4.3%'),
+        marginRight: wp('3.5%'),
         marginBottom: hp('1%'),
-        borderRadius: wp('3.7%'),
+        borderRadius: wp('3.2%'),
         borderWidth: 0.67,
-        padding: wp('2.7%'),
-        width: wp('48%'),
-        height: hp('40.6%'),
+        padding: wp('2.3%'),
+        width: wp('41%'),
+        height: hp('34.5%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.06,
@@ -78,7 +78,7 @@ const InsightPropertyCard = ({
         elevation: 3,
       }}
     >
-      <View className="w-full overflow-hidden relative" style={{ height: hp('15.8%'), borderRadius: wp('3.2%') }}>
+      <View className="w-full overflow-hidden relative" style={{ height: hp('13.4%'), borderRadius: wp('2.7%') }}>
         <Image 
           source={{ uri: image }} 
           className="w-full h-full"
@@ -86,18 +86,18 @@ const InsightPropertyCard = ({
         />
         {/* RERA Badge */}
         {isRera && (
-          <View className="absolute bg-[#008E96] flex-row items-center" style={{ left: wp('2.1%'), top: hp('1%'), borderRadius: wp('2%'), paddingVertical: hp('0.5%'), paddingHorizontal: wp('2.1%'), gap: wp('1%') }}>
-            <Check size={wp('3.2%')} color="#FFFFFF" strokeWidth={3} />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.9%'), lineHeight: hp('2%') }} className="text-white">RERA</Text>
+          <View className="absolute bg-[#008E96] flex-row items-center" style={{ left: wp('1.8%'), top: hp('0.8%'), borderRadius: wp('1.8%'), paddingVertical: hp('0.4%'), paddingHorizontal: wp('1.8%'), gap: wp('0.8%') }}>
+            <Check size={wp('2.7%')} color="#FFFFFF" strokeWidth={3} />
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.5%'), lineHeight: hp('1.8%') }} className="text-white">RERA</Text>
           </View>
         )}
         <TouchableOpacity 
           onPress={toggleWishlist}
           className="absolute bg-white/90 rounded-full items-center justify-center"
-          style={{ right: wp('2.1%'), top: hp('1%'), width: wp('8.5%'), height: wp('8.5%') }}
+          style={{ right: wp('1.8%'), top: hp('0.8%'), width: wp('7.2%'), height: wp('7.2%') }}
         >
           <Heart 
-            size={wp('4.8%')} 
+            size={wp('4%')} 
             color={isSaved ? "#F04438" : "#4A5565"} 
             fill={isSaved ? "#F04438" : "transparent"} 
             strokeWidth={2} 
@@ -105,38 +105,38 @@ const InsightPropertyCard = ({
         </TouchableOpacity>
       </View>
 
-      <View style={{ marginTop: hp('0.7%') }}>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginBottom: hp('0.5%') }} className="text-[#6A7282]">
+      <View style={{ marginTop: hp('0.5%') }}>
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%'), lineHeight: hp('1.9%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
           {possession}
         </Text>
-        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%'), lineHeight: hp('3%'), marginBottom: hp('0.2%') }} className="text-[#101828]" numberOfLines={1}>
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.6%'), lineHeight: hp('2.5%'), marginBottom: hp('0.2%') }} className="text-[#101828]" numberOfLines={1}>
           {title}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('0.5%') }} className="text-[#6A7282]">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
           {location}
         </Text>
-        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), lineHeight: hp('2.7%'), marginBottom: hp('0.2%') }} className="text-[#101828]">
+        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.4%'), lineHeight: hp('2.3%'), marginBottom: hp('0.2%') }} className="text-[#101828]">
           {price}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('0.2%') }} className="text-[#6A7282]">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.2%') }} className="text-[#6A7282]">
           {bhk}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%'), marginBottom: hp('1%') }} className="text-[#6A7282]">
+        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.8%') }} className="text-[#6A7282]">
           {area}
         </Text>
 
-        <View className="flex-row items-center w-full" style={{ gap: wp('2.1%'), height: hp('4.9%') }}>
+        <View className="flex-row items-center w-full" style={{ gap: wp('1.8%'), height: hp('4.2%') }}>
           <TouchableOpacity 
             className="bg-[#25D366]/10 rounded-full items-center justify-center"
-            style={{ width: wp('10.7%'), height: wp('10.7%') }}
+            style={{ width: wp('9%'), height: wp('9%') }}
           >
-            <MessageCircle size={wp('5.3%')} color="#25D366" fill="#25D366" />
+            <MessageCircle size={wp('4.5%')} color="#25D366" fill="#25D366" />
           </TouchableOpacity>
           <TouchableOpacity 
             className="flex-1 bg-[#008E96]/10 items-center justify-center"
-            style={{ height: hp('4.9%'), borderRadius: wp('3.7%') }}
+            style={{ height: hp('4.2%'), borderRadius: wp('3.2%') }}
           >
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), lineHeight: hp('2.6%') }} className="text-[#008E96] text-center">
+            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#008E96] text-center">
               View Phone
             </Text>
           </TouchableOpacity>
