@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "REALESTATE-USER",
-    "slug": "REALESTATE-USER",
+    "name": "HousingMania",
+    "slug": "HousingMania",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon3.jpeg",

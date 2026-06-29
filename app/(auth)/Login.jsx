@@ -1,4 +1,4 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
@@ -63,11 +63,7 @@ const Login = () => {
   };
 
   const handleSafeBack = () => {
-    try {
-      router.back();
-    } catch {
-      router.replace("/(auth)/onboard");
-    }
+    router.replace('/screens/Buy/Buy');
   };
 
   return (
@@ -139,24 +135,7 @@ const Login = () => {
             </Text>
           </TouchableOpacity>
 
-          {/* Social Login */}
-          <View className="mt-12">
-            <View className="flex-row items-center mb-8">
-              <View className="flex-1 h-[1px] bg-gray-200" />
-              <Text className="mx-4 text-gray-500 font-inter-medium">Or login with social</Text>
-              <View className="flex-1 h-[1px] bg-gray-200" />
-            </View>
-
-            <View className="flex-row justify-center">
-              <TouchableOpacity
-                activeOpacity={0.7}
-                className="flex-row items-center justify-center p-2 bg-white border border-gray-200 rounded-2xl shadow-sm w-full h-16"
-              >
-                <AntDesign name="google" size={24} color="#DB4437" />
-                <Text className="text-gray-900 font-inter-bold text-[16px] ml-3">Continue with Google</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          {/* Social Login removed */}
         </View>
 
         <TouchableOpacity

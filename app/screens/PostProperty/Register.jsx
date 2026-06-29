@@ -4,11 +4,11 @@ import { router } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from 'react';
 import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DashboardSelectorModal from '../../../components/DashboardSelectorModal';
 import Toast from '../../../components/Toast';
 import { performRoleBasedRedirect, useRegister } from '../../../hooks/Register';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const PostProperty = () => {
 
   const {
@@ -43,6 +43,44 @@ const PostProperty = () => {
     const token = await SecureStore.getItemAsync("token");
     const role = await SecureStore.getItemAsync("userRole");
     if (token) {
+      // Parse role to check if user has owner or builder role
+      let roleArray = [];
+      if (Array.isArray(role)) {
+        roleArray = role;
+      } else if (typeof role === 'string') {
+        try {
+          const parsed = JSON.parse(role);
+          if (Array.isArray(parsed)) {
+            roleArray = parsed;
+          } else {
+            roleArray = [role];
+          }
+        } catch {
+          roleArray = [role];
+        }
+      }
+
+      const hasOwner = roleArray.includes('owner');
+      const hasBuilder = roleArray.includes('builder');
+
+      // If user only has buyer role, let them stay on this page to add a role
+      if (!hasOwner && !hasBuilder) {
+        setIsLogin(true);
+        // Prefill the phone number from userData if available
+        const userStr = await SecureStore.getItemAsync("userData");
+        if (userStr) {
+          try {
+            const user = JSON.parse(userStr);
+            if (user && user.phone) {
+              updateFormData('phone', user.phone);
+            }
+          } catch (e) {
+            console.error("Error parsing userData in Register checkToken:", e);
+          }
+        }
+        return;
+      }
+
       setTimeout(() => {
         performRoleBasedRedirect(role, "/screens/PostProperty/PropertyDetails", setRoleSelector);
       }, 100);

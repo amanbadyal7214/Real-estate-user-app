@@ -1,9 +1,10 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 
-const ProjectConfigCard = ({ title, areaRange, priceRange }) => {
+const ProjectConfigCard = ({ title, areaRange, priceRange, onPress }) => {
   return (
-    <View 
+    <TouchableOpacity 
+      activeOpacity={0.9}
+      onPress={onPress}
       className="bg-white border border-[#E5E7EB] rounded-[14px] p-[12.6px] mr-3"
       style={{ width: 170, height: 166 }}
     >
@@ -14,7 +15,6 @@ const ProjectConfigCard = ({ title, areaRange, priceRange }) => {
           <Text className="font-inter-regular text-[#6A7282] text-[12px] leading-[16px]">Super Builtup Area</Text>
           <View className="flex-row items-center gap-1">
              <Text className="font-inter-regular text-[#101828] text-[12px] leading-[16px]">{areaRange}</Text>
-             <Ionicons name="chevron-down" size={12} color="#6A7282" />
           </View>
         </View>
 
@@ -24,7 +24,7 @@ const ProjectConfigCard = ({ title, areaRange, priceRange }) => {
 
         {/* See Floor Plan button removed per request */}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

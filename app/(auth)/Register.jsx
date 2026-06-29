@@ -1,4 +1,4 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
@@ -173,11 +173,7 @@ const Register = () => {
   };
 
   const handleSafeBack = () => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace("/(auth)/onboard");
-    }
+    router.replace('/screens/Buy/Buy');
   };
 
   return (
@@ -198,198 +194,30 @@ const Register = () => {
             className="mb-3"
           />
           <Text className="text-[24px] font-inter-bold text-gray-900">
-            {isLogin ? "Existing User Roles" : "Create Your Account"}
+            Create Your Account
           </Text>
-          <Text className="text-gray-500 mt-3 font-inter-regular ">
-            {isLogin
-              ? "Verify your phone and select a new role to continue."
-              : `Sign up as a ${formData.role || 'user'} to access the platform.`
-            }
+          <Text className="text-gray-500 mt-3 font-inter-regular">
+            Sign up to access the platform.
           </Text>
         </View>
 
-        {/* Auth Tabs */}
-        <View className="flex-row bg-[#F3F4F6] rounded-xl p-1 mb-6">
-          <TouchableOpacity
-            onPress={() => {
-              setIsLogin(false);
-              resetForm(false);
-            }}
-            className="flex-1 py-3 rounded-lg items-center"
-            style={{
-              backgroundColor: !isLogin ? '#008E96' : 'transparent',
-              shadowColor: !isLogin ? '#000' : 'transparent',
-              shadowOffset: !isLogin ? { width: 0, height: 1 } : { width: 0, height: 0 },
-              shadowOpacity: !isLogin ? 0.15 : 0,
-              shadowRadius: !isLogin ? 1.00 : 0,
-              elevation: !isLogin ? 1 : 0,
-            }}
-          >
-            <Text
-              className="text-sm font-inter-medium"
-              style={{
-                color: !isLogin ? '#FFFFFF' : '#4B5563'
-              }}
+        {/* User Type display */}
+        <View className="mb-6">
+          <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
+            User Type
+          </Text>
+          <View className="flex-row gap-2">
+            <View
+              className="flex-1 py-3 rounded-2xl border items-center shadow-sm bg-[#E6F7F6] border-[#008E96]"
             >
-              New User
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setIsLogin(true);
-              resetForm(true);
-            }}
-            className="flex-1 py-3 rounded-lg items-center"
-            style={{
-              backgroundColor: isLogin ? '#008E96' : 'transparent',
-              shadowColor: isLogin ? '#000' : 'transparent',
-              shadowOffset: isLogin ? { width: 0, height: 1 } : { width: 0, height: 0 },
-              shadowOpacity: isLogin ? 0.15 : 0,
-              shadowRadius: isLogin ? 1.00 : 0,
-              elevation: isLogin ? 1 : 0,
-            }}
-          >
-            <Text
-              className="text-sm font-inter-medium"
-              style={{
-                color: isLogin ? '#FFFFFF' : '#4B5563'
-              }}
-            >
-              Existing User
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Role Selector for New User, or Role Assignment for Existing User */}
-        {!isLogin ? (
-          <View className="mb-6">
-            <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
-              User Type
-            </Text>
-            <View className="flex-row gap-2">
-              <TouchableOpacity
-                onPress={() => updateFormData('role', 'buyer')}
-                className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
-                style={{
-                  backgroundColor: isRoleActive('buyer') ? '#E6F7F6' : '#FFFFFF',
-                  borderColor: isRoleActive('buyer') ? '#008E96' : '#E5E7EB'
-                }}
+              <Text
+                className="text-sm font-inter-bold text-[#008E96]"
               >
-                <Text
-                  className="text-sm font-inter-bold"
-                  style={{
-                    color: isRoleActive('buyer') ? '#008E96' : '#4B5563'
-                  }}
-                >
-                  Buyer
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => updateFormData('role', 'owner')}
-                className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
-                style={{
-                  backgroundColor: isRoleActive('owner') ? '#E6F7F6' : '#FFFFFF',
-                  borderColor: isRoleActive('owner') ? '#008E96' : '#E5E7EB'
-                }}
-              >
-                <Text
-                  className="text-sm font-inter-bold"
-                  style={{
-                    color: isRoleActive('owner') ? '#008E96' : '#4B5563'
-                  }}
-                >
-                  Owner
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => updateFormData('role', 'builder')}
-                className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
-                style={{
-                  backgroundColor: isRoleActive('builder') ? '#E6F7F6' : '#FFFFFF',
-                  borderColor: isRoleActive('builder') ? '#008E96' : '#E5E7EB'
-                }}
-              >
-                <Text
-                  className="text-sm font-inter-bold"
-                  style={{
-                    color: isRoleActive('builder') ? '#008E96' : '#4B5563'
-                  }}
-                >
-                  Builder
-                </Text>
-              </TouchableOpacity>
+                Buyer
+              </Text>
             </View>
           </View>
-        ) : (
-          isPhoneVerified && (
-            <View className="mb-6 gap-4">
-              {/* Already Assigned Roles */}
-              <View>
-                <Text className="text-gray-500 text-sm mb-2 font-inter-medium">
-                  Already Assigned Roles
-                </Text>
-                <View className="flex-row gap-2 flex-wrap">
-                  {existingUserDetails?.role && (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role]).map((r) => (
-                    <View key={r} className="bg-gray-100 px-4 py-2 rounded-2xl border border-gray-200">
-                      <Text className="text-gray-500 text-xs capitalize font-semibold" style={{ fontFamily: 'Inter-Medium' }}>
-                        {r}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              </View>
-
-              {/* Select Your Role (unassigned) */}
-              <View>
-                <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
-                  Select Your Role
-                </Text>
-                {(() => {
-                  const allRolesList = ['buyer', 'owner', 'builder'];
-                  const assignedRolesList = existingUserDetails?.role
-                    ? (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role])
-                    : [];
-                  const unassignedRolesList = allRolesList.filter(r => !assignedRolesList.includes(r));
-
-                  if (unassignedRolesList.length === 0) {
-                    return (
-                      <Text className="text-red-500 text-xs italic" style={{ fontFamily: 'Inter-Regular' }}>
-                        All roles are already assigned to this account.
-                      </Text>
-                    );
-                  }
-
-                  return (
-                    <View className="flex-row gap-2">
-                      {unassignedRolesList.map((roleName) => (
-                        <TouchableOpacity
-                          key={roleName}
-                          onPress={() => updateFormData('role', roleName)}
-                          className="flex-1 py-3 rounded-2xl border items-center shadow-sm"
-                          style={{
-                            backgroundColor: formData.role === roleName ? '#E6F7F6' : '#FFFFFF',
-                            borderColor: formData.role === roleName ? '#008E96' : '#E5E7EB'
-                          }}
-                        >
-                          <Text
-                            className="text-sm capitalize font-inter-bold"
-                            style={{
-                              color: formData.role === roleName ? '#008E96' : '#4B5563'
-                            }}
-                          >
-                            {roleName}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  );
-                })()}
-              </View>
-            </View>
-          )
-        )}
+        </View>
 
         {/* Form Fields - Tightened */}
         <View className="space-y-3 mb-2">
@@ -593,45 +421,9 @@ const Register = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Toggle to Existing User / New User */}
-        <TouchableOpacity
-          className="mt-6 mb-4"
-          onPress={() => {
-            if (isLogin) {
-              setIsLogin(false);
-              resetForm(false);
-            } else {
-              setIsLogin(true);
-              resetForm(true);
-            }
-          }}
-        >
-          <Text className="text-center font-inter-regular text-gray-500">
-            {isLogin ? "Need a new account? " : "Already have an account? "}
-            <Text className="font-inter-bold" style={{ color: PRIMARY_COLOR }}>
-              {isLogin ? "Register Here" : "Add Role / Login Here"}
-            </Text>
-          </Text>
-        </TouchableOpacity>
 
-        {/* Social Login - Optimized height */}
-        <View className="mt-6">
-          <View className="flex-row items-center mb-6">
-            <View className="flex-1 h-[1px] bg-gray-200" />
-            <Text className="mx-4 text-gray-500 font-inter-medium">Or sign up with social</Text>
-            <View className="flex-1 h-[1px] bg-gray-200" />
-          </View>
 
-          <View className="flex-row justify-center">
-            <TouchableOpacity
-              activeOpacity={0.7}
-              className="flex-row items-center justify-center p-2 bg-white border border-gray-200 rounded-2xl shadow-sm w-full h-14"
-            >
-              <AntDesign name="google" size={24} color="#DB4437" />
-              <Text className="text-gray-900 font-inter-bold text-[16px] ml-3">Continue with Google</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        {/* Social Login removed */}
 
         <TouchableOpacity
           className="mt-6 mb-4"

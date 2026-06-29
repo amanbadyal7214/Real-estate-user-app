@@ -2,7 +2,7 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@e
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, FlatList, Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ProjectConfigCard from '../../components/ProjectConfigCard';
@@ -20,6 +20,7 @@ const ProjectDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeFloorTab, setActiveFloorTab] = useState('All');
+  const [selectedConfigImage, setSelectedConfigImage] = useState(null);
   const flatListRef = useRef(null);
 
   // Use custom hook for project details
@@ -46,8 +47,8 @@ const ProjectDetails = () => {
   ];
 
   const configData = [
-    { title: '3 BHK Apartment', areaRange: '1835 - 1950 sq.ft.', priceRange: '₹ 3.24 Cr - ₹ 3.44 Cr' },
-    { title: '5 BHK Apartment', areaRange: '2800 - 3200 sq.ft.', priceRange: '₹ 4.50 Cr - ₹ 5.01 Cr' }
+    { title: '3 BHK Apartment', areaRange: '1835 - 1950 sq.ft.', priceRange: '₹ 3.24 Cr - ₹ 3.44 Cr', image: 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=400' },
+    { title: '5 BHK Apartment', areaRange: '2800 - 3200 sq.ft.', priceRange: '₹ 4.50 Cr - ₹ 5.01 Cr', image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=400' }
   ];
 
   // If summaries are available, derive configuration cards from summaries.summaries
@@ -71,7 +72,8 @@ const ProjectDetails = () => {
       return {
         title,
         areaRange,
-        priceRange
+        priceRange,
+        image: (s.images && s.images.length > 0) ? s.images[0] : (s.image || s.layoutImage || null)
       };
     })
     : configData;
@@ -285,7 +287,20 @@ const ProjectDetails = () => {
                 <Text className="text-[#101828] text-[18px] font-inter-medium mb-3">Project Configurations</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {derivedConfigData.map((item, index) => (
-                    <ProjectConfigCard key={index} title={item.title} areaRange={item.areaRange} priceRange={item.priceRange} />
+                    <ProjectConfigCard 
+                      key={index} 
+                      title={item.title} 
+                      areaRange={item.areaRange} 
+                      priceRange={item.priceRange} 
+                      onPress={() => {
+                        const img = item.image;
+                        if (img) {
+                          setSelectedConfigImage(img);
+                        } else {
+                          Alert.alert("No image", "No layout plan image available for this configuration.");
+                        }
+                      }}
+                    />
                   ))}
                 </ScrollView>
               </View>
@@ -617,6 +632,40 @@ const ProjectDetails = () => {
           <Text className="text-white font-inter-medium" style={{ fontSize: wp('4%') }}>Contact Seller</Text>
         </TouchableOpacity>
       </View>
+      {/* Configuration Image Lightbox Modal */}
+      <Modal
+        visible={!!selectedConfigImage}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setSelectedConfigImage(null)}
+      >
+        <View className="flex-1 bg-black/90 justify-center items-center relative">
+          <TouchableOpacity 
+            activeOpacity={1}
+            onPress={() => setSelectedConfigImage(null)}
+            className="absolute inset-0"
+          />
+          
+          <TouchableOpacity 
+            onPress={() => setSelectedConfigImage(null)} 
+            className="absolute top-12 right-6 bg-white/20 p-2 rounded-full z-[10]"
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
+          
+          {selectedConfigImage && (
+            <Image
+              source={{ uri: selectedConfigImage }}
+              style={{ width: wp('90%'), height: hp('60%') }}
+              resizeMode="contain"
+            />
+          )}
+          
+          <Text className="text-white/60 font-inter-regular text-xs mt-4">
+            Tap outside or click close to dismiss
+          </Text>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

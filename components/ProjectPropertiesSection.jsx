@@ -76,7 +76,7 @@ const ProjectPropertyCard = ({ property }) => {
   );
 };
 
-const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, propertyType, lookingFor = 'sell', title = "Properties in this Project" }) => {
+const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, propertyType, lookingFor = 'sell', title = "Properties in this Project", excludeId }) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -88,7 +88,7 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, pro
         const params = {
           lookingFor,
           city: (cityName || cityId || 'mohali'),
-          limit: 6
+          limit: 10
         };
 
         if (!projectId) {
@@ -104,9 +104,51 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, pro
         }
 
         const response = await api.get(endpoint, { params });
+        let data = response.data?.success && response.data?.data ? response.data.data : (Array.isArray(response.data) ? response.data : []);
 
-        const data = response.data?.success && response.data?.data ? response.data.data : (Array.isArray(response.data) ? response.data : []);
-        setProperties(data);
+        // Filter out excludeId if provided
+        if (excludeId) {
+          data = data.filter(p => (p._id || p.id) !== excludeId);
+        }
+
+        // If we fetched project properties or locality properties and got fewer than 4 properties,
+        // fetch more similar properties from the general `/properties` endpoint
+        if (data.length < 4) {
+          try {
+            const fallbackParams = {
+              lookingFor,
+              city: (cityName || cityId || 'mohali'),
+              limit: 10
+            };
+            if (cityId) {
+              fallbackParams.city = cityId;
+            }
+            if (propertyType) {
+              fallbackParams.propertyType = propertyType;
+            }
+            const fallbackResponse = await api.get("/properties", { params: fallbackParams });
+            const fallbackData = fallbackResponse.data?.success && fallbackResponse.data?.data 
+              ? fallbackResponse.data.data 
+              : (Array.isArray(fallbackResponse.data) ? fallbackResponse.data : []);
+            
+            // Merge lists, filtering out duplicates and excludeId
+            const existingIds = new Set(data.map(p => p._id || p.id));
+            if (excludeId) {
+              existingIds.add(excludeId);
+            }
+            fallbackData.forEach(p => {
+              const id = p._id || p.id;
+              if (id && !existingIds.has(id)) {
+                data.push(p);
+                existingIds.add(id);
+              }
+            });
+          } catch (fallbackErr) {
+            console.warn("Failed to fetch fallback properties:", fallbackErr?.message);
+          }
+        }
+
+        setProperties(data.slice(0, 6));
       } catch (err) {
         console.warn("Failed to fetch related properties:", err?.response?.data || err.message);
       } finally {
@@ -115,7 +157,7 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, pro
     };
 
     fetchProperties();
-  }, [projectId, localityId, cityId, propertyType, cityName, lookingFor]);
+  }, [projectId, localityId, cityId, propertyType, cityName, lookingFor, excludeId]);
 
   if (loading) {
     return (

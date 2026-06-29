@@ -83,10 +83,10 @@ const Spotlight = ({ data }) => {
                 </LinearGradient>
               </TouchableOpacity>
 
-              {/* Property Card - Clickable to PropertyDetails */}
+              {/* Property Card - Clickable to ProjectDetails */}
               <TouchableOpacity
                 activeOpacity={0.9}
-                onPress={() => item.property.id && router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: item.property.id } })}
+                onPress={() => item.property.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.property.id } })}
                 className="overflow-hidden bg-white elevation-5"
                 style={{
                   marginTop: hp('1.2%'),

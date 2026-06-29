@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Alert } from "react-native";
 import api from "../app/api";
 
@@ -68,7 +68,11 @@ export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) =
     } else if (hasOwner) {
         router.replace("/screens/PostProperty/MyProperties");
     } else if (hasBuyer) {
-        router.replace("/screens/Buy/Buy");
+        if (defaultTarget === "/screens/PostProperty/PropertyDetails") {
+            router.replace("/screens/PostProperty/Register");
+        } else {
+            router.replace("/screens/Buy/Buy");
+        }
     } else {
         router.replace(defaultTarget || "/screens/Buy/Buy");
     }
@@ -188,7 +192,7 @@ export const useRegister = () => {
                     setExistingUserDetails(user);
                     setIsPhoneVerified(true);
                     showToast("Phone verified successfully!", "success");
-                    
+
                     // Pre-fill form fields
                     setFormData(prev => ({
                         ...prev,

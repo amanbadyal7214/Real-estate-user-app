@@ -82,7 +82,7 @@ const PropertyCard = ({ item, destination = 'property' }) => {
               <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.4%') }}>RERA</Text>
             </View>
             <View className="items-end">
-              <Text className="font-inter-bold text-white tracking-widest text-right" style={{ fontSize: wp('2.9%') }}>TALLEST LANDMARK</Text>
+              <Text className="font-inter-bold text-white tracking-widest text-right" style={{ fontSize: wp('2.9%') }}>{item.title}</Text>
               <Text className="font-inter-regular text-white text-right uppercase" style={{ fontSize: wp('2.4%') }}>BY {item.developer || item.builder || ''}</Text>
             </View>
           </View>

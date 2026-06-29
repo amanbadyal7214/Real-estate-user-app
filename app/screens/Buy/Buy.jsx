@@ -307,6 +307,7 @@ const Buy = () => {
         projects: String(dev.projectCount || developerProjects.length || 1),
       },
       property: {
+        id: firstProject._id,
         title: firstProject.projectName || firstProject.title || 'Project',
         location: `${firstProject.addressLine1 || firstProject.locality || ''}, ${firstProject.district || firstProject.city || ''}`,
         config: firstProject.config || firstProject.possessionStatus?.label || 'Project',

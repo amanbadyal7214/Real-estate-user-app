@@ -1,4 +1,4 @@
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -43,6 +43,26 @@ const getFurnishingLabel = (status) => {
   if (name === 'semi_furnished') return 'Semi Furnished';
   if (name === 'unfurnished') return 'Unfurnished';
   return name || 'N/A';
+};
+const getAmenityIcon = (amenity) => {
+  const icon = amenity?.icon || '';
+
+  if (icon) {
+    if (icon in MaterialIcons.glyphMap) {
+      return <MaterialIcons name={icon} size={24} color="#008E96" />;
+    }
+    if (icon in MaterialCommunityIcons.glyphMap) {
+      return <MaterialCommunityIcons name={icon} size={24} color="#008E96" />;
+    }
+    if (icon in Ionicons.glyphMap) {
+      return <Ionicons name={icon} size={24} color="#008E96" />;
+    }
+    if (icon in FontAwesome.glyphMap) {
+      return <FontAwesome name={icon} size={24} color="#008E96" />;
+    }
+  }
+
+  return <MaterialIcons name="check-circle-outline" size={24} color="#008E96" />;
 };
 
 const PropertyDetails = () => {
@@ -561,9 +581,11 @@ const PropertyDetails = () => {
 
               <ProjectPropertiesSection
                 projectId={projectInfo._id}
-                
+                localityId={normalizedProperty.locality?._id || normalizedProperty.locality}
                 cityId={normalizedProperty.city?._id || normalizedProperty.city}
                 propertyType={normalizedProperty.propertyType?._id || normalizedProperty.propertyType}
+                lookingFor={isRent ? 'rent' : 'sell'}
+                excludeId={normalizedProperty._id || normalizedProperty.id}
                 title="Similar Properties"
               />
             </View>
@@ -576,11 +598,7 @@ const PropertyDetails = () => {
                   {amenities.length > 0 ? (
                     amenities.map((item, idx) => (
                       <View key={idx} className="w-[31.5%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-1">
-                        <MaterialIcons
-                          name={item.amenity?.icon || 'check-circle-outline'}
-                          size={24}
-                          color="#008E96"
-                        />
+                        {getAmenityIcon(item.amenity)}
                         <Text className="text-[#101828] text-[11px] text-center font-inter-medium mt-2" numberOfLines={2}>
                           {item.amenity?.label || item.amenity?.name || 'Amenity'}
                         </Text>
@@ -599,9 +617,11 @@ const PropertyDetails = () => {
               <View className="mt-4">
                 <ProjectPropertiesSection
                   projectId={projectInfo._id}
-                 
+                  localityId={normalizedProperty.locality?._id || normalizedProperty.locality}
                   cityId={normalizedProperty.city?._id || normalizedProperty.city}
                   propertyType={normalizedProperty.propertyType?._id || normalizedProperty.propertyType}
+                  lookingFor={isRent ? 'rent' : 'sell'}
+                  excludeId={normalizedProperty._id || normalizedProperty.id}
                   title="Related Properties"
                 />
               </View>
@@ -669,10 +689,10 @@ const PropertyDetails = () => {
               </View>
 
               {/* Placeholder for Video/Tour */}
-              <View className="bg-white rounded-[16px] p-6 items-center justify-center border border-[#E5E7EB] border-dashed">
+              {/* <View className="bg-white rounded-[16px] p-6 items-center justify-center border border-[#E5E7EB] border-dashed">
                 <MaterialCommunityIcons name="video-outline" size={32} color="#008E96" />
                 <Text className="text-[#101828] font-inter-medium mt-2">Virtual Tour coming soon</Text>
-              </View>
+              </View> */}
             </View>
           )}
         </ScrollView>
