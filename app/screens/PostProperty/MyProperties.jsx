@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useLookup } from '../../../hooks/useLookup';
 import api from '../../api';
 import { formatPrice } from '../../utils/formatPrice';
@@ -28,7 +28,7 @@ const getLocalityName = (locality) => {
 };
 
 const DEACTIVATE_REASONS = [
-  'Sold/Rented out via The Property Wall',
+  'Sold/Rented out via HousingMania',
   'Sold/Rented out via other source',
   'I don\'t want to sell/rent anymore',
   'Duplicate Listing',

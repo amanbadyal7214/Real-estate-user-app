@@ -96,16 +96,16 @@ const ServicesBenefitItem = ({ index = 0, text }) => {
     const Illustration = illustrations[index] || PremiumProductsIllustration;
 
     return (
-        <View className="flex-row items-center self-stretch" style={{ paddingVertical: hp('2%'), gap: wp('6.4%') }}>
+        <View className="flex-row items-center self-stretch" style={{ paddingVertical: hp('1.5%'), gap: wp('5%') }}>
             {/* Illustration */}
-            <View style={{ width: wp('26.7%'), height: wp('26.7%') }}>
+            <View style={{ width: wp('22%'), height: wp('22%') }}>
                 <Illustration />
             </View>
 
             {/* Text */}
             <Text
                 className="font-inter-regular text-[#4A5565] flex-1"
-                style={{ fontSize: wp('4.3%'), lineHeight: wp('6.9%') }}
+                style={{ fontSize: wp('3.5%'), lineHeight: wp('5.5%') }}
             >
                 {text}
             </Text>

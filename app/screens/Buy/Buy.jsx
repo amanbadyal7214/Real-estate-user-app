@@ -5,8 +5,8 @@ import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { ActivityIndicator, DeviceEventEmitter, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, DeviceEventEmitter, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BetterPricedPropertyCard from '../../../components/BetterPricedPropertyCard';
 import CalculatorCard from '../../../components/CalculatorCard';
@@ -119,7 +119,7 @@ const Buy = () => {
   const [activeDeveloperProjectsLoading, setActiveDeveloperProjectsLoading] = useState(false);
   const skipFirstRedirect = useRef(true);
 
-  
+
 
   const handleProtectedViewMore = useCallback(async (destination) => {
     const token = await SecureStore.getItemAsync('token');
@@ -556,12 +556,12 @@ const Buy = () => {
 
 
 
-        {/* Popular on The Property Wall Section */}
+        {/* Popular on HousingMania Section */}
         <View className="px-4 mb-6">
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[18px]">⭐</Text>
-            <Text className="font-inter-bold text-[15px] text-[#101828]">Popular on The Property Wall</Text>
+            <Text className="font-inter-bold text-[15px] text-[#101828]">Popular on HousingMania</Text>
           </View>
 
           {/* Tools Grid Card */}

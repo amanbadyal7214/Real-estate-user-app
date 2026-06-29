@@ -12,33 +12,33 @@ const OwnerPropertyCardAlt = ({ id, image, price, title, area, location, onConta
       >
         <ImageBackground
           source={{ uri: image }}
-          style={{ width: wp('58.6%'), height: hp('19.7%'), borderRadius: wp('3.7%'), overflow: 'hidden', justifyContent: 'flex-end' }}
-          imageStyle={{ borderRadius: wp('3.7%') }}
+          style={{ width: wp('49.8%'), height: hp('16.7%'), borderRadius: wp('3.2%'), overflow: 'hidden', justifyContent: 'flex-end' }}
+          imageStyle={{ borderRadius: wp('3.2%') }}
         >
-          <View style={{ backgroundColor: 'rgba(0,0,0,0.36)', padding: 8 }}>
-            <Text className="font-inter-bold text-white" style={{ fontSize: 14 }} numberOfLines={1}>
+          <View style={{ backgroundColor: 'rgba(0,0,0,0.36)', padding: 7 }}>
+            <Text className="font-inter-bold text-white" style={{ fontSize: 12 }} numberOfLines={1}>
               {typeof price === 'number' ? formatPrice(price) : (price || 'View details')}
             </Text>
-            <Text className="font-inter-medium text-white" style={{ fontSize: 12 }} numberOfLines={1}>{title}</Text>
+            <Text className="font-inter-medium text-white" style={{ fontSize: 10 }} numberOfLines={1}>{title}</Text>
           </View>
         </ImageBackground>
 
       </TouchableOpacity>
 
-      <View className="mt-2 bg-white px-3 py-2 rounded-[12px]" style={{ width: wp('68.2%'), borderWidth: 0.67, borderColor: '#F3F4F6' }}>
-        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 12 }}>{area}</Text>
-        <Text className="font-inter-regular text-[#6A7282] mt-1" style={{ fontSize: 12 }} numberOfLines={1}>{location}</Text>
+      <View className="mt-1.5 bg-white px-2.5 py-1.5 rounded-[10px]" style={{ width: wp('49.9%'), borderWidth: 0.67, borderColor: '#F3F4F6' }}>
+        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: 10 }}>{area}</Text>
+        <Text className="font-inter-regular text-[#6A7282] mt-1" style={{ fontSize: 10 }} numberOfLines={1}>{location}</Text>
 
-        <View className="flex-row items-center justify-between mt-3">
-          <View style={{ backgroundColor: '#FFF7ED', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 }}>
-            <Text className="font-inter-medium text-[#92400E]" style={{ fontSize: 12 }}>Owner</Text>
+        <View className="flex-row items-center justify-between mt-2">
+          <View style={{ backgroundColor: '#FFF7ED', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 7 }}>
+            <Text className="font-inter-medium text-[#92400E]" style={{ fontSize: 10 }}>Owner</Text>
           </View>
 
           <TouchableOpacity
             onPress={() => onContact ? onContact(id) : router.push({ pathname: '/screens/ContactOwner', params: { propertyId: id } })}
-            style={{ backgroundColor: '#008E96', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 }}
+            style={{ backgroundColor: '#008E96', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 7 }}
           >
-            <Text className="font-inter-medium text-white" style={{ fontSize: 12 }}>Contact</Text>
+            <Text className="font-inter-medium text-white" style={{ fontSize: 10 }}>Contact</Text>
           </TouchableOpacity>
         </View>
       </View>

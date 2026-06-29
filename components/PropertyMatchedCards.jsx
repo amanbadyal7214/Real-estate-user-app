@@ -43,7 +43,7 @@ const PropertyCard = ({ item, destination = 'property' }) => {
         }}
         style={{ marginRight: wp('4.3%') }}
       >
-        <View className="overflow-hidden bg-gray-200 shadow-lg" style={{ width: wp('59%'), height: hp('23%'), borderRadius: wp('4.3%') }}>
+        <View className="overflow-hidden bg-gray-200 shadow-lg" style={{ width: wp('50%'), height: hp('19.5%'), borderRadius: wp('3.7%') }}>
           <Image
             source={images[currentImageIndex]}
             style={StyleSheet.absoluteFill}
@@ -79,20 +79,20 @@ const PropertyCard = ({ item, destination = 'property' }) => {
           {/* Top Section */}
           <View className="flex-row justify-between items-start" style={{ paddingTop: hp('2%'), paddingHorizontal: wp('3.2%') }}>
             <View className="bg-[#155DFC]" style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('1.1%') }}>
-              <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.1%') }}>RERA</Text>
+              <Text className="font-inter-bold text-white" style={{ fontSize: wp('1.8%') }}>RERA</Text>
             </View>
             <View className="items-end">
-              <Text className="font-inter-bold text-white tracking-widest text-right" style={{ fontSize: wp('2.5%') }}>{item.title}</Text>
-              <Text className="font-inter-regular text-white text-right uppercase" style={{ fontSize: wp('2.1%') }}>BY {item.developer || item.builder || ''}</Text>
+              <Text className="font-inter-bold text-white tracking-widest text-right" style={{ fontSize: wp('2.1%') }}>{item.title}</Text>
+              <Text className="font-inter-regular text-white text-right uppercase" style={{ fontSize: wp('1.8%') }}>BY {item.developer || item.builder || ''}</Text>
             </View>
           </View>
 
           {/* Bottom Section */}
           <View className="absolute" style={{ bottom: hp('2%'), left: wp('3.2%'), right: wp('3.2%') }}>
-            <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.4%'), lineHeight: hp('2.5%') }}>
+            <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.9%'), lineHeight: hp('2.1%') }}>
               {item.title}
             </Text>
-            <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.8%') }}>
+            <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.1%'), lineHeight: hp('1.5%') }}>
               {item.location}
             </Text>
             <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.0%'), marginTop: hp('0.8%'), lineHeight: hp('2%') }}>

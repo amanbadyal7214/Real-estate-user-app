@@ -4,8 +4,8 @@ import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, DeviceEventEmitter, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CalculatorCard from '../../../components/CalculatorCard';
 import ContinueCards from '../../../components/ContinueCards';
 import DeveloperProjectCard from '../../../components/DeveloperProjectCard';
@@ -538,7 +538,7 @@ const Project = () => {
         }}
       >
         {/* Main Category Blue Container */}
-        <View 
+        <View
           className="bg-[#E6F4F5]"
           style={{
             marginHorizontal: wp('4.3%'),
@@ -561,53 +561,53 @@ const Project = () => {
         <ContinueCards data={recentSearches} />
 
         {/* Matches Section */}
-        <View 
+        <View
           style={{
             paddingHorizontal: wp('4.3%'),
             marginTop: hp('4%'),
             marginBottom: hp('3%'),
           }}
         >
-          <View 
+          <View
             className="flex-row items-center justify-between"
             style={{ marginBottom: hp('1%') }}
           >
-            <Text 
+            <Text
               className="font-inter-bold text-[#101828]"
-              style={{ fontSize: wp('4.8%') }}
+              style={{ fontSize: wp('3.7%') }}
             >Perfectly matched home...</Text>
             <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/Project/ProjectMatchedHome', params: { city: currentLocation?.city || 'Mohali' } })}>
-              <Text 
+              <Text
                 className="font-inter-medium text-primary"
-                style={{ fontSize: wp('3.7%') }}
+                style={{ fontSize: wp('3.2%') }}
               >View more</Text>
             </TouchableOpacity>
           </View>
-          <Text 
-            style={{ 
+          <Text
+            style={{
               fontFamily: 'Inter-Regular',
-              fontSize: wp('3.7%'),
+              fontSize: wp('3.2%'),
               marginBottom: hp('2%'),
-            }} 
+            }}
             className="text-[#667085]"
           >Projects from the best developers</Text>
 
           {matchedHomesLoading ? (
-            <Text 
-              style={{ 
+            <Text
+              style={{
                 fontFamily: 'Inter-Regular',
                 fontSize: wp('3.7%'),
                 marginBottom: hp('2%'),
-              }} 
+              }}
               className="text-[#667085]"
             >Loading projects...</Text>
           ) : matchedHomesError ? (
-            <Text 
-              style={{ 
+            <Text
+              style={{
                 fontFamily: 'Inter-Regular',
                 fontSize: wp('3.7%'),
                 marginBottom: hp('2%'),
-              }} 
+              }}
               className="text-[#667085]"
             >Showing available projects for now.</Text>
           ) : null}
@@ -619,33 +619,33 @@ const Project = () => {
 
         {/* Smart Suggestions Section */}
         <View style={{ marginBottom: hp('3%') }}>
-          <View 
+          <View
             style={{
               paddingHorizontal: wp('4.3%'),
               marginBottom: hp('2%'),
             }}
           >
             <View className="flex-row justify-between items-center">
-              <Text 
+              <Text
                 className="font-inter-bold text-[#101828]"
-                style={{ fontSize: wp('5.8%') }}
+                style={{ fontSize: wp('3.7%') }}
               >Smart Suggestions</Text>
               <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/Project/Suggestions', params: { city: currentLocation?.city || 'Mohali' } })}>
-                <Text 
+                <Text
                   className="font-inter-semibold text-[#008E96]"
-                  style={{ fontSize: wp('4%') }}
+                  style={{ fontSize: wp('3.2%') }}
                 >See all</Text>
               </TouchableOpacity>
             </View>
-            <Text 
+            <Text
               className="font-inter-regular text-[#6A7282]"
-              style={{ fontSize: wp('3.7%'), marginTop: hp('0.5%') }}
+              style={{ fontSize: wp('3.2%'), marginTop: hp('0.5%') }}
             >
               Based on your last search in Khanpur
             </Text>
           </View>
 
-          <View 
+          <View
             className="flex-row"
             style={{
               gap: wp('2%'),
@@ -719,18 +719,18 @@ const Project = () => {
           </ScrollView>
         </View> */}
 
-        {/* Popular on The Property Wall Section */}
+        {/* Popular on HousingMania Section */}
         <View style={{ marginBottom: hp('3%') }}>
           {/* Section Header */}
-          <View 
+          <View
             className="flex-row items-center"
             style={{ gap: wp('2%'), marginBottom: hp('2%'), paddingHorizontal: wp('4.3%') }}
           >
             <Text style={{ fontSize: wp('5.3%') }}>⭐</Text>
-            <Text 
+            <Text
               className="font-inter-bold text-[#101828]"
-              style={{ fontSize: wp('4.5%') }}
-            >Popular on The Property Wall</Text>
+              style={{ fontSize: wp('3.7%') }}
+            >Popular on HousingMania</Text>
           </View>
 
           {/* Tools Grid Card */}
@@ -755,7 +755,7 @@ const Project = () => {
                 className="items-center"
                 style={{ width: wp('24%') }}
               >
-                <View 
+                <View
                   className="bg-[#DBEAEB]/45 items-center justify-center"
                   style={{
                     width: wp('12%'),
@@ -766,14 +766,14 @@ const Project = () => {
                 >
                   <Ionicons name="bulb-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text 
+                <Text
                   className="font-inter-medium text-[#364153] text-center"
                   style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}
                 >Suggestions</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: wp('24%') }}>
-                <View 
+                <View
                   className="bg-[#DBEAEB]/45 items-center justify-center"
                   style={{
                     width: wp('12%'),
@@ -784,14 +784,14 @@ const Project = () => {
                 >
                   <Ionicons name="pricetag-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text 
+                <Text
                   className="font-inter-medium text-[#364153] text-center"
                   style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}
                 >Deals</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: wp('24%') }}>
-                <View 
+                <View
                   className="bg-[#DBEAEB]/45 items-center justify-center"
                   style={{
                     width: wp('12%'),
@@ -802,7 +802,7 @@ const Project = () => {
                 >
                   <Ionicons name="newspaper-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text 
+                <Text
                   className="font-inter-medium text-[#364153] text-center"
                   style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}
                 >News</Text>
@@ -811,7 +811,7 @@ const Project = () => {
 
             <View className="flex-row justify-around">
               <TouchableOpacity className="items-center" style={{ width: wp('24%') }}>
-                <View 
+                <View
                   className="bg-[#DBEAEB]/45 items-center justify-center"
                   style={{
                     width: wp('12%'),
@@ -822,14 +822,14 @@ const Project = () => {
                 >
                   <Ionicons name="calculator-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text 
+                <Text
                   className="font-inter-medium text-[#364153] text-center"
                   style={{ fontSize: wp('2.9%'), lineHeight: hp('1.8%') }}
                 >EMI Calculator</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: wp('24%') }}>
-                <View 
+                <View
                   className="bg-[#DBEAEB]/45 items-center justify-center"
                   style={{
                     width: wp('12%'),
@@ -840,14 +840,14 @@ const Project = () => {
                 >
                   <Ionicons name="stats-chart-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text 
+                <Text
                   className="font-inter-medium text-[#364153] text-center"
                   style={{ fontSize: wp('2.9%'), lineHeight: hp('1.8%') }}
                 >Affordability Calculator</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center" style={{ width: wp('24%') }}>
-                <View 
+                <View
                   className="bg-[#DBEAEB]/45 items-center justify-center"
                   style={{
                     width: wp('12%'),
@@ -858,7 +858,7 @@ const Project = () => {
                 >
                   <Ionicons name="checkmark-done-circle-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text 
+                <Text
                   className="font-inter-medium text-[#364153] text-center"
                   style={{ fontSize: wp('2.9%'), lineHeight: hp('1.8%') }}
                 >Eligibility Calculator</Text>
@@ -893,7 +893,7 @@ const Project = () => {
 
               <View style={{ gap: hp('0.8%') }}>
                 <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
-                  <View 
+                  <View
                     className="bg-[#008E96] rounded-full items-center justify-center"
                     style={{ width: wp('4.3%'), height: wp('4.3%') }}
                   >
@@ -903,7 +903,7 @@ const Project = () => {
                 </View>
 
                 <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
-                  <View 
+                  <View
                     className="bg-[#008E96] rounded-full items-center justify-center"
                     style={{ width: wp('4.3%'), height: wp('4.3%') }}
                   >
@@ -949,31 +949,31 @@ const Project = () => {
 
         {/* Best Rated Localities Section */}
         <View style={{ paddingHorizontal: wp('4.3%'), marginBottom: hp('2%') }}>
-          <View 
+          <View
             className="flex-row items-center justify-between"
             style={{ marginBottom: hp('2%') }}
           >
-            <Text 
+            <Text
               className="font-inter-bold text-[#101828]"
-              style={{ fontSize: wp('4.5%') }}
+              style={{ fontSize: wp('3.7%') }}
             >Top-rated neighborhoods</Text>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text 
+              <Text
                 className="font-inter-medium text-primary"
-                style={{ fontSize: wp('3.7%') }}
+                style={{ fontSize: wp('3.2%') }}
               >See all</Text>
             </TouchableOpacity>
           </View>
 
           {localityLoading ? (
-            <View 
-              className="items-center justify-center bg-white border border-[#F3F4F6]" 
+            <View
+              className="items-center justify-center bg-white border border-[#F3F4F6]"
               style={{ height: hp('15.6%'), borderRadius: wp('5.3%') }}
             >
               <ActivityIndicator size="small" color="#008E96" />
             </View>
           ) : localityError ? (
-            <View 
+            <View
               className="bg-[#FFF5F5] border border-[#FEE2E2]"
               style={{
                 borderRadius: wp('5.3%'),
@@ -981,13 +981,13 @@ const Project = () => {
                 paddingVertical: hp('1.5%'),
               }}
             >
-              <Text 
+              <Text
                 className="font-inter-medium text-[#B42318]"
                 style={{ fontSize: wp('3.5%') }}
               >{localityError}</Text>
             </View>
           ) : visibleLocalities.length === 0 ? (
-            <View 
+            <View
               className="bg-white border border-[#F3F4F6]"
               style={{
                 borderRadius: wp('5.3%'),
@@ -995,7 +995,7 @@ const Project = () => {
                 paddingVertical: hp('2.5%'),
               }}
             >
-              <Text 
+              <Text
                 className="font-inter-medium text-[#6A7282]"
                 style={{ fontSize: wp('3.5%') }}
               >No best-rated locality data available right now.</Text>
@@ -1027,13 +1027,13 @@ const Project = () => {
             <View style={{ gap: hp('0.1%') }}>
               <Text
                 className="font-inter-bold text-[#101828]"
-                style={{ fontSize: wp('4.5%'), lineHeight: hp('2.7%') }}
+                style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%') }}
               >
                 High Demand Projects
               </Text>
               <Text
                 className="font-inter-regular text-[#6A7282]"
-                style={{ fontSize: wp('3.5%'), lineHeight: hp('2.5%') }}
+                style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}
               >
                 Hurry! Only a few units left
               </Text>
@@ -1041,7 +1041,7 @@ const Project = () => {
             <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/HighDemandProduct', params: { city: currentLocation?.city || 'Mohali' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text
                 className="font-inter-medium text-[#008E96]"
-                style={{ fontSize: wp('3.7%'), lineHeight: hp('2.7%') }}
+                style={{ fontSize: wp('3.2%'), lineHeight: hp('2.5%') }}
               >
                 View more
               </Text>
@@ -1049,14 +1049,14 @@ const Project = () => {
           </View>
 
           {highDemandLoading ? (
-            <View 
-              className="items-center justify-center bg-white border border-[#F3F4F6]" 
+            <View
+              className="items-center justify-center bg-white border border-[#F3F4F6]"
               style={{ height: hp('28%'), borderRadius: wp('5.3%') }}
             >
               <ActivityIndicator size="small" color="#008E96" />
             </View>
           ) : highDemandError ? (
-            <View 
+            <View
               className="bg-[#FFF5F5] border border-[#FEE2E2]"
               style={{
                 borderRadius: wp('5.3%'),
@@ -1064,13 +1064,13 @@ const Project = () => {
                 paddingVertical: hp('1.5%'),
               }}
             >
-              <Text 
+              <Text
                 className="font-inter-medium text-[#B42318]"
                 style={{ fontSize: wp('3.5%') }}
               >{highDemandError}</Text>
             </View>
           ) : highDemandProjects.length === 0 ? (
-            <View 
+            <View
               className="bg-white border border-[#F3F4F6]"
               style={{
                 borderRadius: wp('5.3%'),
@@ -1078,7 +1078,7 @@ const Project = () => {
                 paddingVertical: hp('2.5%'),
               }}
             >
-              <Text 
+              <Text
                 className="font-inter-medium text-[#6A7282]"
                 style={{ fontSize: wp('3.5%') }}
               >No high demand projects available right now.</Text>
@@ -1106,23 +1106,23 @@ const Project = () => {
 
         {/* Top Rated Developers Section */}
         <View style={{ paddingHorizontal: wp('4.3%'), marginBottom: hp('2.5%') }}>
-          <View 
+          <View
             className="flex-row items-center justify-between"
             style={{ marginBottom: hp('2%') }}
           >
             <View>
-              <Text 
+              <Text
                 className="font-inter-bold text-[#101828]"
-                style={{ fontSize: wp('4.5%') }}
+                style={{ fontSize: wp('3.7%') }}
               >Top rated developers</Text>
-              <Text 
+              <Text
                 className="font-inter-regular text-[#6A7282]"
-                style={{ fontSize: wp('3.5%'), marginTop: hp('0.2%') }}
+                style={{ fontSize: wp('3.2%'), marginTop: hp('0.2%') }}
               >Projects from the best developers</Text>
             </View>
           </View>
 
-          <View 
+          <View
             className="flex-row items-stretch"
             style={{ gap: wp('4.3%'), marginBottom: hp('3%') }}
           >
@@ -1141,7 +1141,7 @@ const Project = () => {
                 </View>
               ))
             ) : (
-              <Text 
+              <Text
                 className="font-inter-regular text-[#6A7282]"
                 style={{ fontSize: wp('3.5%') }}
               >No top developers available right now.</Text>
@@ -1174,7 +1174,7 @@ const Project = () => {
                     />
                   ))
                 ) : (
-                  <Text 
+                  <Text
                     className="font-inter-regular text-[#6A7282]"
                     style={{ fontSize: wp('3.5%') }}
                   >No projects found for this developer.</Text>
@@ -1186,37 +1186,37 @@ const Project = () => {
 
         {/* Explore Localities Section */}
         <View style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3%') }}>
-          <View 
+          <View
             className="flex-row items-center justify-between"
             style={{ marginBottom: hp('2%') }}
           >
             <View>
-              <Text 
+              <Text
                 className="font-inter-semibold text-[#101828]"
-                style={{ fontSize: wp('4.5%') }}
+                style={{ fontSize: wp('3.7%') }}
               >Explore Localities</Text>
-              <Text 
+              <Text
                 className="font-inter-regular text-[#6A7282]"
-                style={{ fontSize: wp('3.5%'), marginTop: hp('0.2%') }}
+                style={{ fontSize: wp('3.2%'), marginTop: hp('0.2%') }}
               >See Insights and videos in {currentLocation?.city || 'Mohali'}</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text 
+              <Text
                 className="font-inter-medium text-primary"
-                style={{ fontSize: wp('3.7%') }}
+                style={{ fontSize: wp('3.2%') }}
               >See all</Text>
             </TouchableOpacity>
           </View>
 
           {localityLoading ? (
-            <View 
-              className="items-center justify-center bg-white border border-[#F3F4F6]" 
+            <View
+              className="items-center justify-center bg-white border border-[#F3F4F6]"
               style={{ height: hp('14.8%'), borderRadius: wp('5.3%') }}
             >
               <ActivityIndicator size="small" color="#008E96" />
             </View>
           ) : localityError ? (
-            <View 
+            <View
               className="bg-[#FFF5F5] border border-[#FEE2E2]"
               style={{
                 borderRadius: wp('5.3%'),
@@ -1224,13 +1224,13 @@ const Project = () => {
                 paddingVertical: hp('1.5%'),
               }}
             >
-              <Text 
+              <Text
                 className="font-inter-medium text-[#B42318]"
                 style={{ fontSize: wp('3.5%') }}
               >{localityError}</Text>
             </View>
           ) : exploreLocalities.length === 0 ? (
-            <View 
+            <View
               className="bg-white border border-[#F3F4F6]"
               style={{
                 borderRadius: wp('5.3%'),
@@ -1238,7 +1238,7 @@ const Project = () => {
                 paddingVertical: hp('2.5%'),
               }}
             >
-              <Text 
+              <Text
                 className="font-inter-medium text-[#6A7282]"
                 style={{ fontSize: wp('3.5%') }}
               >No locality pricing data available right now.</Text>
@@ -1265,24 +1265,24 @@ const Project = () => {
 
         {/* News For You Section */}
         <View style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2%') }}>
-          <View 
+          <View
             className="flex-row items-center justify-between"
             style={{ marginBottom: hp('2%') }}
           >
             <View>
-              <Text 
+              <Text
                 className="font-inter-semibold text-[#101828]"
-                style={{ fontSize: wp('4.5%') }}
+                style={{ fontSize: wp('3.7%') }}
               >News For You</Text>
-              <Text 
+              <Text
                 className="font-inter-regular text-[#6A7282]"
-                style={{ fontSize: wp('3.5%'), marginTop: hp('0.2%') }}
+                style={{ fontSize: wp('3.2%'), marginTop: hp('0.2%') }}
               >Read whats happening in real estate</Text>
             </View>
             <TouchableOpacity>
-              <Text 
+              <Text
                 className="font-inter-medium text-primary"
-                style={{ fontSize: wp('3.7%') }}
+                style={{ fontSize: wp('3.2%') }}
               >See all</Text>
             </TouchableOpacity>
           </View>

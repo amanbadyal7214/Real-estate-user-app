@@ -146,7 +146,7 @@ const PG = () => {
           </LinearGradient>
         </View>
 
-        {/* Popular on The Property Wall Section */}
+        {/* Popular on HousingMania Section */}
         <View className="px-4 mb-6">
 
 
@@ -164,7 +164,7 @@ const PG = () => {
             {/* Section Header */}
             <View className="flex-row items-center gap-2 mb-4">
               <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-              <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
+              <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on HousingMania</Text>
             </View>
             <View className="flex-row justify-around mb-8">
               <TouchableOpacity

@@ -5,6 +5,7 @@ import { Check, TrendingUp } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, DeviceEventEmitter, ImageBackground, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import NewsCard from '../../../components/NewsCard';
 import PropertyCardSmall from '../../../components/PropertyCardSmall';
@@ -297,7 +298,7 @@ const Commercial = () => {
           <View
             className="w-full flex-row items-center gap-3 rounded-xl border border-[#E4E7EC] bg-white p-3"
             style={{
-              minHeight: 73,
+              minHeight: hp('8.5%'),
               borderWidth: 0.6667,
             }}
           >
@@ -315,16 +316,17 @@ const Commercial = () => {
               ]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              className="h-12 w-12 items-center justify-center rounded-[10px]"
+              className="items-center justify-center rounded-[10px]"
+              style={{ height: hp('6%'), width: hp('6%') }}
             >
-              <TrendingUp size={24} color="#F59E0B" strokeWidth={2} />
+              <TrendingUp size={wp('6%')} color="#F59E0B" strokeWidth={2} />
             </LinearGradient>
 
             <View className="flex-1">
-              <Text className="font-inter-semibold text-[15px] leading-[19px] text-[#101828]">
+              <Text className="font-inter-semibold text-[13px] leading-[17px] text-[#101828]">
                 Properties with Great Returns!
               </Text>
-              <Text className="mt-0.5 font-inter-regular text-[13px] leading-[16px] text-[#6A7282]">
+              <Text className="mt-0.5 font-inter-regular text-[12px] leading-[15px] text-[#6A7282]">
                 Explore high ROI investments
               </Text>
             </View>
@@ -342,19 +344,19 @@ const Commercial = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             className="rounded-2xl border border-[#008E9633] p-4"
-            style={{ minHeight: 231, borderWidth: 0.6667 }}
+            style={{ minHeight: hp('27%'), borderWidth: 0.6667 }}
           >
-            <Text className="font-inter-semibold text-[17px] leading-[23px] text-[#101828]">
+            <Text className="font-inter-semibold text-[13px] leading-[19px] text-[#101828]">
               Are you a property owner looking to{`\n`}rent/sell?
             </Text>
 
             <View className="mt-5 gap-2">
               {['Zero Brokerage', 'Verified leads', 'On-demand assistance'].map((item) => (
                 <View key={item} className="flex-row items-center">
-                  <View className="h-5 w-5 items-center justify-center rounded-full bg-[#008E96]">
-                    <Check size={12} color="#FFFFFF" strokeWidth={2.2} />
+                  <View className="items-center justify-center rounded-full bg-[#008E96]" style={{ width: hp('2.5%'), height: hp('2.5%') }}>
+                    <Check size={wp('3%')} color="#FFFFFF" strokeWidth={2.2} />
                   </View>
-                  <Text className="ml-2 font-inter-regular text-[14px] leading-[21px] text-[#4A5565]">
+                  <Text className="ml-2 font-inter-regular text-[12px] leading-[18px] text-[#4A5565]">
                     {item}
                   </Text>
                 </View>
@@ -364,9 +366,10 @@ const Commercial = () => {
             <TouchableOpacity
               activeOpacity={0.85}
               onPress={() => router.push('/screens/PostProperty/PropertyDetails')}
-              className="mt-5 h-11 items-center justify-center rounded-xl bg-[#008E96]"
+              className="mt-5 items-center justify-center rounded-xl bg-[#008E96]"
+              style={{ height: hp('5.5%') }}
             >
-              <Text className="font-inter-semibold text-[15px] leading-[22px] text-white">
+              <Text className="font-inter-semibold text-[13px] leading-[19px] text-white">
                 Post property for FREE
               </Text>
             </TouchableOpacity>
@@ -376,10 +379,10 @@ const Commercial = () => {
         <View className="mt-1 px-4">
           <View className="mb-2 flex-row items-start justify-between">
             <View>
-              <Text className="font-inter-semibold text-[22px] leading-[33px] text-[#101828]">
+              <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828]">
                 Recently Added
               </Text>
-              <Text className="font-inter-regular text-[13px] leading-5 text-[#6A7282]">
+              <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
                 Fresh listings in your area
               </Text>
             </View>
@@ -398,7 +401,7 @@ const Commercial = () => {
                 });
               }}
             >
-              <Text className="font-inter-semibold text-[14px] leading-[21px] text-[#008E96]">See all</Text>
+              <Text className="font-inter-semibold text-[12px] leading-[18px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -410,15 +413,17 @@ const Commercial = () => {
                   key={tab}
                   activeOpacity={0.85}
                   onPress={() => setRecentlyAddedTab(tab)}
-                  className="h-[38px] items-center justify-center rounded-full px-9"
+                  className="items-center justify-center rounded-full"
                   style={{
+                    height: hp('4.5%'),
+                    paddingHorizontal: wp('9%'),
                     borderWidth: 0.6667,
                     borderColor: isActive ? '#008E96' : '#E4E7EC',
                     backgroundColor: isActive ? 'rgba(0, 142, 150, 0.1)' : '#FFFFFF',
                   }}
                 >
                   <Text
-                    className="font-inter-medium text-[14px] leading-[21px]"
+                    className="font-inter-medium text-[12px] leading-[18px]"
                     style={{ color: isActive ? '#008E96' : '#4A5565' }}
                   >
                     {tab}
@@ -462,8 +467,8 @@ const Commercial = () => {
         <View className="px-4 my-3">
           <View className="mb-4 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+              <Text className="font-inter-semibold text-[15px] text-[#101828]">Recommended Sellers</Text>
+              <Text className="font-inter-regular text-[12px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
             </View>
           </View>
 
@@ -473,7 +478,7 @@ const Commercial = () => {
             contentContainerStyle={{ gap: 12, paddingBottom: 8, paddingRight: 8 }}
           >
             {sellerColumns.map((column, columnIndex) => (
-              <View key={`seller-col-${columnIndex}`} style={{ width: 340, gap: 12 }}>
+              <View key={`seller-col-${columnIndex}`} style={{ width: wp('75%'), gap: 12 }}>
                 {column.map((seller) => (
                   <SellerCard
                     key={seller.id}
@@ -492,10 +497,10 @@ const Commercial = () => {
         <View className="mt-1 mb-4">
           <View className="px-4 mb-4 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[22px] leading-[33px] text-[#101828]">
+              <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828]">
                 Recommended for You
               </Text>
-              <Text className="font-inter-regular text-[13px] leading-5 text-[#6A7282]">
+              <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
                 Based on your preferences
               </Text>
             </View>
@@ -513,7 +518,7 @@ const Commercial = () => {
                 });
               }}
             >
-              <Text className="font-inter-semibold text-[14px] leading-[21px] text-[#008E96]">See all</Text>
+              <Text className="font-inter-semibold text-[12px] leading-[18px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -528,7 +533,7 @@ const Commercial = () => {
               contentContainerStyle={{ paddingHorizontal: 16 }}
             >
               {recommendedForYou.map((property) => (
-                <View key={property.id} style={{ width: 168, height: 257.08, marginRight: 12 }}>
+                <View key={property.id} style={{ width: wp('42%'), height: hp('30.5%'), marginRight: 12 }}>
                   <PropertyCardSmall
                     image={property.image}
                     price={property.price}
@@ -550,10 +555,10 @@ const Commercial = () => {
         <View className="mt-1 mb-4">
           <View className="px-4 mb-3 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[22px] leading-[33px] text-[#101828]">
+              <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828]">
                 Curated Collections
               </Text>
-              <Text className="font-inter-regular text-[13px] leading-5 text-[#6A7282]">
+              <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
                 Handpicked properties for you
               </Text>
             </View>
@@ -593,8 +598,8 @@ const Commercial = () => {
                     });
                   }}
                   style={{
-                    width: index === 0 ? 168 : 161,
-                    height: 180,
+                    width: index === 0 ? wp('42%') : wp('40%'),
+                    height: hp('21%'),
                     borderRadius: 16,
                     overflow: 'hidden',
                     backgroundColor: 'rgba(0, 142, 150, 0.15)',
@@ -614,14 +619,14 @@ const Commercial = () => {
 
                     <View className="absolute inset-0 justify-end p-4">
                       <Text
-                        className="font-inter-semibold text-[17px] leading-[21px] text-center"
+                        className="font-inter-semibold text-[14px] leading-[18px] text-center"
                         style={{ color: isActive ? '#FFFFFF' : '#101828' }}
                         numberOfLines={1}
                       >
                         {collection.title}
                       </Text>
                       <Text
-                        className="font-inter-medium text-[13px] leading-5 text-center"
+                        className="font-inter-medium text-[11px] leading-4 text-center"
                         style={{ color: isActive ? '#FFFFFF' : '#4A5565' }}
                         numberOfLines={1}
                       >
@@ -642,11 +647,11 @@ const Commercial = () => {
         <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
+              <Text className="font-inter-semibold text-[15px] text-[#101828]">News For You</Text>
+              <Text className="font-inter-regular text-[12px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
             <TouchableOpacity>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-inter-medium text-[12px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 

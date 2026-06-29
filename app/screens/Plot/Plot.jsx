@@ -3,6 +3,10 @@ import * as SecureStore from 'expo-secure-store';
 import { useEffect, useRef, } from 'react';
 import { DeviceEventEmitter, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PropertyCardSmall from '../../../components/PropertyCardSmall';
+import SellerCard from '../../../components/SellerCard';
+import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import NoDataFound from '../../../components/NoDataFound';
 import SearchBox from '../../../components/SearchBox';
 import UserHeader from '../../../components/UserHeader';
@@ -194,11 +198,11 @@ const Plot = () => {
         </View>
         */}
 
-        {/* Popular on The Property Wall Section
+        {/* Popular on HousingMania Section
         <View className="px-4 mb-6">
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
+            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on HousingMania</Text>
           </View>
 
           <View
@@ -281,7 +285,7 @@ const Plot = () => {
             contentContainerStyle={{ gap: 12, paddingBottom: 8, paddingRight: 8 }}
           >
             {sellerColumns.map((column, columnIndex) => (
-              <View key={`seller-col-${columnIndex}`} style={{ width: 340, gap: 12 }}>
+              <View key={`seller-col-${columnIndex}`} style={{ width: wp('75%'), gap: 12 }}>
                 {column.map((seller) => (
                   <SellerCard
                     key={seller.id}

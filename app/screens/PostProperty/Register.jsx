@@ -230,7 +230,7 @@ const PostProperty = () => {
             Sell or rent your property
           </Text>
           <Text className="text-white text-2xl leading-8" style={{ fontFamily: 'Inter-Medium' }}>
-            faster with The Property Wall
+            faster with HousingMania
           </Text>
           <View className="w-24 h-1 bg-[#FDC700] rounded-full mt-2 mb-6" />
 
@@ -894,7 +894,7 @@ const PostProperty = () => {
 
               <View className="gap-3">
                 {[
-                  "How to post a property on The Property Wall?",
+                  "How to post a property on HousingMania?",
                   "Can I post a property for free?",
                   "Can I post a property for free?",
                   "Can I post a property for free?"

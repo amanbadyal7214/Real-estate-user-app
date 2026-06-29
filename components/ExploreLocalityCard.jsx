@@ -38,18 +38,18 @@ const ExploreLocalityCard = ({
     <TouchableOpacity
       activeOpacity={0.9}
       style={{
-        width: wp('39%'),
-        height: hp('12.5%'),
+        width: wp('33%'),
+        height: hp('10.5%'),
         backgroundColor: '#FFFFFF',
-        borderWidth: 0.67,
+        borderWidth: 0.57,
         borderColor: '#F3F4F6',
-        borderBottomLeftRadius: wp('3.8%'),
-        borderBottomRightRadius: wp('3.8%'),
+        borderBottomLeftRadius: wp('3.2%'),
+        borderBottomRightRadius: wp('3.2%'),
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: hp('0.1%') },
-        shadowOpacity: 0.06,
-        shadowRadius: wp('0.8%'),
-        elevation: 2,
+        shadowOffset: { width: 0, height: hp('0.08%') },
+        shadowOpacity: 0.05,
+        shadowRadius: wp('0.7%'),
+        elevation: 1.5,
         overflow: 'hidden'
       }}
     >
@@ -61,7 +61,7 @@ const ExploreLocalityCard = ({
           paddingHorizontal: wp('2.7%'),
         }}
       >
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%') }} numberOfLines={1} ellipsizeMode="tail">
+        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('2.7%'), lineHeight: hp('1.5%') }} numberOfLines={1} ellipsizeMode="tail">
           {title}
         </Text>
       </View>
@@ -75,10 +75,10 @@ const ExploreLocalityCard = ({
           </Text>
           {String(displayPrice).includes('/') ? (
             <View style={{ flex: 0.6, alignItems: 'flex-end' }}>
-              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} numberOfLines={1} ellipsizeMode="tail">
+              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('2.7%'), lineHeight: hp('1.5%') }} numberOfLines={1} ellipsizeMode="tail">
                 {displayPrice.split('/')[0]}
               </Text>
-              <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.5%') }} numberOfLines={1} ellipsizeMode="tail">
+              <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.1%'), lineHeight: hp('1.2%') }} numberOfLines={1} ellipsizeMode="tail">
                 /{displayPrice.split('/').slice(1).join('/')}
               </Text>
             </View>

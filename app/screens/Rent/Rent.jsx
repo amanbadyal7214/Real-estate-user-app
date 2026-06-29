@@ -4,8 +4,8 @@ import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CalculatorCard from '../../../components/CalculatorCard';
 import ContinueCards from '../../../components/ContinueCards';
 import ExploreLocalityCard from '../../../components/ExploreLocalityCard';
@@ -168,7 +168,7 @@ const getPropertyLocation = (property) => {
 
 const Rent = () => {
   const isFocused = useIsFocused();
-  const SUGGESTION_CARD_INTERVAL = wp('56.5%');
+  const SUGGESTION_CARD_INTERVAL = wp('48%');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { fetchRecentlyViewed, recentlyViewed } = useUserActivity();
 
@@ -463,14 +463,14 @@ const Rent = () => {
 
         {/* Smart Suggestions Section */}
         <View>
-          <View className="px-4 my-4">
+          <View className="px-4 my-3">
             <View className="flex-row justify-between items-center">
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Smart Suggestions</Text>
+              <Text className="font-inter-semibold text-[14px] text-[#101828]">Smart Suggestions</Text>
               <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-                <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
+                <Text className="font-inter-medium text-[12px] text-[#008E96]">See all</Text>
               </TouchableOpacity>
             </View>
-            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">
+            <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">
               Based on your last search in {currentLocation?.city || 'Khanpur'}
             </Text>
           </View>
@@ -506,13 +506,13 @@ const Rent = () => {
 
         {/* Owner Properties Section */}
         <View className="px-4 my-6">
-          <View className="mb-4 flex-row items-center justify-between">
+          <View className="mb-3 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Owner Properties</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Properties listed directly by owners</Text>
+              <Text className="font-inter-semibold text-[14px] text-[#101828]">Owner Properties</Text>
+              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Properties listed directly by owners</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/OwnerProperties')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
+              <Text className="font-inter-regular text-[13px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -543,15 +543,15 @@ const Rent = () => {
 
         <FurnishedPropertiesSection />
 
-        {/* Popular on The Property Wall Section */}
+        {/* Popular on HousingMania Section */}
         <View className="px-4 pt-6 mb-6 items-center">
           <View
             style={{
-              width: wp('85%'),
-              height: hp('19%'),
+              width: wp('78%'),
+              height: hp('16.2%'),
               backgroundColor: '#FFFFFF',
-              borderRadius: 24,
-              padding: 16,
+              borderRadius: 20,
+              padding: 13,
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.25,
@@ -560,9 +560,9 @@ const Rent = () => {
             }}
           >
             {/* Section Header */}
-            <View className="flex-row items-center gap-2 mb-6">
-              <Text style={{ fontSize: 16 }}>⭐</Text>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Popular on The Property Wall</Text>
+            <View className="flex-row items-center gap-2 mb-4">
+              <Text style={{ fontSize: 14 }}>⭐</Text>
+              <Text className="font-inter-semibold text-[14px] text-[#101828]">Popular on HousingMania</Text>
             </View>
 
             <View className="flex-row justify-around">
@@ -571,18 +571,18 @@ const Rent = () => {
                 onPress={() => handleProtectedViewMore('/screens/Buy/Suggestions')}
                 className="items-center"
               >
-                <View className="bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('10.6%'), height: wp('10.6%') }}>
-                  <Ionicons name="bulb-outline" size={wp('6.4%')} color="#008E96" />
+                <View className="bg-[#DBEAEB]/45 rounded-[12px] items-center justify-center mb-1.5" style={{ width: wp('9%'), height: wp('9%') }}>
+                  <Ionicons name="bulb-outline" size={wp('5.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[#364153]" style={{ fontSize: wp('3.2%') }}>Suggestions</Text>
+                <Text className="font-inter-medium text-[#364153]" style={{ fontSize: wp('2.7%') }}>Suggestions</Text>
               </TouchableOpacity>
 
               {/* News */}
               <TouchableOpacity className="items-center">
-                <View className="bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('10.6%'), height: wp('10.6%') }}>
-                  <Ionicons name="newspaper-outline" size={wp('6.4%')} color="#008E96" />
+                <View className="bg-[#DBEAEB]/45 rounded-[12px] items-center justify-center mb-1.5" style={{ width: wp('9%'), height: wp('9%') }}>
+                  <Ionicons name="newspaper-outline" size={wp('5.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[#364153]" style={{ fontSize: wp('3.2%') }}>News</Text>
+                <Text className="font-inter-medium text-[#364153]" style={{ fontSize: wp('2.7%') }}>News</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -591,8 +591,8 @@ const Rent = () => {
         {/* Recommended Sellers Section */}
         <View className="px-4 mb-3">
           <View className="mb-4">
-            <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
-            <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+            <Text className="font-inter-semibold text-[14px] text-[#101828]">Recommended Sellers</Text>
+            <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
           </View>
 
           <ScrollView
@@ -616,11 +616,11 @@ const Rent = () => {
         <View className="px-4 py-2">
           <View className="flex-row justify-between items-center mb-4">
             <View>
-              <Text className="font-inter-bold text-[18px] text-[#101828]">Handpicked for you</Text>
-              <Text className="font-inter-regular text-[14px] text-[#667085]">Homes that fit what you’re looking for</Text>
+              <Text className="font-inter-bold text-[15px] text-[#101828]">Handpicked for you</Text>
+              <Text className="font-inter-regular text-[12px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'rent' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
+              <Text className="font-inter-regular text-[13px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -649,11 +649,11 @@ const Rent = () => {
         <View className="px-4  ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Explore Localities</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
+              <Text className="font-inter-semibold text-[14px] text-[#101828]">Explore Localities</Text>
+              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">See Insights and videos in Mohali</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-inter-medium text-[12px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -693,11 +693,11 @@ const Rent = () => {
         <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
+              <Text className="font-inter-semibold text-[14px] text-[#101828]">News For You</Text>
+              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-inter-medium text-[12px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 

@@ -8,29 +8,29 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
       onPress={onPress}
       activeOpacity={0.95}
       style={{
-        width: wp('42%'),
-        height: hp('25%'),
+        width: wp('35%'),
+        height: hp('21%'),
         backgroundColor: '#FFFFFF',
-        borderWidth: 0.8,
+        borderWidth: 0.68,
         borderColor: '#D4A574',
-        borderRadius: wp('4%'),
+        borderRadius: wp('3.4%'),
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: hp('0.7%') },
-        shadowOpacity: 0.08,
-        shadowRadius: wp('3.2%'),
-        elevation: 3,
-        marginRight: wp('3.2%'),
-        padding: wp('3.7%'),
-        paddingBottom: hp('2%'),
+        shadowOffset: { width: 0, height: hp('0.6%') },
+        shadowOpacity: 0.07,
+        shadowRadius: wp('2.7%'),
+        elevation: 2,
+        marginRight: wp('2.7%'),
+        padding: wp('3.1%'),
+        paddingBottom: hp('1.7%'),
         overflow: 'visible'
       }}
     >
       <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), color: '#8B6F47', lineHeight: hp('2.2%') }}>{titlePrefix}</Text>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), color: '#8B6F47', marginTop: hp('0.2%') }}>Calculator</Text>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.1%'), color: '#8B6F47', lineHeight: hp('1.9%') }}>{titlePrefix}</Text>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%'), color: '#8B6F47', marginTop: hp('0.2%') }}>Calculator</Text>
       </View>
 
-      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%'), color: '#6A7282', marginTop: hp('1.2%'), minHeight: hp('3.5%') }}>
+      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.4%'), color: '#6A7282', marginTop: hp('1.0%'), minHeight: hp('3.5%') }}>
         {description}
       </Text>
 
@@ -39,9 +39,9 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
         <View
           style={{
             position: 'absolute',
-            width: wp('34%'),
-            height: hp('6.8%'),
-            borderRadius: wp('9%'),
+            width: wp('29%'),
+            height: hp('5.8%'),
+            borderRadius: wp('7.6%'),
             backgroundColor: '#FCEFE2',
             bottom: hp('0.2%'),
             alignSelf: 'center'
@@ -89,7 +89,7 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
             elevation: 3
           }}
         >
-          <ChevronRight size={wp('3.7%')} color="#FFFFFF" strokeWidth={1.5} />
+          <ChevronRight size={wp('3.1%')} color="#FFFFFF" strokeWidth={1.5} />
         </View>
       </View>
     </TouchableOpacity>

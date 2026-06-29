@@ -25,8 +25,8 @@ const ServicesCalculatorCard = ({
             activeOpacity={0.85}
             className="bg-white mr-4 overflow-hidden"
             style={{
-                width: wp('66.7%'),
-                height: hp('19.7%'),
+                width: wp('58%'),
+                height: hp('17.5%'),
                 borderWidth: 0.667,
                 borderColor: '#E4E7EC',
                 borderRadius: wp('4.3%'),
@@ -36,14 +36,14 @@ const ServicesCalculatorCard = ({
             <View className="absolute gap-1" style={{ left: wp('4.3%'), top: hp('2.7%') }}>
                 <Text
                     className="font-inter-semibold text-[#101828] leading-[22px]"
-                    style={{ fontSize: wp('4.8%') }}
+                    style={{ fontSize: wp('4.0%') }}
                     numberOfLines={2}
                 >
                     {title}
                 </Text>
                 <Text
                     className="font-inter-medium text-[#6A7282] leading-[16px]"
-                    style={{ fontSize: wp('3.5%'), maxWidth: wp('37.3%') }}
+                    style={{ fontSize: wp('3.0%'), maxWidth: wp('37.3%') }}
                     numberOfLines={2}
                 >
                     {subtitle}
@@ -57,9 +57,9 @@ const ServicesCalculatorCard = ({
                     backgroundColor: iconColor,
                     right: wp('3.7%'),
                     top: hp('2.7%'),
-                    width: wp('9.6%'),
-                    height: wp('9.6%'),
-                    borderRadius: wp('4.8%'),
+                    width: wp('8%'),
+                    height: wp('8%'),
+                    borderRadius: wp('4%'),
                 }}
             >
                 <Ionicons name="arrow-forward" size={wp('4.8%')} color="#FFFFFF" />
@@ -70,7 +70,7 @@ const ServicesCalculatorCard = ({
                 <Image
                     source={{ uri: image }}
                     className="absolute"
-                    style={{ width: wp('24.5%'), height: wp('24.5%'), right: 0, bottom: 0 }}
+                    style={{ width: wp('21%'), height: wp('21%'), right: 0, bottom: 0 }}
                     resizeMode="cover"
                 />
             ) : null}

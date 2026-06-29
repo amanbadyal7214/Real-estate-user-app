@@ -2,12 +2,12 @@ import { router } from 'expo-router';
 import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Search, TrendingUp } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import api from '../../api';
-import { useLocation } from '../../context/LocationContext';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { useProject } from '../../../hooks/useProject';
+import api from '../../api';
+import { useLocation } from '../../context/LocationContext';
 import { formatPricePerSqft } from '../../utils/formatPrice';
 
 const BuySearch = () => {
@@ -93,9 +93,9 @@ const BuySearch = () => {
       const response = await api.get(`/localities`, {
         params: { city: city || currentLocation?.city || 'Mohali' }
       });
-      
+
       if (response.data?.success) {
-        const filtered = response.data.data.filter(item => 
+        const filtered = response.data.data.filter(item =>
           item.name.toLowerCase().includes(locality.toLowerCase()) ||
           item.label.toLowerCase().includes(locality.toLowerCase())
         );
@@ -122,7 +122,7 @@ const BuySearch = () => {
   const handleSearchSubmit = () => {
     const finalCity = city.trim() || currentLocation?.city || "Mohali";
     const finalLocality = locality.trim();
-    
+
     updateLocation({
       city: finalCity,
       locality: finalLocality,
@@ -150,7 +150,7 @@ const BuySearch = () => {
       {/* Header */}
       <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('1.2%') }}>
         <View className="flex-row items-center" style={{ gap: wp('2.5%') }}>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => router.push('/screens/Buy/Buy')}
             className="items-center justify-center rounded-full border border-gray-100"
             style={{ width: wp('9%'), height: wp('9%') }}
@@ -160,7 +160,7 @@ const BuySearch = () => {
           <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828]">Buy</Text>
         </View>
 
-        <View 
+        <View
           className="flex-row items-center bg-gray-50/50 border border-gray-100"
           style={{ paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.5%'), borderRadius: wp('2.7%'), gap: wp('1.6%') }}
         >
@@ -178,7 +178,7 @@ const BuySearch = () => {
             {/* City Input */}
             <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('5%'), paddingHorizontal: wp('3.5%'), borderRadius: wp('2.7%') }}>
               <MapPin size={wp('4%')} color="#008E96" />
-              <TextInput 
+              <TextInput
                 placeholder="Enter City"
                 placeholderTextColor="#6A7282"
                 style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
@@ -192,7 +192,7 @@ const BuySearch = () => {
             <View style={{ zIndex: 50 }}>
               <View className="flex-row items-center bg-[#F2F4F7]" style={{ height: hp('5%'), paddingHorizontal: wp('3.5%'), borderRadius: wp('2.7%') }}>
                 <Search size={wp('4%')} color="#667085" />
-                <TextInput 
+                <TextInput
                   placeholder="Enter Locality"
                   placeholderTextColor="#6A7282"
                   style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
@@ -210,7 +210,7 @@ const BuySearch = () => {
                 <View className="bg-white border border-gray-100 shadow-sm overflow-hidden" style={{ marginTop: hp('1%'), borderRadius: wp('2.7%'), maxHeight: hp('23.6%') }}>
                   <ScrollView nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
                     {suggestions.map((item) => (
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         key={item._id}
                         onPress={() => {
                           setLocality(item.name);
@@ -231,7 +231,7 @@ const BuySearch = () => {
             </View>
 
             {/* Search Button */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleSearchSubmit}
               className="bg-[#008E96] items-center justify-center shadow-sm shadow-[#008E96]/20"
               style={{ height: hp('5%'), borderRadius: wp('2.7%'), marginTop: hp('0.5%') }}
@@ -250,7 +250,7 @@ const BuySearch = () => {
             <TrendingUp size={wp('3.7%')} color="#008E96" />
             <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">Popular Localities</Text>
           </View>
-          
+
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
             {(popularLocalities.length > 0 ? popularLocalities : [
               { name: 'Kharar', price: '₹6.2K/sq.ft.' },
@@ -258,7 +258,7 @@ const BuySearch = () => {
               { name: 'Sector 125', price: '₹8.9K/sq.ft.' },
               { name: 'Derabassi', price: '₹5.4K/sq.ft.' },
             ]).map((locality, index) => (
-              <TouchableOpacity 
+              <TouchableOpacity
                 key={index}
                 onPress={() => handleLocalitySelect(locality.name)}
                 className="bg-[#F7F9FA] border border-[#E4E7EC] shadow-sm"
@@ -286,15 +286,15 @@ const BuySearch = () => {
               { name: 'Green Valley', area: 'Sector 117, Mohali', price: '₹9.2K/sq.ft.', image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400' },
               { name: 'Palm Residency', area: 'Kharar Road', price: '₹6.5K/sq.ft.', image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=400' },
             ]).map((project, index) => (
-              <TouchableOpacity 
+              <TouchableOpacity
                 key={project.id || index}
                 onPress={() => project.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: project.id } })}
                 className="bg-white border border-[#E4E7EC] overflow-hidden shadow-sm"
                 style={{ width: wp('39%'), marginRight: wp('2.8%'), borderRadius: wp('3.8%') }}
               >
                 <View className="w-full bg-gray-100" style={{ height: hp('10%') }}>
-                  <Image 
-                    source={{ uri: project.image }} 
+                  <Image
+                    source={{ uri: project.image }}
                     className="w-full h-full"
                   />
                 </View>
@@ -309,14 +309,14 @@ const BuySearch = () => {
         </View>
 
         {/* Explore Nearby Properties Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={handleExploreNearby}
           className="flex-row items-center justify-between bg-[#008E96]/10 border border-[#008E96]/20"
           style={{ marginHorizontal: wp('3.5%'), marginBottom: hp('4%'), padding: wp('3.5%'), borderRadius: wp('3.8%') }}
         >
           <View className="flex-row items-center" style={{ gap: wp('2.5%') }}>
             <View className="bg-white items-center justify-center rounded-full border border-gray-100" style={{ width: wp('8%'), height: wp('8%') }}>
-               <ArrowLeft size={wp('3.7%')} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
+              <ArrowLeft size={wp('3.7%')} color="#008E96" style={{ transform: [{ rotate: '180deg' }] }} />
             </View>
             <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.4%') }} className="text-[#101828]">Explore nearby properties</Text>
           </View>

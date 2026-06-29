@@ -1,4 +1,5 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const SellerCard = ({
   name,
@@ -7,44 +8,46 @@ const SellerCard = ({
   avatar,
   tags = ['Commercial', 'Verified'],
   onPressContact,
+  cardWidth = wp('75%'),
 }) => {
   return (
     <View
       className="bg-white border border-[#E4E7EC] rounded-2xl"
       style={{
-        width: '100%',
-        minHeight: 145,
-        paddingTop: 13,
-        paddingHorizontal: 13,
-        paddingBottom: 10,
-        gap: 10,
+        width: cardWidth,
+        minHeight: hp('15%'),
+        paddingTop: hp('1.5%'),
+        paddingHorizontal: wp('3%'),
+        paddingBottom: hp('1.2%'),
+        gap: hp('1.2%'),
       }}
     >
-      <View className="flex-row items-start" style={{ gap: 10 }}>
+      <View className="flex-row items-start" style={{ gap: wp('2.5%') }}>
         <Image
           source={{
             uri:
               avatar ||
               'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
           }}
-          className="w-10 h-10 rounded-full"
+          className="rounded-full"
+          style={{ width: wp('10%'), height: wp('10%') }}
           resizeMode="cover"
         />
 
-        <View className="flex-1" style={{ gap: 2 }}>
-          <Text className="font-inter-semibold text-[14px] leading-5 text-[#101828]">
+        <View className="flex-1" style={{ gap: hp('0.3%') }}>
+          <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.5%') }}>
             {name}
           </Text>
-          <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
+          <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3%') }}>
             {experienceYears} years exp • {propertiesCount} properties
           </Text>
         </View>
       </View>
 
-      <View className="flex-row" style={{ gap: 8 }}>
+      <View className="flex-row" style={{ gap: wp('2%') }}>
         {tags.map((tag) => (
-          <View key={tag} className="bg-[#F3F4F6] rounded-md px-[10px] py-1">
-            <Text className="font-inter-regular text-[12px] leading-[18px] text-[#4A5565]">
+          <View key={tag} className="bg-[#F3F4F6] rounded-md" style={{ paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.5%') }}>
+            <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('3%') }}>
               {tag}
             </Text>
           </View>
@@ -54,9 +57,10 @@ const SellerCard = ({
       <TouchableOpacity
         onPress={onPressContact}
         activeOpacity={0.8}
-        className="h-10 rounded-[10px] border-2 border-[#008E96] items-center justify-center"
+        className="rounded-[10px] border-2 border-[#008E96] items-center justify-center"
+        style={{ height: hp('5%') }}
       >
-        <Text className="font-inter-semibold text-[14px] leading-[21px] text-[#008E96]">
+        <Text className="font-inter-semibold text-[#008E96]" style={{ fontSize: wp('3.5%') }}>
           Show Contact
         </Text>
       </TouchableOpacity>
