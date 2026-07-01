@@ -20,7 +20,7 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
       className="bg-white mr-3"
       style={{
         width: wp('55%'),
-        height: hp('28.5%'),
+        height: hp('30%'),
         borderRadius: wp('3.8%'),
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',

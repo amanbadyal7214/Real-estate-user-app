@@ -9,7 +9,7 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
       activeOpacity={0.95}
       style={{
         width: wp('35%'),
-        height: hp('21%'),
+        height: hp('23%'),
         backgroundColor: '#FFFFFF',
         borderWidth: 0.68,
         borderColor: '#D4A574',

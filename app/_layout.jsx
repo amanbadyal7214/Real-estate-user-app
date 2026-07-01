@@ -6,6 +6,13 @@ import "../global.css";
 import { CategoryTabProvider } from "./context/CategoryTabContext";
 import { PostPropertyProvider } from "./context/PostPropertyContext";
 import { LocationProvider } from "./context/LocationContext";
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
+
+// Disable Reanimated strict mode warnings
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 SplashScreen.preventAutoHideAsync();
 

@@ -8,7 +8,7 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
     <View 
       style={{
         width: wp('62%'),
-        height: hp('19%'),
+        height: hp('22.5%'),
         borderRadius: wp('3.8%'),
         marginRight: wp('3.2%'),
         backgroundColor: 'white',

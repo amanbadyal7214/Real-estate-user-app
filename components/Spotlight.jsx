@@ -29,7 +29,7 @@ const Spotlight = ({ data }) => {
                 onPress={() => item.id && router.push({ pathname: '/screens/ProjectDetails', params: { projectId: item.id } })}
                 className="bg-white elevation-2 z-[1] overflow-hidden"
                 style={{
-                  width: wp('64%'),
+                  width: wp('55%'),
                   height: hp('9.2%'),
                   borderRadius: wp('4%'),
                   shadowColor: '#000',

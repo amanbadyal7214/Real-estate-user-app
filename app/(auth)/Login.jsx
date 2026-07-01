@@ -11,7 +11,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
+import ForgotPasswordModal from "../../components/ForgotPasswordModal";
 import Toast from "../../components/Toast";
 import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
@@ -20,6 +22,7 @@ const Login = () => {
   const router = useRouter();
   const { redirectTo } = useLocalSearchParams();
   const [showPassword, setShowPassword] = useState(false);
+  const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
   const { formData, updateFormData, loading, handleLogin, roleSelector, setRoleSelector, toast, setToast } = useRegister();
 
   useEffect(() => {
@@ -82,55 +85,72 @@ const Login = () => {
               style={{ width: 240, height: 70 }}
               resizeMode="contain"
             />
-            <Text className="text-3xl font-inter-bold text-gray-900 mt-4">
+            <Text className="text-2xl font-inter-bold text-[#101828] mt-4">
               Login to Your Account
             </Text>
-            <Text className="text-gray-500 mt-1 text-center text-lg">
+            <Text className="text-[#6A7282] mt-1.5 text-center text-sm font-inter-regular">
               Welcome back! Please enter your details.
             </Text>
           </View>
 
           {/* Form Fields - Tightened */}
-          <View className="space-y-4">
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-4 rounded-xl">
-              <Ionicons name="mail-outline" size={20} color="#9CA3AF" />
+          <View>
+            <View 
+              className="flex-row items-center border border-[#E4E7EC] bg-[#F9FAFB]"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+              }}
+            >
+              <Ionicons name="mail-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Email address"
                 keyboardType="email-address"
-                className="flex-1 ml-3 text-gray-800"
+                className="flex-1 ml-2.5 text-[#101828] font-inter-regular"
                 placeholderTextColor="#9CA3AF"
                 value={formData.email}
                 onChangeText={(value) => updateFormData("email", value)}
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
             </View>
 
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-4 rounded-xl mt-4">
-              <Ionicons name="lock-closed-outline" size={20} color="#9CA3AF" />
+            <View 
+              className="flex-row items-center border border-[#E4E7EC] bg-[#F9FAFB]"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+                marginTop: hp('1.1%'),
+              }}
+            >
+              <Ionicons name="lock-closed-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Password"
                 secureTextEntry={!showPassword}
-                className="flex-1 ml-3 text-gray-800"
+                className="flex-1 ml-2.5 text-[#101828] font-inter-regular"
                 placeholderTextColor="#9CA3AF"
                 value={formData.password}
                 onChangeText={(value) => updateFormData("password", value)}
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#9CA3AF" />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="p-1">
+                <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={hp('2.2%')} color="#9CA3AF" />
               </TouchableOpacity>
             </View>
           </View>
 
-          <TouchableOpacity className="mt-4 self-end">
-            <Text className="font-inter-medium" style={{ color: PRIMARY_COLOR }}>Forgot Password?</Text>
+          <TouchableOpacity className="mt-3 self-end" onPress={() => setForgotPasswordVisible(true)}>
+            <Text className="font-inter-medium text-sm" style={{ color: PRIMARY_COLOR }}>Forgot Password?</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="mt-8 p-5 rounded-2xl items-center shadow-lg"
+            className="mt-8 p-4 rounded-xl items-center shadow-sm"
             style={{ backgroundColor: PRIMARY_COLOR }}
             onPress={() => handleLogin({ onSuccess: handleLoginSuccess })}
             disabled={loading}
           >
-            <Text className="text-white font-inter-bold text-lg">
+            <Text className="text-white font-inter-semibold text-base">
               {loading ? "Logging in..." : "Login"}
             </Text>
           </TouchableOpacity>
@@ -142,8 +162,8 @@ const Login = () => {
           className="mt-auto py-6"
           onPress={() => router.push("/(auth)/Register")}
         >
-          <Text className="text-center text-gray-500">
-            Don&apos;t have an account? <Text className="font-inter-bold" style={{ color: PRIMARY_COLOR }}>Sign up</Text>
+          <Text className="text-center text-[#6A7282] text-sm font-inter-regular">
+            Don&apos;t have an account? <Text className="font-inter-semibold" style={{ color: PRIMARY_COLOR }}>Sign up</Text>
           </Text>
         </TouchableOpacity>
       </ScrollView>
@@ -157,6 +177,12 @@ const Login = () => {
         onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
       />
       <Toast message={toast?.message} type={toast?.type} onDismiss={() => setToast(null)} />
+      <ForgotPasswordModal
+        visible={forgotPasswordVisible}
+        onClose={() => setForgotPasswordVisible(false)}
+        setToast={setToast}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </SafeAreaView>
   );
 };

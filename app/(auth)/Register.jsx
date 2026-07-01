@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
 import Toast from "../../components/Toast";
 import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
@@ -220,11 +221,18 @@ const Register = () => {
         </View>
 
         {/* Form Fields - Tightened */}
-        <View className="space-y-3 mb-2">
+        <View className="mb-2">
           {/* Phone Number Input */}
           {(!isLogin || !isPhoneVerified) ? (
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl">
-              <Ionicons name="phone-portrait-outline" size={18} color="#9CA3AF" />
+            <View 
+              className="flex-row items-center border border-gray-100 bg-gray-50"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+              }}
+            >
+              <Ionicons name="phone-portrait-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Phone Number"
                 keyboardType="phone-pad"
@@ -233,38 +241,64 @@ const Register = () => {
                 value={formData.phone}
                 onChangeText={(value) => updateFormData("phone", value)}
                 maxLength={10}
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
             </View>
           ) : (
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl opacity-60">
-              <Ionicons name="phone-portrait-outline" size={18} color="#9CA3AF" />
+            <View 
+              className="flex-row items-center border border-gray-100 bg-gray-50 opacity-60"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+              }}
+            >
+              <Ionicons name="phone-portrait-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 className="flex-1 ml-3 font-inter-regular text-gray-800"
                 value={formData.phone}
                 editable={false}
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
-              <Ionicons name="checkmark-circle" size={20} color="green" />
+              <Ionicons name="checkmark-circle" size={hp('2.4%')} color="green" />
             </View>
           )}
 
           {/* Name Field */}
           {(!isLogin || isPhoneVerified) && (
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-              <Ionicons name="person-outline" size={18} color="#9CA3AF" />
+            <View 
+              className="flex-row items-center border border-gray-100 bg-gray-50"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+                marginTop: hp('1.1%'),
+              }}
+            >
+              <Ionicons name="person-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Your Full Name"
                 className="flex-1 ml-3 font-inter-regular text-gray-800"
                 placeholderTextColor="#9CA3AF"
                 value={formData.name}
                 onChangeText={(value) => updateFormData("name", value)}
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
             </View>
           )}
 
           {/* Email Field */}
           {(!isLogin || isPhoneVerified) && (
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-              <Ionicons name="mail-outline" size={18} color="#9CA3AF" />
+            <View 
+              className="flex-row items-center border border-gray-100 bg-gray-50"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+                marginTop: hp('1.1%'),
+              }}
+            >
+              <Ionicons name="mail-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Email address"
                 keyboardType="email-address"
@@ -273,15 +307,23 @@ const Register = () => {
                 value={formData.email}
                 onChangeText={(value) => updateFormData("email", value)}
                 autoCapitalize="none"
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
             </View>
           )}
 
           {/* Password Field */}
           {(!isLogin || isPhoneVerified) && (
-            <View className="mt-3">
-              <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl">
-                <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
+            <View style={{ marginTop: hp('1.1%') }}>
+              <View 
+                className="flex-row items-center border border-gray-100 bg-gray-50"
+                style={{
+                  paddingVertical: hp('1.1%'),
+                  paddingHorizontal: wp('3.5%'),
+                  borderRadius: 12,
+                }}
+              >
+                <Ionicons name="lock-closed-outline" size={hp('2.2%')} color="#9CA3AF" />
                 <TextInput
                   placeholder="Password"
                   secureTextEntry={!showPassword}
@@ -289,13 +331,14 @@ const Register = () => {
                   placeholderTextColor="#9CA3AF"
                   value={formData.password}
                   onChangeText={(value) => updateFormData("password", value)}
+                  style={{ fontSize: hp('1.7%'), padding: 0 }}
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
+                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={hp('2.2%')} color="#9CA3AF" />
                 </TouchableOpacity>
               </View>
               {isLogin && (
-                <Text className="text-xs text-gray-500 mt-1 ml-1" style={{ fontFamily: 'Inter-Regular' }}>
+                <Text className="text-xs text-gray-500 mt-1 ml-1" style={{ fontFamily: 'Inter-Regular', fontSize: hp('1.4%') }}>
                   Fill your login password to get a new role
                 </Text>
               )}
@@ -304,8 +347,16 @@ const Register = () => {
 
           {/* Confirm Password Field (Only for New User) */}
           {!isLogin && (
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-              <Ionicons name="lock-closed-outline" size={18} color="#9CA3AF" />
+            <View 
+              className="flex-row items-center border border-gray-100 bg-gray-50"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+                marginTop: hp('1.1%'),
+              }}
+            >
+              <Ionicons name="lock-closed-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Confirm Password"
                 secureTextEntry={!showConfirmPassword}
@@ -313,23 +364,33 @@ const Register = () => {
                 placeholderTextColor="#9CA3AF"
                 value={formData.confirmPassword}
                 onChangeText={(value) => updateFormData("confirmPassword", value)}
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
               <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                <Ionicons name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} size={18} color="#9CA3AF" />
+                <Ionicons name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} size={hp('2.2%')} color="#9CA3AF" />
               </TouchableOpacity>
             </View>
           )}
 
           {/* Search City Field */}
           {(!isLogin || isPhoneVerified) && (
-            <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-              <Ionicons name="location-outline" size={18} color="#9CA3AF" />
+            <View 
+              className="flex-row items-center border border-gray-100 bg-gray-50"
+              style={{
+                paddingVertical: hp('1.1%'),
+                paddingHorizontal: wp('3.5%'),
+                borderRadius: 12,
+                marginTop: hp('1.1%'),
+              }}
+            >
+              <Ionicons name="location-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Search City"
                 className="flex-1 ml-3 font-inter-regular text-gray-800"
                 placeholderTextColor="#9CA3AF"
                 value={formData.city || ''}
                 onChangeText={(value) => updateFormData("city", value)}
+                style={{ fontSize: hp('1.7%'), padding: 0 }}
               />
             </View>
           )}
@@ -337,19 +398,36 @@ const Register = () => {
           {/* Builder specific fields */}
           {(!isLogin || isPhoneVerified) && formData.role === 'builder' && (
             <>
-              <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-                <Ionicons name="business-outline" size={18} color="#9CA3AF" />
+              <View 
+                className="flex-row items-center border border-gray-100 bg-gray-50"
+                style={{
+                  paddingVertical: hp('1.1%'),
+                  paddingHorizontal: wp('3.5%'),
+                  borderRadius: 12,
+                  marginTop: hp('1.1%'),
+                }}
+              >
+                <Ionicons name="business-outline" size={hp('2.2%')} color="#9CA3AF" />
                 <TextInput
                   placeholder="Company Name"
                   className="flex-1 ml-3 font-inter-regular text-gray-800"
                   placeholderTextColor="#9CA3AF"
                   value={formData.companyName || ''}
                   onChangeText={(value) => updateFormData("companyName", value)}
+                  style={{ fontSize: hp('1.7%'), padding: 0 }}
                 />
               </View>
 
-              <View className="flex-row items-center border border-gray-100 bg-gray-50 p-3 rounded-2xl mt-3">
-                <Ionicons name="calendar-outline" size={18} color="#9CA3AF" />
+              <View 
+                className="flex-row items-center border border-gray-100 bg-gray-50"
+                style={{
+                  paddingVertical: hp('1.1%'),
+                  paddingHorizontal: wp('3.5%'),
+                  borderRadius: 12,
+                  marginTop: hp('1.1%'),
+                }}
+              >
+                <Ionicons name="calendar-outline" size={hp('2.2%')} color="#9CA3AF" />
                 <TextInput
                   placeholder="Business Since (Year)"
                   keyboardType="number-pad"
@@ -358,6 +436,7 @@ const Register = () => {
                   placeholderTextColor="#9CA3AF"
                   value={formData.businessSince || ''}
                   onChangeText={(value) => updateFormData("businessSince", value)}
+                  style={{ fontSize: hp('1.7%'), padding: 0 }}
                 />
               </View>
             </>
@@ -463,13 +542,17 @@ const Register = () => {
               }
             </Text>
 
-            <View className="flex-row justify-between mb-8">
+            <View className="flex-row justify-between mb-8 px-2">
               {otp.map((digit, index) => (
                 <TextInput
                   key={index}
                   ref={(ref) => (otpInputs.current[index] = ref)}
-                  className="w-11 h-14 border-2 border-gray-200 rounded-lg text-center text-xl"
-                  style={{ fontFamily: 'Inter-Bold' }}
+                  className="bg-white border border-gray-200 rounded-xl text-center text-lg"
+                  style={{
+                    fontFamily: 'Inter-Bold',
+                    width: 38,
+                    height: 46,
+                  }}
                   keyboardType="number-pad"
                   maxLength={1}
                   value={digit}
