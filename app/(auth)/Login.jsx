@@ -10,8 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { SafeAreaView } from "react-native-safe-area-context";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
 import ForgotPasswordModal from "../../components/ForgotPasswordModal";
 import Toast from "../../components/Toast";
@@ -95,7 +95,7 @@ const Login = () => {
 
           {/* Form Fields - Tightened */}
           <View>
-            <View 
+            <View
               className="flex-row items-center border border-[#E4E7EC] bg-[#F9FAFB]"
               style={{
                 paddingVertical: hp('1.1%'),
@@ -115,7 +115,7 @@ const Login = () => {
               />
             </View>
 
-            <View 
+            <View
               className="flex-row items-center border border-[#E4E7EC] bg-[#F9FAFB]"
               style={{
                 paddingVertical: hp('1.1%'),

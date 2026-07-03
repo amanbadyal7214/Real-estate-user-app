@@ -7,6 +7,7 @@ import { Image, KeyboardAvoidingView, Modal, Platform, ScrollView, Text, TextInp
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DashboardSelectorModal from '../../../components/DashboardSelectorModal';
+import PasswordValidator, { validatePasswordRules } from '../../../components/PasswordValidator';
 import Toast from '../../../components/Toast';
 import { performRoleBasedRedirect, useRegister } from '../../../hooks/Register';
 const PostProperty = () => {
@@ -108,7 +109,7 @@ const PostProperty = () => {
     : (formData.phone.length === 10 &&
       formData.name.trim().length > 0 &&
       formData.email.includes('@') &&
-      formData.password.length >= 6);
+      validatePasswordRules(formData.password).isValid);
 
   const isRoleActive = (roleName) => {
     return formData.role === roleName ||
@@ -544,6 +545,9 @@ const PostProperty = () => {
                       Fill your login password to get a new role
                     </Text>
                   )}
+                  {!isLogin && (
+                    <PasswordValidator password={formData.password} />
+                  )}
                 </View>
               )}
 
@@ -680,7 +684,7 @@ const PostProperty = () => {
                   </View>
 
                   <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
-                    {step === 1 
+                    {step === 1
                       ? `Enter the 6-digit code sent to +91 ${formData.phone}`
                       : `Enter the 6-digit code sent to ${formData.email}`
                     }
@@ -720,7 +724,7 @@ const PostProperty = () => {
                     </Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     className="mt-4 items-center"
                     onPress={() => {
                       if (step === 1) {

@@ -3,6 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { useRef, useState } from "react";
 import { Alert } from "react-native";
 import api from "../app/api";
+import { validatePasswordRules } from "../components/PasswordValidator";
 
 export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) => {
     let roleArray = [];
@@ -227,6 +228,12 @@ export const useRegister = () => {
     // Step 2: Account Registration (Backend OTP)
     const handleRegister = async (options = {}) => {
         const { onSuccess } = options;
+
+        const pwdRules = validatePasswordRules(formData.password);
+        if (!pwdRules.isValid) {
+            showToast("Password must be 8+ chars with 1 capital letter, 1 number & 1 special char.", "error");
+            return;
+        }
 
         if (formData.password !== formData.confirmPassword) {
             showToast("Passwords do not match.", "error");

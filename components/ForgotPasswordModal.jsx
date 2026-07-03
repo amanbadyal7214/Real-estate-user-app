@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import api from "../app/api";
 import { PRIMARY_COLOR } from "../app/constants/theme";
+import PasswordValidator, { validatePasswordRules } from "./PasswordValidator";
 
 const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => {
   const [step, setStep] = useState(1); // 1: Mobile, 2: OTP, 3: Reset Password
@@ -112,8 +113,9 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
       return;
     }
 
-    if (newPassword.length < 6) {
-      showToast("Password must be at least 6 characters.", "error");
+    const pwdRules = validatePasswordRules(newPassword);
+    if (!pwdRules.isValid) {
+      showToast("Password must be 8+ chars with 1 capital letter, 1 number & 1 special char.", "error");
       return;
     }
 
@@ -311,7 +313,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
           {step === 2 && (
             <>
               <Text className="text-[#475467] text-sm font-inter-regular text-center mb-5 leading-5 px-4">
-                We've sent a 6-digit verification code to your phone number.
+                We&apos;ve sent a 6-digit verification code to your phone number.
               </Text>
 
               <Text className="text-[#344054] text-sm font-inter-medium mb-2 text-center">
@@ -432,6 +434,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                   <Ionicons name={showNewPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#6A7282" />
                 </TouchableOpacity>
               </View>
+              <PasswordValidator password={newPassword} />
 
               <Text className="text-[#344054] text-sm font-inter-medium mb-1.5">
                 Confirm Password

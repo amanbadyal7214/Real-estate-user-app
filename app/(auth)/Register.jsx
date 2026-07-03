@@ -17,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
 import Toast from "../../components/Toast";
+import PasswordValidator, { validatePasswordRules } from "../../components/PasswordValidator";
 import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
 
@@ -87,7 +88,8 @@ const Register = () => {
     : (formData.phone.length === 10 &&
       formData.name.trim().length > 0 &&
       formData.email.includes('@') &&
-      formData.password.length >= 6);
+      validatePasswordRules(formData.password).isValid &&
+      formData.password === formData.confirmPassword);
 
   const handleNext = async () => {
     if (isFormValid) {
@@ -191,21 +193,23 @@ const Register = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="px-4">
-        <TouchableOpacity onPress={handleSafeBack} className="p-2 self-start">
-          <Ionicons name="chevron-back" size={32} color="black" />
+      <View className="flex-row items-center justify-between px-4 py-2">
+        <TouchableOpacity onPress={handleSafeBack} className="p-2">
+          <Ionicons name="chevron-back" size={28} color="black" />
         </TouchableOpacity>
+        <View className="flex-1 items-center justify-center">
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={{ width: 140, height: 40 }}
+            resizeMode="contain"
+          />
+        </View>
+        <View className="w-10" />
       </View>
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 pb-16">
 
-        <View className=" mb-8">
-          <Image
-            source={require('../../assets/images/icon3.jpeg')}
-            style={{ width: 220, height: 60 }}
-            resizeMode="contain"
-            className="mb-3"
-          />
+        <View className="mb-8">
           <Text className="text-[24px] font-inter-bold text-gray-900">
             Create Your Account
           </Text>
@@ -353,6 +357,9 @@ const Register = () => {
                 <Text className="text-xs text-gray-500 mt-1 ml-1" style={{ fontFamily: 'Inter-Regular', fontSize: hp('1.4%') }}>
                   Fill your login password to get a new role
                 </Text>
+              )}
+              {!isLogin && (
+                <PasswordValidator password={formData.password} />
               )}
             </View>
           )}
