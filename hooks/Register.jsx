@@ -253,10 +253,12 @@ export const useRegister = () => {
             console.log("API Response: /auth/register", response.data);
 
             if (response.data.success) {
-                showToast("Account created successfully!", "success");
-                // Commented out email verification step, log in directly
-                // setStep(3); // Proceed to Email OTP verification
-                await handleLogin();
+                showToast(response.data.message || "OTP sent to your email to complete registration", "success");
+                if (response.data.verifyEmail || response.data.success) {
+                    setStep(3); // Proceed to Email OTP verification
+                } else {
+                    await handleLogin();
+                }
             } else {
                 // If success is false but no error thrown
                 showToast(response.data.error || "Something went wrong.", "warning");
@@ -271,7 +273,7 @@ export const useRegister = () => {
             // Ya sirf debugging ke liye allow karna chahte hain to step 3 par bhej sakte hain
             if (message.includes("Email could not be sent")) {
                 showToast("User created but email dispatch failed.", "warning");
-                // setStep(3); // Uncomment this only if you want to bypass for testing
+                setStep(3);
             }
         } finally {
             setLoading(false);
@@ -279,7 +281,8 @@ export const useRegister = () => {
     };
 
     // Step 3: Email OTP Verification
-    const handleVerifyEmailOtp = async () => {
+    const handleVerifyEmailOtp = async (options = {}) => {
+        const { onSuccess, defaultTarget } = options;
         console.log("handleVerifyEmailOtp Debug:", {
             emailInFormData: formData.email,
             enteredOtp: emailOtp,
@@ -288,12 +291,12 @@ export const useRegister = () => {
 
         if (!emailOtp) {
             showToast("Please enter the OTP sent to your email.", "error");
-            return;
+            return false;
         }
 
         if (!formData.email) {
             showToast("Email address is missing from form data.", "error");
-            return;
+            return false;
         }
 
         setLoading(true);
@@ -315,15 +318,22 @@ export const useRegister = () => {
                     SecureStore.setItemAsync("userData", JSON.stringify(user))
                 ]);
 
-                showToast("Account created successfully!", "success");
-                performRoleBasedRedirect(role, "/screens/PostProperty/PropertyDetails", setRoleSelector);
+                showToast("Account verified successfully!", "success");
+                if (typeof onSuccess === "function") {
+                    onSuccess(response.data);
+                } else {
+                    performRoleBasedRedirect(role, defaultTarget || "/screens/PostProperty/PropertyDetails", setRoleSelector);
+                }
+                return true;
             } else {
                 showToast(response.data.message || "Invalid OTP", "error");
+                return false;
             }
         } catch (error) {
             console.error("API Error: /auth/verify-otp", error.response?.data || error.message);
             const errorMessage = error.response?.data?.message || error.response?.data?.error || "Verification failed. Please try again.";
             showToast(errorMessage, "error");
+            return false;
         } finally {
             setLoading(false);
         }

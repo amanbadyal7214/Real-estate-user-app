@@ -13,6 +13,7 @@ const PostProperty = () => {
 
   const {
     step,
+    setStep,
     formData,
     updateFormData,
     loading,
@@ -21,6 +22,7 @@ const PostProperty = () => {
     handlePhoneValidation,
     verifyMockOtp,
     handleRegister,
+    handleVerifyEmailOtp,
     handleLogin,
     roleSelector,
     setRoleSelector,
@@ -164,6 +166,12 @@ const PostProperty = () => {
       if (step === 1) {
         console.log("Calling verifyMockOtp with isExisting:", isLogin);
         const success = await verifyMockOtp({ isExisting: isLogin });
+        if (success && isLogin) {
+          setShowOTPModal(false);
+        }
+      } else if (step === 2 || step === 3) {
+        console.log("Calling handleVerifyEmailOtp");
+        const success = await handleVerifyEmailOtp({ defaultTarget: "/screens/PostProperty/PropertyDetails" });
         if (success) {
           setShowOTPModal(false);
         }
@@ -191,6 +199,13 @@ const PostProperty = () => {
     };
     registerAndNext();
   }, [step, showOTPModal]);
+
+  // Effect to open modal when transitioning to step 3 (Email Verification)
+  useEffect(() => {
+    if (step === 3) {
+      setShowOTPModal(true);
+    }
+  }, [step]);
 
   // Effect to clear OTP when moving to email verification or step 2
   useEffect(() => {
@@ -657,8 +672,7 @@ const PostProperty = () => {
                 <View className="bg-white rounded-t-3xl p-6">
                   <View className="flex-row justify-between items-center mb-6">
                     <Text className="text-xl" style={{ fontFamily: 'Inter-Bold' }}>
-                      {/* {step === 1 ? 'Verify Phone' : 'Verify Email'} */}
-                      Verify Phone
+                      {step === 1 ? 'Verify Phone' : 'Verify Email'}
                     </Text>
                     <TouchableOpacity onPress={() => setShowOTPModal(false)}>
                       <Ionicons name="close" size={24} color="black" />
@@ -666,11 +680,10 @@ const PostProperty = () => {
                   </View>
 
                   <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
-                    {/* {step === 1 
+                    {step === 1 
                       ? `Enter the 6-digit code sent to +91 ${formData.phone}`
                       : `Enter the 6-digit code sent to ${formData.email}`
-                    } */}
-                    Enter the 6-digit code sent to +91 {formData.phone}
+                    }
                   </Text>
 
                   <View className="flex-row justify-between mb-8">
@@ -707,7 +720,16 @@ const PostProperty = () => {
                     </Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity className="mt-4 items-center">
+                  <TouchableOpacity 
+                    className="mt-4 items-center"
+                    onPress={() => {
+                      if (step === 1) {
+                        handlePhoneValidation();
+                      } else {
+                        setToast({ message: "Verification code resent to your email.", type: "info" });
+                      }
+                    }}
+                  >
                     <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Resend Code</Text>
                   </TouchableOpacity>
                 </View>

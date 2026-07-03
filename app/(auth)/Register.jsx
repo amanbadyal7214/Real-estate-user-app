@@ -140,6 +140,12 @@ const Register = () => {
       if (step === 1) {
         console.log("Calling verifyMockOtp with isExisting:", isLogin);
         const success = await verifyMockOtp({ isExisting: isLogin });
+        if (success && isLogin) {
+          setShowOTPModal(false);
+        }
+      } else if (step === 2 || step === 3) {
+        console.log("Calling handleVerifyEmailOtp");
+        const success = await handleVerifyEmailOtp({ defaultTarget: "/screens/Buy/Buy" });
         if (success) {
           setShowOTPModal(false);
         }
@@ -155,11 +161,17 @@ const Register = () => {
       if (step === 2 && showOTPModal && !loading) {
         // Mock OTP verified, now register
         await handleRegister();
-        setShowOTPModal(false);
       }
     };
     registerAndNext();
   }, [step, showOTPModal]);
+
+  // Effect to open modal when transitioning to step 3 (Email Verification)
+  useEffect(() => {
+    if (step === 3) {
+      setShowOTPModal(true);
+    }
+  }, [step]);
 
   // Effect to clear OTP when moving to email verification or step 2
   useEffect(() => {
@@ -571,7 +583,16 @@ const Register = () => {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity className="mt-4 items-center">
+            <TouchableOpacity 
+              className="mt-4 items-center"
+              onPress={() => {
+                if (step === 1) {
+                  handlePhoneValidation();
+                } else {
+                  setToast({ message: "Verification code resent to your email.", type: "info" });
+                }
+              }}
+            >
               <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Resend Code</Text>
             </TouchableOpacity>
           </View>
