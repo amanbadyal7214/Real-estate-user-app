@@ -183,7 +183,7 @@ const SellRentBanner = () => {
             className="text-[#101828] font-semibold"
             style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.4%'), lineHeight: wp('4.3%'), marginBottom: hp('1.2%') }}
           >
-            Looking to sell/rent{"\n"}your property?
+            {`Looking to sell/rent\nyour property?`}
           </Text>
 
           <TouchableOpacity
