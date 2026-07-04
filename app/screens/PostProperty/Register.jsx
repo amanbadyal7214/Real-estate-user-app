@@ -65,9 +65,10 @@ const PostProperty = () => {
 
       const hasOwner = roleArray.includes('owner');
       const hasBuilder = roleArray.includes('builder');
+      const hasRealtor = roleArray.includes('realtor');
 
       // If user only has buyer role, let them stay on this page to add a role
-      if (!hasOwner && !hasBuilder) {
+      if (!hasOwner && !hasBuilder && !hasRealtor) {
         setIsLogin(true);
         // Prefill the phone number from userData if available
         const userStr = await SecureStore.getItemAsync("userData");
@@ -333,10 +334,10 @@ const PostProperty = () => {
                 <Text className="text-[#4A5565] text-sm mb-3" style={{ fontFamily: 'Inter-Medium' }}>
                   User Type
                 </Text>
-                <View className="flex-row gap-2">
+                <View className="flex-row gap-2 flex-wrap">
                   <TouchableOpacity
                     onPress={() => updateFormData('role', 'buyer')}
-                    className="flex-1 py-3 rounded-xl border items-center"
+                    className="flex-1 min-w-[45%] py-3 rounded-xl border items-center mb-1"
                     style={{
                       backgroundColor: isRoleActive('buyer') ? '#E6F7F6' : '#FFFFFF',
                       borderColor: isRoleActive('buyer') ? '#008E96' : '#D1D5DC'
@@ -354,7 +355,7 @@ const PostProperty = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => updateFormData('role', 'owner')}
-                    className="flex-1 py-3 rounded-xl border items-center"
+                    className="flex-1 min-w-[45%] py-3 rounded-xl border items-center mb-1"
                     style={{
                       backgroundColor: isRoleActive('owner') ? '#E6F7F6' : '#FFFFFF',
                       borderColor: isRoleActive('owner') ? '#008E96' : '#D1D5DC'
@@ -372,7 +373,7 @@ const PostProperty = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => updateFormData('role', 'builder')}
-                    className="flex-1 py-3 rounded-xl border items-center"
+                    className="flex-1 min-w-[45%] py-3 rounded-xl border items-center mb-1"
                     style={{
                       backgroundColor: isRoleActive('builder') ? '#E6F7F6' : '#FFFFFF',
                       borderColor: isRoleActive('builder') ? '#008E96' : '#D1D5DC'
@@ -386,6 +387,24 @@ const PostProperty = () => {
                       }}
                     >
                       Builder
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => updateFormData('role', 'realtor')}
+                    className="flex-1 min-w-[45%] py-3 rounded-xl border items-center mb-1"
+                    style={{
+                      backgroundColor: isRoleActive('realtor') ? '#E6F7F6' : '#FFFFFF',
+                      borderColor: isRoleActive('realtor') ? '#008E96' : '#D1D5DC'
+                    }}
+                  >
+                    <Text
+                      className="text-sm"
+                      style={{
+                        fontFamily: 'Inter-Medium',
+                        color: isRoleActive('realtor') ? '#008E96' : '#364153'
+                      }}
+                    >
+                      Realtor
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -415,7 +434,7 @@ const PostProperty = () => {
                       Select Your Role
                     </Text>
                     {(() => {
-                      const allRolesList = ['buyer', 'owner', 'builder'];
+                      const allRolesList = ['buyer', 'owner', 'builder', 'realtor'];
                       const assignedRolesList = existingUserDetails?.role
                         ? (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role])
                         : [];
@@ -430,12 +449,12 @@ const PostProperty = () => {
                       }
 
                       return (
-                        <View className="flex-row gap-2">
+                        <View className="flex-row gap-2 flex-wrap">
                           {unassignedRolesList.map((roleName) => (
                             <TouchableOpacity
                               key={roleName}
                               onPress={() => updateFormData('role', roleName)}
-                              className="flex-1 py-3 rounded-xl border items-center"
+                              className="flex-1 min-w-[45%] py-3 rounded-xl border items-center mb-1"
                               style={{
                                 backgroundColor: formData.role === roleName ? '#E6F7F6' : '#FFFFFF',
                                 borderColor: formData.role === roleName ? '#008E96' : '#D1D5DC'

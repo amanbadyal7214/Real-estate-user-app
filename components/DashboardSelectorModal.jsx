@@ -1,6 +1,5 @@
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { PRIMARY_COLOR } from '../app/constants/theme';
 
 const DashboardSelectorModal = ({ visible, roles, onSelect, onClose }) => {
@@ -8,7 +7,7 @@ const DashboardSelectorModal = ({ visible, roles, onSelect, onClose }) => {
 
   // Filter or unique the roles if there are duplicates or weird strings
   const roleList = Array.isArray(roles) ? roles : [];
-  
+
   // Construct options based on roles present
   const options = [];
 
@@ -51,10 +50,22 @@ const DashboardSelectorModal = ({ visible, roles, onSelect, onClose }) => {
     });
   }
 
-  // Fallback if no roles matched but we got something
-  if (options.length === 0 && roleList.length > 0) {
-    // If user has other roles not mapped
-    roleList.forEach((role) => {
+  if (roleList.includes('realtor')) {
+    options.push({
+      key: 'realtor',
+      title: 'Realtor Dashboard',
+      subtitle: 'Manage client properties, post listings, track leads',
+      iconType: 'ionicons',
+      iconName: 'briefcase-outline',
+      bgColor: '#EFF6FF',
+      iconColor: '#2563EB',
+      target: '/screens/RealtorProperties'
+    });
+  }
+
+  // Fallback for any other roles in roleList that were not explicitly handled above
+  roleList.forEach((role) => {
+    if (!options.some((opt) => opt.key === role)) {
       options.push({
         key: role,
         title: `${role.charAt(0).toUpperCase() + role.slice(1)} Dashboard`,
@@ -65,8 +76,8 @@ const DashboardSelectorModal = ({ visible, roles, onSelect, onClose }) => {
         iconColor: '#4B5563',
         target: role === 'buyer' ? '/screens/Buy/Buy' : '/screens/PostProperty/MyProperties'
       });
-    });
-  }
+    }
+  });
 
   return (
     <Modal
@@ -102,7 +113,7 @@ const DashboardSelectorModal = ({ visible, roles, onSelect, onClose }) => {
                     <MaterialCommunityIcons name={opt.iconName} size={24} color={opt.iconColor} />
                   )}
                 </View>
-                
+
                 <View style={styles.textContainer}>
                   <Text style={styles.cardTitle}>{opt.title}</Text>
                   <Text style={styles.cardSubtitle}>{opt.subtitle}</Text>

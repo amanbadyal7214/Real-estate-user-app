@@ -25,11 +25,19 @@ export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) =
     const hasOwner = roleArray.includes('owner');
     const hasBuilder = roleArray.includes('builder');
     const hasBuyer = roleArray.includes('buyer');
+    const hasRealtor = roleArray.includes('realtor');
 
     const activeRoles = [];
     if (hasBuyer) activeRoles.push('buyer');
     if (hasOwner) activeRoles.push('owner');
     if (hasBuilder) activeRoles.push('builder');
+    if (hasRealtor) activeRoles.push('realtor');
+
+    roleArray.forEach((r) => {
+        if (!activeRoles.includes(r)) {
+            activeRoles.push(r);
+        }
+    });
 
     if (activeRoles.length > 1) {
         if (setRoleSelector) {
@@ -57,6 +65,12 @@ export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) =
                     onPress: () => router.replace("/screens/Project/MyProjects"),
                 });
             }
+            if (hasRealtor) {
+                buttons.push({
+                    text: "Realtor Dashboard",
+                    onPress: () => router.replace("/screens/PostProperty/MyProperties"),
+                });
+            }
             Alert.alert(
                 "Select Dashboard",
                 "Which dashboard would you like to open?",
@@ -66,7 +80,7 @@ export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) =
         }
     } else if (hasBuilder) {
         router.replace("/screens/Project/MyProjects");
-    } else if (hasOwner) {
+    } else if (hasOwner || hasRealtor) {
         router.replace("/screens/PostProperty/MyProperties");
     } else if (hasBuyer) {
         if (defaultTarget === "/screens/PostProperty/PropertyDetails") {
