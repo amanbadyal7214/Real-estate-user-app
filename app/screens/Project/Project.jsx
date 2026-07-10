@@ -93,6 +93,22 @@ const formatDisplayValue = (value, fallback = '') => {
   return fallback;
 };
 
+const formatProjectLocation = (item, fallback = '') => {
+  if (!item) return fallback;
+  const address1 = formatLocation(item?.addressLine1);
+  const address2 = formatLocation(item?.addressLine2);
+  const locality = formatLocation(item?.localityName || item?.locality);
+  const city = formatLocation(item?.city || item?.district);
+  const state = formatLocation(item?.state);
+
+  const parts = [address1, address2, locality, city, state].filter(Boolean);
+  const uniqueParts = parts.filter(
+    (part, index) => parts.findIndex((p) => p.toLowerCase() === part.toLowerCase()) === index
+  );
+
+  return uniqueParts.join(', ') || fallback;
+};
+
 const normalizeMatchedProjects = (responseData, defaultCity = 'Mohali') => {
   const projects = Array.isArray(responseData)
     ? responseData
@@ -105,10 +121,7 @@ const normalizeMatchedProjects = (responseData, defaultCity = 'Mohali') => {
           : [];
 
   return projects.map((item, index) => {
-    const locality = formatLocation(item?.localityName || item?.locality);
-    const city = formatLocation(item?.city) || defaultCity;
-    const state = formatLocation(item?.state);
-    const location = [locality, city, state].filter(Boolean).join(', ') || defaultCity;
+    const location = formatProjectLocation(item, defaultCity);
 
     // Extract images from multiple possible sources
     let images = [];
@@ -1169,7 +1182,7 @@ const Project = () => {
                       developerName={topDevelopersList.find((dev) => dev._id === activeDeveloperId)?.builderInfo?.name || 'Developer'}
                       rating={project.rating || '4.8'}
                       config={project.config || project.possessionStatus?.label || 'Project'}
-                      location={`${project.addressLine1 || project.locality || ''}, ${project.district || project.city || ''}`}
+                      location={formatProjectLocation(project)}
                       priceRange={project.priceRange || project.price || 'View details'}
                     />
                   ))

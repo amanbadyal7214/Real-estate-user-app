@@ -70,7 +70,7 @@ const ProjectFocusCard = ({ image, images: propImages, title, location, price, t
             <Text className="text-white font-inter-bold" style={{ fontSize: wp('3.6%'), marginBottom: hp('0.2%'), lineHeight: hp('2.2%') }} numberOfLines={2}>{title}</Text>
             <View className="flex-row items-center" style={{ marginBottom: hp('0.8%') }}>
               <Ionicons name="location-sharp" size={wp('2.1%')} color="rgba(255,255,255,0.8)" />
-              <Text className="text-white/80 font-inter-regular" style={{ fontSize: wp('2.5%'), marginLeft: wp('1.1%') }} numberOfLines={1}>{location}</Text>
+              <Text className="text-white/80 font-inter-regular flex-1" style={{ fontSize: wp('2.5%'), marginLeft: wp('1.1%') }} numberOfLines={1} ellipsizeMode="tail">{location}</Text>
             </View>
             <Text className="text-white font-inter-bold tracking-tight" style={{ fontSize: wp('3.2%') }}>{price}</Text>
           </View>

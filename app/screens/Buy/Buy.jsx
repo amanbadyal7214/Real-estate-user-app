@@ -73,14 +73,22 @@ const getLocationLabel = (value) => {
 };
 
 const formatPropertyLocation = (property) => {
+  if (!property) return 'Location not available';
   const directAddress = typeof property?.address === 'string' ? property.address.trim() : '';
   if (directAddress) return directAddress;
 
+  const address1 = getLocationLabel(property?.addressLine1);
+  const address2 = getLocationLabel(property?.addressLine2);
   const locality = getLocationLabel(property?.localityName || property?.locality);
-  const city = getLocationLabel(property?.city);
+  const city = getLocationLabel(property?.city || property?.district);
   const state = getLocationLabel(property?.state);
 
-  return [locality, city, state].filter(Boolean).join(', ') || 'Location not available';
+  const parts = [address1, address2, locality, city, state].filter(Boolean);
+  const uniqueParts = parts.filter(
+    (part, index) => parts.findIndex((p) => p.toLowerCase() === part.toLowerCase()) === index
+  );
+
+  return uniqueParts.join(', ') || 'Location not available';
 };
 
 const Buy = () => {
@@ -309,7 +317,7 @@ const Buy = () => {
       property: {
         id: firstProject._id,
         title: firstProject.projectName || firstProject.title || 'Project',
-        location: `${firstProject.addressLine1 || firstProject.locality || ''}, ${firstProject.district || firstProject.city || ''}`,
+        location: formatPropertyLocation(firstProject),
         config: firstProject.config || firstProject.possessionStatus?.label || 'Project',
         priceRange: firstProject.priceRange || firstProject.price || 'View details',
         image: firstProject.media?.[0]?.fileUrl || firstProject.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1000&auto=format&fit=crop',
@@ -814,7 +822,7 @@ const Buy = () => {
                 projectId={project._id}
                 images={project.media?.map(m => m.fileUrl) || []}
                 title={project.projectName || project.title}
-                location={`${project.addressLine1 || project.locality || ''}`}
+                location={formatPropertyLocation(project)}
                 price={project.priceRange || project.price}
                 tag={project.tag || "PREMIUM"}
                 developer={project.builder?.name || project.projectName}
@@ -918,7 +926,7 @@ const Buy = () => {
                       developerName={topDevelopersList.find((dev) => dev._id === activeDeveloperId)?.builderInfo?.name || 'Developer'}
                       rating={project.rating || '4.8'}
                       config={project.config || project.possessionStatus?.label || 'Project'}
-                      location={`${project.addressLine1 || project.locality || ''}, ${project.district || project.city || ''}`}
+                      location={formatPropertyLocation(project)}
                       priceRange={project.priceRange || project.price || 'View details'}
                     />
                   ))

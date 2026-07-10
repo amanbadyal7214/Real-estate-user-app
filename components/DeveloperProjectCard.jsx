@@ -3,6 +3,42 @@ import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+const formatSafeLabel = (val) => {
+  if (!val) return '';
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (!trimmed || /^[a-f0-9]{24}$/i.test(trimmed)) return '';
+    return trimmed;
+  }
+  if (typeof val === 'object') {
+    return val.name || val.label || val.title || '';
+  }
+  return '';
+};
+
+const formatSafeLocation = (loc) => {
+  if (!loc) return 'Location not available';
+  if (typeof loc === 'string' && !loc.includes('[object Object]')) {
+    return loc;
+  }
+  if (typeof loc === 'object') {
+    const parts = [
+      formatSafeLabel(loc.addressLine1 || loc.localityName || loc.locality),
+      formatSafeLabel(loc.city || loc.district),
+      formatSafeLabel(loc.state),
+    ].filter(Boolean);
+    const uniqueParts = parts.filter((part, idx) => parts.findIndex((p) => p.toLowerCase() === part.toLowerCase()) === idx);
+    return uniqueParts.join(', ') || 'Location not available';
+  }
+  return String(loc);
+};
+
+const formatSafeConfig = (cfg) => {
+  if (!cfg) return 'Project';
+  if (typeof cfg === 'object') return cfg.label || cfg.name || 'Project';
+  return String(cfg);
+};
+
 const DeveloperProjectCard = ({ 
   image, 
   logo, 
@@ -77,11 +113,21 @@ const DeveloperProjectCard = ({
 
         {/* Property Details */}
         <View style={{ gap: hp('0.2%') }}>
-          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
-            {config}
+          <Text
+            className="font-inter-regular text-[#4A5565]"
+            style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {formatSafeConfig(config)}
           </Text>
-          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
-            {location}
+          <Text
+            className="font-inter-regular text-[#4A5565]"
+            style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {formatSafeLocation(location)}
           </Text>
         </View>
 

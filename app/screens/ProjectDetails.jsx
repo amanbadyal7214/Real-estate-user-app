@@ -157,7 +157,10 @@ const ProjectDetails = () => {
       getDisplayValue(projectData?.city),
       getDisplayValue(projectData?.state)
     ].filter(Boolean);
-    return parts.length ? parts.join(', ') : 'N/A';
+    const uniqueParts = parts.filter(
+      (part, index) => parts.findIndex((p) => p.toLowerCase() === part.toLowerCase()) === index
+    );
+    return uniqueParts.length ? uniqueParts.join(', ') : 'N/A';
   };
 
   const handleScroll = (event) => {

@@ -3,6 +3,43 @@ import { router } from 'expo-router';
 import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+const formatLocationLabel = (val) => {
+  if (!val) return '';
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (!trimmed || /^[a-f0-9]{24}$/i.test(trimmed)) return '';
+    return trimmed;
+  }
+  if (typeof val === 'object') {
+    return val.name || val.label || val.title || '';
+  }
+  return '';
+};
+
+const formatPropertyDisplayLocation = (prop) => {
+  if (!prop) return 'Location not available';
+  if (typeof prop.location === 'string' && prop.location.trim() && !prop.location.includes('[object Object]')) {
+    return prop.location;
+  }
+  const address1 = formatLocationLabel(prop.addressLine1 || prop.location);
+  const locality = formatLocationLabel(prop.localityName || prop.locality);
+  const city = formatLocationLabel(prop.city || prop.district);
+  const state = formatLocationLabel(prop.state);
+
+  const parts = [address1, locality, city, state].filter(Boolean);
+  const uniqueParts = parts.filter(
+    (part, idx) => parts.findIndex((p) => p.toLowerCase() === part.toLowerCase()) === idx
+  );
+
+  return uniqueParts.join(', ') || 'Location not available';
+};
+
+const formatPropertyConfig = (config) => {
+  if (!config) return 'Project';
+  if (typeof config === 'object') return config.label || config.name || 'Project';
+  return String(config);
+};
+
 const Spotlight = ({ data }) => {
   const spotlightData = data || [];
 
@@ -113,11 +150,11 @@ const Spotlight = ({ data }) => {
                     <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.2%'), height: hp('2.5%'), lineHeight: hp('2%') }} numberOfLines={1}>
                       {item.property.title}
                     </Text>
-                    <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.6%'), height: hp('1.8%'), lineHeight: hp('1.8%'), marginTop: hp('0.3%') }} numberOfLines={1}>
-                      {item.property.location}
+                    <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.6%'), height: hp('1.8%'), lineHeight: hp('1.8%'), marginTop: hp('0.3%') }} numberOfLines={1} ellipsizeMode="tail">
+                      {formatPropertyDisplayLocation(item.property)}
                     </Text>
-                    <Text className="font-inter-regular text-white/80" style={{ fontSize: wp('2.4%'), height: hp('1.5%'), lineHeight: hp('1.5%'), marginTop: hp('0.1%') }} numberOfLines={1}>
-                      {item.property.config}
+                    <Text className="font-inter-regular text-white/80" style={{ fontSize: wp('2.4%'), height: hp('1.5%'), lineHeight: hp('1.5%'), marginTop: hp('0.1%') }} numberOfLines={1} ellipsizeMode="tail">
+                      {formatPropertyConfig(item.property?.config)}
                     </Text>
                     <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.2%'), height: hp('2.5%'), lineHeight: hp('2%'), marginTop: hp('0.6%') }} numberOfLines={1}>
                       {item.property.priceRange}
