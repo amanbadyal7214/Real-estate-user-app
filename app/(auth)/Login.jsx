@@ -105,7 +105,7 @@ const Login = () => {
             >
               <Ionicons name="mail-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
-                placeholder="Email address"
+                placeholder="Phone Number"
                 keyboardType="email-address"
                 className="flex-1 ml-2.5 text-[#101828] font-inter-regular"
                 placeholderTextColor="#9CA3AF"

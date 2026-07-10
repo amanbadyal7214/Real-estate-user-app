@@ -13,6 +13,7 @@ import AdvancedDetailsStep from './AdvancedDetailsStep';
 import PhotosStep from './PhotosStep';
 import PriceDetailsSection from './PriceDetailsSection';
 import VerifyPropertyStep from './VerifyPropertyStep';
+import Toast from '../../../components/Toast';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
@@ -72,6 +73,10 @@ const RenderIcon = ({ name, size = 32, color = "#008E96", apiAmenities = [] }) =
 
 const PropertyDetails = () => {
   const router = useRouter();
+  const [toast, setToast] = useState(null);
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type });
+  };
   const { isEditMode, editPropertyId } = useLocalSearchParams();
   const { postData, setPostData, resetPostData, updatePropertyDetails, updatePriceDetails } = usePostProperty();
   const { 
@@ -513,14 +518,18 @@ const PropertyDetails = () => {
         getSubPropertyTypeName: postData.propertyDetails.subPropertyType
       });
 
-      if (res.success) {
-        alert("Property posted successfully!");
-        router.replace("/(tabs)");
+      if (res && res.success !== false) {
+        showToast("Property posted successfully!", "success");
+        setTimeout(() => {
+          router.replace("/(tabs)");
+        }, 1500);
       } else {
-        alert(res.error || "Failed to post property");
+        const errorMsg = res?.error || res?.message || "Failed to post property";
+        showToast(errorMsg, "error");
       }
     } catch (err) {
-      alert(err.message || "Network error");
+      const errorMsg = err?.response?.data?.error || err?.response?.data?.message || err.message || "Network error while posting property";
+      showToast(errorMsg, "error");
       console.error(err);
     }
   };
@@ -1253,6 +1262,7 @@ const PropertyDetails = () => {
           )}
         </TouchableOpacity>
       </View>
+      <Toast message={toast?.message} type={toast?.type} onDismiss={() => setToast(null)} />
     </SafeAreaView>
   );
 };

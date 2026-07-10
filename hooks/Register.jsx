@@ -93,6 +93,29 @@ export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) =
     }
 };
 
+export const extractResponseError = (data, defaultMessage = "Operation failed.") => {
+    if (!data) return defaultMessage;
+    if (typeof data === "string" && data.trim()) return data;
+    if (data.message && typeof data.message === "string") return data.message;
+    if (data.error && typeof data.error === "string") return data.error;
+    if (Array.isArray(data.errors) && data.errors.length > 0) {
+        return data.errors
+            .map((e) => (typeof e === "string" ? e : e.msg || e.message || JSON.stringify(e)))
+            .join(", ");
+    }
+    return defaultMessage;
+};
+
+export const extractApiError = (error, defaultMessage = "Something went wrong. Please try again.") => {
+    if (!error) return defaultMessage;
+    const data = error.response?.data;
+    if (data) {
+        return extractResponseError(data, defaultMessage);
+    }
+    if (error.message && typeof error.message === "string") return error.message;
+    return defaultMessage;
+};
+
 export const useRegister = () => {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(1); // 1: Phone Validation, 2: Details Form, 3: Email OTP Verification
@@ -171,11 +194,11 @@ export const useRegister = () => {
             if (response.data.success) {
                 showToast("Verification OTP sent to your phone.", "success");
             } else {
-                showToast(response.data.message || "Failed to send verification code.", "error");
+                showToast(extractResponseError(response.data, "Failed to send verification code."), "error");
             }
         } catch (error) {
             console.error("API Error: /auth/send-phone-otp (Send)", error.response?.data || error.message);
-            const message = error.response?.data?.message || error.response?.data?.error || "Failed to send verification code.";
+            const message = extractApiError(error, "Failed to send verification code.");
             showToast(message, "error");
         } finally {
             setLoading(false);
@@ -226,12 +249,12 @@ export const useRegister = () => {
                 }
                 return true;
             } else {
-                showToast(response.data.message || "Incorrect verification code.", "error");
+                showToast(extractResponseError(response.data, "Incorrect verification code."), "error");
                 return false;
             }
         } catch (error) {
             console.error("API Error: /auth/verify-phone-otp (Verify)", error.response?.data || error.message);
-            const message = error.response?.data?.message || error.response?.data?.error || "Verification failed. Please try again.";
+            const message = extractApiError(error, "Verification failed. Please try again.");
             showToast(message, "error");
             return false;
         } finally {
@@ -282,12 +305,12 @@ export const useRegister = () => {
                 }
             } else {
                 // If success is false but no error thrown
-                showToast(response.data.error || "Something went wrong.", "warning");
+                showToast(extractResponseError(response.data, "Something went wrong."), "warning");
                 // Removed setStep(1) to let user stay on the form
             }
         } catch (error) {
             console.error("API Error: /auth/register", error.response?.data || error.message);
-            const message = error.response?.data?.error || error.response?.data?.message || "Registration failed. Please try again.";
+            const message = extractApiError(error, "Registration failed. Please try again.");
             showToast(message, "error");
 
             // Temporary Workaround: Agar email fail ho raha hai but user create ho gaya ho (backend check)
@@ -347,12 +370,12 @@ export const useRegister = () => {
                 }
                 return true;
             } else {
-                showToast(response.data.message || "Invalid OTP", "error");
+                showToast(extractResponseError(response.data, "Invalid OTP"), "error");
                 return false;
             }
         } catch (error) {
             console.error("API Error: /auth/verify-otp", error.response?.data || error.message);
-            const errorMessage = error.response?.data?.message || error.response?.data?.error || "Verification failed. Please try again.";
+            const errorMessage = extractApiError(error, "Verification failed. Please try again.");
             showToast(errorMessage, "error");
             return false;
         } finally {
@@ -394,12 +417,12 @@ export const useRegister = () => {
                     performRoleBasedRedirect(role, "/screens/PostProperty/PropertyDetails", setRoleSelector);
                 }
             } else {
-                showToast(response.data.message || "Invalid credentials", "error");
+                showToast(extractResponseError(response.data, "Invalid credentials"), "error");
             }
         } catch (error) {
             console.error("API Error: /screens/PostProperty/Register", error.response?.data || error.message);
 
-            const message = error.response?.data?.error || error.response?.data?.message || "Login failed. Please try again.";
+            const message = extractApiError(error, "Login failed. Please try again.");
             showToast(message, "error");
         } finally {
             setLoading(false);

@@ -66,17 +66,18 @@ const Toast = ({ message, type = 'success', onDismiss }) => {
         right: 20,
         opacity: fadeAnim,
         transform: [{ translateY: slideAnim }],
-        zIndex: 9999,
+        zIndex: 99999,
+        elevation: 99,
       }}
     >
       <View
         className={`flex-row items-center border-[1px] p-4 rounded-2xl shadow-md ${bgClass}`}
         style={{
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 4,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          elevation: 99,
         }}
       >
         <Ionicons name={iconName} size={22} color={iconColor} />

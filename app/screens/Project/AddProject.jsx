@@ -22,6 +22,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import api from '../../api';
 import { useLookup } from '../../../hooks/useLookup';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Toast from '../../../components/Toast';
 
 // ─── Fallback Constants ───────────────────────────────────────────────────────
 
@@ -351,6 +352,10 @@ const AddProject = () => {
   const editProjectId = params.projectId;
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [toast, setToast] = useState(null);
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type });
+  };
   const [form, setForm] = useState(EMPTY_FORM);
   const [deletedMediaIds, setDeletedMediaIds] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -727,8 +732,16 @@ const AddProject = () => {
         throw new Error(response.data?.message || (editProjectId ? 'Failed to update project' : 'Failed to create project'));
       }
     } catch (err) {
-      const msg = err?.response?.data?.message || err?.message || 'Something went wrong.';
-      Alert.alert('Error', msg);
+      const errData = err?.response?.data;
+      const msg =
+        errData?.error ||
+        errData?.message ||
+        (Array.isArray(errData?.errors)
+          ? errData.errors.map((e) => (typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e))).join(', ')
+          : null) ||
+        err?.message ||
+        'Something went wrong.';
+      showToast(msg, 'error');
     } finally {
       setSubmitting(false);
     }
@@ -1546,6 +1559,7 @@ const AddProject = () => {
           )}
         </View>
       </KeyboardAvoidingView>
+      <Toast message={toast?.message} type={toast?.type} onDismiss={() => setToast(null)} />
     </SafeAreaView>
   );
 };

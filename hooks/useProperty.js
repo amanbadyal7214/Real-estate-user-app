@@ -78,7 +78,15 @@ export const useProperty = () => {
 
             return response.data;
         } catch (err) {
-            const errorMessage = err.response?.data?.error || err.response?.data?.message || err.message || "Failed to save property";
+            const errData = err.response?.data;
+            const errorMessage =
+                errData?.error ||
+                errData?.message ||
+                (Array.isArray(errData?.errors)
+                    ? errData.errors.map((e) => (typeof e === "string" ? e : e.msg || e.message || JSON.stringify(e))).join(", ")
+                    : null) ||
+                err.message ||
+                "Failed to save property";
             setError(errorMessage);
             throw new Error(errorMessage);
         } finally {
