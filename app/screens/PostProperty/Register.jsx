@@ -663,21 +663,13 @@ const PostProperty = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => {
-                if (isLogin) {
-                  setIsLogin(false);
-                  resetForm(false);
-                } else {
-                  setIsLogin(true);
-                  resetForm(true);
-                }
-              }}
+              onPress={() => router.push('/(auth)/Login')}
               className="w-full bg-[#008E9614] py-3 rounded-xl items-center mb-6"
             >
               <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Regular' }}>
-                {isLogin ? "New user? " : "Existing user? "}
+                Existing user?{' '}
                 <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>
-                  {isLogin ? "Register Here" : "Add Role / Login Here"}
+                  Login Here
                 </Text>
               </Text>
             </TouchableOpacity>
