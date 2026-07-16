@@ -246,54 +246,6 @@ const RealtorProperties = () => {
         }
       }
 
-      // High-fidelity fallback projects if empty
-      if (loadedProjs.length === 0) {
-        loadedProjs = [
-          {
-            _id: 'realtor-proj-1',
-            title: 'Gateway Towers Mohali',
-            projectName: 'Gateway Towers Mohali',
-            builderName: 'Shree Realtors & Builders',
-            locality: 'Sector 66',
-            city: 'Mohali',
-            projectType: 'Residential',
-            priceRange: '₹ 65.5 L - 1.35 Cr',
-            status: 'Under Construction',
-            isActive: true,
-            images: ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
-            completionDate: '2026-12-31'
-          },
-          {
-            _id: 'realtor-proj-2',
-            title: 'Prime Commercial Plaza',
-            projectName: 'Prime Commercial Plaza',
-            builderName: 'Shree Realtors Group',
-            locality: 'Airport Road',
-            city: 'Zirakpur',
-            projectType: 'Commercial',
-            priceRange: '₹ 45.0 L - 95.0 L',
-            status: 'Ready to Move',
-            isActive: true,
-            images: ['https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600'],
-            completionDate: '2025-08-15'
-          },
-          {
-            _id: 'realtor-proj-3',
-            title: 'Green Valley Villas',
-            projectName: 'Green Valley Villas',
-            builderName: 'Apex Realtors Partner',
-            locality: 'Landran Road',
-            city: 'Kharar',
-            projectType: 'Villa',
-            priceRange: '₹ 1.10 Cr - 2.50 Cr',
-            status: 'New Launch',
-            isActive: false,
-            images: ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600'],
-            completionDate: '2027-04-30'
-          }
-        ];
-      }
-
       setProjects(Array.isArray(loadedProjs) ? loadedProjs.map(cleanItem) : []);
     } catch (error) {
       console.error('Error loading projects:', error);
@@ -1024,7 +976,7 @@ const RealtorProperties = () => {
             <View>
               <View className="flex-row items-center" style={{ gap: wp('1.5%') }}>
                 <Text className="text-white font-inter-bold" style={{ fontSize: wp('4.8%') }}>
-                  {userName ? `${userName}'s Console` : 'Realtor Hub'}
+                  {userName ? `${userName}` : 'Realtor Hub'}
                 </Text>
                 <View className="bg-white/20 px-2 py-0.5 rounded-full">
                   <Text className="text-white font-inter-bold text-[10px] uppercase">Realtor</Text>
@@ -1035,14 +987,7 @@ const RealtorProperties = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity
-            onPress={() => router.push('/screens/PostProperty/PropertyDetails')}
-            className="bg-white/25 flex-row items-center rounded-full"
-            style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.7%'), gap: wp('1%') }}
-          >
-            <Ionicons name="add" size={wp('4.3%')} color="white" />
-            <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.2%') }}>Add New</Text>
-          </TouchableOpacity>
+         
         </View>
       </LinearGradient>
 
@@ -1074,12 +1019,12 @@ const RealtorProperties = () => {
 
           {/* 3. Add Bulk Property */}
           <TouchableOpacity
-            onPress={() => setShowBulkModal(true)}
-            className="flex-1 bg-[#FAF5FF] border border-[#E9D5FF] items-center justify-center flex-row shadow-sm"
+            onPress={() => router.push('/screens/PostProperty/BulkUpload')}
+            className="flex-1 bg-[#E6F7F6] border border-[#B2E8E6] items-center justify-center flex-row shadow-sm"
             style={{ paddingVertical: hp('1.2%'), borderRadius: wp('3.2%'), gap: wp('1.2%') }}
           >
-            <Ionicons name="cloud-upload-outline" size={wp('4.2%')} color="#9333EA" />
-            <Text className="text-[#6B21A8] font-inter-bold" style={{ fontSize: wp('3.1%') }}>Bulk Upload</Text>
+            <Ionicons name="cloud-upload-outline" size={wp('4.2%')} color="#008E96" />
+            <Text className="text-[#008E96] font-inter-bold" style={{ fontSize: wp('3.1%') }}>Bulk Upload</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -1273,73 +1218,6 @@ const RealtorProperties = () => {
         </View>
       </Modal>
 
-      {/* Bulk Upload Modal */}
-      <Modal animationType="fade" transparent={true} visible={showBulkModal} onRequestClose={() => setShowBulkModal(false)}>
-        <View className="flex-1 justify-center items-center bg-black/60 px-4">
-          <View className="bg-white w-full max-w-md rounded-[24px] p-6 shadow-2xl border border-gray-100">
-            <View className="flex-row justify-between items-center mb-2">
-              <View className="flex-row items-center gap-2">
-                <View className="w-10 h-10 rounded-full bg-purple-100 items-center justify-center">
-                  <Ionicons name="cloud-upload" size={22} color="#9333EA" />
-                </View>
-                <Text className="font-inter-bold text-[#0F172A] text-[18px]">Bulk Property Upload</Text>
-              </View>
-              <TouchableOpacity onPress={() => setShowBulkModal(false)} className="p-1 rounded-full bg-gray-100">
-                <Ionicons name="close" size={20} color="#64748B" />
-              </TouchableOpacity>
-            </View>
-            <Text className="text-[#64748B] font-inter-regular text-[13px] mb-5 leading-5">
-              Upload inventory (.csv/.xlsx) or paste bulk listing data to add multiple properties and projects simultaneously.
-            </Text>
-            <TouchableOpacity onPress={() => Alert.alert('Template Downloaded 📥', 'Sample file "realtor_bulk_template.csv" downloaded.')} className="flex-row items-center justify-between bg-gray-50 border border-gray-200 rounded-xl p-3.5 mb-4">
-              <View className="flex-row items-center gap-2.5">
-                <Ionicons name="document-text-outline" size={20} color="#475569" />
-                <View>
-                  <Text className="font-inter-semibold text-[#1E293B] text-[13px]">1. Download CSV Template</Text>
-                  <Text className="text-[#64748B] text-[11px]">Standard schema columns</Text>
-                </View>
-              </View>
-              <Ionicons name="download-outline" size={18} color="#2563EB" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleSimulateFileSelect}
-              className="border-2 border-dashed rounded-2xl p-5 items-center justify-center mb-4"
-              style={{
-                backgroundColor: bulkFile ? 'rgba(147, 51, 234, 0.05)' : 'rgba(249, 250, 251, 0.5)',
-                borderColor: bulkFile ? '#C084FC' : '#D1D5DB'
-              }}
-            >
-              <Ionicons name={bulkFile ? "checkmark-circle" : "folder-open-outline"} size={32} color={bulkFile ? "#9333EA" : "#64748B"} />
-              <Text className="font-inter-bold text-[#1E293B] text-[14px] mt-2">{bulkFile ? bulkFile.name : "2. Select Inventory File (.csv/.xlsx)"}</Text>
-              <Text className="text-[#64748B] text-[12px] mt-0.5">{bulkFile ? `${bulkFile.size} • ${bulkFile.rows}` : "Tap to browse from device"}</Text>
-            </TouchableOpacity>
-            <Text className="font-inter-semibold text-[#475569] text-[12px] mb-1.5">Or Paste Bulk Listing JSON/CSV:</Text>
-            <TextInput
-              value={bulkText}
-              onChangeText={setBulkText}
-              placeholder="e.g. [{ title: '4 BHK Luxury Villa', price: 12500000, locality: 'Sector 66' }]"
-              placeholderTextColor="#94A3B8"
-              multiline
-              numberOfLines={3}
-              className="bg-gray-50 border border-gray-200 rounded-xl p-3 text-[13px] text-[#1E293B] mb-6 min-h-[70px]"
-              style={{ textAlignVertical: 'top' }}
-            />
-            <View className="flex-row gap-3">
-              <TouchableOpacity onPress={() => setShowBulkModal(false)} className="flex-1 py-3 rounded-xl border border-gray-300 items-center justify-center">
-                <Text className="font-inter-semibold text-[#64748B] text-[14px]">Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleBulkUploadSubmit} disabled={bulkUploading} className="flex-1 py-3 rounded-xl bg-[#9333EA] items-center justify-center shadow-md flex-row gap-2">
-                {bulkUploading ? <ActivityIndicator size="small" color="white" /> : (
-                  <>
-                    <Ionicons name="rocket-outline" size={18} color="white" />
-                    <Text className="font-inter-bold text-white text-[14px]">Upload Inventory</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };
