@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Dimensions, FlatList, Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ProjectConfigCard from '../../components/ProjectConfigCard';
 import ProjectContactFormCard from '../../components/ProjectContactFormCard';
@@ -17,6 +17,7 @@ import { useProjectDetails } from '../../hooks/useProjectDetails';
 const ProjectDetails = () => {
   const router = useRouter();
   const { projectId, source } = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeFloorTab, setActiveFloorTab] = useState('All');
@@ -195,7 +196,7 @@ const ProjectDetails = () => {
       <View className="flex-1 bg-[#F9FAFB]">
         <ScrollView showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
           <View className="bg-white">
-            <View className="w-full overflow-hidden bg-gray-200" style={{ height: hp('40%'), borderBottomLeftRadius: wp('10%'), borderBottomRightRadius: wp('10%') }}>
+            <View className="w-full overflow-hidden bg-gray-200" style={{ height: hp('28%'), borderBottomLeftRadius: wp('10%'), borderBottomRightRadius: wp('10%') }}>
               <FlatList
                 ref={flatListRef}
                 data={images}
@@ -207,7 +208,7 @@ const ProjectDetails = () => {
                 renderItem={({ item }) => (
                   <Image
                     source={{ uri: item }}
-                    style={{ width: wp('100%'), height: hp('40%') }}
+                    style={{ width: wp('100%'), height: hp('28%') }}
                     resizeMode="cover"
                   />
                 )}
@@ -623,7 +624,7 @@ const ProjectDetails = () => {
         </ScrollView>
       </View>
 
-      <View className="bg-white border-t border-[#E5E7EB] flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%'), gap: wp('2%') }}>
+      <View className="bg-white border-t border-[#E5E7EB] flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('1.5%'), paddingBottom: insets.bottom, gap: wp('2%') }}>
         <TouchableOpacity className="flex-1 border border-[#008E96] flex-row items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%'), gap: wp('2%') }}>
           <Ionicons name="chatbubble-outline" size={wp('5%')} color="#008E96" />
           <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>Chat</Text>

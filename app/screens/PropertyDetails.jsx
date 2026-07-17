@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, Text, TouchableOpacity, View, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ProjectPropertiesSection from '../../components/ProjectPropertiesSection';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
@@ -68,6 +68,7 @@ const getAmenityIcon = (amenity) => {
 const PropertyDetails = () => {
   const router = useRouter();
   const { propertyId, property } = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const initialProperty = useMemo(() => parseMaybeJson(property), [property]);
   const [propertyData, setPropertyData] = useState(initialProperty);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -402,7 +403,7 @@ const PropertyDetails = () => {
         <ScrollView showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
           {/* Header Section */}
           <View className="bg-white">
-            <View className="w-full overflow-hidden bg-gray-200" style={{ height: hp('40%'), borderBottomLeftRadius: wp('10%'), borderBottomRightRadius: wp('10%') }}>
+            <View className="w-full overflow-hidden bg-gray-200" style={{ height: hp('28%'), borderBottomLeftRadius: wp('10%'), borderBottomRightRadius: wp('10%') }}>
               <FlatList
                 ref={flatListRef}
                 data={heroImages}
@@ -412,7 +413,7 @@ const PropertyDetails = () => {
                 onScroll={handleScroll}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                  <View style={{ width: wp('100%'), height: hp('40%') }}>
+                  <View style={{ width: wp('100%'), height: hp('28%') }}>
                     <Image
                       source={{ uri: item.startsWith('data:') ? item : item }}
                       style={{ width: '100%', height: '100%' }}
@@ -699,7 +700,7 @@ const PropertyDetails = () => {
       </View>
 
       {/* Sticky Bottom Bar */}
-      <View className="bg-white border-t border-[#E5E7EB] flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%'), gap: wp('2%') }}>
+      <View className="bg-white border-t border-[#E5E7EB] flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('1.5%'), paddingBottom: insets.bottom, gap: wp('2%') }}>
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/screens/Chat', params: { propertyId } })}
           className="flex-1 border border-[#008E96] flex-row items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%'), gap: wp('2%') }}

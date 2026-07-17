@@ -4,8 +4,10 @@ import * as SecureStore from 'expo-secure-store';
 import { Heart, Search, Sparkles, User } from 'lucide-react-native';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
+  const insets = useSafeAreaInsets();
   const handleProtectedNavigation = async (destination) => {
     const token = await SecureStore.getItemAsync('token');
     const redirectTo = encodeURIComponent(JSON.stringify(destination));
@@ -44,7 +46,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: hp('4.3%'),
+          bottom: insets.bottom + hp('1%'),
           left: 0,
           right: 0,
           height: Platform.OS === 'ios' ? hp('8.6%') : hp('8%'),
@@ -94,7 +96,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
       <View
         style={{
           position: 'absolute',
-          bottom: hp('4.3%'),
+          bottom: insets.bottom + hp('1%'),
           left: 0,
           right: 0,
           height: Platform.OS === 'ios' ? hp('8.6%') : hp('8%'),
@@ -149,7 +151,7 @@ const BottomTabBar = ({ activeTab = 'Search', mode = 'Buy' }) => {
     <View
       style={{
         position: 'absolute',
-        bottom: hp('4.3%'),
+        bottom: insets.bottom + hp('1%'),
         left: 0,
         right: 0,
         height: Platform.OS === 'ios' ? hp('8.6%') : hp('8%'),
