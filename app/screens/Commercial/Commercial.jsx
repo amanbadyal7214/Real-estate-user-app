@@ -333,7 +333,7 @@ const Commercial = () => {
           </View>
         </View>
 
-        <View className="mx-4 pb-2 my-4">
+        <View style={{ marginHorizontal: 16, paddingBottom: 8, marginVertical: 16 }}>
           <LinearGradient
             colors={[
               'rgba(0,142,150,0.08)',
@@ -343,20 +343,34 @@ const Commercial = () => {
             ]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            className="rounded-2xl border border-[#008E9633] p-4"
-            style={{ minHeight: hp('27%'), borderWidth: 0.6667 }}
+            style={{ 
+              minHeight: hp('27%'), 
+              borderWidth: 0.6667,
+              borderRadius: 16,
+              borderColor: '#008E9633',
+              padding: 16
+            }}
           >
-            <Text className="font-inter-semibold text-[13px] leading-[19px] text-[#101828]">
+            <Text style={{ fontWeight: '600', fontSize: 13, lineHeight: 19, color: '#101828' }}>
               Are you a property owner looking to{`\n`}rent/sell?
             </Text>
 
-            <View className="mt-5 gap-2">
+            <View style={{ marginTop: 20, gap: 8 }}>
               {['Zero Brokerage', 'Verified leads', 'On-demand assistance'].map((item) => (
-                <View key={item} className="flex-row items-center">
-                  <View className="items-center justify-center rounded-full bg-[#008E96]" style={{ width: hp('2.5%'), height: hp('2.5%') }}>
+                <View key={item} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View 
+                    style={{ 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: 999, 
+                      backgroundColor: '#008E96',
+                      width: hp('2.5%'), 
+                      height: hp('2.5%') 
+                    }}
+                  >
                     <Check size={wp('3%')} color="#FFFFFF" strokeWidth={2.2} />
                   </View>
-                  <Text className="ml-2 font-inter-regular text-[12px] leading-[18px] text-[#4A5565]">
+                  <Text style={{ marginLeft: 8, fontWeight: '400', fontSize: 12, lineHeight: 18, color: '#4A5565' }}>
                     {item}
                   </Text>
                 </View>
@@ -366,10 +380,16 @@ const Commercial = () => {
             <TouchableOpacity
               activeOpacity={0.85}
               onPress={() => router.push('/screens/PostProperty/PropertyDetails')}
-              className="mt-5 items-center justify-center rounded-xl bg-[#008E96]"
-              style={{ height: hp('5.5%') }}
+              style={{ 
+                marginTop: 20, 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                borderRadius: 12, 
+                backgroundColor: '#008E96',
+                height: hp('5.5%') 
+              }}
             >
-              <Text className="font-inter-semibold text-[13px] leading-[19px] text-white">
+              <Text style={{ fontWeight: '600', fontSize: 13, lineHeight: 19, color: '#FFFFFF' }}>
                 Post property for FREE
               </Text>
             </TouchableOpacity>

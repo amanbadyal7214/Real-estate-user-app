@@ -1,61 +1,80 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const DeveloperSummaryCard = ({ logo, logoText, name, yearEstd, projectCount, logoColor = '#E7000B', onPress, isActive }) => {
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       onPress={onPress}
-      className={`bg-white border ${isActive ? 'border-primary' : 'border-[#F3F4F6]'} items-center justify-center`}
+      activeOpacity={0.85}
       style={{
-        padding: wp('2.7%'),
+        width: wp('38%'),
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: isActive ? '#008E96' : '#F3F4F6',
+        paddingVertical: 16, // Equal space top and bottom
+        paddingHorizontal: 10,
         borderRadius: wp('3.2%'),
-        width: wp('30%'),
-        height: hp('11.8%'),
+        minHeight: hp('14%'),
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: hp('0.1%') },
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.08,
-        shadowRadius: wp('0.5%'),
+        shadowRadius: 3,
         elevation: 1,
+        alignItems: 'center',
+        justifyContent: 'space-between', // Pushes content evenly
       }}
     >
       {/* Logo Container */}
-      <View className="items-center justify-center" style={{ height: hp('4.9%'), marginBottom: hp('0.5%') }}>
+      <View style={{ alignItems: 'center', justifyContent: 'center', height: hp('4%'), marginBottom: 6 }}>
         {logo ? (
           <Image source={{ uri: logo }} style={{ width: wp('10.7%'), height: wp('10.7%') }} resizeMode="contain" />
         ) : (
-          <Text 
-            className="font-inter-black" 
-            style={{ fontSize: wp('4.5%'), color: logoColor, lineHeight: hp('3.2%') }}
-          >
-            {logoText || (name ? name.substring(0, 1) : 'D')}
-          </Text>
+          <View style={{
+            width: wp('10.7%'),
+            height: wp('10.7%'),
+            borderRadius: wp('2%'),
+            backgroundColor: logoColor + '22',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Text style={{ fontSize: wp('4.5%'), color: logoColor, fontWeight: '700' }}>
+              {logoText ? String(logoText) : (name ? String(name).substring(0, 1) : 'D')}
+            </Text>
+          </View>
         )}
       </View>
 
       {/* Developer Name */}
-      <Text 
-        className="font-inter-semibold text-[#101828] text-center"
-        style={{ fontSize: wp('3%'), lineHeight: hp('2.2%'), marginBottom: hp('1.2%') }}
+      <Text
+        numberOfLines={2}
+        style={{
+          fontWeight: '600',
+          color: '#101828',
+          textAlign: 'center',
+          fontSize: wp('3%'),
+          lineHeight: hp('2%'),
+          marginBottom: 8,
+        }}
       >
-        {name}
+        {name ? String(name) : ''}
       </Text>
 
       {/* Stats Row */}
-      <View className="flex-row items-center justify-center" style={{ gap: wp('3.2%') }}>
-        <View className="items-center">
-          <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
-            {yearEstd}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: wp('3.2%') }}>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ fontWeight: '600', color: '#101828', fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
+            {yearEstd ? String(yearEstd) : '2024'}
           </Text>
-          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.2%'), lineHeight: hp('1.5%') }}>
+          <Text style={{ fontWeight: '400', color: '#4A5565', fontSize: wp('2.2%'), lineHeight: hp('1.5%') }}>
             Year estd.
           </Text>
         </View>
-        <View className="items-center">
-          <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
-            {projectCount}
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ fontWeight: '600', color: '#101828', fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>
+            {projectCount !== undefined ? String(projectCount) : '0'}
           </Text>
-          <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.2%'), lineHeight: hp('1.5%') }}>
-            Project
+          <Text style={{ fontWeight: '400', color: '#4A5565', fontSize: wp('2.2%'), lineHeight: hp('1.5%') }}>
+            Projects
           </Text>
         </View>
       </View>

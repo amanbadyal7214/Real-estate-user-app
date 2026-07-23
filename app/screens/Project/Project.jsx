@@ -884,11 +884,15 @@ const Project = () => {
             colors={['#DAEAEB', '#FFFFFF']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            className="rounded-2xl overflow-hidden border-[#1CB2A9] flex-row items-center justify-between"
             style={{
-              height: hp('18.5%'),
+              minHeight: hp('18.5%'),
               padding: wp('4.3%'),
               marginHorizontal: wp('4.3%'),
+              borderRadius: 16,
+              overflow: 'hidden',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               shadowColor: '#000',
               shadowOffset: { width: 0, height: hp('0.1%') },
               shadowOpacity: 0.1,
@@ -896,33 +900,30 @@ const Project = () => {
               elevation: 2,
             }}
           >
-            <View className="flex-1 pr-2 justify-between" style={{ height: hp('14%') }}>
+            <View style={{ flex: 1, paddingRight: 8, gap: hp('1.5%') }}>
               <Text
-                className="font-inter-bold text-[#101828]"
-                style={{ fontSize: wp('3.7%'), lineHeight: hp('2.5%') }}
+                style={{ fontWeight: '700', color: '#101828', fontSize: wp('3.7%'), lineHeight: hp('2.5%') }}
               >
                 Are you a property owner looking to rent/sell?
               </Text>
 
               <View style={{ gap: hp('0.8%') }}>
-                <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: wp('2.1%') }}>
                   <View
-                    className="bg-[#008E96] rounded-full items-center justify-center"
-                    style={{ width: wp('4.3%'), height: wp('4.3%') }}
+                    style={{ backgroundColor: '#008E96', borderRadius: 999, alignItems: 'center', justifyContent: 'center', width: wp('4.3%'), height: wp('4.3%') }}
                   >
                     <MaterialCommunityIcons name="check" size={wp('2.7%')} color="white" />
                   </View>
-                  <Text className="font-inter-regular text-[#364153]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>Free Brokerage</Text>
+                  <Text style={{ fontWeight: '400', color: '#364153', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>Free Brokerage</Text>
                 </View>
 
-                <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: wp('2.1%') }}>
                   <View
-                    className="bg-[#008E96] rounded-full items-center justify-center"
-                    style={{ width: wp('4.3%'), height: wp('4.3%') }}
+                    style={{ backgroundColor: '#008E96', borderRadius: 999, alignItems: 'center', justifyContent: 'center', width: wp('4.3%'), height: wp('4.3%') }}
                   >
                     <MaterialCommunityIcons name="check" size={wp('2.7%')} color="white" />
                   </View>
-                  <Text className="font-inter-regular text-[#364153]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>Genuine, verified leads</Text>
+                  <Text style={{ fontWeight: '400', color: '#364153', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>Genuine, verified leads</Text>
                 </View>
               </View>
             </View>
@@ -941,7 +942,7 @@ const Project = () => {
                   justifyContent: 'center'
                 }}
               >
-                <View className="flex-row flex-wrap justify-center items-center" style={{ width: wp('16%'), height: wp('16%'), gap: wp('1%') }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: wp('16%'), height: wp('16%'), gap: wp('1%') }}>
                   {[...Array(20)].map((_, i) => (
                     <View
                       key={i}

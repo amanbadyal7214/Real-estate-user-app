@@ -649,9 +649,14 @@ const Buy = () => {
             colors={['#DAEAEB', '#FFFFFF']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            className=" p-4 rounded-2xl overflow-hidden border-[#1CB2A9] flex-row items-center justify-between"
             style={{
-              height: hp('18.5%'),
+              padding: 8,
+              borderRadius: 16,
+              overflow: 'hidden',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              minHeight: hp('16.5%'),
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.1,
@@ -659,10 +664,10 @@ const Buy = () => {
               elevation: 2,
             }}
           >
-            <View className="flex-1 pr-2" style={{ height: 117, gap: 12 }}>
+            <View className="flex-1 pr-2" style={{ gap: 12 }}>
               <Text
                 className="font-inter-bold text-[12px] text-[#101828] leading-[18px]"
-                style={{ width: wp('51.5%'), height: hp('7.8%') }}
+                style={{ width: wp('51.5%') }}
               >
                 Want to sell or rent out your place?
               </Text>
@@ -719,6 +724,7 @@ const Buy = () => {
               </LinearGradient>
             </View>
           </LinearGradient>
+
         </View>
         {/* High Demand Projects Section */}
         <View className="px-4 mb-6" style={{ gap: 16 }}>
