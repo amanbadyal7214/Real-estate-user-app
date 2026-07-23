@@ -99,19 +99,19 @@ const LocationSelection = () => {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-white" style={{ paddingHorizontal: wp('2%') }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} style={{ paddingHorizontal: wp('2%') }}>
       {/* Header */}
       <View className="flex-row items-center border-b border-gray-50" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('2%'), marginTop: hp('5%') }}>
         <TouchableOpacity onPress={() => router.back()} className="p-1">
           <Ionicons name="arrow-back" size={wp('6%')} color="#4A5565" />
         </TouchableOpacity>
-        <Text className="font-inter-medium text-[#101828]" style={{ marginLeft: wp('4%'), fontSize: wp('5.5%') }}>
+        <Text className="font-medium text-[#101828]" style={{ marginLeft: wp('4%'), fontSize: wp('5.5%') }}>
           Where do you want to Buy?
         </Text>
       </View>
 
-      <ScrollView className="flex-1" style={{ paddingHorizontal: wp('4%') }} showsVerticalScrollIndicator={false}>
-        <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.5%'), marginBottom: hp('3%') }}>
+      <ScrollView style={{ flex: 1 }} style={{ paddingHorizontal: wp('4%') }} showsVerticalScrollIndicator={false}>
+        <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.5%'), marginBottom: hp('3%') }}>
           Choose a city which can be changed later
         </Text>
 
@@ -120,7 +120,7 @@ const LocationSelection = () => {
           <TextInput
             placeholder="Type city here..."
             placeholderTextColor="rgba(16, 24, 40, 0.5)"
-            className="flex-1 font-inter-regular"
+            className="flex-1 font-normal"
             style={{ fontSize: wp('3.5%') }}
             value={search}
             onChangeText={setSearch}
@@ -137,13 +137,13 @@ const LocationSelection = () => {
         {/* Current Location Button */}
         <TouchableOpacity className="flex-row items-center" style={{ marginBottom: hp('4%'), gap: wp('2%') }}>
           <Ionicons name="locate-outline" size={wp('5%')} color="#008E96" />
-          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.5%') }}>
+          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>
             Use my current location
           </Text>
         </TouchableOpacity>
 
         {/* Popular Cities */}
-        <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('4%'), marginBottom: hp('2%') }}>
+        <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('4%'), marginBottom: hp('2%') }}>
           Popular Cities
         </Text>
         <View className="flex-row flex-wrap justify-between" style={{ gap: hp('1.5%'), marginBottom: hp('4%') }}>
@@ -155,7 +155,7 @@ const LocationSelection = () => {
               style={{ width: '48%', borderRadius: wp('3%'), paddingHorizontal: wp('3%'), paddingVertical: hp('1.5%') }}
             >
               <Text style={{ fontSize: wp('5%'), marginRight: wp('2%') }}>{city.icon}</Text>
-              <Text className="text-[#101828] font-inter-medium" style={{ fontSize: wp('3.5%') }}>
+              <Text className="text-[#101828] font-medium" style={{ fontSize: wp('3.5%') }}>
                 {city.name}
               </Text>
             </TouchableOpacity>
@@ -163,7 +163,7 @@ const LocationSelection = () => {
         </View>
 
         {/* Alphabet Search */}
-        <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.5%'), marginBottom: hp('2%') }}>
+        <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.5%'), marginBottom: hp('2%') }}>
           Search in 330+ other cities
         </Text>
         <ScrollView
@@ -177,8 +177,8 @@ const LocationSelection = () => {
               <Text
                 className={
                   letter === "D"
-                    ? "text-[#008E96] font-inter-bold"
-                    : "text-[#6A7282] font-inter-medium"
+                    ? "text-[#008E96] font-bold"
+                    : "text-[#6A7282] font-medium"
                 }
                 style={{ fontSize: wp('3.5%') }}
               >
@@ -196,7 +196,7 @@ const LocationSelection = () => {
                 style={{ width: '48%' }}
                 onPress={() => handleCitySelect(row[0])}
               >
-                <Text className="text-[#4A5565] font-inter-medium" style={{ fontSize: wp('3.8%') }}>
+                <Text className="text-[#4A5565] font-medium" style={{ fontSize: wp('3.8%') }}>
                   {row[0]}
                 </Text>
               </TouchableOpacity>
@@ -204,7 +204,7 @@ const LocationSelection = () => {
                 style={{ width: '48%' }}
                 onPress={() => handleCitySelect(row[1])}
               >
-                <Text className="text-[#4A5565] font-inter-medium" style={{ fontSize: wp('3.8%') }}>
+                <Text className="text-[#4A5565] font-medium" style={{ fontSize: wp('3.8%') }}>
                   {row[1]}
                 </Text>
               </TouchableOpacity>

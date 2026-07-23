@@ -33,7 +33,7 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload, brochureUrl, preview
         elevation: 2 
       }}
     >
-      <Text className="font-inter-medium text-[#101828] text-[18px] leading-[27px]">Project brochure</Text>
+      <Text className="font-medium text-[#101828] text-[18px] leading-[27px]">Project brochure</Text>
       
       <View 
         className="rounded-[14px] overflow-hidden flex-row gap-2" 
@@ -50,7 +50,7 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload, brochureUrl, preview
             className="absolute inset-0"
           />
           <View className="absolute left-2 bottom-2 bg-black/60 rounded-[4px] px-2 py-0.5">
-            <Text className="text-white font-inter-regular text-[11px]">1/{totalPages}</Text>
+            <Text className="text-white font-normal text-[11px]">1/{totalPages}</Text>
           </View>
         </View>
 
@@ -69,7 +69,7 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload, brochureUrl, preview
               resizeMode="cover"
             />
             <View className="absolute inset-0 bg-black/40 items-center justify-center">
-              <Text className="text-white font-inter-medium text-[16px]">+{extraPages}</Text>
+              <Text className="text-white font-medium text-[16px]">+{extraPages}</Text>
             </View>
           </View>
         </View>
@@ -81,7 +81,7 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload, brochureUrl, preview
         >
           <View className="flex-row items-center gap-2">
             <Ionicons name="share-social-outline" size={18} color="#101828" />
-            <Text className="font-inter-medium text-[#101828] text-[14px]">Share</Text>
+            <Text className="font-medium text-[#101828] text-[14px]">Share</Text>
           </View>
         </TouchableOpacity>
 
@@ -90,7 +90,7 @@ const ProjectBrochureCard = ({ totalPages = 30, onDownload, brochureUrl, preview
           className="flex-[2] bg-[#F2F4F7] h-[48px] rounded-[10px] flex-row items-center justify-center gap-2"
         >
           <Ionicons name="download-outline" size={20} color="#101828" />
-          <Text className="font-inter-medium text-[#101828] text-[14px]">Download Brochure</Text>
+          <Text className="font-medium text-[#101828] text-[14px]">Download Brochure</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -39,16 +39,16 @@ const ServicesTestimonialCard = ({ name, location, rating, comment, image }) => 
                 />
 
                 {/* Name + Location */}
-                <View className="flex-1">
+                <View style={{ flex: 1 }}>
                     <Text
-                        className="font-inter-semibold text-[#101828] leading-[22px]"
+                        className="font-semibold text-[#101828] leading-[22px]"
                         style={{ fontSize: 15 }}
                         numberOfLines={1}
                     >
                         {name}
                     </Text>
                     <Text
-                        className="font-inter-regular text-[#6A7282] leading-[20px]"
+                        className="font-normal text-[#6A7282] leading-[20px]"
                         style={{ fontSize: 13 }}
                     >
                         {location}
@@ -59,7 +59,7 @@ const ServicesTestimonialCard = ({ name, location, rating, comment, image }) => 
                 <View className="flex-row items-center gap-1">
                     <Ionicons name="star" size={16} color="#FFA726" />
                     <Text
-                        className="font-inter-semibold text-[#101828] leading-[21px]"
+                        className="font-semibold text-[#101828] leading-[21px]"
                         style={{ fontSize: 14 }}
                     >
                         {rating}
@@ -69,7 +69,7 @@ const ServicesTestimonialCard = ({ name, location, rating, comment, image }) => 
 
             {/* Comment */}
             <Text
-                className="font-inter-regular text-[#4A5565]"
+                className="font-normal text-[#4A5565]"
                 style={{ fontSize: 14, lineHeight: 23 }}
             >
                 {comment}

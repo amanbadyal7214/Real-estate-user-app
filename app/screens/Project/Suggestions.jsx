@@ -75,17 +75,17 @@ const Suggestions = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <View style={{ paddingHorizontal: wp('4%'), paddingBottom: hp('2.2%') }} className="flex-row items-center justify-between border-b border-[#E4E7EC] bg-white">
         <TouchableOpacity onPress={() => router.back()} style={{ width: wp('9%'), height: wp('9%') }} className="justify-center items-center rounded-full">
           <ArrowLeft size={wp('6%')} color="#4A5565" />
         </TouchableOpacity>
 
         <View className="items-center flex-1">
-          <Text style={{ fontSize: wp('5%'), lineHeight: wp('6.4%') }} className="font-inter-bold text-[#101828] text-center">
+          <Text style={{ fontSize: wp('5%'), lineHeight: wp('6.4%') }} className="font-bold text-[#101828] text-center">
             {suggestionsData.length > 0 ? `${suggestionsData.length} Smart Suggestions` : 'Smart Suggestions'}
           </Text>
-          <Text style={{ fontSize: wp('3.5%'), lineHeight: wp('4.3%'), marginTop: hp('0.3%') }} className="text-[#6A7282] font-inter-regular text-center">
+          <Text style={{ fontSize: wp('3.5%'), lineHeight: wp('4.3%'), marginTop: hp('0.3%') }} className="text-[#6A7282] font-normal text-center">
             Based on your last search in {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
@@ -111,7 +111,7 @@ const Suggestions = () => {
             ))
           ) : (
             <View style={{ marginTop: hp('4%') }} className="flex-1 items-center justify-center">
-              <Text style={{ fontSize: wp('3.7%') }} className="font-inter-medium text-[#6A7282]">No suggestions found for this location.</Text>
+              <Text style={{ fontSize: wp('3.7%') }} className="font-medium text-[#6A7282]">No suggestions found for this location.</Text>
             </View>
           )}
         </ScrollView>

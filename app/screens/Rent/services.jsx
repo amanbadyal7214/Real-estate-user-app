@@ -145,7 +145,7 @@ const Services = () => {
     ];
 
     return (
-        <View className="flex-1 bg-white">
+        <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
             <StatusBar barStyle="light-content" />
 
             {/* Header */}
@@ -167,8 +167,8 @@ const Services = () => {
 
                 {/* Text Container */}
                 <View className="absolute gap-1" style={{ left: wp('4.3%'), top: hp('14.8%') }}>
-                    <Text className="text-white font-inter-medium tracking-[0.7px]" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%') }}>HOUSING</Text>
-                    <Text className="text-white font-inter-bold" style={{ fontSize: wp('6%'), lineHeight: wp('6%'), letterSpacing: -1 }}>EDGE</Text>
+                    <Text className="text-white font-medium tracking-[0.7px]" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%') }}>HOUSING</Text>
+                    <Text className="text-white font-bold" style={{ fontSize: wp('6%'), lineHeight: wp('6%'), letterSpacing: -1 }}>EDGE</Text>
                 </View>
 
                 {/* Abstract Illustration – Buildings */}
@@ -217,7 +217,7 @@ const Services = () => {
                     {/* All Services Section */}
                     <View className="gap-4" style={{ paddingHorizontal: wp('4.3%'), paddingTop: hp('3%') }}>
                         {/* Heading */}
-                        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: wp('5.8%') }}>All Services (1)</Text>
+                        <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: wp('5.8%') }}>All Services (1)</Text>
 
                         {/* Service Cards Row */}
                         <View className="flex-row items-start" style={{ gap: wp('6.4%') }}>
@@ -230,14 +230,14 @@ const Services = () => {
                                 <View className="bg-[#EEF2FF] rounded-2xl justify-center items-center" style={{ width: wp('22%'), height: wp('22%') }}>
                                     <MaterialCommunityIcons name="home-city-outline" size={wp('8%')} color="#6366F1" />
                                 </View>
-                                <Text className="font-inter-medium text-[#101828] text-center" style={{ fontSize: wp('3.2%'), lineHeight: wp('4.2%') }}>Home Loans</Text>
+                                <Text className="font-medium text-[#101828] text-center" style={{ fontSize: wp('3.2%'), lineHeight: wp('4.2%') }}>Home Loans</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
 
                     {/* Calculators Section */}
                     <View className="gap-4" style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3.9%') }}>
-                        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: wp('5.8%') }}>Home Loan Calculators</Text>
+                        <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: wp('5.8%') }}>Home Loan Calculators</Text>
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
@@ -264,8 +264,8 @@ const Services = () => {
                     <View style={{ marginTop: hp('3%'), paddingHorizontal: wp('3%') }}>
                         {/* Header */}
                         <View className="gap-1" style={{ marginBottom: hp('2%') }}>
-                            <Text className="font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>BENEFITS</Text>
-                            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.6%'), lineHeight: wp('5%') }}>Why to choose Housing Edge</Text>
+                            <Text className="font-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>BENEFITS</Text>
+                            <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('3.6%'), lineHeight: wp('5%') }}>Why to choose Housing Edge</Text>
                         </View>
 
                         {/* Divider */}
@@ -289,8 +289,8 @@ const Services = () => {
                     {/* <View className="mt-8"> */}
                     {/* Header */}
                     {/* <View className="px-4 gap-1 mb-4">
-                            <Text className="text-[13px] font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>TESTIMONIALS</Text>
-                            <Text className="text-[22px] font-inter-semibold text-[#101828] leading-[33px]">What our users say</Text>
+                            <Text className="text-[13px] font-medium tracking-[0.65px]" style={{ color: '#EC4899' }}>TESTIMONIALS</Text>
+                            <Text className="text-[22px] font-semibold text-[#101828] leading-[33px]">What our users say</Text>
                         </View> */}
 
                     {/* Divider */}
@@ -321,8 +321,8 @@ const Services = () => {
                     <View style={{ marginTop: hp('3.9%') }}>
                         {/* Header */}
                         <View className="gap-1" style={{ paddingHorizontal: wp('4.3%'), marginBottom: hp('2%') }}>
-                            <Text className="font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>ARTICLES</Text>
-                            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Read more about our services</Text>
+                            <Text className="font-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>ARTICLES</Text>
+                            <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Read more about our services</Text>
                         </View>
 
                         {/* Divider */}
@@ -352,8 +352,8 @@ const Services = () => {
                     <View style={{ marginTop: hp('3.9%') }}>
                         {/* Header */}
                         <View className="gap-1" style={{ paddingHorizontal: wp('4.3%'), marginBottom: hp('2%') }}>
-                            <Text className="font-inter-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>SUPPORT</Text>
-                            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Frequently asked questions</Text>
+                            <Text className="font-medium tracking-[0.65px]" style={{ color: '#EC4899', fontSize: wp('3.5%') }}>SUPPORT</Text>
+                            <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('5.9%'), lineHeight: wp('8.8%') }}>Frequently asked questions</Text>
                         </View>
 
                         {/* Divider */}
@@ -367,7 +367,7 @@ const Services = () => {
                                 className="justify-center items-center"
                                 style={{ height: hp('7.1%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('2.7%'), backgroundColor: '#F3F4F6' }}
                             >
-                                <Text className="font-inter-medium text-[#6A7282] text-center" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%') }}>
+                                <Text className="font-medium text-[#6A7282] text-center" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%') }}>
                                     Questions{'\n'}about
                                 </Text>
                             </TouchableOpacity>
@@ -375,7 +375,7 @@ const Services = () => {
                                 className="justify-center items-center"
                                 style={{ height: hp('7.1%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('2.7%'), backgroundColor: 'rgba(0, 142, 150, 0.1)' }}
                             >
-                                <Text className="font-inter-medium text-center" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%'), color: '#008E96' }}>
+                                <Text className="font-medium text-center" style={{ fontSize: wp('3.7%'), lineHeight: wp('5.6%'), color: '#008E96' }}>
                                     Home{'\n'}Loans
                                 </Text>
                             </TouchableOpacity>
@@ -397,7 +397,7 @@ const Services = () => {
                                 >
                                     <View className="flex-row justify-between items-center" style={{ minHeight: hp('6.9%'), paddingHorizontal: wp('4.3%') }}>
                                         <Text
-                                            className="font-inter-medium text-[#101828] flex-1 mr-4"
+                                            className="font-medium text-[#101828] flex-1 mr-4"
                                             style={{ fontSize: wp('2.8%'), lineHeight: wp('4.2%') }}
                                         >
                                             {faq.question}
@@ -410,7 +410,7 @@ const Services = () => {
                                     </View>
                                     {expandedFaq === faq.id && (
                                         <Text
-                                            className="font-inter-regular text-[#4A5565]"
+                                            className="font-normal text-[#4A5565]"
                                             style={{ fontSize: wp('3.7%'), lineHeight: wp('5.9%'), paddingHorizontal: wp('4.3%'), paddingBottom: hp('2%') }}
                                         >
                                             {faq.answer}

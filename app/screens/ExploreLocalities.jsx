@@ -85,20 +85,20 @@ const ExploreLocalities = () => {
         <View style={{ position: 'absolute', right: -wp('2.5%'), top: -hp('1.2%'), opacity: 0.05 }}>
           <MaterialCommunityIcons name="city-variant-outline" size={wp('20%')} color="#008E96" />
         </View>
-        <Text className="text-[#101828] font-inter-bold tracking-tight" style={{ fontSize: wp('4%') }}>{item.name}</Text>
-        <Text className="text-[#667085] font-inter-regular" style={{ fontSize: wp('2.8%') }}>{item.location}</Text>
+        <Text className="text-[#101828] font-bold tracking-tight" style={{ fontSize: wp('4%') }}>{item.name}</Text>
+        <Text className="text-[#667085] font-normal" style={{ fontSize: wp('2.8%') }}>{item.location}</Text>
       </LinearGradient>
 
       {/* Content Section */}
       <View style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.5%') }}>
         <View className="flex-row items-center justify-between">
           <View>
-            <Text className="text-[#98A2B3] font-inter-medium uppercase tracking-wider" style={{ fontSize: wp('2.5%'), marginBottom: hp('0.3%') }}>Avg. Price</Text>
+            <Text className="text-[#98A2B3] font-medium uppercase tracking-wider" style={{ fontSize: wp('2.5%'), marginBottom: hp('0.3%') }}>Avg. Price</Text>
             <View className="flex-row items-center">
               <View className="bg-[#F0F9F9] rounded-full items-center justify-center" style={{ width: wp('5%'), height: wp('5%'), marginRight: wp('1.5%') }}>
                 <FontAwesome5 name="rupee-sign" size={wp('2%')} color="#008E96" />
               </View>
-              <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('3.5%') }}>{item.price}</Text>
+              <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('3.5%') }}>{item.price}</Text>
             </View>
           </View>
         </View>
@@ -130,8 +130,8 @@ const ExploreLocalities = () => {
           </TouchableOpacity>
 
           <View className="items-center flex-1" style={{ paddingTop: hp('1%'), paddingRight: wp('9%') }}>
-            <Text className="text-white font-inter-bold" style={{ fontSize: wp('4%') }}>Explore Localities</Text>
-            <Text className="text-white/80 font-inter-regular" style={{ fontSize: wp('2.8%') }}>Premium Investment Zones in {currentLocation?.city || 'Mohali'}</Text>
+            <Text className="text-white font-bold" style={{ fontSize: wp('4%') }}>Explore Localities</Text>
+            <Text className="text-white/80 font-normal" style={{ fontSize: wp('2.8%') }}>Premium Investment Zones in {currentLocation?.city || 'Mohali'}</Text>
           </View>
         </View>
       </LinearGradient>
@@ -141,11 +141,11 @@ const ExploreLocalities = () => {
         <View style={{ paddingTop: hp('1.2%') }}>
           <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('5%'), marginBottom: hp('1.5%') }}>
             <View>
-              <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.5%') }}>Popular Areas</Text>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.5%') }}>Popular Areas</Text>
               <View className="bg-[#008E96] rounded-full" style={{ height: hp('0.3%'), width: wp('6%'), marginTop: hp('0.3%') }} />
             </View>
             <TouchableOpacity>
-              <Text className="text-[#008E96] font-inter-semibold" style={{ fontSize: wp('3.3%') }}>See all</Text>
+              <Text className="text-[#008E96] font-semibold" style={{ fontSize: wp('3.3%') }}>See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -165,7 +165,7 @@ const ExploreLocalities = () => {
             </ScrollView>
           ) : (
             <View className="items-center" style={{ paddingHorizontal: wp('5%'), paddingVertical: hp('3%') }}>
-              <Text className="text-gray-400 font-inter-medium" style={{ fontSize: wp('3.5%') }}>No localities found for {currentLocation?.city}</Text>
+              <Text className="text-gray-400 font-medium" style={{ fontSize: wp('3.5%') }}>No localities found for {currentLocation?.city}</Text>
             </View>
           )}
         </View>
@@ -173,8 +173,8 @@ const ExploreLocalities = () => {
         {/* Investment Hotspot Section */}
         <View style={{ marginTop: hp('3%'), paddingHorizontal: wp('5%'), marginBottom: hp('5%') }}>
           <View style={{ marginBottom: hp('2%') }}>
-            <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.5%') }}>Investment Hotspots</Text>
-            <Text className="text-[#667085] font-inter-regular" style={{ fontSize: wp('3%'), marginTop: hp('0.3%') }}>Top performing localities this month</Text>
+            <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.5%') }}>Investment Hotspots</Text>
+            <Text className="text-[#667085] font-normal" style={{ fontSize: wp('3%'), marginTop: hp('0.3%') }}>Top performing localities this month</Text>
           </View>
 
           {loading ? (

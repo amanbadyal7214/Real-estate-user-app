@@ -21,12 +21,12 @@ const ComingSoon = () => {
           style={{ width: lottieSize, height: lottieSize }}
         />
 
-        <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[#101828] text-[24px] sm:text-[28px] text-center mt-4">
+        <Text style={{ fontWeight: '700' }} className="text-[#101828] text-[24px] sm:text-[28px] text-center mt-4">
           Coming Soon
         </Text>
 
         <Text
-          style={{ fontFamily: 'Inter-Regular' }}
+          style={{ fontWeight: '400' }}
           className="text-[#4A5565] text-[14px] sm:text-[16px] text-center leading-[22px] mt-3"
         >
           We are building something exciting for you. This feature will be available very soon.
@@ -36,7 +36,7 @@ const ComingSoon = () => {
           onPress={() => router.back()}
           className="mt-8 bg-[#008E96] rounded-[14px] px-6 py-3 sm:py-4 w-full items-center active:opacity-80"
         >
-          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-white text-[15px] sm:text-[16px]">
+          <Text style={{ fontWeight: '500' }} className="text-white text-[15px] sm:text-[16px]">
             Go Back
           </Text>
         </TouchableOpacity>

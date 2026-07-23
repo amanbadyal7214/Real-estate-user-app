@@ -104,7 +104,7 @@ const ServicesBenefitItem = ({ index = 0, text }) => {
 
             {/* Text */}
             <Text
-                className="font-inter-regular text-[#4A5565] flex-1"
+                className="font-normal text-[#4A5565] flex-1"
                 style={{ fontSize: wp('3.5%'), lineHeight: wp('5.5%') }}
             >
                 {text}

@@ -35,14 +35,14 @@ const ServicesCalculatorCard = ({
             {/* Title + Subtitle */}
             <View className="absolute gap-1" style={{ left: wp('4.3%'), top: hp('2.7%') }}>
                 <Text
-                    className="font-inter-semibold text-[#101828] leading-[22px]"
+                    className="font-semibold text-[#101828] leading-[22px]"
                     style={{ fontSize: wp('4.0%') }}
                     numberOfLines={2}
                 >
                     {title}
                 </Text>
                 <Text
-                    className="font-inter-medium text-[#6A7282] leading-[16px]"
+                    className="font-medium text-[#6A7282] leading-[16px]"
                     style={{ fontSize: wp('3.0%'), maxWidth: wp('37.3%') }}
                     numberOfLines={2}
                 >

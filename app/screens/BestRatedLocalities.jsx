@@ -99,7 +99,7 @@ const BestRatedLocalities = () => {
   }, [searchText, projectsData]);
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Header Section */}
       <View style={{ height: hp('38.2%') }} className="relative">
         <LinearGradient
@@ -120,14 +120,14 @@ const BestRatedLocalities = () => {
             style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.7%'), borderRadius: wp('2.7%') }}
           >
             <Ionicons name="location-outline" size={wp('4.3%')} color="white" />
-            <Text className="text-white font-inter-medium" style={{ fontSize: wp('3.7%'), marginHorizontal: wp('1%') }}>Mohali</Text>
+            <Text className="text-white font-medium" style={{ fontSize: wp('3.7%'), marginHorizontal: wp('1%') }}>Mohali</Text>
             <Ionicons name="chevron-down" size={wp('4.3%')} color="white" />
           </TouchableOpacity>
         </View>
  
         {/* Title */}
         <View style={{ paddingHorizontal: wp('4.3%'), marginTop: 0 }}>
-          <Text className="text-white font-inter-semibold" style={{ fontSize: wp('5.9%'), lineHeight: wp('7.7%') }}>
+          <Text className="text-white font-semibold" style={{ fontSize: wp('5.9%'), lineHeight: wp('7.7%') }}>
             Resident Reviews on{"\n"}Projects and Localities
           </Text>
         </View>
@@ -138,7 +138,7 @@ const BestRatedLocalities = () => {
               <TextInput 
                 placeholder="Enter a locality, society or project to search..." 
                 placeholderTextColor="rgba(16, 24, 40, 0.5)"
-                className="flex-1 font-inter-regular"
+                className="flex-1 font-normal"
                 style={{ fontSize: wp('3.7%') }}
                 value={searchText}
                 onChangeText={(text) => setSearchText(text)}
@@ -160,39 +160,39 @@ const BestRatedLocalities = () => {
             className={`flex-1 items-center justify-center ${activeTab === 'localities' ? 'bg-[#008E96]/10 border-2 border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
             style={{ borderRadius: wp('3.2%') }}
           >
-            <Text className="font-inter-semibold" style={{ fontSize: wp('3.7%'), color: activeTab === 'localities' ? '#008E96' : '#6A7282' }}>Localities</Text>
+            <Text className="font-semibold" style={{ fontSize: wp('3.7%'), color: activeTab === 'localities' ? '#008E96' : '#6A7282' }}>Localities</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setActiveTab('projects')}
             className={`flex-1 items-center justify-center ${activeTab === 'projects' ? 'bg-[#008E96]/10 border-2 border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
             style={{ borderRadius: wp('3.2%') }}
           >
-            <Text className="font-inter-semibold" style={{ fontSize: wp('3.7%'), color: activeTab === 'projects' ? '#008E96' : '#6A7282' }}>Projects</Text>
+            <Text className="font-semibold" style={{ fontSize: wp('3.7%'), color: activeTab === 'projects' ? '#008E96' : '#6A7282' }}>Projects</Text>
           </TouchableOpacity>
         </View>
  
         {/* List Header */}
         <View style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2.5%') }}>
-          <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4.8%') }}>
+          <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4.8%') }}>
             Reviews for {activeTab} in Mohali
           </Text>
           
           {activeTab === 'projects' && (
             <View className="flex-row items-center" style={{ marginTop: hp('1.5%') }}>
-              <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.7%'), marginRight: wp('2.1%') }}>Filter by</Text>
+              <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.7%'), marginRight: wp('2.1%') }}>Filter by</Text>
               <TouchableOpacity 
                 onPress={() => setIsFilterModalVisible(true)}
                 className="flex-row items-center border border-[#008E96]"
                 style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('1%') }}
               >
-                <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.7%') }}>{selectedPropertyType}</Text>
+                <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.7%') }}>{selectedPropertyType}</Text>
                 <Ionicons name="chevron-down" size={wp('4.3%')} color="#008E96" style={{ marginLeft: wp('1%') }} />
               </TouchableOpacity>
             </View>
           )}
  
           <View className="flex-row justify-between items-center" style={{ marginTop: hp('2%') }}>
-            <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.5%') }}>
+            <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.5%') }}>
               Showing top {activeTab === 'localities' ? (localitiesDataFiltered.length) : (projectsDataFiltered.length)} results
             </Text>
             <TouchableOpacity 
@@ -200,14 +200,14 @@ const BestRatedLocalities = () => {
               className="flex-row items-center"
               style={{ gap: wp('1%') }}
             >
-              <Text className="text-[#101828] font-inter-medium" style={{ fontSize: wp('3.7%') }}>{selectedSort}</Text>
+              <Text className="text-[#101828] font-medium" style={{ fontSize: wp('3.7%') }}>{selectedSort}</Text>
               <Ionicons name="chevron-down" size={wp('4.3%')} color="#4A5565" />
             </TouchableOpacity>
           </View>
         </View>
  
         {/* Results List */}
-        <ScrollView className="flex-1" style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2%') }} contentContainerStyle={{ gap: 16, paddingBottom: 20 }}>
+        <ScrollView style={{ flex: 1 }} style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2%') }} contentContainerStyle={{ gap: 16, paddingBottom: 20 }}>
           {activeTab === 'localities' ? (
             localitiesDataFiltered.length > 0 ? (
               localitiesDataFiltered.map((item, index) => (
@@ -272,7 +272,7 @@ const BestRatedLocalities = () => {
  
               {/* Content */}
               <View style={{ paddingHorizontal: wp('5.3%'), paddingBottom: hp('4.9%'), paddingTop: hp('1.2%') }}>
-                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5.3%'), marginBottom: hp('2.5%') }}>Sort by</Text>
+                <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5.3%'), marginBottom: hp('2.5%') }}>Sort by</Text>
                 <View style={{ marginBottom: hp('3.9%') }}>
                   {sortOptions.map((option) => (
                     <TouchableOpacity 
@@ -281,7 +281,7 @@ const BestRatedLocalities = () => {
                       className="flex-row justify-between items-center"
                       style={{ paddingVertical: hp('1.5%') }}
                     >
-                      <Text className="font-inter-regular" style={{ fontSize: wp('4.3%'), color: selectedSort === option ? '#008E96' : 'black' }}>
+                      <Text className="font-normal" style={{ fontSize: wp('4.3%'), color: selectedSort === option ? '#008E96' : 'black' }}>
                         {option}
                       </Text>
                       {selectedSort === option && <Ionicons name="checkmark" size={wp('5.3%')} color="#008E96" />}
@@ -300,7 +300,7 @@ const BestRatedLocalities = () => {
                     end={{ x: 1, y: 1 }}
                     style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
                   />
-                  <Text className="text-white font-inter-semibold" style={{ fontSize: wp('4.3%') }}>Apply filters</Text>
+                  <Text className="text-white font-semibold" style={{ fontSize: wp('4.3%') }}>Apply filters</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -332,12 +332,12 @@ const BestRatedLocalities = () => {
  
               {/* Header */}
               <View style={{ paddingHorizontal: wp('5.3%'), paddingTop: hp('1.2%'), paddingBottom: hp('2.5%') }}>
-                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5.3%') }}>Filters</Text>
-                <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.7%'), marginTop: hp('1%') }}>Searching in <Text className="text-[#101828] font-inter-medium">Mohali</Text></Text>
+                <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5.3%') }}>Filters</Text>
+                <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.7%'), marginTop: hp('1%') }}>Searching in <Text className="text-[#101828] font-medium">Mohali</Text></Text>
                 
                 <TouchableOpacity className="flex-row items-center" style={{ marginTop: hp('2%') }}>
-                  <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.7%') }}>Filters: </Text>
-                  <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.7%') }}>{selectedPropertyType}</Text>
+                  <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.7%') }}>Filters: </Text>
+                  <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.7%') }}>{selectedPropertyType}</Text>
                   <Ionicons name="chevron-forward" size={wp('4.3%')} color="#008E96" />
                 </TouchableOpacity>
               </View>
@@ -346,7 +346,7 @@ const BestRatedLocalities = () => {
  
               {/* Property Type Section */}
               <View style={{ paddingHorizontal: wp('5.3%'), paddingVertical: hp('3%') }}>
-                <Text className="text-[#101828] font-inter-medium" style={{ fontSize: wp('4.3%'), marginBottom: hp('2%') }}>Property Type</Text>
+                <Text className="text-[#101828] font-medium" style={{ fontSize: wp('4.3%'), marginBottom: hp('2%') }}>Property Type</Text>
                 <View className="flex-row flex-wrap" style={{ gap: wp('3.2%') }}>
                   {propertyTypes.map((type) => (
                     <TouchableOpacity
@@ -359,7 +359,7 @@ const BestRatedLocalities = () => {
                       }`}
                       style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3.2%') }}
                     >
-                      <Text className="font-inter-medium" style={{ fontSize: wp('3.7%'), color: selectedPropertyType === type ? '#008E96' : '#101828' }}>
+                      <Text className="font-medium" style={{ fontSize: wp('3.7%'), color: selectedPropertyType === type ? '#008E96' : '#101828' }}>
                         {type}
                       </Text>
                     </TouchableOpacity>
@@ -380,7 +380,7 @@ const BestRatedLocalities = () => {
                     end={{ x: 1, y: 1 }}
                     style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: wp('3.2%') }}
                   />
-                  <Text className="text-white font-inter-semibold" style={{ fontSize: wp('4.3%') }}>Apply filters</Text>
+                  <Text className="text-white font-semibold" style={{ fontSize: wp('4.3%') }}>Apply filters</Text>
                 </TouchableOpacity>
               </View>
             </View>

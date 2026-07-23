@@ -35,10 +35,10 @@ const SellerCard = ({
         />
 
         <View className="flex-1" style={{ gap: hp('0.3%') }}>
-          <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3.5%') }}>
+          <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('3.5%') }}>
             {name}
           </Text>
-          <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('3%') }}>
+          <Text className="font-normal text-[#6A7282]" style={{ fontSize: wp('3%') }}>
             {experienceYears} years exp • {propertiesCount} properties
           </Text>
         </View>
@@ -47,7 +47,7 @@ const SellerCard = ({
       <View className="flex-row" style={{ gap: wp('2%') }}>
         {tags.map((tag) => (
           <View key={tag} className="bg-[#F3F4F6] rounded-md" style={{ paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.5%') }}>
-            <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('3%') }}>
+            <Text className="font-normal text-[#4A5565]" style={{ fontSize: wp('3%') }}>
               {tag}
             </Text>
           </View>
@@ -60,7 +60,7 @@ const SellerCard = ({
         className="rounded-[10px] border-2 border-[#008E96] items-center justify-center"
         style={{ height: hp('5%') }}
       >
-        <Text className="font-inter-semibold text-[#008E96]" style={{ fontSize: wp('3.5%') }}>
+        <Text className="font-semibold text-[#008E96]" style={{ fontSize: wp('3.5%') }}>
           Show Contact
         </Text>
       </TouchableOpacity>

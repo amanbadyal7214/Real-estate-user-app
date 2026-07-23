@@ -111,7 +111,7 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
                 borderRadius: wp('2.1%'),
               }}
             >
-              <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.2%') }}>Zero Brokerage</Text>
+              <Text className="text-white font-semibold" style={{ fontSize: wp('3.2%') }}>Zero Brokerage</Text>
             </View>
           )}
           {property.isRera && (
@@ -128,7 +128,7 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
                 className="rounded-full bg-white"
                 style={{ width: wp('1.5%'), height: wp('1.5%') }}
               />
-              <Text className="text-white font-inter-bold" style={{ fontSize: wp('2.9%') }}>RERA</Text>
+              <Text className="text-white font-bold" style={{ fontSize: wp('2.9%') }}>RERA</Text>
             </View>
           )}
         </View>
@@ -147,7 +147,7 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
           pointerEvents="none"
         >
           <Camera size={wp('3.7%')} color="white" />
-          <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.2%') }}>{property.images?.length || 0}</Text>
+          <Text className="text-white font-semibold" style={{ fontSize: wp('3.2%') }}>{property.images?.length || 0}</Text>
         </View>
 
         {/* Heart Button Right */}
@@ -176,19 +176,19 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
       {/* Content Section */}
       <View style={{ paddingHorizontal: wp('1%') }}>
         <Text 
-          className="font-inter-semibold text-[#101828]" 
+          className="font-semibold text-[#101828]" 
           style={{ fontSize: wp('4.3%'), marginBottom: hp('0.5%') }}
         >{property.price}</Text>
         <Text 
-          className="font-inter-semibold text-[#101828]"
+          className="font-semibold text-[#101828]"
           style={{ fontSize: wp('3.7%'), marginBottom: hp('0.2%') }}
         >{property.name}</Text>
         <Text 
-          className="font-inter-regular text-[#6A7282]"
+          className="font-normal text-[#6A7282]"
           style={{ fontSize: wp('3.2%') }}
         >{property.developer}</Text>
         <Text 
-          className="font-inter-regular text-[#6A7282]"
+          className="font-normal text-[#6A7282]"
           style={{ fontSize: wp('3.2%'), marginBottom: hp('1%') }}
         >{property.location}</Text>
         
@@ -197,7 +197,7 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
           style={{ paddingTop: hp('1%'), marginBottom: hp('2%') }}
         >
           <Text 
-            className="font-inter-regular text-[#6A7282]" 
+            className="font-normal text-[#6A7282]" 
             style={{ fontSize: wp('3.2%'), paddingBottom: hp('1.5%') }}
           >{property.details}</Text>
         </View>
@@ -233,7 +233,7 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
             >
               <Phone size={wp('4.3%')} color="white" />
               <Text 
-                className="text-white font-inter-semibold"
+                className="text-white font-semibold"
                 style={{ fontSize: wp('3.5%'), lineHeight: hp('2.4%') }}
               >Contact</Text>
             </LinearGradient>
@@ -261,7 +261,7 @@ const PerfectMatchCard = ({ property, onPress, showWishlist = true }) => {
             elevation: 5,
           }}
         >
-          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: wp('3.5%'), textAlign: 'center' }}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: wp('3.5%'), textAlign: 'center' }}>
             {toast}
           </Text>
         </View>

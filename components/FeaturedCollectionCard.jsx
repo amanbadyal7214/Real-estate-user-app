@@ -26,10 +26,10 @@ const FeaturedCollectionCard = ({
   return (
     <View style={{ gap: 12 }}>
       <View className="px-4 sm:px-6" style={{ gap: 4 }}>
-        <Text className="font-inter-semibold text-[22px] sm:text-[26px] leading-[33px] text-[#101828]">
+        <Text className="font-semibold text-[22px] sm:text-[26px] leading-[33px] text-[#101828]">
           {title}
         </Text>
-        <Text className="font-inter-regular text-[13px] sm:text-[15px] leading-5 text-[#6A7282]">
+        <Text className="font-normal text-[13px] sm:text-[15px] leading-5 text-[#6A7282]">
           {subtitle}
         </Text>
       </View>
@@ -70,7 +70,7 @@ const FeaturedCollectionCard = ({
             >
               <Text 
                 numberOfLines={2} 
-                className="font-inter-bold text-[14px] sm:text-[16px] text-white text-center"
+                className="font-bold text-[14px] sm:text-[16px] text-white text-center"
               >
                 {item.title}
               </Text>

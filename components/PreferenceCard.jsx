@@ -21,14 +21,14 @@ const PreferenceCard = ({ icon, label, value, properties, onPress }) => {
                 elevation: 2
             }}
         >
-            <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%'), lineHeight: hp('2.1%'), marginBottom: hp('0.8%') }} className="text-[#6A7282]">
+            <Text style={{ fontWeight: '400', fontSize: wp('3%'), lineHeight: hp('2.1%'), marginBottom: hp('0.8%') }} className="text-[#6A7282]">
                 {label}
             </Text>
             
             <View className="flex-row items-center" style={{ gap: wp('1.8%'), marginBottom: hp('1.2%'), height: hp('2.7%') }}>
                 <MaterialCommunityIcons name={icon} size={wp('4.5%')} color="#101828" />
                 <Text 
-                    style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%'), lineHeight: hp('2.7%') }}
+                    style={{ fontWeight: '600', fontSize: wp('3.8%'), lineHeight: hp('2.7%') }}
                     className="text-[#101828]"
                     numberOfLines={1}
                 >
@@ -39,7 +39,7 @@ const PreferenceCard = ({ icon, label, value, properties, onPress }) => {
             <View className="w-full border-t-[0.67px] border-dashed border-[#E4E7EC]" style={{ marginBottom: hp('1.2%') }} />
 
             <TouchableOpacity onPress={onPress}>
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#008E96] text-center">
+                <Text style={{ fontWeight: '500', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#008E96] text-center">
                     View {properties}+ properties
                 </Text>
             </TouchableOpacity>

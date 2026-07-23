@@ -13,7 +13,7 @@ const ProjectMapCard = () => {
         elevation: 2 
       }}
     >
-      <Text className="font-inter-medium text-[#101828] text-[18px] leading-[27px]">Explore on map</Text>
+      <Text className="font-medium text-[#101828] text-[18px] leading-[27px]">Explore on map</Text>
       
       {/* Search Input */}
       <View className="bg-[#F3F4F6] rounded-[10px] flex-row items-center px-4 h-[44px]">
@@ -21,7 +21,7 @@ const ProjectMapCard = () => {
         <TextInput 
           placeholder="Check distance from office/landmark" 
           placeholderTextColor="rgba(10, 10, 10, 0.5)"
-          className="flex-1 font-inter-regular text-[14px]"
+          className="flex-1 font-normal text-[14px]"
         />
       </View>
 
@@ -37,7 +37,7 @@ const ProjectMapCard = () => {
 
         {/* Request Overlay */}
         <TouchableOpacity className="absolute bottom-4 bg-black rounded-full px-4 py-2 flex-row items-center">
-          <Text className="text-white font-inter-regular text-[14px]">Request seller for exact location →</Text>
+          <Text className="text-white font-normal text-[14px]">Request seller for exact location →</Text>
         </TouchableOpacity>
 
         {/* Fullscreen Button */}
@@ -51,18 +51,18 @@ const ProjectMapCard = () => {
         <View className="flex-row gap-2">
           <TouchableOpacity className="flex-1 border border-[#E5E7EB] rounded-[10px] flex-row items-center p-3">
             <Text className="text-[20px] mr-2">🏥</Text>
-            <Text className="flex-1 font-inter-medium text-[#101828] text-[14px]">Healthcare</Text>
+            <Text className="flex-1 font-medium text-[#101828] text-[14px]">Healthcare</Text>
             <Text className="text-[16px]">→</Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 border border-[#E5E7EB] rounded-[10px] flex-row items-center p-3">
             <Text className="text-[20px] mr-2">🚗</Text>
-            <Text className="flex-1 font-inter-medium text-[#101828] text-[14px]">Commute</Text>
+            <Text className="flex-1 font-medium text-[#101828] text-[14px]">Commute</Text>
             <Text className="text-[16px]">→</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity className="border border-[#E5E7EB] rounded-[10px] flex-row items-center p-3">
           <Text className="text-[20px] mr-2">☕</Text>
-          <Text className="flex-1 font-inter-medium text-[#101828] text-[14px]">Food and Drinks</Text>
+          <Text className="flex-1 font-medium text-[#101828] text-[14px]">Food and Drinks</Text>
           <Text className="text-[16px]">→</Text>
         </TouchableOpacity>
       </View>

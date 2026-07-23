@@ -86,7 +86,7 @@ const DeveloperProjectCard = ({
               <Image source={{ uri: logo }} style={{ width: wp('6.4%'), height: wp('6.4%') }} resizeMode="contain" />
             ) : (
               <Text 
-                className="font-inter-black" 
+                className="font-black" 
                 style={{ fontSize: wp('2.7%'), color: logoColor }}
               >
                 {logoText}
@@ -95,11 +95,11 @@ const DeveloperProjectCard = ({
           </View>
 
           {/* Title & Developer Info */}
-          <View className="flex-1">
-            <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.4%'), lineHeight: hp('2.3%') }} numberOfLines={1}>
+          <View style={{ flex: 1 }}>
+            <Text className="font-bold text-[#101828]" style={{ fontSize: wp('3.4%'), lineHeight: hp('2.3%') }} numberOfLines={1}>
               {title}
             </Text>
-            <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }} numberOfLines={1}>
+            <Text className="font-normal text-[#6A7282]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }} numberOfLines={1}>
               rated by {developerName}
             </Text>
           </View>
@@ -107,14 +107,14 @@ const DeveloperProjectCard = ({
           {/* Rating */}
           <View className="flex-row items-center" style={{ gap: wp('1.1%') }}>
             <FontAwesome name="star" size={wp('2.8%')} color="#00A63E" />
-            <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('2.5%') }}>{rating}</Text>
+            <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('2.5%') }}>{rating}</Text>
           </View>
         </View>
 
         {/* Property Details */}
         <View style={{ gap: hp('0.2%') }}>
           <Text
-            className="font-inter-regular text-[#4A5565]"
+            className="font-normal text-[#4A5565]"
             style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}
             numberOfLines={1}
             ellipsizeMode="tail"
@@ -122,7 +122,7 @@ const DeveloperProjectCard = ({
             {formatSafeConfig(config)}
           </Text>
           <Text
-            className="font-inter-regular text-[#4A5565]"
+            className="font-normal text-[#4A5565]"
             style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}
             numberOfLines={1}
             ellipsizeMode="tail"
@@ -132,7 +132,7 @@ const DeveloperProjectCard = ({
         </View>
 
         {/* Price Range */}
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.4%'), lineHeight: hp('2.3%') }}>
+        <Text className="font-bold text-[#101828]" style={{ fontSize: wp('3.4%'), lineHeight: hp('2.3%') }}>
           {priceRange}
         </Text>
       </View>

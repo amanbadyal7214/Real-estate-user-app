@@ -82,7 +82,7 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
             >
               <Icon size={wp('4.5%')} color={isActive ? '#008E96' : '#101828'} />
               <Text
-                style={{ fontFamily: 'Inter-Medium', fontSize: tab.id === 'Commercial' ? wp('2.5%') : wp('3%'), marginTop: hp('0.6%') }}
+                style={{ fontWeight: '500', fontSize: tab.id === 'Commercial' ? wp('2.5%') : wp('3%'), marginTop: hp('0.6%') }}
                 className={`text-center ${
                   isActive ? 'text-[#008E96]' : 'text-[#101828]'
                 }`}
@@ -94,7 +94,7 @@ const CategoryTabs = ({ activeTab = 'Buy', onTabPress, mode = 'Buy' }) => {
             </TouchableOpacity>
             {tab.isNew && (
               <View className="absolute left-1/2 -translate-x-1/2 bg-[#008E96] rounded-full" style={{ top: hp('-1%'), paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.2%') }}>
-                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.1%') }} className="text-white">NEW</Text>
+                <Text style={{ fontWeight: '700', fontSize: wp('2.1%') }} className="text-white">NEW</Text>
               </View>
             )}
           </View>

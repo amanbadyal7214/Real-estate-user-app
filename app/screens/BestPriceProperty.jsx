@@ -278,7 +278,7 @@ const BestPriceProperty = () => {
         style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1%'), gap: wp('1.6%') }}
       >
         <Text 
-          style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%'), lineHeight: wp('5.3%') }}
+          style={{ fontWeight: '600', fontSize: wp('3.5%'), lineHeight: wp('5.3%') }}
           className="text-white"
         >
           {label}
@@ -396,9 +396,9 @@ const BestPriceProperty = () => {
             </View>
 
             <View className="border-b border-gray-100 flex-row justify-between items-center" style={{ paddingHorizontal: wp('5.3%'), paddingBottom: hp('1.5%') }}>
-              <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.8%') }}>{title}</Text>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.8%') }}>{title}</Text>
               <TouchableOpacity onPress={() => setActiveFilterDropdown(null)}>
-                <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.7%') }}>Cancel</Text>
+                <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.7%') }}>Cancel</Text>
               </TouchableOpacity>
             </View>
 
@@ -435,7 +435,7 @@ const BestPriceProperty = () => {
                 })
               ) : (
                 <View className="py-10 items-center justify-center">
-                  <Text className="text-gray-400 font-inter-medium" style={{ fontSize: wp('3.7%') }}>No options available</Text>
+                  <Text className="text-gray-400 font-medium" style={{ fontSize: wp('3.7%') }}>No options available</Text>
                 </View>
               )}
             </ScrollView>
@@ -472,13 +472,13 @@ const BestPriceProperty = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="flex-row items-center" style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('2%') }}>
         <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10.6%'), height: wp('10.6%') }}>
           <ArrowLeft size={wp('7.5%')} color="#101828" />
         </TouchableOpacity>
-        <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5.3%'), marginLeft: wp('2.1%') }}>Best Price Properties</Text>
+        <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5.3%'), marginLeft: wp('2.1%') }}>Best Price Properties</Text>
       </View>
 
       {/* Scrollable Filter Bar */}
@@ -526,7 +526,7 @@ const BestPriceProperty = () => {
       {loading && properties.length === 0 ? (
         <View className="flex-1 items-center justify-center py-20">
           <ActivityIndicator size="large" color="#008E96" />
-          <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.7%'), marginTop: hp('2%') }}>Searching...</Text>
+          <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.7%'), marginTop: hp('2%') }}>Searching...</Text>
         </View>
       ) : properties.length > 0 ? (
         <FlatList
@@ -547,7 +547,7 @@ const BestPriceProperty = () => {
           onEndReachedThreshold={0.2}
           ListEmptyComponent={
             <View className="flex-1 items-center justify-center py-20">
-              <Text className="font-inter-medium text-[#6A7282]" style={{ fontSize: wp('3.7%') }}>No properties found.</Text>
+              <Text className="font-medium text-[#6A7282]" style={{ fontSize: wp('3.7%') }}>No properties found.</Text>
             </View>
           }
           ListFooterComponent={

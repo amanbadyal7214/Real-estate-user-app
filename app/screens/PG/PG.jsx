@@ -43,7 +43,7 @@ const PG = () => {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <UserHeader />
 
       <ScrollView
@@ -81,7 +81,7 @@ const PG = () => {
             end={{ x: 1, y: 1 }}
             className="min-h-[247px] rounded-2xl border border-[#008E9626] p-5"
           >
-            <Text className="max-w-[285px] font-inter-semibold text-[17px] leading-[21px] text-[#101828]">
+            <Text className="max-w-[285px] font-semibold text-[17px] leading-[21px] text-[#101828]">
               Are you a property owner looking{`\n`}to rent/sell?
             </Text>
 
@@ -91,7 +91,7 @@ const PG = () => {
                   <View className="h-5 w-5 items-center justify-center rounded-full bg-[#008E96]">
                     <Check size={12} color="#FFFFFF" strokeWidth={2.2} />
                   </View>
-                  <Text className="font-inter-regular text-[14px] leading-[21px] text-[#4A5565]">
+                  <Text className="font-normal text-[14px] leading-[21px] text-[#4A5565]">
                     {item}
                   </Text>
                 </View>
@@ -102,7 +102,7 @@ const PG = () => {
               activeOpacity={0.85}
               className="mt-5 h-11 w-[201px] items-center justify-center rounded-xl bg-[#008E96]"
             >
-              <Text className="font-inter-semibold text-[15px] leading-[22px] text-white">
+              <Text className="font-semibold text-[15px] leading-[22px] text-white">
                 Post property for FREE
               </Text>
             </TouchableOpacity>
@@ -164,7 +164,7 @@ const PG = () => {
             {/* Section Header */}
             <View className="flex-row items-center gap-2 mb-4">
               <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-              <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on HousingMania</Text>
+              <Text className="font-bold text-[17px] text-[#101828]">Popular on HousingMania</Text>
             </View>
             <View className="flex-row justify-around mb-8">
               <TouchableOpacity
@@ -174,7 +174,7 @@ const PG = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="albums-outline" size={24} color="blue" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Collection</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">Collection</Text>
               </TouchableOpacity>
 
 
@@ -183,13 +183,13 @@ const PG = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="newspaper-outline" size={24} color="blue" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
               </TouchableOpacity>
               <TouchableOpacity className="items-center w-[100px]">
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="calculator-outline" size={24} color="blue" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">EMI Calculator</Text>
+                <Text className="font-medium text-[11px] text-[#364153] text-center leading-[14px]">EMI Calculator</Text>
               </TouchableOpacity>
             </View>
 
@@ -203,7 +203,7 @@ const PG = () => {
         <View className="mt-2 mb-6 w-full" style={{ height: 573 }}>
           {/* Heading */}
           <View className="px-4">
-            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
+            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontWeight: '600' }}>
               Home at First Sight
             </Text>
           </View>
@@ -218,7 +218,7 @@ const PG = () => {
               >
                 <MaterialCommunityIcons name="shield-check-outline" size={20} color="#F59E0B" />
               </View>
-              <Text className="font-inter-regular text-[15px] leading-[22px] text-[#4A5565]">
+              <Text className="font-normal text-[15px] leading-[22px] text-[#4A5565]">
                 Verified & Onboarded by our experts
               </Text>
             </View>
@@ -231,7 +231,7 @@ const PG = () => {
               >
                 <MaterialCommunityIcons name="home-outline" size={20} color="#8B5CF6" />
               </View>
-              <Text className="font-inter-regular text-[15px] leading-[22px] text-[#4A5565]">
+              <Text className="font-normal text-[15px] leading-[22px] text-[#4A5565]">
                 Every property detail on just a click
               </Text>
             </View>
@@ -244,7 +244,7 @@ const PG = () => {
               >
                 <MaterialCommunityIcons name="account-group-outline" size={20} color="#EC4899" />
               </View>
-              <Text className="font-inter-regular text-[15px] leading-[22px] text-[#4A5565]">
+              <Text className="font-normal text-[15px] leading-[22px] text-[#4A5565]">
                 Genuine & vast userbase
               </Text>
             </View>
@@ -264,7 +264,7 @@ const PG = () => {
         {/* Benefits of our P.G. Section */}
         <View className="px-4 gap-5 mb-6" style={{ height: 523.75 }}>
           {/* Heading */}
-          <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
+          <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontWeight: '600' }}>
             Benefits of our P.G.
           </Text>
 
@@ -282,11 +282,11 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontWeight: '600' }}>
                 Stress Free Search
               </Text>
               {/* Description */}
-              <Text className="font-inter-regular text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
+              <Text className="font-normal text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
                 Real property photos and Transparent pricing
               </Text>
             </View>
@@ -302,11 +302,11 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontWeight: '600' }}>
                 Find your Match
               </Text>
               {/* Description */}
-              <Text className="font-inter-regular text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
+              <Text className="font-normal text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
                 Lots of options to choose from (private, twin & multi-sharing)
               </Text>
             </View>
@@ -322,11 +322,11 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontWeight: '600' }}>
                 Bon appétite
               </Text>
               {/* Description */}
-              <Text className="font-inter-regular text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
+              <Text className="font-normal text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
                 Info on meal type and offerings to know what cooking
               </Text>
             </View>
@@ -342,11 +342,11 @@ const PG = () => {
                 />
               </View>
               {/* Title */}
-              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontFamily: 'Inter-SemiBold' }}>
+              <Text className="text-[16px] leading-[20px] text-center text-[#101828] mt-3" style={{ fontWeight: '600' }}>
                 Your Life, Your Rules
               </Text>
               {/* Description */}
-              <Text className="font-inter-regular text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
+              <Text className="font-normal text-[13px] leading-[21px] text-center text-[#6A7282] mt-2" style={{ width: 167 }}>
                 Advance info on house rules to live like you do
               </Text>
             </View>
@@ -358,10 +358,10 @@ const PG = () => {
         <View className="mb-6" style={{ gap: 16 }}>
           {/* Header */}
           <View className="px-4" style={{ gap: 4 }}>
-            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
+            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontWeight: '600' }}>
               Featured Collections
             </Text>
-            <Text className="text-[14px] leading-[21px] text-[#6A7282]" style={{ fontFamily: 'Inter-Regular' }}>
+            <Text className="text-[14px] leading-[21px] text-[#6A7282]" style={{ fontWeight: '400' }}>
               Category suited to your property needs
             </Text>
           </View>
@@ -407,7 +407,7 @@ const PG = () => {
               {/* Title */}
               <Text
                 className="absolute text-[18px] leading-[27px] text-[#101828]"
-                style={{ left: 16, top: 87, fontFamily: 'Inter-SemiBold' }}
+                style={{ left: 16, top: 87, fontWeight: '600' }}
               >
                 For Boys
               </Text>
@@ -452,7 +452,7 @@ const PG = () => {
               {/* Title */}
               <Text
                 className="absolute text-[18px] leading-[27px] text-[#101828]"
-                style={{ left: 16, top: 87, fontFamily: 'Inter-SemiBold' }}
+                style={{ left: 16, top: 87, fontWeight: '600' }}
               >
                 For Girls
               </Text>
@@ -464,10 +464,10 @@ const PG = () => {
         <View className="mb-6" style={{ gap: 16 }}>
           {/* Header */}
           <View className="px-4" style={{ gap: 4 }}>
-            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontFamily: 'Inter-SemiBold' }}>
+            <Text className="text-[22px] text-[#101828] leading-[33px]" style={{ fontWeight: '600' }}>
               Our Testimonials
             </Text>
-            <Text className="text-[14px] leading-[21px] text-[#6A7282]" style={{ fontFamily: 'Inter-Regular' }}>
+            <Text className="text-[14px] leading-[21px] text-[#6A7282]" style={{ fontWeight: '400' }}>
               Testimonials from our Housing edge customers
             </Text>
           </View>
@@ -511,13 +511,13 @@ const PG = () => {
             <View className="items-center" style={{ width: 92.67 }}>
               <Text
                 className="text-[24px] leading-[36px] text-white text-center"
-                style={{ fontFamily: 'Inter-Bold' }}
+                style={{ fontWeight: '700' }}
               >
                 30k+
               </Text>
               <Text
                 className="text-[13px] leading-[20px] text-center mt-1"
-                style={{ fontFamily: 'Inter-Regular', color: '#D1D5DB' }}
+                style={{ fontWeight: '400', color: '#D1D5DB' }}
               >
                 Properties
               </Text>
@@ -527,13 +527,13 @@ const PG = () => {
             <View className="items-center" style={{ width: 92.67 }}>
               <Text
                 className="text-[24px] leading-[36px] text-white text-center"
-                style={{ fontFamily: 'Inter-Bold' }}
+                style={{ fontWeight: '700' }}
               >
                 35+
               </Text>
               <Text
                 className="text-[13px] leading-[20px] text-center mt-1"
-                style={{ fontFamily: 'Inter-Regular', color: '#D1D5DB' }}
+                style={{ fontWeight: '400', color: '#D1D5DB' }}
               >
                 Cities
               </Text>
@@ -543,13 +543,13 @@ const PG = () => {
             <View className="items-center" style={{ width: 92.67 }}>
               <Text
                 className="text-[24px] leading-[36px] text-white text-center"
-                style={{ fontFamily: 'Inter-Bold' }}
+                style={{ fontWeight: '700' }}
               >
                 2.5{'\n'}Lakh+
               </Text>
               <Text
                 className="text-[13px] leading-[20px] text-center mt-1"
-                style={{ fontFamily: 'Inter-Regular', color: '#D1D5DB' }}
+                style={{ fontWeight: '400', color: '#D1D5DB' }}
               >
                 Monthly Users
               </Text>
@@ -587,7 +587,7 @@ const PG = () => {
               <View style={{ flex: 1, gap: 16 }}>
                 <Text
                   className="text-[20px] leading-[25px] text-[#101828]"
-                  style={{ fontFamily: 'Inter-SemiBold' }}
+                  style={{ fontWeight: '600' }}
                 >
                   Like the app?{'\n'}Share the app
                 </Text>
@@ -598,7 +598,7 @@ const PG = () => {
                 >
                   <Text
                     className="text-white text-[15px] leading-[22px]"
-                    style={{ fontFamily: 'Inter-SemiBold' }}
+                    style={{ fontWeight: '600' }}
                   >
                     Share Now
                   </Text>

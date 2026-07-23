@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Welcome1 = () => {
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <View className="flex-1 px-8 pt-4">
         {/* Header: Logo + Skip */}
         <View className="flex-row items-center justify-between mb-10">
@@ -15,7 +15,7 @@ const Welcome1 = () => {
             resizeMode="contain"
           />
           <TouchableOpacity onPress={() => router.replace('/(auth)/onboard')}>
-            <Text className="text-[#99A1AF] text-md font-inter-regular">Skip</Text>
+            <Text className="text-[#99A1AF] text-md font-normal">Skip</Text>
           </TouchableOpacity>
         </View>
 
@@ -31,12 +31,12 @@ const Welcome1 = () => {
         {/* Content Container */}
         <View className="pb-10 items-center">
           {/* Heading */}
-          <Text className="text-[24px] font-inter-bold text-[#101828] text-center leading-[30px] mb-4">
+          <Text className="text-[24px] font-bold text-[#101828] text-center leading-[30px] mb-4">
             Find Your Perfect Home
           </Text>
 
           {/* Description */}
-          <Text className="text-[14px] text-[#6A7282] font-inter-regular text-center leading-[23px] mb-10">
+          <Text className="text-[14px] text-[#6A7282] font-normal text-center leading-[23px] mb-10">
             Discover thousands of properties tailored for students and professionals
           </Text>
 
@@ -72,7 +72,7 @@ const Welcome1 = () => {
               activeOpacity={0.8}
               onPress={() => router.push('/onboarding/Welcome2')}
             >
-              <Text className="text-white text-lg font-inter-bold mr-2 ml-4 ">Next</Text>
+              <Text className="text-white text-lg font-bold mr-2 ml-4 ">Next</Text>
               <ChevronRight color="white" size={20} strokeWidth={3} />
             </TouchableOpacity>
           </View>

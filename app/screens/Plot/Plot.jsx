@@ -164,7 +164,7 @@ const Plot = () => {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Top Header */}
       <UserHeader />
 
@@ -202,7 +202,7 @@ const Plot = () => {
         <View className="px-4 mb-6">
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[20px]">⭐</Text>
-            <Text className="font-inter-bold text-[17px] text-[#101828]">Popular on HousingMania</Text>
+            <Text className="font-bold text-[17px] text-[#101828]">Popular on HousingMania</Text>
           </View>
 
           <View
@@ -223,21 +223,21 @@ const Plot = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="bulb-outline" size={24} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Suggestions</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">Suggestions</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center w-[100px]">
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="pricetag-outline" size={24} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Deals</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">Deals</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center w-[100px]">
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="newspaper-outline" size={24} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">News</Text>
               </TouchableOpacity>
             </View>
 
@@ -246,21 +246,21 @@ const Plot = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="calculator-outline" size={24} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">EMI Calculator</Text>
+                <Text className="font-medium text-[11px] text-[#364153] text-center leading-[14px]">EMI Calculator</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center w-[100px]">
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="stats-chart-outline" size={24} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Affordability Calculator</Text>
+                <Text className="font-medium text-[11px] text-[#364153] text-center leading-[14px]">Affordability Calculator</Text>
               </TouchableOpacity>
 
               <TouchableOpacity className="items-center w-[100px]">
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2">
                   <Ionicons name="checkmark-done-circle-outline" size={24} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Eligibility Calculator</Text>
+                <Text className="font-medium text-[11px] text-[#364153] text-center leading-[14px]">Eligibility Calculator</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -271,11 +271,11 @@ const Plot = () => {
         <View className="px-4 mb-3">
           <View className="mb-4 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+              <Text className="font-semibold text-[17px] text-[#101828]">Recommended Sellers</Text>
+              <Text className="font-normal text-[13px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/RecommendedSellers')}>
-              <Text className="font-inter-medium text-[14px] text-[#008E96]">See all</Text>
+              <Text className="font-medium text-[14px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -312,11 +312,11 @@ const Plot = () => {
         <View className="px-4 mb-3">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">Most Popular</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Handpicked for you</Text>
+              <Text className="font-semibold text-[17px] text-[#101828]">Most Popular</Text>
+              <Text className="font-normal text-[13px] text-[#6A7282] mt-0.5">Handpicked for you</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/MostPopularPlots')}>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -344,11 +344,11 @@ const Plot = () => {
         <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[17px] text-[#101828]">News For You</Text>
-              <Text className="font-inter-regular text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
+              <Text className="font-semibold text-[17px] text-[#101828]">News For You</Text>
+              <Text className="font-normal text-[13px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/NewsForYou')}>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 

@@ -36,7 +36,7 @@ const ServicesArticleCard = ({ title, date, excerpt, image, onPress }) => {
             <View style={{ paddingHorizontal: wp('4.3%'), paddingTop: hp('2%'), paddingBottom: hp('2%'), gap: hp('0.5%') }}>
                 {/* Title */}
                 <Text
-                    className="font-inter-semibold text-[#101828]"
+                    className="font-semibold text-[#101828]"
                     style={{ fontSize: wp('4.3%'), lineHeight: wp('5.3%') }}
                     numberOfLines={2}
                 >
@@ -45,7 +45,7 @@ const ServicesArticleCard = ({ title, date, excerpt, image, onPress }) => {
 
                 {/* Date */}
                 <Text
-                    className="font-inter-medium text-[#6A7282]"
+                    className="font-medium text-[#6A7282]"
                     style={{ fontSize: wp('3.2%'), lineHeight: wp('4.8%'), marginTop: hp('0.4%') }}
                 >
                     {date}
@@ -53,7 +53,7 @@ const ServicesArticleCard = ({ title, date, excerpt, image, onPress }) => {
 
                 {/* Excerpt */}
                 <Text
-                    className="font-inter-medium text-[#4A5565]"
+                    className="font-medium text-[#4A5565]"
                     style={{ fontSize: wp('3.7%'), lineHeight: wp('6.1%'), marginTop: hp('0.4%') }}
                     numberOfLines={2}
                 >

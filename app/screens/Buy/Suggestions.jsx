@@ -117,7 +117,7 @@ const Suggestions = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Header */}
       <View className="flex-row items-center justify-between border-b border-[#E4E7EC] bg-white" style={{ paddingHorizontal: wp('3.7%'), paddingBottom: hp('2%') }}>
         <TouchableOpacity onPress={() => router.back()} className="justify-center items-center rounded-full" style={{ width: wp('8.2%'), height: wp('8.2%') }}>
@@ -125,10 +125,10 @@ const Suggestions = () => {
         </TouchableOpacity>
 
         <View className="items-center flex-1">
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%'), lineHeight: hp('2.5%') }} className="text-[#101828] text-center">
+          <Text style={{ fontWeight: '700', fontSize: wp('4.3%'), lineHeight: hp('2.5%') }} className="text-[#101828] text-center">
             {suggestionsData.length > 0 ? `${suggestionsData.length} Smart Suggestions` : 'Smart Suggestions'}
           </Text>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%'), lineHeight: hp('1.7%'), marginTop: hp('0.2%') }} className="text-[#6A7282] text-center">
+          <Text style={{ fontWeight: '400', fontSize: wp('3%'), lineHeight: hp('1.7%'), marginTop: hp('0.2%') }} className="text-[#6A7282] text-center">
             Based on your last search in {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
@@ -161,7 +161,7 @@ const Suggestions = () => {
             ))
           ) : (
             <View className="flex-1 items-center justify-center" style={{ marginTop: hp('4.9%') }}>
-              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }} className="text-[#6A7282]">No suggestions found for this location.</Text>
+              <Text style={{ fontWeight: '500', fontSize: wp('3.5%') }} className="text-[#6A7282]">No suggestions found for this location.</Text>
             </View>
           )}
 
@@ -175,7 +175,7 @@ const Suggestions = () => {
           {/* End of list message */}
           {!hasMore && suggestionsData.length > 0 && (
             <View className="items-center" style={{ paddingVertical: hp('3%') }}>
-              <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%') }} className="text-[#6A7282]">You've seen all suggestions</Text>
+              <Text style={{ fontWeight: '400', fontSize: wp('3.5%') }} className="text-[#6A7282]">You've seen all suggestions</Text>
             </View>
           )}
         </ScrollView>

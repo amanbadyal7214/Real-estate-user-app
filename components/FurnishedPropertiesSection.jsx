@@ -96,14 +96,14 @@ const FurnishedPropertiesSection = () => {
     <View className="mx-4 sm:mx-6 md:mx-8 rounded-[24px] bg-[#F5F5F5] py-4 sm:py-6 mb-4">
       <View className="mb-4 flex-row items-start justify-between px-4 sm:px-6">
         <View className="flex-1 pr-4">
-          <Text className="font-inter-bold text-[17px] sm:text-[22px] leading-8 text-[#101828]">Fully Furnished Properties</Text>
-          <Text className="mt-[-2px] sm:mt-1 font-inter-regular text-[13px] sm:text-[15px] leading-6 text-[#6A7282]">Most sought-after rental properties</Text>
+          <Text className="font-bold text-[17px] sm:text-[22px] leading-8 text-[#101828]">Fully Furnished Properties</Text>
+          <Text className="mt-[-2px] sm:mt-1 font-normal text-[13px] sm:text-[15px] leading-6 text-[#6A7282]">Most sought-after rental properties</Text>
         </View>
         <TouchableOpacity
           className="pt-[5px] sm:pt-2 active:opacity-80"
           onPress={() => router.push('/screens/FullyFurnishedProperties')}
         >
-          <Text className="font-inter-medium text-[14px] sm:text-[16px] text-[#008E96]">See all</Text>
+          <Text className="font-medium text-[14px] sm:text-[16px] text-[#008E96]">See all</Text>
         </TouchableOpacity>
       </View>
 

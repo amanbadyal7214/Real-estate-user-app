@@ -75,17 +75,17 @@ const PhotosStep = () => {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <View style={{ paddingHorizontal: wp('5.3%'), paddingTop: hp('3%'), gap: hp('2.5%') }}>
         {/* Selected Images Preview */}
         {images.length > 0 && (
           <View style={{ gap: hp('1.5%') }}>
             <View className="flex-row justify-between items-center">
-              <Text className="text-[#101828]" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%') }}>
+              <Text className="text-[#101828]" style={{ fontWeight: '600', fontSize: wp('4.3%') }}>
                 Selected Photos ({images.length})
               </Text>
               <TouchableOpacity onPress={() => setImages([])}>
-                <Text className="text-red-500" style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}>Clear All</Text>
+                <Text className="text-red-500" style={{ fontWeight: '500', fontSize: wp('3.2%') }}>Clear All</Text>
               </TouchableOpacity>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: wp('3.2%') }}>
@@ -117,7 +117,7 @@ const PhotosStep = () => {
             style={{ height: hp('15.8%'), borderRadius: wp('4.3%') }}
           >
             <Ionicons name="camera-outline" size={wp('8.5%')} color="#008E96" />
-            <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginTop: hp('1%') }}>Take Photo</Text>
+            <Text className="text-[#008E96]" style={{ fontWeight: '600', fontSize: wp('3.2%'), marginTop: hp('1%') }}>Take Photo</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={pickImage}
@@ -125,13 +125,13 @@ const PhotosStep = () => {
             style={{ height: hp('15.8%'), borderRadius: wp('4.3%') }}
           >
             <Ionicons name="images-outline" size={wp('8.5%')} color="#99A1AF" />
-            <Text className="text-[#6A7282]" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginTop: hp('1%') }}>Upload Gallery</Text>
+            <Text className="text-[#6A7282]" style={{ fontWeight: '600', fontSize: wp('3.2%'), marginTop: hp('1%') }}>Upload Gallery</Text>
           </TouchableOpacity>
         </View>
 
         {/* Tips Section */}
         <View style={{ gap: hp('2%') }}>
-          <Text className="text-[#101828]" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%') }}>Photo Tips</Text>
+          <Text className="text-[#101828]" style={{ fontWeight: '600', fontSize: wp('4.3%') }}>Photo Tips</Text>
           <View className="flex-row flex-wrap justify-between" style={{ gap: wp('3.2%') }}>
             {photoTips.map((tip, index) => (
               <View 
@@ -140,8 +140,8 @@ const PhotosStep = () => {
                 style={{ width: wp('42%'), padding: wp('3.2%'), borderRadius: wp('3.2%'), gap: hp('0.5%') }}
               >
                 <Text style={{ fontSize: wp('4.8%') }}>{tip.emoji}</Text>
-                <Text className="text-[#101828]" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('2.9%') }}>{tip.title}</Text>
-                <Text className="text-[#6A7282]" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%'), lineHeight: hp('1.8%') }}>{tip.desc}</Text>
+                <Text className="text-[#101828]" style={{ fontWeight: '600', fontSize: wp('2.9%') }}>{tip.title}</Text>
+                <Text className="text-[#6A7282]" style={{ fontWeight: '400', fontSize: wp('2.7%'), lineHeight: hp('1.8%') }}>{tip.desc}</Text>
               </View>
             ))}
           </View>
@@ -149,7 +149,7 @@ const PhotosStep = () => {
 
         {/* Recommendations */}
         <View style={{ gap: hp('2%'), marginBottom: hp('3%') }}>
-          <Text className="text-[#101828]" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.3%') }}>What to capture?</Text>
+          <Text className="text-[#101828]" style={{ fontWeight: '600', fontSize: wp('4.3%') }}>What to capture?</Text>
           <View className="flex-row flex-wrap" style={{ gap: wp('2.1%') }}>
             {recommendations.map((item) => (
               <TouchableOpacity
@@ -158,7 +158,7 @@ const PhotosStep = () => {
                 className={`border ${selectedRecommendations.includes(item) ? 'bg-[#008E96] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
                 style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1%'), borderRadius: wp('4.3%') }}
               >
-                <Text className={`${selectedRecommendations.includes(item) ? 'text-white' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}>
+                <Text className={`${selectedRecommendations.includes(item) ? 'text-white' : 'text-[#6A7282]'}`} style={{ fontWeight: '500', fontSize: wp('3.2%') }}>
                   {item}
                 </Text>
               </TouchableOpacity>

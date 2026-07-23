@@ -107,7 +107,7 @@ const TopRatedDevelopers = () => {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top', 'left', 'right']}>
       {/* Header with Search */}
       <View className="flex-row items-center gap-3" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
         <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%') }}>
@@ -120,7 +120,7 @@ const TopRatedDevelopers = () => {
           style={{ borderWidth: 1.5, borderColor: '#B2E0E2', height: hp('6%'), paddingHorizontal: wp('5%'), borderRadius: wp('10%') }}
         >
           <Search size={wp('5.5%')} color="#6A7282" />
-          <Text className="ml-3 flex-1 text-[#6A7282]" style={{ fontFamily: 'Inter-Regular', fontSize: wp('4%') }}>
+          <Text className="ml-3 flex-1 text-[#6A7282]" style={{ fontWeight: '400', fontSize: wp('4%') }}>
             Locality, Landmark, Project...
           </Text>
         </TouchableOpacity>
@@ -129,14 +129,14 @@ const TopRatedDevelopers = () => {
       {/* Filter Buttons */}
       <View className="flex-row gap-2" style={{ paddingHorizontal: wp('4%') }}>
         <TouchableOpacity className="flex-row items-center border border-[#6A7282] bg-white" style={{ borderRadius: wp('6%'), paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
-          <Text className="text-[#101828] mr-2" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }}>Budget in Rs.</Text>
+          <Text className="text-[#101828] mr-2" style={{ fontWeight: '500', fontSize: wp('4%') }}>Budget in Rs.</Text>
           <Svg width={wp('2.5%')} height={wp('1.5%')} viewBox="0 0 10 6" fill="none">
             <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </Svg>
         </TouchableOpacity>
         
         <TouchableOpacity className="flex-row items-center border border-[#6A7282] bg-white" style={{ borderRadius: wp('6%'), paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
-          <Text className="text-[#101828] mr-2" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }}>BHK type</Text>
+          <Text className="text-[#101828] mr-2" style={{ fontWeight: '500', fontSize: wp('4%') }}>BHK type</Text>
           <Svg width={wp('2.5%')} height={wp('1.5%')} viewBox="0 0 10 6" fill="none">
             <Path d="M1 1L5 5L9 1" stroke="#101828" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </Svg>
@@ -175,7 +175,7 @@ const TopRatedDevelopers = () => {
                     </View>
                     <Text
                       style={{
-                        fontFamily: 'Inter-SemiBold',
+                        fontWeight: '600',
                         fontSize: wp('3.5%'),
                         lineHeight: wp('5.5%'),
                         textAlign: 'center',
@@ -192,7 +192,7 @@ const TopRatedDevelopers = () => {
                   >
                     <Text
                       style={{
-                        fontFamily: 'Inter-SemiBold',
+                        fontWeight: '600',
                         fontSize: wp('3.5%'),
                         lineHeight: wp('5.5%'),
                         textAlign: 'center',

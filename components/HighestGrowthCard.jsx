@@ -12,11 +12,11 @@ const HighestGrowthCard = ({ image, title, location, growth, timeline, price, on
                     source={{ uri: image }}
                     className="w-20 h-20 rounded-[14px]"
                 />
-                <View className="flex-1">
-                    <Text className="font-inter-semibold text-[17px] text-[#101828] leading-[26px]">
+                <View style={{ flex: 1 }}>
+                    <Text className="font-semibold text-[17px] text-[#101828] leading-[26px]">
                         {title}
                     </Text>
-                    <Text className="font-inter-regular text-[13px] text-[#6A7282] leading-[20px]">
+                    <Text className="font-normal text-[13px] text-[#6A7282] leading-[20px]">
                         {location}
                     </Text>
                 </View>
@@ -60,15 +60,15 @@ const HighestGrowthCard = ({ image, title, location, growth, timeline, price, on
             <View className="flex-row items-center justify-between mb-4">
                 <View className="flex-row items-center gap-1">
                     <MaterialCommunityIcons name="trending-up" size={16} color="#00C48C" />
-                    <Text className="font-inter-semibold text-[15px] text-[#00C48C]">
+                    <Text className="font-semibold text-[15px] text-[#00C48C]">
                         {growth}
                     </Text>
-                    <Text className="font-inter-regular text-[13px] text-[#00C48C]">
+                    <Text className="font-normal text-[13px] text-[#00C48C]">
                         in {timeline}
                     </Text>
                 </View>
                 <TouchableOpacity>
-                    <Text className="font-inter-medium text-[14px] text-[#101828] underline">
+                    <Text className="font-medium text-[14px] text-[#101828] underline">
                         View price trend
                     </Text>
                 </TouchableOpacity>
@@ -79,7 +79,7 @@ const HighestGrowthCard = ({ image, title, location, growth, timeline, price, on
                 <View className="w-6 h-6 border-[1px] border-dashed border-[#6A7282] rounded-[4px] items-center justify-center">
                     <MaterialCommunityIcons name="currency-rupee" size={14} color="#6A7282" />
                 </View>
-                <Text className="font-inter-semibold text-[15px] text-[#101828]">
+                <Text className="font-semibold text-[15px] text-[#101828]">
                     {price}
                 </Text>
             </View>
@@ -89,7 +89,7 @@ const HighestGrowthCard = ({ image, title, location, growth, timeline, price, on
                 onPress={onPress}
                 className="h-11 bg-[#008E96]/10 rounded-[14px] justify-center items-center"
             >
-                <Text className="font-inter-semibold text-[15px] text-[#008E96]">
+                <Text className="font-semibold text-[15px] text-[#008E96]">
                     View Property
                 </Text>
             </TouchableOpacity>

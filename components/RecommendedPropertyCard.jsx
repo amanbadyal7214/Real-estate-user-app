@@ -46,7 +46,7 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
 
       {/* Details Container */}
       <View className="flex-col" style={{ flex: 1, height: hp('10.4%'), paddingTop: hp('0.7%'), paddingVertical: hp('0.2%') }}>
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.1%') }}>
+        <Text className="font-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.1%') }}>
           {(() => {
             const raw = price;
             if (raw === null || raw === undefined || raw === '') return 'View details';
@@ -69,13 +69,13 @@ const RecommendedPropertyCard = ({ id, image, price, title, area, location }) =>
             return String(raw);
           })()}
         </Text>
-        <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('2.7%'), lineHeight: hp('1.9%'), marginTop: hp('0.3%') }} numberOfLines={1}>
+        <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('2.7%'), lineHeight: hp('1.9%'), marginTop: hp('0.3%') }} numberOfLines={1}>
           {title}
         </Text>
-        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.3%'), lineHeight: hp('1.5%'), marginTop: hp('0.3%') }}>
+        <Text className="font-normal text-[#6A7282]" style={{ fontSize: wp('2.3%'), lineHeight: hp('1.5%'), marginTop: hp('0.3%') }}>
           {area}
         </Text>
-        <Text className="font-inter-regular text-[#6A7282]" style={{ fontSize: wp('2.3%'), lineHeight: hp('1.5%') }} numberOfLines={1}>
+        <Text className="font-normal text-[#6A7282]" style={{ fontSize: wp('2.3%'), lineHeight: hp('1.5%') }} numberOfLines={1}>
           {location}
         </Text>
       </View>

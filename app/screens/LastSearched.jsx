@@ -203,8 +203,8 @@ const LastSearched = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F9FAFB]">
-      <View className="flex-1">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }}>
+      <View style={{ flex: 1 }}>
         {/* Header Container (Based on CSS) */}
         <View className="flex-row justify-between items-center h-[64px]" style={{ paddingHorizontal: wp('4%') }}>
           <TouchableOpacity onPress={() => router.back()}>
@@ -216,7 +216,7 @@ const LastSearched = () => {
         {loading && properties.length === 0 ? (
           <View className="flex-1 justify-center items-center py-20">
             <ActivityIndicator size="large" color="#008E96" />
-            <Text className="text-[#667085] font-inter-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Loading listings...</Text>
+            <Text className="text-[#667085] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Loading listings...</Text>
           </View>
         ) : (
           <FlatList
@@ -232,10 +232,10 @@ const LastSearched = () => {
             ListHeaderComponent={
               <View className="flex-row items-center" style={{ marginTop: hp('1%'), marginBottom: hp('3%'), height: hp('4%') }}>
                 <TouchableOpacity className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
-                  <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.5%') }}>+ Add</Text>
+                  <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>+ Add</Text>
                 </TouchableOpacity>
                 <View style={{ marginLeft: wp('2%') }}>
-                  <Text className="text-[#008E96] font-inter-semibold" style={{ fontSize: wp('4%') }}>Mohali</Text>
+                  <Text className="text-[#008E96] font-semibold" style={{ fontSize: wp('4%') }}>Mohali</Text>
                 </View>
               </View>
             }
@@ -250,7 +250,7 @@ const LastSearched = () => {
             ListEmptyComponent={
               <View className="items-center" style={{ paddingVertical: hp('10%') }}>
                 <Ionicons name="home-outline" size={wp('12%')} color="#D0D5DD" />
-                <Text className="text-[#667085] font-inter-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>No listings found for Mohali</Text>
+                <Text className="text-[#667085] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>No listings found for Mohali</Text>
               </View>
             }
             ListFooterComponent={
@@ -284,7 +284,7 @@ const LastSearched = () => {
           onPress={() => setSortModalVisible(true)}
         >
           <MaterialIcons name="sort" size={wp('5%')} color="#008E96" />
-          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.3%') }}>Sort</Text>
+          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.3%') }}>Sort</Text>
         </TouchableOpacity>
         <View className="bg-[#E4E7EC] self-center" style={{ width: 1, height: hp('4%') }} />
         <TouchableOpacity 
@@ -293,7 +293,7 @@ const LastSearched = () => {
           onPress={openFilter}
         >
           <Ionicons name="options-outline" size={wp('5%')} color="#008E96" />
-          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.3%') }}>Filters</Text>
+          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.3%') }}>Filters</Text>
         </TouchableOpacity>
       </View>
 
@@ -304,7 +304,7 @@ const LastSearched = () => {
         visible={filterModalVisible}
         onRequestClose={closeFilter}
       >
-        <View className="flex-1">
+        <View style={{ flex: 1 }}>
           <TouchableOpacity 
             activeOpacity={1} 
             className="absolute inset-0"
@@ -333,9 +333,9 @@ const LastSearched = () => {
 
               {/* Header */}
               <View className="flex-row justify-between items-center" style={{ paddingHorizontal: wp('5%'), paddingBottom: hp('2%') }}>
-                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5%') }}>Filter</Text>
+                <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5%') }}>Filter</Text>
                 <TouchableOpacity onPress={clearAllFilters}>
-                  <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.5%') }}>Clear all</Text>
+                  <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>Clear all</Text>
                 </TouchableOpacity>
               </View>
 
@@ -348,21 +348,21 @@ const LastSearched = () => {
               >
                 {/* Searching In */}
                 <View className="flex-row justify-between items-center" style={{ marginTop: hp('1.5%') }}>
-                  <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.5%') }}>
-                    You are currently looking in <Text className="font-inter-semibold text-[#101828]">Mohali</Text>
+                  <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.5%') }}>
+                    You are currently looking in <Text className="font-semibold text-[#101828]">Mohali</Text>
                   </Text>
                   <TouchableOpacity className="flex-row items-center">
-                    <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>Change Location</Text>
+                    <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('4%') }}>Change Location</Text>
                     <Ionicons name="chevron-forward" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1%') }} />
                   </TouchableOpacity>
                 </View>
 
                 {/* Filter Applied Tag */}
                 <View style={{ marginTop: hp('3%') }}>
-                  <Text className="text-[#9CA3AF] font-inter-regular" style={{ fontSize: wp('3.5%') }}>Filter Applied</Text>
+                  <Text className="text-[#9CA3AF] font-normal" style={{ fontSize: wp('3.5%') }}>Filter Applied</Text>
                   <View className="flex-row" style={{ marginTop: hp('1%') }}>
                     <View className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
-                      <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.5%') }}>Mohali</Text>
+                      <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>Mohali</Text>
                       <Ionicons name="close-circle" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1.5%') }} />
                     </View>
                   </View>
@@ -370,7 +370,7 @@ const LastSearched = () => {
 
                 {/* I'm Looking to */}
                 <View style={{ marginTop: hp('4%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>{"I'm Looking to"}</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>{"I'm Looking to"}</Text>
                   <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     {lookOptions.map(option => (
                       <TouchableOpacity 
@@ -379,7 +379,7 @@ const LastSearched = () => {
                         className={`border bg-[#008E96]/10 border-[#008E96]`}
                         style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }}
                       >
-                        <Text className={`font-inter-medium text-[#008E96]`} style={{ fontSize: wp('3.5%') }}>
+                        <Text className={`font-medium text-[#008E96]`} style={{ fontSize: wp('3.5%') }}>
                           {option}
                         </Text>
                       </TouchableOpacity>
@@ -389,7 +389,7 @@ const LastSearched = () => {
 
                 {/* Localities */}
                 <View style={{ marginTop: hp('4%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Localities</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Localities</Text>
                   <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     <TouchableOpacity 
                       className="flex-row items-center overflow-hidden"
@@ -401,10 +401,10 @@ const LastSearched = () => {
                         end={{ x: 1, y: 1 }}
                         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: wp('3%') }}
                       />
-                      <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.5%') }}>+ Add More</Text>
+                      <Text className="text-white font-semibold" style={{ fontSize: wp('3.5%') }}>+ Add More</Text>
                     </TouchableOpacity>
                     <View className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
-                      <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('3.5%') }}>Mohali</Text>
+                      <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>Mohali</Text>
                       <Ionicons name="close-circle" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1.5%') }} />
                     </View>
                   </View>
@@ -412,7 +412,7 @@ const LastSearched = () => {
 
                 {/* Property Type */}
                 <View style={{ marginTop: hp('2.5%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Property Type <Ionicons name="information-circle-outline" size={wp('4%')} color="#6A7282" /></Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Property Type <Ionicons name="information-circle-outline" size={wp('4%')} color="#6A7282" /></Text>
                   <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     {propertyTypes && propertyTypes.length > 0 ? (
                       propertyTypes.map((pt) => {
@@ -426,7 +426,7 @@ const LastSearched = () => {
                             className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
                             style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
                           >
-                            <Text className={`font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
                           </TouchableOpacity>
                         );
                       })
@@ -438,7 +438,7 @@ const LastSearched = () => {
 
                 {/* Sub Property Type */}
                 <View style={{ marginTop: hp('2%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Sub Property Type</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Sub Property Type</Text>
                   <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     {subPropertyTypes && subPropertyTypes.length > 0 ? (
                       subPropertyTypes
@@ -459,7 +459,7 @@ const LastSearched = () => {
                               className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
                               style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
                             >
-                              <Text className={`font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                              <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
                             </TouchableOpacity>
                           );
                         })
@@ -471,7 +471,7 @@ const LastSearched = () => {
 
                 {/* Budget */}
                 <View style={{ marginTop: hp('4%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Budget</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Budget</Text>
                   <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     <TextInput
                       placeholder="Min (₹)"
@@ -502,7 +502,7 @@ const LastSearched = () => {
 
                 {/* Built-up Area */}
                 <View style={{ marginTop: hp('4%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Built-up Area</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Built-up Area</Text>
                   <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     <TextInput
                       placeholder="Min Area (Sqft)"
@@ -533,7 +533,7 @@ const LastSearched = () => {
 
                 {/* Structure Type */}
                 <View style={{ marginTop: hp('4%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Structure Type</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Structure Type</Text>
                   <View style={{ marginTop: hp('1.5%') }}>
                     <TextInput
                       placeholder="Enter structure (numbers only)"
@@ -564,7 +564,7 @@ const LastSearched = () => {
                             className={`border justify-center ${isActive ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
                             style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
                           >
-                            <Text className={`font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>
                               {label}
                             </Text>
                           </TouchableOpacity>
@@ -578,7 +578,7 @@ const LastSearched = () => {
 
                 {/* Construction Status */}
                 <View style={{ marginTop: hp('2.5%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Construction Status</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Construction Status</Text>
                   <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     {constructionStatus && constructionStatus.length > 0 ? (
                       constructionStatus.map((cs) => {
@@ -592,7 +592,7 @@ const LastSearched = () => {
                             className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
                             style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
                           >
-                            <Text className={`font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
                           </TouchableOpacity>
                         );
                       })
@@ -604,7 +604,7 @@ const LastSearched = () => {
 
                 {/* Possession Status */}
                 <View style={{ marginTop: hp('2.5%'), marginBottom: hp('5%') }}>
-                  <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%') }}>Possession Status</Text>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Possession Status</Text>
                   <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     {possessionStatus && possessionStatus.length > 0 ? (
                       possessionStatus.map((ps) => {
@@ -618,7 +618,7 @@ const LastSearched = () => {
                             className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
                             style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
                           >
-                            <Text className={`font-inter-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
                           </TouchableOpacity>
                         );
                       })
@@ -651,7 +651,7 @@ const LastSearched = () => {
                     end={{ x: 1, y: 0 }}
                     style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: wp('3%') }}
                   />
-                  <Text className="text-white font-inter-bold" style={{ fontSize: wp('4%') }}>View Properties</Text>
+                  <Text className="text-white font-bold" style={{ fontSize: wp('4%') }}>View Properties</Text>
                 </TouchableOpacity>
               </View>
             </SafeAreaView>
@@ -666,7 +666,7 @@ const LastSearched = () => {
         visible={sortModalVisible}
         onRequestClose={() => setSortModalVisible(false)}
       >
-        <View className="flex-1">
+        <View style={{ flex: 1 }}>
           {sortModalVisible && (
             <BlurView
               intensity={50}
@@ -682,7 +682,7 @@ const LastSearched = () => {
               {/* Header section (Frame 8) */}
               <View className="bg-[#E4E7EC]/50" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), paddingTop: hp('2.5%'), paddingHorizontal: wp('5%'), paddingBottom: hp('2.5%') }}>
                 <View className="self-center bg-[#D9D9D9] rounded-full" style={{ width: wp('13.5%'), height: hp('0.8%'), marginBottom: hp('1.5%') }} />
-                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5%'), lineHeight: wp('7.5%') }}>Sort by</Text>
+                <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5%'), lineHeight: wp('7.5%') }}>Sort by</Text>
               </View>
               
               {/* Options section (Frame 9) */}
@@ -694,7 +694,7 @@ const LastSearched = () => {
                     className={`items-center rounded-sm ${selectedSort === option ? 'bg-[#1CB2A9]/5' : ''}`}
                     style={{ paddingVertical: hp('1%') }}
                   >
-                    <Text className={`font-inter-regular text-center ${selectedSort === option ? 'text-[#008E96]' : 'text-black'}`} style={{ fontSize: wp('3.5%'), lineHeight: wp('5%') }}>
+                    <Text className={`font-normal text-center ${selectedSort === option ? 'text-[#008E96]' : 'text-black'}`} style={{ fontSize: wp('3.5%'), lineHeight: wp('5%') }}>
                       {option}
                     </Text>
                   </TouchableOpacity>
@@ -723,7 +723,7 @@ const LastSearched = () => {
                       elevation: 4
                     }}
                   >
-                    <Text className="text-white font-inter-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('6%') }}>Apply filters</Text>
+                    <Text className="text-white font-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('6%') }}>Apply filters</Text>
                   </LinearGradient>
                 </TouchableOpacity>
               </View>

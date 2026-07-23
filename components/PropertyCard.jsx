@@ -6,12 +6,12 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const BHKCard = ({ config, area, price }) => {
   return (
     <View className="bg-white border border-[#E4E7EC]" style={{ width: wp('27%'), height: hp('13.5%'), padding: wp('2.7%'), borderRadius: wp('2.7%'), marginRight: wp('2.7%') }}>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), lineHeight: hp('1.9%') }} className="text-[#101828]">{config}</Text>
+      <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), lineHeight: hp('1.9%') }} className="text-[#101828]">{config}</Text>
       <View style={{ marginTop: hp('0.5%') }}>
-        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%'), lineHeight: hp('1.6%') }} className="text-[#6A7282]">Super Builtup Area</Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%'), lineHeight: hp('1.7%') }} className="text-[#4A5565]">{area}</Text>
+        <Text style={{ fontWeight: '500', fontSize: wp('2.7%'), lineHeight: hp('1.6%') }} className="text-[#6A7282]">Super Builtup Area</Text>
+        <Text style={{ fontWeight: '400', fontSize: wp('3%'), lineHeight: hp('1.7%') }} className="text-[#4A5565]">{area}</Text>
       </View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), lineHeight: hp('1.9%'), marginTop: hp('0.5%') }} className="text-[#101828]">{price}</Text>
+      <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), lineHeight: hp('1.9%'), marginTop: hp('0.5%') }} className="text-[#101828]">{price}</Text>
     </View>
   );
 };
@@ -64,7 +64,7 @@ const PropertyCard = ({ property }) => {
             <View className="bg-white rounded-full items-center justify-center" style={{ width: wp('3.2%'), height: wp('3.2%') }}>
               <View className="bg-primary rounded-full" style={{ width: wp('1.8%'), height: wp('1.8%') }} />
             </View>
-            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.5%') }} className="text-white tracking-widest">RERA</Text>
+            <Text style={{ fontWeight: '700', fontSize: wp('2.5%') }} className="text-white tracking-widest">RERA</Text>
           </View>
         )}
 
@@ -75,7 +75,7 @@ const PropertyCard = ({ property }) => {
 
         {/* Image Count & Indicator */}
         <View className="absolute bg-black/60 flex-row items-center" style={{ left: wp('2.7%'), bottom: hp('1.2%'), borderRadius: wp('1.8%'), paddingHorizontal: wp('2.3%'), paddingVertical: hp('0.4%'), gap: wp('1.4%') }}>
-          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%') }} className="text-white">1/{property.imageCount}</Text>
+          <Text style={{ fontWeight: '500', fontSize: wp('2.7%') }} className="text-white">1/{property.imageCount}</Text>
           <View className="flex-row" style={{ gap: wp('1%') }}>
             <View className="bg-white rounded-full" style={{ width: wp('1%'), height: wp('1%') }} />
             <View className="bg-white/40 rounded-full" style={{ width: wp('1%'), height: wp('1%') }} />
@@ -86,19 +86,19 @@ const PropertyCard = ({ property }) => {
 
       {/* Property Details */}
       <View style={{ marginTop: hp('1.2%') }}>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%'), lineHeight: hp('1.6%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: wp('2.7%'), lineHeight: hp('1.6%') }} className="text-[#6A7282]">
           Possession by {property.possessionDate} • Avg. rate/sq.ft. {property.avgRate}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.2%'), lineHeight: hp('3%'), marginTop: hp('0.8%') }} className="text-[#101828]">
+        <Text style={{ fontWeight: '700', fontSize: wp('5.2%'), lineHeight: hp('3%'), marginTop: hp('0.8%') }} className="text-[#101828]">
           {property.projectName}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: hp('1.9%'), marginTop: hp('0.4%') }} className="text-[#4A5565]">
+        <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), lineHeight: hp('1.9%'), marginTop: hp('0.4%') }} className="text-[#4A5565]">
           {property.location}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.1%'), lineHeight: hp('2.3%'), marginTop: hp('0.8%') }} className="text-[#101828]">
+        <Text style={{ fontWeight: '700', fontSize: wp('4.1%'), lineHeight: hp('2.3%'), marginTop: hp('0.8%') }} className="text-[#101828]">
           {property.priceRange}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%'), lineHeight: hp('1.7%'), marginTop: hp('0.8%') }} className="text-[#4A5565]">
+        <Text style={{ fontWeight: '400', fontSize: wp('3%'), lineHeight: hp('1.7%'), marginTop: hp('0.8%') }} className="text-[#4A5565]">
           {property.bhkFlats}
         </Text>
 
@@ -123,10 +123,10 @@ const PropertyCard = ({ property }) => {
         <View className="flex-row" style={{ marginTop: hp('1.7%'), gap: wp('2.7%') }}>
           <TouchableOpacity className="flex-1 flex-row justify-center items-center bg-primary/10" style={{ height: hp('5%'), borderRadius: wp('2.7%'), gap: wp('1.8%') }}>
             <MessageSquare size={wp('4.5%')} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-primary">Chat</Text>
+            <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-primary">Chat</Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 justify-center items-center bg-primary" style={{ height: hp('5%'), borderRadius: wp('2.7%'), elevation: 2 }}>
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-white">Contact Seller</Text>
+            <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-white">Contact Seller</Text>
           </TouchableOpacity>
         </View>
       </View>

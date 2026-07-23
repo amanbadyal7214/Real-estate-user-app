@@ -565,7 +565,7 @@ const BulkUploadScreen = () => {
         <View className="flex-1 justify-center items-center bg-black/50 px-4">
           <View className="bg-white w-full max-w-md rounded-[24px] p-5 shadow-2xl" style={{ maxHeight: hp('65%') }}>
             <View className="flex-row justify-between items-center pb-3 border-b border-gray-100">
-              <Text className="text-[#101828] font-inter-bold text-[17px]">{title}</Text>
+              <Text className="text-[#101828] font-bold text-[17px]">{title}</Text>
               <TouchableOpacity onPress={() => setActiveDropdown(null)} className="p-1 rounded-full bg-gray-100">
                 <Ionicons name="close" size={18} color="#64748B" />
               </TouchableOpacity>
@@ -603,8 +603,8 @@ const BulkUploadScreen = () => {
         <View className="bg-white rounded-t-[28px] p-6" style={{ maxHeight: hp('75%') }}>
           <View className="flex-row justify-between items-center pb-3 border-b border-gray-100">
             <View>
-              <Text className="text-[#101828] font-inter-bold text-[18px]">Select Common Amenities</Text>
-              <Text className="text-[#64748B] font-inter-regular text-[12px]">Dynamic API amenities will apply to all listings in this batch</Text>
+              <Text className="text-[#101828] font-bold text-[18px]">Select Common Amenities</Text>
+              <Text className="text-[#64748B] font-normal text-[12px]">Dynamic API amenities will apply to all listings in this batch</Text>
             </View>
             <TouchableOpacity onPress={() => setShowAmenitiesModal(false)} className="p-1.5 rounded-full bg-gray-100">
               <Ionicons name="close" size={20} color="#64748B" />
@@ -643,7 +643,7 @@ const BulkUploadScreen = () => {
             onPress={() => setShowAmenitiesModal(false)}
             className="bg-[#008E96] py-3.5 rounded-xl items-center justify-center mt-3"
           >
-            <Text className="text-white font-inter-bold text-[15px]">Done ({selectedAmenities.length} Selected)</Text>
+            <Text className="text-white font-bold text-[15px]">Done ({selectedAmenities.length} Selected)</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -769,11 +769,11 @@ const BulkUploadScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F8FAFC]">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F8FAFC" }}>
       {lookupLoading && (
         <View className="absolute inset-0 bg-white/85 z-[999] items-center justify-center">
           <ActivityIndicator size="large" color="#008E96" />
-          <Text className="text-[#008E96] font-inter-semibold mt-4 text-sm">Loading Live API Lookups...</Text>
+          <Text className="text-[#008E96] font-semibold mt-4 text-sm">Loading Live API Lookups...</Text>
         </View>
       )}
 
@@ -787,12 +787,12 @@ const BulkUploadScreen = () => {
             <Ionicons name="arrow-back" size={19} color="#334155" />
           </TouchableOpacity>
           <View>
-            <Text className="text-[#0F172A] font-inter-bold text-[17px]">Bulk Property Upload</Text>
-            <Text className="text-[#64748B] font-inter-regular text-[11px]">Multi-Step Batch Creator • Live API</Text>
+            <Text className="text-[#0F172A] font-bold text-[17px]">Bulk Property Upload</Text>
+            <Text className="text-[#64748B] font-normal text-[11px]">Multi-Step Batch Creator • Live API</Text>
           </View>
         </View>
         <View className="bg-[#E6F7F6] px-3 py-1.5 rounded-full border border-[#B2EBE8]">
-          <Text className="text-[#008E96] font-inter-bold text-[11px] uppercase tracking-wider">Step {currentStep} of 5</Text>
+          <Text className="text-[#008E96] font-bold text-[11px] uppercase tracking-wider">Step {currentStep} of 5</Text>
         </View>
       </View>
 
@@ -832,7 +832,7 @@ const BulkUploadScreen = () => {
                   ) : (
                     <Text
                       style={{
-                        fontFamily: 'Inter-Bold',
+                        fontWeight: '700',
                         fontSize: 10,
                         color: isCurrent ? '#FFFFFF' : '#64748B',
                       }}
@@ -866,15 +866,15 @@ const BulkUploadScreen = () => {
                 <View className="w-8 h-8 rounded-xl bg-[#E6F7F6] items-center justify-center">
                   <Ionicons name="home" size={17} color="#008E96" />
                 </View>
-                <Text className="text-[#0F172A] font-inter-bold text-[16px]">1. Purpose & Property Category</Text>
+                <Text className="text-[#0F172A] font-bold text-[16px]">1. Purpose & Property Category</Text>
               </View>
-              <Text className="text-[#64748B] font-inter-regular text-[12px] mb-4">
+              <Text className="text-[#64748B] font-normal text-[12px] mb-4">
                 Choose the listing purpose and property classification.
               </Text>
 
               {/* Purpose / Category Selection */}
               <View className="mb-4">
-                <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-2">PURPOSE *</Text>
+                <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-2">PURPOSE *</Text>
                 <View className="flex-row gap-3">
                   {(apiCategories.length > 0 ? apiCategories : [{ label: 'Rent', _id: '1' }, { label: 'Sell', _id: '2' }]).map((cat) => {
                     const label = cat.label || cat.name;
@@ -908,25 +908,25 @@ const BulkUploadScreen = () => {
 
               {/* Property Type & Sub-Type Row */}
               <View className="flex-row gap-3 mb-4">
-                <View className="flex-1">
-                  <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-2">PROPERTY TYPE *</Text>
+                <View style={{ flex: 1 }}>
+                  <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-2">PROPERTY TYPE *</Text>
                   <TouchableOpacity
                     onPress={() => setActiveDropdown('propertyType')}
                     className="border border-[#E2E8F0] rounded-xl px-3.5 py-3 flex-row justify-between items-center bg-[#F8FAFC]"
                   >
-                    <Text className="text-[#0F172A] font-inter-medium text-[13px]" numberOfLines={1}>
+                    <Text className="text-[#0F172A] font-medium text-[13px]" numberOfLines={1}>
                       {propertyType || 'Select Type'}
                     </Text>
                     <Ionicons name="chevron-down" size={16} color="#64748B" />
                   </TouchableOpacity>
                 </View>
-                <View className="flex-1">
-                  <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-2">SUB-TYPE *</Text>
+                <View style={{ flex: 1 }}>
+                  <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-2">SUB-TYPE *</Text>
                   <TouchableOpacity
                     onPress={() => setActiveDropdown('subType')}
                     className="border border-[#E2E8F0] rounded-xl px-3.5 py-3 flex-row justify-between items-center bg-[#F8FAFC]"
                   >
-                    <Text className="text-[#0F172A] font-inter-medium text-[13px]" numberOfLines={1}>
+                    <Text className="text-[#0F172A] font-medium text-[13px]" numberOfLines={1}>
                       {subType || 'Select Sub-Type'}
                     </Text>
                     <Ionicons name="chevron-down" size={16} color="#64748B" />
@@ -936,14 +936,14 @@ const BulkUploadScreen = () => {
 
               {/* Link to Existing Project */}
               <View className="mb-4">
-                <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-2">LINK TO EXISTING PROJECT (AUTO-FILL LOCATION)</Text>
+                <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-2">LINK TO EXISTING PROJECT (AUTO-FILL LOCATION)</Text>
                 <TouchableOpacity
                   onPress={() => setActiveDropdown('linkedProject')}
                   className="border border-[#E2E8F0] rounded-xl px-3.5 py-3 flex-row justify-between items-center bg-[#F8FAFC]"
                 >
                   <View className="flex-row items-center gap-2 flex-1 mr-2">
                     <Ionicons name="business-outline" size={16} color="#008E96" />
-                    <Text className="text-[#0F172A] font-inter-medium text-[13px]" numberOfLines={1}>
+                    <Text className="text-[#0F172A] font-medium text-[13px]" numberOfLines={1}>
                       {linkedProject}
                     </Text>
                   </View>
@@ -953,7 +953,7 @@ const BulkUploadScreen = () => {
 
               {/* Base Title Prefix */}
               <View>
-                <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-2">BASE TITLE PREFIX *</Text>
+                <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-2">BASE TITLE PREFIX *</Text>
                 <View className="border border-[#E2E8F0] rounded-xl px-3.5 py-1 bg-[#F8FAFC] flex-row items-center">
                   <Ionicons name="text-outline" size={16} color="#64748B" style={{ marginRight: 8 }} />
                   <TextInput
@@ -961,7 +961,7 @@ const BulkUploadScreen = () => {
                     onChangeText={setBaseTitlePrefix}
                     placeholder="e.g. 3 BHK Luxury Apartment in Sector 115"
                     placeholderTextColor="#94A3B8"
-                    className="flex-1 py-2.5 text-[13px] text-[#0F172A] font-inter-regular"
+                    className="flex-1 py-2.5 text-[13px] text-[#0F172A] font-normal"
                   />
                 </View>
               </View>
@@ -973,34 +973,34 @@ const BulkUploadScreen = () => {
                 <View className="w-8 h-8 rounded-xl bg-[#E6F7F6] items-center justify-center">
                   <Ionicons name="location" size={17} color="#008E96" />
                 </View>
-                <Text className="text-[#0F172A] font-inter-bold text-[16px]">2. Location Details</Text>
+                <Text className="text-[#0F172A] font-bold text-[16px]">2. Location Details</Text>
               </View>
-              <Text className="text-[#64748B] font-inter-regular text-[12px] mb-4">
+              <Text className="text-[#64748B] font-normal text-[12px] mb-4">
                 Select Country → State → City sequentially.
               </Text>
 
               {/* Country and Pincode Section */}
               <View className="flex-row gap-3 mb-4">
-                <View className="flex-1">
-                  <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">COUNTRY *</Text>
+                <View style={{ flex: 1 }}>
+                  <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">COUNTRY *</Text>
                   <TouchableOpacity
                     onPress={() => setActiveDropdown('country')}
                     className="flex-row items-center justify-between bg-[#F8FAFC] px-3.5 py-3 rounded-xl border border-[#E2E8F0]"
                   >
-                    <Text className="text-[#334155] text-[13px] font-inter-medium" numberOfLines={1}>
+                    <Text className="text-[#334155] text-[13px] font-medium" numberOfLines={1}>
                       {country || 'Select Country'}
                     </Text>
                     <Ionicons name="chevron-down" size={16} color="#64748B" />
                   </TouchableOpacity>
                 </View>
 
-                <View className="flex-1">
-                  <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">PINCODE *</Text>
+                <View style={{ flex: 1 }}>
+                  <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">PINCODE *</Text>
                   <View className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-1">
                     <TextInput
                       placeholder="e.g. 140301"
                       placeholderTextColor="#94A3B8"
-                      className="text-[13px] py-2 text-[#0F172A] font-inter-regular"
+                      className="text-[13px] py-2 text-[#0F172A] font-normal"
                       keyboardType="numeric"
                       value={pincode}
                       onChangeText={setPincode}
@@ -1011,40 +1011,40 @@ const BulkUploadScreen = () => {
 
               {/* State and City Section */}
               <View className="flex-row gap-3 mb-4">
-                <View className="flex-1">
-                  <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">STATE *</Text>
+                <View style={{ flex: 1 }}>
+                  <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">STATE *</Text>
                   {countryId ? (
                     <TouchableOpacity
                       onPress={() => setActiveDropdown('state')}
                       className="flex-row items-center justify-between bg-[#F8FAFC] px-3.5 py-3 rounded-xl border border-[#E2E8F0]"
                     >
-                      <Text className="text-[#334155] text-[13px] font-inter-medium" numberOfLines={1}>
+                      <Text className="text-[#334155] text-[13px] font-medium" numberOfLines={1}>
                         {state || 'Select State'}
                       </Text>
                       <Ionicons name="chevron-down" size={16} color="#64748B" />
                     </TouchableOpacity>
                   ) : (
                     <View className="px-3.5 py-3 bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl">
-                      <Text className="text-[12px] text-[#94A3B8] font-inter-regular">Select country first</Text>
+                      <Text className="text-[12px] text-[#94A3B8] font-normal">Select country first</Text>
                     </View>
                   )}
                 </View>
 
-                <View className="flex-1">
-                  <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">CITY *</Text>
+                <View style={{ flex: 1 }}>
+                  <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">CITY *</Text>
                   {stateId ? (
                     <TouchableOpacity
                       onPress={() => setActiveDropdown('city')}
                       className="flex-row items-center justify-between bg-[#F8FAFC] px-3.5 py-3 rounded-xl border border-[#E2E8F0]"
                     >
-                      <Text className="text-[#334155] text-[13px] font-inter-medium" numberOfLines={1}>
+                      <Text className="text-[#334155] text-[13px] font-medium" numberOfLines={1}>
                         {city || 'Select City'}
                       </Text>
                       <Ionicons name="chevron-down" size={16} color="#64748B" />
                     </TouchableOpacity>
                   ) : (
                     <View className="px-3.5 py-3 bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl">
-                      <Text className="text-[12px] text-[#94A3B8] font-inter-regular">Select state first</Text>
+                      <Text className="text-[12px] text-[#94A3B8] font-normal">Select state first</Text>
                     </View>
                   )}
                 </View>
@@ -1052,13 +1052,13 @@ const BulkUploadScreen = () => {
 
               {/* Address Line 1 / Street input */}
               <View>
-                <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">ADDRESS LINE 1 / STREET *</Text>
+                <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">ADDRESS LINE 1 / STREET *</Text>
                 <View className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-1 flex-row items-center">
                   <Ionicons name="map-outline" size={16} color="#64748B" style={{ marginRight: 8 }} />
                   <TextInput
                     placeholder="Enter locality, street or sector..."
                     placeholderTextColor="#94A3B8"
-                    className="py-2.5 flex-1 text-[13px] text-[#0F172A] font-inter-regular"
+                    className="py-2.5 flex-1 text-[13px] text-[#0F172A] font-normal"
                     value={locality}
                     onChangeText={(val) => {
                       setLocality(val);
@@ -1082,7 +1082,7 @@ const BulkUploadScreen = () => {
                           className="px-4 py-3 border-b border-[#F1F5F9] flex-row items-center gap-2"
                         >
                           <Ionicons name="location-outline" size={16} color="#008E96" />
-                          <Text className="text-sm text-[#334155] font-inter-medium">
+                          <Text className="text-sm text-[#334155] font-medium">
                             {item.name}
                           </Text>
                         </TouchableOpacity>
@@ -1120,36 +1120,36 @@ const BulkUploadScreen = () => {
                       <View className="w-9 h-9 rounded-xl bg-[#E6F7F6] items-center justify-center">
                         <Ionicons name="options" size={18} color="#008E96" />
                       </View>
-                      <Text className="text-[#0F172A] font-inter-bold text-[17px]">
+                      <Text className="text-[#0F172A] font-bold text-[17px]">
                         3. Additional Details
                       </Text>
                     </View>
                     <View className="flex-row items-center gap-2">
                       {isOfficeTypeSelected && (
                         <View className="bg-[#E6F7F6] px-3 py-1 rounded-full border border-[#B2EBF2]">
-                          <Text className="text-[#008E96] font-inter-bold text-[11px]">OFFICE SPECS</Text>
+                          <Text className="text-[#008E96] font-bold text-[11px]">OFFICE SPECS</Text>
                         </View>
                       )}
                       {isRetailShopSelected && !isOfficeTypeSelected && (
                         <View className="bg-[#EFF6FF] px-3 py-1 rounded-full border border-[#BFDBFE]">
-                          <Text className="text-[#3B82F6] font-inter-bold text-[11px]">RETAIL SHOP SPECS</Text>
+                          <Text className="text-[#3B82F6] font-bold text-[11px]">RETAIL SHOP SPECS</Text>
                         </View>
                       )}
                       {isResidentialSelected && !isOfficeTypeSelected && !isRetailShopSelected && (
                         <View className="bg-[#F3E8FF] px-3 py-1 rounded-full border border-[#E9D5FF]">
-                          <Text className="text-[#9333EA] font-inter-bold text-[11px]">RESIDENTIAL SPECS</Text>
+                          <Text className="text-[#9333EA] font-bold text-[11px]">RESIDENTIAL SPECS</Text>
                         </View>
                       )}
                     </View>
                   </View>
-                  <Text className="text-[#64748B] font-inter-regular text-[13px] mb-5">
+                  <Text className="text-[#64748B] font-normal text-[13px] mb-5">
                     Configure common attributes shared across all these units.
                   </Text>
 
                   {/* Row 1: Common Across All Types (Age of Property, Facing Direction, Construction Status) */}
                   <View className="flex-row flex-wrap gap-3 mb-4">
                     <View className="flex-1 min-w-[140px]">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                         Age of Property (Years)
                       </Text>
                       <View className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-1">
@@ -1159,13 +1159,13 @@ const BulkUploadScreen = () => {
                           placeholder="e.g. 2"
                           placeholderTextColor="#94A3B8"
                           keyboardType="numeric"
-                          className="py-2.5 text-[13px] text-[#0F172A] font-inter-medium"
+                          className="py-2.5 text-[13px] text-[#0F172A] font-medium"
                         />
                       </View>
                     </View>
 
                     <View className="flex-1 min-w-[140px]">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                         Facing Direction
                       </Text>
                       <TouchableOpacity
@@ -1173,7 +1173,7 @@ const BulkUploadScreen = () => {
                         className="border border-[#E2E8F0] rounded-xl px-3.5 py-3.5 flex-row justify-between items-center bg-[#F8FAFC]"
                       >
                         <Text
-                          className={`font-inter-medium text-[13px] ${facingDirection ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
+                          className={`font-medium text-[13px] ${facingDirection ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
                           numberOfLines={1}
                         >
                           {facingDirection || 'Select Facing Direction'}
@@ -1183,7 +1183,7 @@ const BulkUploadScreen = () => {
                     </View>
 
                     <View className="flex-1 min-w-[140px]">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                         Construction Status
                       </Text>
                       <TouchableOpacity
@@ -1191,7 +1191,7 @@ const BulkUploadScreen = () => {
                         className="border border-[#E2E8F0] rounded-xl px-3.5 py-3.5 flex-row justify-between items-center bg-[#F8FAFC]"
                       >
                         <Text
-                          className={`font-inter-medium text-[13px] ${constructionStatus ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
+                          className={`font-medium text-[13px] ${constructionStatus ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
                           numberOfLines={1}
                         >
                           {constructionStatus || 'Select Status'}
@@ -1205,7 +1205,7 @@ const BulkUploadScreen = () => {
                   {(isOfficeTypeSelected || isRetailShopSelected || !isResidentialSelected) && (
                     <View className="flex-row flex-wrap gap-3 mb-4">
                       <View className="flex-1 min-w-[140px]">
-                        <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                        <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                           Zone Type
                         </Text>
                         <TouchableOpacity
@@ -1213,7 +1213,7 @@ const BulkUploadScreen = () => {
                           className="border border-[#E2E8F0] rounded-xl px-3.5 py-3.5 flex-row justify-between items-center bg-[#F8FAFC]"
                         >
                           <Text
-                            className={`font-inter-medium text-[13px] ${zoneType ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
+                            className={`font-medium text-[13px] ${zoneType ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
                             numberOfLines={1}
                           >
                             {zoneType || 'Select Zone Type'}
@@ -1223,7 +1223,7 @@ const BulkUploadScreen = () => {
                       </View>
 
                       <View className="flex-1 min-w-[140px]">
-                        <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                        <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                           Ownership Type
                         </Text>
                         <TouchableOpacity
@@ -1231,7 +1231,7 @@ const BulkUploadScreen = () => {
                           className="border border-[#E2E8F0] rounded-xl px-3.5 py-3.5 flex-row justify-between items-center bg-[#F8FAFC]"
                         >
                           <Text
-                            className={`font-inter-medium text-[13px] ${ownershipType ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
+                            className={`font-medium text-[13px] ${ownershipType ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
                             numberOfLines={1}
                           >
                             {ownershipType || 'Select Ownership Type'}
@@ -1246,7 +1246,7 @@ const BulkUploadScreen = () => {
                   {(isOfficeTypeSelected || (!isRetailShopSelected && !isResidentialSelected)) && (
                     <View className="flex-row flex-wrap gap-3 mb-4">
                       <View className="flex-1 min-w-[140px]">
-                        <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                        <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                           Location Hub
                         </Text>
                         <TouchableOpacity
@@ -1254,7 +1254,7 @@ const BulkUploadScreen = () => {
                           className="border border-[#E2E8F0] rounded-xl px-3.5 py-3.5 flex-row justify-between items-center bg-[#F8FAFC]"
                         >
                           <Text
-                            className={`font-inter-medium text-[13px] ${locationHub ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
+                            className={`font-medium text-[13px] ${locationHub ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
                             numberOfLines={1}
                           >
                             {locationHub || 'Select Location Hub'}
@@ -1264,7 +1264,7 @@ const BulkUploadScreen = () => {
                       </View>
 
                       <View className="flex-1 min-w-[140px]">
-                        <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                        <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                           Property Condition
                         </Text>
                         <View className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3.5 py-1">
@@ -1273,7 +1273,7 @@ const BulkUploadScreen = () => {
                             onChangeText={setPropertyCondition}
                             placeholder="e.g. Ready to move"
                             placeholderTextColor="#94A3B8"
-                            className="py-2.5 text-[13px] text-[#0F172A] font-inter-medium"
+                            className="py-2.5 text-[13px] text-[#0F172A] font-medium"
                           />
                         </View>
                       </View>
@@ -1284,7 +1284,7 @@ const BulkUploadScreen = () => {
                   {(isResidentialSelected || (!isOfficeTypeSelected && !isRetailShopSelected)) && (
                     <View className="flex-row flex-wrap gap-3 mb-4">
                       <View className="flex-1 min-w-[140px]">
-                        <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                        <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                           Furnishing Status
                         </Text>
                         <TouchableOpacity
@@ -1292,7 +1292,7 @@ const BulkUploadScreen = () => {
                           className="border border-[#E2E8F0] rounded-xl px-3.5 py-3.5 flex-row justify-between items-center bg-[#F8FAFC]"
                         >
                           <Text
-                            className={`font-inter-medium text-[13px] ${furnishingStatus ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
+                            className={`font-medium text-[13px] ${furnishingStatus ? 'text-[#0F172A]' : 'text-[#94A3B8]'}`}
                             numberOfLines={1}
                           >
                             {furnishingStatus || 'Select Furnishing Status'}
@@ -1306,7 +1306,7 @@ const BulkUploadScreen = () => {
                   {/* Description field shown for Retail Shop, Residential, and Default (not for Office as requested) */}
                   {!isOfficeTypeSelected && (
                     <View className="w-full">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase tracking-wider mb-1.5">
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase tracking-wider mb-1.5">
                         Description
                       </Text>
                       <TextInput
@@ -1316,7 +1316,7 @@ const BulkUploadScreen = () => {
                         placeholderTextColor="#94A3B8"
                         multiline
                         numberOfLines={3}
-                        className="border border-[#E2E8F0] rounded-xl p-3.5 text-[13px] text-[#0F172A] bg-[#F8FAFC] font-inter-regular min-h-[75px]"
+                        className="border border-[#E2E8F0] rounded-xl p-3.5 text-[13px] text-[#0F172A] bg-[#F8FAFC] font-normal min-h-[75px]"
                         style={{ textAlignVertical: 'top' }}
                       />
                     </View>
@@ -1331,9 +1331,9 @@ const BulkUploadScreen = () => {
                 <View className="w-8 h-8 rounded-xl bg-[#E6F7F6] items-center justify-center">
                   <Ionicons name="images" size={17} color="#008E96" />
                 </View>
-                <Text className="text-[#0F172A] font-inter-bold text-[16px]">4. Common Images & Media</Text>
+                <Text className="text-[#0F172A] font-bold text-[16px]">4. Common Images & Media</Text>
               </View>
-              <Text className="text-[#64748B] font-inter-regular text-[12px] mb-4">
+              <Text className="text-[#64748B] font-normal text-[12px] mb-4">
                 Upload photos that apply to all units in this batch.
               </Text>
 
@@ -1344,16 +1344,16 @@ const BulkUploadScreen = () => {
                 <View className="w-12 h-12 rounded-full bg-white border border-[#E2E8F0] items-center justify-center mb-2.5 shadow-xs">
                   <Ionicons name="cloud-upload-outline" size={24} color="#008E96" />
                 </View>
-                <Text className="font-inter-bold text-[#1E293B] text-[14px]">Click to upload common property photos</Text>
-                <Text className="text-[#64748B] font-inter-regular text-[12px] mt-0.5">PNG, JPG, JPEG files supported (max 10)</Text>
+                <Text className="font-bold text-[#1E293B] text-[14px]">Click to upload common property photos</Text>
+                <Text className="text-[#64748B] font-normal text-[12px] mt-0.5">PNG, JPG, JPEG files supported (max 10)</Text>
               </TouchableOpacity>
 
               {images.length > 0 && (
                 <View className="mt-4">
                   <View className="flex-row justify-between items-center mb-2">
-                    <Text className="text-[#1E293B] font-inter-semibold text-[13px]">Uploaded Photos ({images.length})</Text>
+                    <Text className="text-[#1E293B] font-semibold text-[13px]">Uploaded Photos ({images.length})</Text>
                     <TouchableOpacity onPress={() => setImages([])}>
-                      <Text className="text-red-500 font-inter-medium text-[12px]">Clear All</Text>
+                      <Text className="text-red-500 font-medium text-[12px]">Clear All</Text>
                     </TouchableOpacity>
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
@@ -1384,9 +1384,9 @@ const BulkUploadScreen = () => {
                   <View className="w-8 h-8 rounded-xl bg-[#E6F7F6] items-center justify-center">
                     <Ionicons name="sparkles" size={17} color="#008E96" />
                   </View>
-                  <Text className="text-[#0F172A] font-inter-bold text-[16px]">5. Common Amenities</Text>
+                  <Text className="text-[#0F172A] font-bold text-[16px]">5. Common Amenities</Text>
                 </View>
-                <Text className="text-[#64748B] font-inter-regular text-[12px]">
+                <Text className="text-[#64748B] font-normal text-[12px]">
                   Select shared facilities available for these listings.
                 </Text>
               </View>
@@ -1394,7 +1394,7 @@ const BulkUploadScreen = () => {
                 onPress={() => setShowAmenitiesModal(true)}
                 className="border border-[#008E96] rounded-xl px-4 py-3 bg-[#E6F7F6] flex-row items-center gap-1.5"
               >
-                <Text className="text-[#008E96] font-inter-bold text-[13px]">
+                <Text className="text-[#008E96] font-bold text-[13px]">
                   Choose ({selectedAmenities.length})
                 </Text>
               </TouchableOpacity>
@@ -1411,15 +1411,15 @@ const BulkUploadScreen = () => {
             </View>
 
             {/* Title & Subtitle */}
-            <Text className="text-[#0F172A] font-inter-bold text-[22px] text-center mb-1.5">
+            <Text className="text-[#0F172A] font-bold text-[22px] text-center mb-1.5">
               Specify Listing Quantity
             </Text>
-            <Text className="text-[#64748B] font-inter-regular text-[13px] text-center mb-8">
+            <Text className="text-[#64748B] font-normal text-[13px] text-center mb-8">
               How many commercial or residential units do you want to list in this batch?
             </Text>
 
             {/* Quantity Input Box */}
-            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase tracking-widest mb-2.5 text-center">
+            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase tracking-widest mb-2.5 text-center">
               QUANTITY OF UNITS
             </Text>
             <View className="border border-[#E2E8F0] rounded-2xl w-64 py-2 bg-white items-center justify-center shadow-xs mb-6">
@@ -1429,7 +1429,7 @@ const BulkUploadScreen = () => {
                 keyboardType="numeric"
                 placeholder="2"
                 placeholderTextColor="#94A3B8"
-                className="text-center font-inter-bold text-[#0F172A] text-[24px] w-full py-1.5"
+                className="text-center font-bold text-[#0F172A] text-[24px] w-full py-1.5"
               />
             </View>
 
@@ -1468,8 +1468,8 @@ const BulkUploadScreen = () => {
                 <Ionicons name="settings" size={22} color="#008E96" />
               </View>
               <View>
-                <Text className="text-[#0F172A] font-inter-bold text-[18px]">Configuration Mode</Text>
-                <Text className="text-[#64748B] font-inter-regular text-[13px]">Choose whether all units share the exact same specs</Text>
+                <Text className="text-[#0F172A] font-bold text-[18px]">Configuration Mode</Text>
+                <Text className="text-[#64748B] font-normal text-[13px]">Choose whether all units share the exact same specs</Text>
               </View>
             </View>
 
@@ -1485,9 +1485,9 @@ const BulkUploadScreen = () => {
                 <View className="flex-1 pr-3">
                   <View className="flex-row items-center gap-2">
                     <Ionicons name="cube" size={18} color="#008E96" />
-                    <Text className="text-[#0F172A] font-inter-bold text-[15px]">Uniform Specs (All Units Same)</Text>
+                    <Text className="text-[#0F172A] font-bold text-[15px]">Uniform Specs (All Units Same)</Text>
                   </View>
-                  <Text className="text-[#64748B] font-inter-regular text-[12px] mt-1.5 leading-5">
+                  <Text className="text-[#64748B] font-normal text-[12px] mt-1.5 leading-5">
                     Same BHK, Price & Area applied automatically to all {quantity} units. Fast & easy.
                   </Text>
                 </View>
@@ -1505,9 +1505,9 @@ const BulkUploadScreen = () => {
                 <View className="flex-1 pr-3">
                   <View className="flex-row items-center gap-2">
                     <Ionicons name="options" size={18} color="#64748B" />
-                    <Text className="text-[#0F172A] font-inter-bold text-[15px]">Custom Specs</Text>
+                    <Text className="text-[#0F172A] font-bold text-[15px]">Custom Specs</Text>
                   </View>
-                  <Text className="text-[#64748B] font-inter-regular text-[12px] mt-1.5 leading-5">
+                  <Text className="text-[#64748B] font-normal text-[12px] mt-1.5 leading-5">
                     Customize pricing, floor number or area individually per listing unit.
                   </Text>
                 </View>
@@ -1529,8 +1529,8 @@ const BulkUploadScreen = () => {
                     <View className="w-11 h-11 rounded-2xl bg-[#E6F7F6] items-center justify-center">
                       <Ionicons name="storefront" size={22} color="#008E96" />
                     </View>
-                    <View className="flex-1">
-                      <Text className="text-[#0F172A] font-inter-bold text-[19px]">
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#0F172A] font-bold text-[19px]">
                         Shared Unit Configuration
                       </Text>
                     </View>
@@ -1539,23 +1539,23 @@ const BulkUploadScreen = () => {
                   {/* Badges Row */}
                   <View className="flex-row flex-wrap items-center gap-2 mt-3 mb-2">
                     <View className="bg-[#EFF6FF] px-3 py-1 rounded-lg">
-                      <Text className="text-[#3B82F6] font-inter-bold text-[11px] uppercase">
+                      <Text className="text-[#3B82F6] font-bold text-[11px] uppercase">
                         {propertyType || 'COMMERCIAL'}
                       </Text>
                     </View>
                     <View className="bg-[#E6F7F6] px-3 py-1 rounded-lg">
-                      <Text className="text-[#008E96] font-inter-bold text-[11px]">
+                      <Text className="text-[#008E96] font-bold text-[11px]">
                         Applied to all {quantity || 2} units
                       </Text>
                     </View>
                     <View className="bg-[#F1F5F9] px-3 py-1 rounded-lg border border-[#E2E8F0]">
-                      <Text className="text-[#475569] font-inter-bold text-[11px]">
+                      <Text className="text-[#475569] font-bold text-[11px]">
                         1 Shared Template
                       </Text>
                     </View>
                   </View>
 
-                  <Text className="text-[#64748B] font-inter-regular text-[13px] leading-5">
+                  <Text className="text-[#64748B] font-normal text-[13px] leading-5">
                     Fill in the shared specifications below — this configuration will be automatically cloned to all {quantity || 2} units.
                   </Text>
                 </View>
@@ -1566,184 +1566,184 @@ const BulkUploadScreen = () => {
                   <View className="flex-row items-center justify-between flex-wrap gap-2 mb-5 border-b border-[#F1F5F9] pb-4">
                     <View className="flex-row items-center gap-2">
                       <Ionicons name="checkmark-circle" size={20} color="#008E96" />
-                      <Text className="text-[#0F172A] font-inter-bold text-[15px]">
+                      <Text className="text-[#0F172A] font-bold text-[15px]">
                         Shared Configuration Template
                       </Text>
                     </View>
                     <View className="bg-[#E6F7F6] px-3 py-1 rounded-full">
-                      <Text className="text-[#008E96] font-inter-bold text-[11px]">
+                      <Text className="text-[#008E96] font-bold text-[11px]">
                         Clones to {quantity || 2} units
                       </Text>
                     </View>
                   </View>
 
                   {/* Section 1: Core Dimensions & Pricing */}
-                  <Text className="text-[#008E96] font-inter-bold text-[12px] uppercase tracking-wider mb-3">
+                  <Text className="text-[#008E96] font-bold text-[12px] uppercase tracking-wider mb-3">
                     1. Core Pricing & Dimensions
                   </Text>
 
                   <View className="flex-row gap-3 mb-3.5">
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">OFFICE TYPE</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">OFFICE TYPE</Text>
                       <TextInput
                         value={defaultBhk}
                         onChangeText={setDefaultBhk}
                         placeholder="e.g. Private Office"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
 
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">PRICE (INR) *</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">PRICE (INR) *</Text>
                       <View className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 flex-row items-center bg-[#F8FAFC]">
-                        <Text className="font-inter-bold text-[#008E96] text-[15px] mr-1.5">₹</Text>
+                        <Text className="font-bold text-[#008E96] text-[15px] mr-1.5">₹</Text>
                         <TextInput
                           value={defaultPrice}
                           onChangeText={setDefaultPrice}
                           keyboardType="numeric"
                           placeholder="Price in Rs"
                           placeholderTextColor="#94A3B8"
-                          className="flex-1 text-[13px] text-[#0F172A] font-inter-bold"
+                          className="flex-1 text-[13px] text-[#0F172A] font-bold"
                         />
                       </View>
                     </View>
                   </View>
 
                   <View className="flex-row gap-3 mb-3.5">
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">AREA (SQ.FT) *</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">AREA (SQ.FT) *</Text>
                       <TextInput
                         value={defaultArea}
                         onChangeText={setDefaultArea}
                         keyboardType="numeric"
                         placeholder="Sq. Ft."
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
 
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">FLOOR LEVEL</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">FLOOR LEVEL</Text>
                       <TextInput
                         value={defaultFloor}
                         onChangeText={setDefaultFloor}
                         keyboardType="numeric"
                         placeholder="e.g. 1"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
                   </View>
 
                   <View className="flex-row gap-3 mb-6">
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">TOTAL FLOORS</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">TOTAL FLOORS</Text>
                       <TextInput
                         value={defaultTotalFloors}
                         onChangeText={setDefaultTotalFloors}
                         keyboardType="numeric"
                         placeholder="e.g. 5"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
 
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">CEILING HT (FT)</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">CEILING HT (FT)</Text>
                       <TextInput
                         value={defaultCeilingHeight}
                         onChangeText={setDefaultCeilingHeight}
                         keyboardType="numeric"
                         placeholder="e.g. 12"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
                   </View>
 
                   {/* Section 2: Rooms & Capacity */}
-                  <Text className="text-[#008E96] font-inter-bold text-[12px] uppercase tracking-wider mb-3 border-t border-[#F1F5F9] pt-4">
+                  <Text className="text-[#008E96] font-bold text-[12px] uppercase tracking-wider mb-3 border-t border-[#F1F5F9] pt-4">
                     2. Rooms & Capacity
                   </Text>
 
                   <View className="flex-row gap-3 mb-3.5">
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">CABINS</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">CABINS</Text>
                       <TextInput
                         value={defaultCabins}
                         onChangeText={setDefaultCabins}
                         keyboardType="numeric"
                         placeholder="e.g. 4"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
 
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">MEETING ROOMS</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">MEETING ROOMS</Text>
                       <TextInput
                         value={defaultMeetingRooms}
                         onChangeText={setDefaultMeetingRooms}
                         keyboardType="numeric"
                         placeholder="e.g. 2"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
                   </View>
 
                   <View className="flex-row gap-3 mb-6">
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">WASHROOMS</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">WASHROOMS</Text>
                       <TextInput
                         value={defaultWashrooms}
                         onChangeText={setDefaultWashrooms}
                         keyboardType="numeric"
                         placeholder="e.g. 3"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
 
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">PARKING SPOTS</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">PARKING SPOTS</Text>
                       <TextInput
                         value={defaultParking}
                         onChangeText={setDefaultParking}
                         placeholder="Slots"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
                   </View>
 
                   {/* Section 3: Deposit & Utilities */}
-                  <Text className="text-[#008E96] font-inter-bold text-[12px] uppercase tracking-wider mb-3 border-t border-[#F1F5F9] pt-4">
+                  <Text className="text-[#008E96] font-bold text-[12px] uppercase tracking-wider mb-3 border-t border-[#F1F5F9] pt-4">
                     3. Deposit & Utilities
                   </Text>
 
                   <View className="flex-row gap-3 mb-4">
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">SECURITY DEPOSIT</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">SECURITY DEPOSIT</Text>
                       <TextInput
                         value={defaultSecurityDeposit}
                         onChangeText={setDefaultSecurityDeposit}
                         keyboardType="numeric"
                         placeholder="Deposit in Rs"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
 
-                    <View className="flex-1">
-                      <Text className="text-[#475569] font-inter-bold text-[11px] uppercase mb-1.5">MAINTENANCE / MO</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text className="text-[#475569] font-bold text-[11px] uppercase mb-1.5">MAINTENANCE / MO</Text>
                       <TextInput
                         value={defaultMaintenance}
                         onChangeText={setDefaultMaintenance}
                         placeholder="Rs / month"
                         placeholderTextColor="#94A3B8"
-                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-inter-medium bg-[#F8FAFC]"
+                        className="h-12 border border-[#E2E8F0] rounded-xl px-3.5 text-[13px] text-[#0F172A] font-medium bg-[#F8FAFC]"
                       />
                     </View>
                   </View>
@@ -1768,10 +1768,10 @@ const BulkUploadScreen = () => {
                         {defaultPowerBackup && <Ionicons name="checkmark" size={15} color="white" />}
                       </View>
                       <View>
-                        <Text className="text-[#0F172A] font-inter-bold text-[14px]">
+                        <Text className="text-[#0F172A] font-bold text-[14px]">
                           24x7 Power Backup Available
                         </Text>
-                        <Text className="text-[#64748B] font-inter-regular text-[12px]">
+                        <Text className="text-[#64748B] font-normal text-[12px]">
                           Includes generator facility for these commercial units
                         </Text>
                       </View>
@@ -1789,24 +1789,24 @@ const BulkUploadScreen = () => {
                       <View className="w-10 h-10 rounded-xl bg-[#E6F7F6] items-center justify-center">
                         <Ionicons name="storefront" size={20} color="#008E96" />
                       </View>
-                      <Text className="text-[#0F172A] font-inter-bold text-[20px]">
+                      <Text className="text-[#0F172A] font-bold text-[20px]">
                         Individual Unit Specifications
                       </Text>
                       <View className="bg-[#EFF6FF] px-3 py-1 rounded-md">
-                        <Text className="text-[#3B82F6] font-inter-bold text-[11px] uppercase">
+                        <Text className="text-[#3B82F6] font-bold text-[11px] uppercase">
                           {propertyType || 'COMMERCIAL'}
                         </Text>
                       </View>
                     </View>
 
                     <View className="bg-[#EFF6FF] px-4 py-1.5 rounded-xl border border-[#BFDBFE]">
-                      <Text className="text-[#3B82F6] font-inter-bold text-[13px]">
+                      <Text className="text-[#3B82F6] font-bold text-[13px]">
                         {quantity || 2} Units
                       </Text>
                     </View>
                   </View>
 
-                  <Text className="text-[#64748B] font-inter-regular text-[13px] mt-2">
+                  <Text className="text-[#64748B] font-normal text-[13px] mt-2">
                     Specify Unit No., Floor, Price, Area and commercial details for each unit.
                   </Text>
                 </View>
@@ -1824,10 +1824,10 @@ const BulkUploadScreen = () => {
                       >
                         {/* Unit Card Header */}
                         <View className="flex-row justify-between items-center mb-5 border-b border-[#F8FAFC] pb-3.5">
-                          <Text className="text-[#008E96] font-inter-bold text-[16px]">
+                          <Text className="text-[#008E96] font-bold text-[16px]">
                             Commercial Unit #{unitNumber}
                           </Text>
-                          <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase tracking-wider">
+                          <Text className="text-[#94A3B8] font-bold text-[11px] uppercase tracking-wider">
                             CONFIGURE UNIT SPECS
                           </Text>
                         </View>
@@ -1835,60 +1835,60 @@ const BulkUploadScreen = () => {
                         {/* Row 1: 5 Inputs */}
                         <View className="flex-row flex-wrap gap-3 mb-4">
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">UNIT NO *</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">UNIT NO *</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'unitNo', `Unit ${unitNumber}`)}
                               onChangeText={(val) => updateCustomUnit(idx, 'unitNo', val)}
                               placeholder={`Unit ${unitNumber}`}
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">OFFICE TYPE</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">OFFICE TYPE</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'officeType', defaultBhk)}
                               onChangeText={(val) => updateCustomUnit(idx, 'officeType', val)}
                               placeholder="e.g. Private Office"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">PRICE (INR) *</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">PRICE (INR) *</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'price', defaultPrice)}
                               onChangeText={(val) => updateCustomUnit(idx, 'price', val)}
                               keyboardType="numeric"
                               placeholder="3456788"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">AREA (SQ.FT) *</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">AREA (SQ.FT) *</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'area', defaultArea)}
                               onChangeText={(val) => updateCustomUnit(idx, 'area', val)}
                               keyboardType="numeric"
                               placeholder="2345"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[100px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">FLOOR LEVEL</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">FLOOR LEVEL</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'floor', defaultFloor)}
                               onChangeText={(val) => updateCustomUnit(idx, 'floor', val)}
                               keyboardType="numeric"
                               placeholder="1"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
                         </View>
@@ -1896,61 +1896,61 @@ const BulkUploadScreen = () => {
                         {/* Row 2: 5 Inputs */}
                         <View className="flex-row flex-wrap gap-3 mb-4">
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">CABINS</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">CABINS</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'cabins', defaultCabins)}
                               onChangeText={(val) => updateCustomUnit(idx, 'cabins', val)}
                               keyboardType="numeric"
                               placeholder="e.g. 4"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">MEETING ROOMS</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">MEETING ROOMS</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'meetingRooms', defaultMeetingRooms)}
                               onChangeText={(val) => updateCustomUnit(idx, 'meetingRooms', val)}
                               keyboardType="numeric"
                               placeholder="e.g. 2"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">WASHROOMS</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">WASHROOMS</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'washrooms', defaultWashrooms)}
                               onChangeText={(val) => updateCustomUnit(idx, 'washrooms', val)}
                               keyboardType="numeric"
                               placeholder="e.g. 3"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">PARKING SPOTS</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">PARKING SPOTS</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'parking', defaultParking)}
                               onChangeText={(val) => updateCustomUnit(idx, 'parking', val)}
                               placeholder="Slots"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[130px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">CEILING HT (FT)</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">CEILING HT (FT)</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'ceilingHeight', defaultCeilingHeight)}
                               onChangeText={(val) => updateCustomUnit(idx, 'ceilingHeight', val)}
                               keyboardType="numeric"
                               placeholder="e.g. 12"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
                         </View>
@@ -1958,37 +1958,37 @@ const BulkUploadScreen = () => {
                         {/* Row 3: Security Deposit, Maintenance, Total Floors & Power Backup Checkbox */}
                         <View className="flex-row flex-wrap items-center gap-4">
                           <View className="flex-1 min-w-[150px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">SECURITY DEPOSIT</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">SECURITY DEPOSIT</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'securityDeposit', defaultSecurityDeposit)}
                               onChangeText={(val) => updateCustomUnit(idx, 'securityDeposit', val)}
                               keyboardType="numeric"
                               placeholder="Rs"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[150px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">MAINTENANCE/MO</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">MAINTENANCE/MO</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'maintenance', defaultMaintenance)}
                               onChangeText={(val) => updateCustomUnit(idx, 'maintenance', val)}
                               placeholder="Rs/month"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
                           <View className="flex-1 min-w-[120px]">
-                            <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase mb-1.5">TOTAL FLOORS</Text>
+                            <Text className="text-[#94A3B8] font-bold text-[11px] uppercase mb-1.5">TOTAL FLOORS</Text>
                             <TextInput
                               value={getCustomUnitField(idx, 'totalFloors', defaultTotalFloors)}
                               onChangeText={(val) => updateCustomUnit(idx, 'totalFloors', val)}
                               keyboardType="numeric"
                               placeholder="5"
                               placeholderTextColor="#94A3B8"
-                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-inter-medium bg-white"
+                              className="border border-[#E2E8F0] rounded-xl px-3.5 py-2.5 text-[13px] text-[#0F172A] font-medium bg-white"
                             />
                           </View>
 
@@ -2005,7 +2005,7 @@ const BulkUploadScreen = () => {
                             >
                               {isPowerBackup && <Ionicons name="checkmark" size={12} color="white" />}
                             </View>
-                            <Text className="text-[#475569] font-inter-bold text-[11px] uppercase">
+                            <Text className="text-[#475569] font-bold text-[11px] uppercase">
                               POWER BACKUP
                             </Text>
                           </TouchableOpacity>
@@ -2024,10 +2024,10 @@ const BulkUploadScreen = () => {
           <View className="bg-white rounded-[24px] p-5 md:p-8 border border-[#E2E8F0] shadow-xs my-2">
             {/* Top Header */}
             <View className="mb-6">
-              <Text className="text-[#0F172A] font-inter-bold text-[22px]">
+              <Text className="text-[#0F172A] font-bold text-[22px]">
                 Review Batch Details
               </Text>
-              <Text className="text-[#64748B] font-inter-regular text-[13px] mt-1">
+              <Text className="text-[#64748B] font-normal text-[13px] mt-1">
                 Verify details before creating all properties in the system.
               </Text>
             </View>
@@ -2036,86 +2036,86 @@ const BulkUploadScreen = () => {
             <View className="flex-row flex-wrap gap-5 mb-8">
               {/* Left Card: COMMON SPECS */}
               <View className="flex-1 min-w-[280px] border border-[#F1F5F9] rounded-[20px] p-6 bg-white shadow-2xs justify-between gap-4">
-                <Text className="text-[#94A3B8] font-inter-bold text-[11px] uppercase tracking-wider">
+                <Text className="text-[#94A3B8] font-bold text-[11px] uppercase tracking-wider">
                   COMMON SPECS
                 </Text>
                 <View className="gap-3.5">
                   <View className="flex-row justify-between flex-wrap gap-2">
-                    <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                      Base Title: <Text className="text-[#0F172A] font-inter-bold">{baseTitlePrefix || 'dfgh.'}</Text>
+                    <Text className="text-[#64748B] font-medium text-[13px]">
+                      Base Title: <Text className="text-[#0F172A] font-bold">{baseTitlePrefix || 'dfgh.'}</Text>
                     </Text>
-                    <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                      Purpose: <Text className="text-[#0F172A] font-inter-bold">{category || 'Sell'}</Text>
+                    <Text className="text-[#64748B] font-medium text-[13px]">
+                      Purpose: <Text className="text-[#0F172A] font-bold">{category || 'Sell'}</Text>
                     </Text>
                   </View>
 
                   <View className="flex-row justify-between flex-wrap gap-2">
-                    <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                      Property Type: <Text className="text-[#0F172A] font-inter-bold">{propertyType || 'Commercial'}</Text>
+                    <Text className="text-[#64748B] font-medium text-[13px]">
+                      Property Type: <Text className="text-[#0F172A] font-bold">{propertyType || 'Commercial'}</Text>
                     </Text>
-                    <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                      Sub-Type: <Text className="text-[#0F172A] font-inter-bold">{subType || defaultBhk || 'Office'}</Text>
+                    <Text className="text-[#64748B] font-medium text-[13px]">
+                      Sub-Type: <Text className="text-[#0F172A] font-bold">{subType || defaultBhk || 'Office'}</Text>
                     </Text>
                   </View>
 
-                  <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                    Address: <Text className="text-[#0F172A] font-inter-bold">
+                  <Text className="text-[#64748B] font-medium text-[13px]">
+                    Address: <Text className="text-[#0F172A] font-bold">
                       {city ? `${city.toUpperCase()}, ${state} (${pincode || '160001'})` : 'CHANDIGARH, Jammu, J&K (160001)'}
                     </Text>
                   </Text>
 
-                  <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                    Associated Project: <Text className="text-[#0F172A] font-inter-bold">{linkedProject || 'Noble Callista'}</Text>
+                  <Text className="text-[#64748B] font-medium text-[13px]">
+                    Associated Project: <Text className="text-[#0F172A] font-bold">{linkedProject || 'Noble Callista'}</Text>
                   </Text>
 
                   <View className="flex-row justify-between flex-wrap gap-2 pt-1 border-t border-[#F8FAFC]">
-                    <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                      Images Uploaded: <Text className="text-[#0F172A] font-inter-bold">{images.length || 0}</Text>
+                    <Text className="text-[#64748B] font-medium text-[13px]">
+                      Images Uploaded: <Text className="text-[#0F172A] font-bold">{images.length || 0}</Text>
                     </Text>
-                    <Text className="text-[#64748B] font-inter-medium text-[13px]">
-                      Amenities: <Text className="text-[#0F172A] font-inter-bold">{selectedAmenities.length || 0}</Text>
+                    <Text className="text-[#64748B] font-medium text-[13px]">
+                      Amenities: <Text className="text-[#0F172A] font-bold">{selectedAmenities.length || 0}</Text>
                     </Text>
                   </View>
 
                   <View className="flex-row justify-between flex-wrap gap-2 pt-2 border-t border-[#F8FAFC]">
                     {ageOfProperty ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Age: <Text className="text-[#0F172A] font-inter-bold">{ageOfProperty} Yrs</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Age: <Text className="text-[#0F172A] font-bold">{ageOfProperty} Yrs</Text>
                       </Text>
                     ) : null}
                     {facingDirection ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Facing: <Text className="text-[#0F172A] font-inter-bold">{facingDirection}</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Facing: <Text className="text-[#0F172A] font-bold">{facingDirection}</Text>
                       </Text>
                     ) : null}
                     {constructionStatus ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Status: <Text className="text-[#0F172A] font-inter-bold">{constructionStatus}</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Status: <Text className="text-[#0F172A] font-bold">{constructionStatus}</Text>
                       </Text>
                     ) : null}
                     {zoneType ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Zone: <Text className="text-[#0F172A] font-inter-bold">{zoneType}</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Zone: <Text className="text-[#0F172A] font-bold">{zoneType}</Text>
                       </Text>
                     ) : null}
                     {ownershipType ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Ownership: <Text className="text-[#0F172A] font-inter-bold">{ownershipType}</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Ownership: <Text className="text-[#0F172A] font-bold">{ownershipType}</Text>
                       </Text>
                     ) : null}
                     {locationHub ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Hub: <Text className="text-[#0F172A] font-inter-bold">{locationHub}</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Hub: <Text className="text-[#0F172A] font-bold">{locationHub}</Text>
                       </Text>
                     ) : null}
                     {propertyCondition ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Condition: <Text className="text-[#0F172A] font-inter-bold">{propertyCondition}</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Condition: <Text className="text-[#0F172A] font-bold">{propertyCondition}</Text>
                       </Text>
                     ) : null}
                     {furnishingStatus ? (
-                      <Text className="text-[#64748B] font-inter-medium text-[12px]">
-                        Furnishing: <Text className="text-[#0F172A] font-inter-bold">{furnishingStatus}</Text>
+                      <Text className="text-[#64748B] font-medium text-[12px]">
+                        Furnishing: <Text className="text-[#0F172A] font-bold">{furnishingStatus}</Text>
                       </Text>
                     ) : null}
                   </View>
@@ -2125,26 +2125,26 @@ const BulkUploadScreen = () => {
               {/* Right Card: BATCH SUMMARY */}
               <View className="w-full md:w-[340px] border border-[#F1F5F9] rounded-[20px] p-6 bg-white shadow-2xs justify-between gap-6">
                 <View>
-                  <Text className="text-[#008E96] font-inter-bold text-[12px] uppercase tracking-wider mb-5">
+                  <Text className="text-[#008E96] font-bold text-[12px] uppercase tracking-wider mb-5">
                     BATCH SUMMARY
                   </Text>
 
                   <View className="gap-3.5">
                     <View className="flex-row justify-between items-center">
-                      <Text className="text-[#475569] font-inter-medium text-[13px]">Total Units:</Text>
-                      <Text className="text-[#0F172A] font-inter-bold text-[15px]">{quantity || 2}</Text>
+                      <Text className="text-[#475569] font-medium text-[13px]">Total Units:</Text>
+                      <Text className="text-[#0F172A] font-bold text-[15px]">{quantity || 2}</Text>
                     </View>
 
                     <View className="flex-row justify-between items-center">
-                      <Text className="text-[#475569] font-inter-medium text-[13px]">Type:</Text>
-                      <Text className="text-[#2563EB] font-inter-bold text-[13px] uppercase">
+                      <Text className="text-[#475569] font-medium text-[13px]">Type:</Text>
+                      <Text className="text-[#2563EB] font-bold text-[13px] uppercase">
                         {propertyType || 'COMMERCIAL'}
                       </Text>
                     </View>
 
                     <View className="flex-row justify-between items-center">
-                      <Text className="text-[#475569] font-inter-medium text-[13px]">Price Range:</Text>
-                      <Text className="text-[#0F172A] font-inter-bold text-[13px]">
+                      <Text className="text-[#475569] font-medium text-[13px]">Price Range:</Text>
+                      <Text className="text-[#0F172A] font-bold text-[13px]">
                         Rs. {parseInt(defaultPrice || '3456788', 10).toLocaleString('en-IN')} - Rs. {parseInt(defaultPrice || '3456788', 10).toLocaleString('en-IN')}
                       </Text>
                     </View>
@@ -2161,7 +2161,7 @@ const BulkUploadScreen = () => {
                   ) : (
                     <>
                       <Ionicons name="checkmark-circle-outline" size={18} color="white" />
-                      <Text className="text-white font-inter-bold text-[14px]">Publish Batch Listings</Text>
+                      <Text className="text-white font-bold text-[14px]">Publish Batch Listings</Text>
                     </>
                   )}
                 </TouchableOpacity>
@@ -2169,7 +2169,7 @@ const BulkUploadScreen = () => {
             </View>
 
             {/* Bottom Section: UNITS BREAKDOWN Table */}
-            <Text className="text-[#94A3B8] font-inter-bold text-[12px] uppercase tracking-wider mb-3">
+            <Text className="text-[#94A3B8] font-bold text-[12px] uppercase tracking-wider mb-3">
               UNITS BREAKDOWN
             </Text>
 
@@ -2178,13 +2178,13 @@ const BulkUploadScreen = () => {
                 <View className="min-w-[700px]">
                   {/* Table Header */}
                   <View className="flex-row bg-[#F8FAFC] px-5 py-3.5 border-b border-[#F1F5F9]">
-                    <Text className="w-[100px] text-[#475569] font-inter-bold text-[13px]">Unit No</Text>
-                    <Text className="w-[150px] text-[#475569] font-inter-bold text-[13px]">Price</Text>
-                    <Text className="w-[130px] text-[#475569] font-inter-bold text-[13px]">Area</Text>
-                    <Text className="w-[130px] text-[#475569] font-inter-bold text-[13px]">Office Type</Text>
-                    <Text className="w-[80px] text-[#475569] font-inter-bold text-[13px]">Floor</Text>
-                    <Text className="w-[90px] text-[#475569] font-inter-bold text-[13px]">Cabins</Text>
-                    <Text className="w-[90px] text-[#475569] font-inter-bold text-[13px]">Parking</Text>
+                    <Text className="w-[100px] text-[#475569] font-bold text-[13px]">Unit No</Text>
+                    <Text className="w-[150px] text-[#475569] font-bold text-[13px]">Price</Text>
+                    <Text className="w-[130px] text-[#475569] font-bold text-[13px]">Area</Text>
+                    <Text className="w-[130px] text-[#475569] font-bold text-[13px]">Office Type</Text>
+                    <Text className="w-[80px] text-[#475569] font-bold text-[13px]">Floor</Text>
+                    <Text className="w-[90px] text-[#475569] font-bold text-[13px]">Cabins</Text>
+                    <Text className="w-[90px] text-[#475569] font-bold text-[13px]">Parking</Text>
                   </View>
 
                   {/* Table Rows */}
@@ -2209,25 +2209,25 @@ const BulkUploadScreen = () => {
                         className={`flex-row px-5 py-4 items-center ${index !== (Number(quantity) || 2) - 1 ? 'border-b border-[#F8FAFC]' : ''
                           }`}
                       >
-                        <Text className="w-[100px] text-[#0F172A] font-inter-bold text-[13px]">
+                        <Text className="w-[100px] text-[#0F172A] font-bold text-[13px]">
                           {unitName}
                         </Text>
-                        <Text className="w-[150px] text-[#334155] font-inter-medium text-[13px]">
+                        <Text className="w-[150px] text-[#334155] font-medium text-[13px]">
                           {formattedPrice}
                         </Text>
-                        <Text className="w-[130px] text-[#334155] font-inter-medium text-[13px]">
+                        <Text className="w-[130px] text-[#334155] font-medium text-[13px]">
                           {formattedArea}
                         </Text>
-                        <Text className="w-[130px] text-[#64748B] font-inter-regular text-[13px]">
+                        <Text className="w-[130px] text-[#64748B] font-normal text-[13px]">
                           {rawOfficeType}
                         </Text>
-                        <Text className="w-[80px] text-[#64748B] font-inter-regular text-[13px]">
+                        <Text className="w-[80px] text-[#64748B] font-normal text-[13px]">
                           {rawFloor}
                         </Text>
-                        <Text className="w-[90px] text-[#64748B] font-inter-regular text-[13px]">
+                        <Text className="w-[90px] text-[#64748B] font-normal text-[13px]">
                           {rawCabins}
                         </Text>
-                        <Text className="w-[90px] text-[#64748B] font-inter-regular text-[13px]">
+                        <Text className="w-[90px] text-[#64748B] font-normal text-[13px]">
                           {rawParking}
                         </Text>
                       </View>
@@ -2249,7 +2249,7 @@ const BulkUploadScreen = () => {
             className="flex-row items-center px-5 py-3 rounded-xl border border-[#E2E8F0] bg-white"
           >
             <Ionicons name="chevron-back" size={16} color="#475569" />
-            <Text className="text-[#475569] font-inter-bold text-[14px] ml-1">Back</Text>
+            <Text className="text-[#475569] font-bold text-[14px] ml-1">Back</Text>
           </TouchableOpacity>
         ) : (
           <View />
@@ -2261,7 +2261,7 @@ const BulkUploadScreen = () => {
             onPress={handleNextStep}
             className="bg-[#008E96] px-7 py-3.5 rounded-xl flex-row items-center gap-2 shadow-xs"
           >
-            <Text className="text-white font-inter-bold text-[14px]">
+            <Text className="text-white font-bold text-[14px]">
               Next: {steps[currentStep]?.label}
             </Text>
             <Ionicons name="chevron-forward" size={16} color="white" />
@@ -2277,7 +2277,7 @@ const BulkUploadScreen = () => {
             ) : (
               <>
                 <Ionicons name="rocket" size={17} color="white" />
-                <Text className="text-white font-inter-bold text-[15px]">Publish {quantity} Listings</Text>
+                <Text className="text-white font-bold text-[15px]">Publish {quantity} Listings</Text>
               </>
             )}
           </TouchableOpacity>

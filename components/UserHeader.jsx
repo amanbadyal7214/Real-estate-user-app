@@ -103,7 +103,7 @@ const UserHeader = ({ userName: propUserName }) => {
               <User color="white" size={wp('4.3%')} />
             </View>
             <View className="flex-row items-center flex-shrink" style={{ paddingRight: wp('1.1%') }}>
-              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%') }} className="text-[#101828]">
+              <Text style={{ fontWeight: '500', fontSize: wp('3.5%') }} className="text-[#101828]">
                 Hi {userName}
               </Text>
               <ChevronDown size={wp('3.7%')} color="#101828" style={{ marginLeft: wp('0.5%') }} />
@@ -118,9 +118,9 @@ const UserHeader = ({ userName: propUserName }) => {
             className="flex-row items-center bg-[#F2F4F7] rounded-full"
             style={{ paddingHorizontal: wp('2.7%'), paddingVertical: hp('0.7%') }}
           >
-            <Text numberOfLines={1} className="font-inter-medium text-[#101828]" style={{ fontSize: wp('2.9%'), marginRight: wp('1.6%') }}>List Property</Text>
+            <Text numberOfLines={1} className="font-medium text-[#101828]" style={{ fontSize: wp('2.9%'), marginRight: wp('1.6%') }}>List Property</Text>
             <View className="bg-primary rounded" style={{ paddingHorizontal: wp('1.6%'), paddingVertical: hp('0.2%') }}>
-              <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.1%') }}>FREE</Text>
+              <Text className="font-bold text-white" style={{ fontSize: wp('2.1%') }}>FREE</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -144,19 +144,19 @@ const UserHeader = ({ userName: propUserName }) => {
                       <View className="bg-[#E6F7F6] items-center justify-center rounded-full" style={{ width: wp('8.5%'), height: wp('8.5%') }}>
                         <User color="#008E96" size={wp('4.3%')} />
                       </View>
-                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%') }} className="text-[#101828] flex-1" numberOfLines={1}>
+                      <Text style={{ fontWeight: '700', fontSize: wp('4.3%') }} className="text-[#101828] flex-1" numberOfLines={1}>
                         {userData.name}
                       </Text>
                     </View>
 
                     {userData.email && (
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginLeft: wp('1.1%') }} className="text-[#4A5565]">
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), marginLeft: wp('1.1%') }} className="text-[#4A5565]">
                         ✉️  {userData.email}
                       </Text>
                     )}
 
                     {(userData.phone || userData.profileData?.phone) && (
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginLeft: wp('1.1%') }} className="text-[#4A5565]">
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), marginLeft: wp('1.1%') }} className="text-[#4A5565]">
                         📞  {userData.phone || userData.profileData?.phone}
                       </Text>
                     )}
@@ -165,7 +165,7 @@ const UserHeader = ({ userName: propUserName }) => {
                       <View className="flex-row flex-wrap" style={{ gap: wp('1.6%'), marginTop: hp('0.5%') }}>
                         {(Array.isArray(userData.role) ? userData.role : [userData.role]).map((r) => (
                           <View key={r} className="bg-[#E6F7F6] rounded-md border border-[#008E96]/20" style={{ paddingHorizontal: wp('2.7%'), paddingVertical: hp('0.2%') }}>
-                            <Text className="text-[#008E96] uppercase font-semibold" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('2.7%') }}>
+                            <Text className="text-[#008E96] uppercase font-semibold" style={{ fontWeight: '600', fontSize: wp('2.7%') }}>
                               {r}
                             </Text>
                           </View>
@@ -180,17 +180,17 @@ const UserHeader = ({ userName: propUserName }) => {
                       className="flex-row items-center justify-center bg-red-50 rounded-xl border border-red-100"
                       style={{ paddingVertical: hp('1.2%') }}
                     >
-                      <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-red-600">
+                      <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-red-600">
                         Logout
                       </Text>
                     </TouchableOpacity>
                   </View>
                 ) : (
                   <View style={{ padding: wp('4.3%'), gap: wp('3.2%') }}>
-                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%') }} className="text-[#101828]">
+                    <Text style={{ fontWeight: '700', fontSize: wp('4.3%') }} className="text-[#101828]">
                       Welcome, Guest!
                     </Text>
-                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), lineHeight: hp('2.5%') }} className="text-[#6A7282]">
+                    <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), lineHeight: hp('2.5%') }} className="text-[#6A7282]">
                       Log in to access your properties, post new ads, and explore calculators.
                     </Text>
                     <TouchableOpacity
@@ -201,7 +201,7 @@ const UserHeader = ({ userName: propUserName }) => {
                       className="bg-[#008E96] rounded-xl items-center shadow-sm"
                       style={{ paddingVertical: hp('1.5%') }}
                     >
-                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%') }} className="text-white">
+                      <Text style={{ fontWeight: '700', fontSize: wp('3.7%') }} className="text-white">
                         Login / Register
                       </Text>
                     </TouchableOpacity>

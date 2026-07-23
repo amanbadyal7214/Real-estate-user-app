@@ -79,23 +79,23 @@ const PropertyCard = ({ item, destination = 'property' }) => {
           {/* Top Section */}
           <View className="flex-row justify-between items-start" style={{ paddingTop: hp('2%'), paddingHorizontal: wp('3.2%') }}>
             <View className="bg-[#155DFC]" style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('1.1%') }}>
-              <Text className="font-inter-bold text-white" style={{ fontSize: wp('1.8%') }}>RERA</Text>
+              <Text className="font-bold text-white" style={{ fontSize: wp('1.8%') }}>RERA</Text>
             </View>
             <View className="items-end">
-              <Text className="font-inter-bold text-white tracking-widest text-right" style={{ fontSize: wp('2.1%') }}>{item.title}</Text>
-              <Text className="font-inter-regular text-white text-right uppercase" style={{ fontSize: wp('1.8%') }}>BY {item.developer || item.builder || ''}</Text>
+              <Text className="font-bold text-white tracking-widest text-right" style={{ fontSize: wp('2.1%') }}>{item.title}</Text>
+              <Text className="font-normal text-white text-right uppercase" style={{ fontSize: wp('1.8%') }}>BY {item.developer || item.builder || ''}</Text>
             </View>
           </View>
 
           {/* Bottom Section */}
           <View className="absolute" style={{ bottom: hp('2%'), left: wp('3.2%'), right: wp('3.2%') }}>
-            <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.9%'), lineHeight: hp('2.1%') }}>
+            <Text className="font-bold text-white" style={{ fontSize: wp('2.9%'), lineHeight: hp('2.1%') }}>
               {item.title}
             </Text>
-            <Text className="font-inter-regular text-white/90" style={{ fontSize: wp('2.1%'), lineHeight: hp('1.5%') }}>
+            <Text className="font-normal text-white/90" style={{ fontSize: wp('2.1%'), lineHeight: hp('1.5%') }}>
               {item.location}
             </Text>
-            <Text className="font-inter-bold text-white" style={{ fontSize: wp('3.0%'), marginTop: hp('0.8%'), lineHeight: hp('2%') }}>
+            <Text className="font-bold text-white" style={{ fontSize: wp('3.0%'), marginTop: hp('0.8%'), lineHeight: hp('2%') }}>
               {formatPrice(item.priceRange)}
             </Text>
           </View>

@@ -32,7 +32,7 @@ const NewsCard = ({ image, title, meta, description }) => {
       
       <View style={{ paddingHorizontal: wp('3.7%'), paddingTop: hp('1%'), paddingBottom: hp('1.5%') }}>
         <Text 
-          className="font-inter-bold text-[#101828]" 
+          className="font-bold text-[#101828]" 
           style={{ fontSize: wp('3.2%'), lineHeight: hp('2%'), marginBottom: hp('0.5%') }}
           numberOfLines={2}
         >
@@ -40,14 +40,14 @@ const NewsCard = ({ image, title, meta, description }) => {
         </Text>
         
         <Text 
-          className="font-inter-regular text-[#6A7282]" 
+          className="font-normal text-[#6A7282]" 
           style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%'), marginBottom: hp('0.5%') }}
         >
           {meta}
         </Text>
         
         <Text 
-          className="font-inter-regular text-[#4A5565]" 
+          className="font-normal text-[#4A5565]" 
           style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}
           numberOfLines={2}
         >

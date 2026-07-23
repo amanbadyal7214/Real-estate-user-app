@@ -185,14 +185,14 @@ const ProjectDetails = () => {
       <SafeAreaView className="flex-1 bg-white items-center justify-center" edges={['top']}>
         <Text className="text-red-600 text-center" style={{ paddingHorizontal: wp('4%'), marginBottom: hp('2%'), fontSize: wp('4%') }}>{error || 'Failed to load project'}</Text>
         <TouchableOpacity onPress={() => router.back()} className="bg-[#008E96]" style={{ paddingHorizontal: wp('6%'), paddingVertical: hp('1.5%'), borderRadius: wp('2%') }}>
-          <Text className="text-white font-inter-medium" style={{ fontSize: wp('3.5%') }}>Go Back</Text>
+          <Text className="text-white font-medium" style={{ fontSize: wp('3.5%') }}>Go Back</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top']}>
       <View className="flex-1 bg-[#F9FAFB]">
         <ScrollView showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
           <View className="bg-white">
@@ -233,28 +233,28 @@ const ProjectDetails = () => {
               <View className="absolute" style={{ bottom: hp('4%'), left: wp('4%'), gap: hp('1%') }}>
                 <View className="bg-[#008E96] self-start flex-row items-center" style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.5%'), borderRadius: wp('1%'), gap: wp('1%') }}>
                   <Ionicons name="checkmark" size={wp('3%')} color="white" />
-                  <Text className="text-white font-inter-regular" style={{ fontSize: wp('3%') }}>
+                  <Text className="text-white font-normal" style={{ fontSize: wp('3%') }}>
                     {projectData.isReraApproved ? 'RERA' : 'NON-RERA'}
                   </Text>
                 </View>
-                <Text className="text-white font-inter-medium" style={{ fontSize: wp('6%') }}>{projectData.projectName}</Text>
+                <Text className="text-white font-medium" style={{ fontSize: wp('6%') }}>{projectData.projectName}</Text>
                 <View className="flex-row justify-between items-center" style={{ width: wp('90%') }}>
-                  <Text className="text-white font-inter-regular flex-1" style={{ fontSize: wp('3.5%') }}>{location}</Text>
+                  <Text className="text-white font-normal flex-1" style={{ fontSize: wp('3.5%') }}>{location}</Text>
                   <TouchableOpacity className="bg-white/20 flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%'), borderRadius: wp('2.5%'), gap: wp('2%') }}>
                     <Ionicons name="location-outline" size={wp('4%')} color="white" />
-                    <Text className="text-white font-inter-medium" style={{ fontSize: wp('3.5%') }}>See on Map</Text>
+                    <Text className="text-white font-medium" style={{ fontSize: wp('3.5%') }}>See on Map</Text>
                   </TouchableOpacity>
                 </View>
               </View>
               <View className="absolute bg-black/60 rounded-full" style={{ bottom: hp('3%'), right: wp('4%'), paddingHorizontal: wp('3%'), paddingVertical: hp('0.5%') }}>
-                <Text className="text-white font-inter-regular" style={{ fontSize: wp('3.5%') }}>{currentImageIndex + 1}/{images.length || 1}</Text>
+                <Text className="text-white font-normal" style={{ fontSize: wp('3.5%') }}>{currentImageIndex + 1}/{images.length || 1}</Text>
               </View>
             </View>
             <View className="flex-row border-b border-[#E5E7EB]" style={{ gap: wp('2%'), paddingHorizontal: wp('4%'), paddingVertical: hp('2%') }}>
               {/* Data Insights tab hidden for now */}
               {['Overview', 'Highlights', 'Property Tour'].map((tab) => (
                 <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} className={`flex-1 items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`} style={{ paddingVertical: hp('1%'), borderRadius: wp('3.5%') }}>
-                  <Text className={`font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>{tab}</Text>
+                  <Text className={`font-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>{tab}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -264,31 +264,31 @@ const ProjectDetails = () => {
             <View className="p-4 gap-4">
               <View className="bg-white p-4 border rounded-[16px] border-[#E5E7EB]">
                 <View className="flex-row items-start justify-between gap-3">
-                  <View className="flex-1">
+                  <View style={{ flex: 1 }}>
                     <View className="flex-row items-center gap-2 mb-2">
                       <View className="w-9 h-9 rounded-full bg-[#E6F7F7] items-center justify-center">
                         <MaterialCommunityIcons name="cash-multiple" size={18} color="#008E96" />
                       </View>
                       <View>
-                        <Text className="text-[#667085] text-[12px] font-inter-medium">Starting from</Text>
-                        <Text className="text-[#0A0A0A] text-[16px] font-inter-semibold">{formatPricePerSqFt(averagePricePerSqFt || projectData.costPerSqft)}</Text>
+                        <Text className="text-[#667085] text-[12px] font-medium">Starting from</Text>
+                        <Text className="text-[#0A0A0A] text-[16px] font-semibold">{formatPricePerSqFt(averagePricePerSqFt || projectData.costPerSqft)}</Text>
                       </View>
                     </View>
-                    <Text className="text-[#6A7282] text-[12px] mb-3 font-inter-regular">
+                    <Text className="text-[#6A7282] text-[12px] mb-3 font-normal">
                       Zero Brokerage • Possession by {possessionDate}
                     </Text>
-                    <Text className="text-[#6A7282] text-[12px] mb-3 font-inter-regular">
+                    <Text className="text-[#6A7282] text-[12px] mb-3 font-normal">
                       Avg. price per sq.ft. {formatPricePerSqFt(averagePricePerSqFt || projectData.costPerSqft)}
                     </Text>
                   </View>
                   <View className="bg-[#F0F9FA] rounded-[16px] px-3 py-2 border border-[#D2F0F2]">
-                    <Text className="text-[#008E96] text-[12px] font-inter-semibold text-center">{projectData.bhkType || 'Apartments'}</Text>
+                    <Text className="text-[#008E96] text-[12px] font-semibold text-center">{projectData.bhkType || 'Apartments'}</Text>
                   </View>
                 </View>
 
               </View>
               <View>
-                <Text className="text-[#101828] text-[18px] font-inter-medium mb-3">Project Configurations</Text>
+                <Text className="text-[#101828] text-[18px] font-medium mb-3">Project Configurations</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {derivedConfigData.map((item, index) => (
                     <ProjectConfigCard 
@@ -310,14 +310,14 @@ const ProjectDetails = () => {
               </View>
               <ProjectSellerCard sellerName={builderName} postedBy={projectData.builder?.designation || 'Developer'} />
               <View className="bg-white rounded-[16px] p-4 gap-2 shadow-sm border border-[#E5E7EB]">
-                <Text className="text-[#101828] text-[18px] font-inter-medium">{projectData.projectName}</Text>
-                <Text className="text-[#000] text-[13px] leading-[27px] font-inter-regular">
+                <Text className="text-[#101828] text-[18px] font-medium">{projectData.projectName}</Text>
+                <Text className="text-[#000] text-[13px] leading-[27px] font-normal">
                   {projectData.description || 'Modern apartments in a prime location with premium amenities and finishes.'}
                 </Text>
               </View>
               {summariesData ? (
                 <View className="bg-white rounded-[16px] p-4 gap-3 border border-[#E5E7EB]">
-                  <Text className="text-[#101828] text-[18px] font-inter-medium">Project Summary</Text>
+                  <Text className="text-[#101828] text-[18px] font-medium">Project Summary</Text>
                   {summariesData.amenities && summariesData.amenities.length > 0 && (
                     <View className="flex-row flex-wrap gap-2">
                       {summariesData.amenities.map((am) => (
@@ -334,7 +334,7 @@ const ProjectDetails = () => {
                       {summariesData.summaries.map((s) => (
                         <View key={s._id} className="flex-row items-center justify-between py-2 border-b border-[#F2F4F7]">
                           <View>
-                            <Text className="text-[#101828] text-[14px] font-inter-semibold">{s.propertyItem?.label} • {s.structure?.value}{s.structure?.id?.name ? ` ${s.structure.id.name}` : ''}</Text>
+                            <Text className="text-[#101828] text-[14px] font-semibold">{s.propertyItem?.label} • {s.structure?.value}{s.structure?.id?.name ? ` ${s.structure.id.name}` : ''}</Text>
                             <Text className="text-[#667085] text-[12px]">{s.area} {s.areaUnit?.label} • {s.quantity} units</Text>
                           </View>
                         </View>
@@ -351,17 +351,17 @@ const ProjectDetails = () => {
                         <MaterialCommunityIcons name="home-city-outline" size={20} color="#008E96" />
                       </View>
                       <View>
-                        <Text className="text-[#101828] text-[16px] font-inter-semibold">Project Snapshot</Text>
-                        <Text className="text-[#667085] text-[12px] font-inter-regular">Quick facts at a glance</Text>
+                        <Text className="text-[#101828] text-[16px] font-semibold">Project Snapshot</Text>
+                        <Text className="text-[#667085] text-[12px] font-normal">Quick facts at a glance</Text>
                       </View>
                     </View>
                     {projectData.isReraApproved ? (
                       <View className="px-3 py-1 bg-[#EAFBF1] rounded-full border border-[#B7EBC8]">
-                        <Text className="text-[#078345] text-[12px] font-inter-semibold">RERA Approved</Text>
+                        <Text className="text-[#078345] text-[12px] font-semibold">RERA Approved</Text>
                       </View>
                     ) : (
                       <View className="px-3 py-1 bg-[#FFF4E5] rounded-full border border-[#FFD7A8]">
-                        <Text className="text-[#B54708] text-[12px] font-inter-semibold">RERA Pending</Text>
+                        <Text className="text-[#B54708] text-[12px] font-semibold">RERA Pending</Text>
                       </View>
                     )}
                   </View>
@@ -378,9 +378,9 @@ const ProjectDetails = () => {
                           <View className="w-8 h-8 rounded-full bg-[#F0F9FA] items-center justify-center">
                             <MaterialCommunityIcons name={item.icon} size={16} color="#008E96" />
                           </View>
-                          <Text className="text-[#667085] text-[12px] font-inter-medium">{item.label}</Text>
+                          <Text className="text-[#667085] text-[12px] font-medium">{item.label}</Text>
                         </View>
-                        <Text className="text-[#101828] text-[14px] font-inter-semibold" numberOfLines={2}>{item.value}</Text>
+                        <Text className="text-[#101828] text-[14px] font-semibold" numberOfLines={2}>{item.value}</Text>
                       </View>
                     ))}
                   </View>
@@ -389,20 +389,20 @@ const ProjectDetails = () => {
                 <View className="p-4 gap-3">
 
                   <View className="flex-row items-center justify-between">
-                    <Text className="text-[#101828] text-[14px] font-inter-medium">Gated Community</Text>
-                    <Text className="text-[#344054] text-[14px] font-inter-semibold">{projectData.isGated ? 'Yes' : 'No'}</Text>
+                    <Text className="text-[#101828] text-[14px] font-medium">Gated Community</Text>
+                    <Text className="text-[#344054] text-[14px] font-semibold">{projectData.isGated ? 'Yes' : 'No'}</Text>
                   </View>
                   <View className="flex-row items-center justify-between">
-                    <Text className="text-[#101828] text-[14px] font-inter-medium">Start Date</Text>
-                    <Text className="text-[#344054] text-[14px] font-inter-semibold">{formatDate(projectData.startDate)}</Text>
+                    <Text className="text-[#101828] text-[14px] font-medium">Start Date</Text>
+                    <Text className="text-[#344054] text-[14px] font-semibold">{formatDate(projectData.startDate)}</Text>
                   </View>
                   <View className="flex-row items-center justify-between">
-                    <Text className="text-[#101828] text-[14px] font-inter-medium">Completion Date</Text>
-                    <Text className="text-[#344054] text-[14px] font-inter-semibold">{formatDate(projectData.completionDate)}</Text>
+                    <Text className="text-[#101828] text-[14px] font-medium">Completion Date</Text>
+                    <Text className="text-[#344054] text-[14px] font-semibold">{formatDate(projectData.completionDate)}</Text>
                   </View>
                   <View className="pt-2 border-t border-dashed border-[#E5E7EB]">
-                    <Text className="text-[#667085] text-[12px] font-inter-medium mb-1">Address</Text>
-                    <Text className="text-[#101828] text-[14px] font-inter-regular leading-5">{formatAddress()}</Text>
+                    <Text className="text-[#667085] text-[12px] font-medium mb-1">Address</Text>
+                    <Text className="text-[#101828] text-[14px] font-normal leading-5">{formatAddress()}</Text>
                   </View>
                 </View>
               </View>
@@ -426,37 +426,37 @@ const ProjectDetails = () => {
           ) : activeTab === 'Highlights' ? (
             <View className="p-4 gap-6">
               <View className="gap-3">
-                <Text className="text-[#101828] text-[18px] font-inter-medium">Nearby landmarks in Vamana Riseonic</Text>
+                <Text className="text-[#101828] text-[18px] font-medium">Nearby landmarks in Vamana Riseonic</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
                   <TouchableOpacity className="w-[200px] bg-white border border-[#E5E7EB] rounded-[14px] p-3 gap-2 mr-3">
                     <View className="flex-row items-center gap-2">
                       <Ionicons name="school-outline" size={20} color="#101828" />
-                      <Text className="text-[#101828] text-[14px] font-inter-regular underline">School</Text>
+                      <Text className="text-[#101828] text-[14px] font-normal underline">School</Text>
                       <Ionicons name="chevron-forward" size={14} color="#101828" />
                     </View>
-                    <Text className="text-[#6A7282] text-[14px] font-inter-regular h-[40px]">SHRIRAM e - TECHNO SCHOOL</Text>
-                    <Text className="text-[#101828] text-[16px] font-inter-medium">800 m</Text>
+                    <Text className="text-[#6A7282] text-[14px] font-normal h-[40px]">SHRIRAM e - TECHNO SCHOOL</Text>
+                    <Text className="text-[#101828] text-[16px] font-medium">800 m</Text>
                   </TouchableOpacity>
                   <TouchableOpacity className="w-[200px] bg-white border border-[#E5E7EB] rounded-[14px] p-3 gap-2 mr-3">
                     <View className="flex-row items-center gap-2">
                       <Ionicons name="medkit-outline" size={20} color="#101828" />
-                      <Text className="text-[#101828] text-[14px] font-inter-regular underline">Hospital</Text>
+                      <Text className="text-[#101828] text-[14px] font-normal underline">Hospital</Text>
                       <Ionicons name="chevron-forward" size={14} color="#101828" />
                     </View>
-                    <Text className="text-[#6A7282] text-[14px] font-inter-regular h-[40px]">Homi Bhabha Cancer Hospital a...</Text>
-                    <Text className="text-[#101828] text-[16px] font-inter-medium">2.6 km</Text>
+                    <Text className="text-[#6A7282] text-[14px] font-normal h-[40px]">Homi Bhabha Cancer Hospital a...</Text>
+                    <Text className="text-[#101828] text-[16px] font-medium">2.6 km</Text>
                   </TouchableOpacity>
                 </ScrollView>
               </View>
               <View className="gap-3">
-                <Text className="text-[#101828] text-[18px] font-inter-medium">Amenities</Text>
+                <Text className="text-[#101828] text-[18px] font-medium">Amenities</Text>
                 <View className="flex-row flex-wrap gap-2">
                   {summariesData && summariesData.amenities && summariesData.amenities.length > 0 ? (
                     summariesData.amenities.map((am) => (
                       <View key={am._id || am.label} className="w-[31%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-2">
                         <View className="items-center">
                           <MaterialIcons name={am.icon || am.name || 'check'} size={28} color="#008E96" />
-                          <Text className="text-[#101828] text-[12px] text-center font-inter-regular mt-2" numberOfLines={2}>{am.label}</Text>
+                          <Text className="text-[#101828] text-[12px] text-center font-normal mt-2" numberOfLines={2}>{am.label}</Text>
                         </View>
                       </View>
                     ))
@@ -472,13 +472,13 @@ const ProjectDetails = () => {
                       <View key={index} className="w-[31%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-2">
                         {item.isMore ? (
                           <View className="items-center">
-                            <Text className="text-[#101828] text-[20px] font-inter-medium">+20</Text>
-                            <Text className="text-[#101828] text-[12px] font-inter-regular underline">More amenities</Text>
+                            <Text className="text-[#101828] text-[20px] font-medium">+20</Text>
+                            <Text className="text-[#101828] text-[12px] font-normal underline">More amenities</Text>
                           </View>
                         ) : (
                           <>
                             <Text className="text-[24px] mb-1">{item.icon}</Text>
-                            <Text className="text-[#101828] text-[12px] text-center font-inter-regular" numberOfLines={1}>{item.title}</Text>
+                            <Text className="text-[#101828] text-[12px] text-center font-normal" numberOfLines={1}>{item.title}</Text>
                           </>
                         )}
                       </View>
@@ -487,34 +487,34 @@ const ProjectDetails = () => {
                 </View>
               </View>
               {/* <View className="gap-3">
-                <Text className="text-[#101828] text-[18px] font-inter-medium">Construction details</Text> */}
+                <Text className="text-[#101828] text-[18px] font-medium">Construction details</Text> */}
               {/* <View className="bg-white border border-[#E5E7EB] rounded-[24px] p-6 gap-6">
                   {/* Floor & Counter Section 
                   <View className="gap-4">
                     <View className="flex-row items-center gap-2">
                       <Image source={{ uri: 'https://cdn-icons-png.flaticon.com/512/619/619153.png' }} style={{ width: 24, height: 24 }} />
-                      <Text className="text-[#101828] text-[18px] font-inter-medium">Floor & Counter</Text>
+                      <Text className="text-[#101828] text-[18px] font-medium">Floor & Counter</Text>
                     </View>
                     
                     <View className="flex-row justify-between mb-4">
-                      <View className="flex-1">
+                      <View style={{ flex: 1 }}>
                         <Text className="text-[#98A2B3] text-[16px] mb-1">Living or dining</Text>
-                        <Text className="text-[#101828] text-[18px] font-inter-medium">Vitrified Tiles</Text>
+                        <Text className="text-[#101828] text-[18px] font-medium">Vitrified Tiles</Text>
                       </View>
                       <View className="flex-1 ml-4">
                         <Text className="text-[#98A2B3] text-[16px] mb-1">Master bedroom</Text>
-                        <Text className="text-[#101828] text-[18px] font-inter-medium">Vitrified Tiles</Text>
+                        <Text className="text-[#101828] text-[18px] font-medium">Vitrified Tiles</Text>
                       </View>
                     </View>
 
                     <View className="flex-row justify-between">
-                      <View className="flex-1">
+                      <View style={{ flex: 1 }}>
                         <Text className="text-[#98A2B3] text-[16px] mb-1">Other bedroom</Text>
-                        <Text className="text-[#101828] text-[18px] font-inter-medium">Vitrified Tiles</Text>
+                        <Text className="text-[#101828] text-[18px] font-medium">Vitrified Tiles</Text>
                       </View>
                       <View className="flex-1 ml-4">
                         <Text className="text-[#98A2B3] text-[16px] mb-1">Kitchen</Text>
-                        <Text className="text-[#101828] text-[18px] font-inter-medium">Vitrified Tiles</Text>
+                        <Text className="text-[#101828] text-[18px] font-medium">Vitrified Tiles</Text>
                       </View>
                     </View>
                   </View>
@@ -525,23 +525,23 @@ const ProjectDetails = () => {
                   <View className="gap-4">
                     <View className="flex-row items-center gap-2">
                       <Image source={{ uri: 'https://cdn-icons-png.flaticon.com/512/3050/3050218.png' }} style={{ width: 24, height: 24 }} />
-                      <Text className="text-[#101828] text-[18px] font-inter-medium">Walls</Text>
+                      <Text className="text-[#101828] text-[18px] font-medium">Walls</Text>
                     </View>
                     
                     <View className="flex-row justify-between">
-                      <View className="flex-1">
+                      <View style={{ flex: 1 }}>
                         <Text className="text-[#98A2B3] text-[16px] mb-1">Interior</Text>
-                        <Text className="text-[#101828] text-[18px] font-inter-medium">Acrylic Paint</Text>
+                        <Text className="text-[#101828] text-[18px] font-medium">Acrylic Paint</Text>
                       </View>
                       <View className="flex-1 ml-4">
                         <Text className="text-[#98A2B3] text-[16px] mb-1">Exterior</Text>
-                        <Text className="text-[#101828] text-[18px] font-inter-medium">Weather Coat Paint</Text>
+                        <Text className="text-[#101828] text-[18px] font-medium">Weather Coat Paint</Text>
                       </View>
                     </View>
                   </View>
 
                   <TouchableOpacity className="mt-2">
-                    <Text className="text-[#008E96] text-[18px] font-inter-medium border-b border-[#008E96] self-start">Show full details →</Text>
+                    <Text className="text-[#008E96] text-[18px] font-medium border-b border-[#008E96] self-start">Show full details →</Text>
                   </TouchableOpacity>
                 </View> */}
               <ProjectPropertiesSection
@@ -553,8 +553,8 @@ const ProjectDetails = () => {
               <View className="p-4 gap-4">
                 <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] gap-4">
                   <View className="flex-row justify-between items-center">
-                    <Text className="text-[#101828] text-[18px] font-inter-bold">Floor plan & pricing</Text>
-                    <Text className="text-[#6A7282] text-[12px] font-inter-regular">*1 Sq.m = 10.76 Sq.ft</Text>
+                    <Text className="text-[#101828] text-[18px] font-bold">Floor plan & pricing</Text>
+                    <Text className="text-[#6A7282] text-[12px] font-normal">*1 Sq.m = 10.76 Sq.ft</Text>
                   </View>
 
                   {/* Floor Tabs */}
@@ -566,8 +566,8 @@ const ProjectDetails = () => {
                         className={`items-center py-3 px-5 ${activeFloorTab === tab.label ? 'bg-[#E6F7F6]' : 'bg-white'} ${index < propertyTourTabs.length - 1 ? 'border-r border-[#E5E7EB]' : ''}`}
                         style={{ minWidth: 92 }}
                       >
-                        <Text className={`text-[14px] font-inter-medium ${activeFloorTab === tab.label ? 'text-[#008E96]' : 'text-[#364153]'}`}>{tab.label}</Text>
-                        <Text className="text-[#6A7282] text-[12px] font-inter-medium">{tab.count} Sizes</Text>
+                        <Text className={`text-[14px] font-medium ${activeFloorTab === tab.label ? 'text-[#008E96]' : 'text-[#364153]'}`}>{tab.label}</Text>
+                        <Text className="text-[#6A7282] text-[12px] font-medium">{tab.count} Sizes</Text>
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
@@ -583,17 +583,17 @@ const ProjectDetails = () => {
                           </TouchableOpacity>
                         </View>
                         <View className="px-1 gap-1">
-                          <Text className="text-[#101828] text-[16px] font-inter-bold">{item.bhk}</Text>
-                          <Text className="text-[#6A7282] text-[12px] font-inter-regular">{item.info}</Text>
-                          <Text className="text-[#101828] text-[14px] font-inter-medium">{item.area}</Text>
-                          <Text className="text-[#101828] text-[16px] font-inter-bold">{item.price}</Text>
+                          <Text className="text-[#101828] text-[16px] font-bold">{item.bhk}</Text>
+                          <Text className="text-[#6A7282] text-[12px] font-normal">{item.info}</Text>
+                          <Text className="text-[#101828] text-[14px] font-medium">{item.area}</Text>
+                          <Text className="text-[#101828] text-[16px] font-bold">{item.price}</Text>
                         </View>
                         <View className="flex-row gap-2 mt-1">
                           <TouchableOpacity className="w-10 h-10 border border-[#D1D5DC] rounded-[10px] items-center justify-center">
                             <FontAwesome name="whatsapp" size={20} color="#00C950" />
                           </TouchableOpacity>
                           <TouchableOpacity className="flex-1 h-10 border-2 border-[#008E96] rounded-[10px] items-center justify-center">
-                            <Text className="text-[#008E96] text-[14px] font-inter-medium">Contact</Text>
+                            <Text className="text-[#008E96] text-[14px] font-medium">Contact</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -602,15 +602,15 @@ const ProjectDetails = () => {
 
                   {/* Feedback Section */}
                   <View className="flex-row justify-between items-center pt-4 border-t border-[#F3F4F6]">
-                    <Text className="text-[#364153] text-[14px] font-inter-regular">Was this information helpful?</Text>
+                    <Text className="text-[#364153] text-[14px] font-normal">Was this information helpful?</Text>
                     <View className="flex-row gap-3">
                       <TouchableOpacity className="flex-row items-center gap-1.5">
                         <Ionicons name="thumbs-up-outline" size={18} color="#4A5565" />
-                        <Text className="text-[#4A5565] text-[14px] font-inter-medium">Yes</Text>
+                        <Text className="text-[#4A5565] text-[14px] font-medium">Yes</Text>
                       </TouchableOpacity>
                       <TouchableOpacity className="flex-row items-center gap-1.5">
                         <Ionicons name="thumbs-down-outline" size={18} color="#4A5565" />
-                        <Text className="text-[#4A5565] text-[14px] font-inter-medium">No</Text>
+                        <Text className="text-[#4A5565] text-[14px] font-medium">No</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -618,7 +618,7 @@ const ProjectDetails = () => {
               </View>
             ) : (
             <View className="p-20 items-center justify-center">
-              <Text className="text-gray-400 font-inter-medium">{activeTab} Content Coming Soon</Text>
+              <Text className="text-gray-400 font-medium">{activeTab} Content Coming Soon</Text>
             </View>
           )}
         </ScrollView>
@@ -627,13 +627,13 @@ const ProjectDetails = () => {
       <View className="bg-white border-t border-[#E5E7EB] flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('1.5%'), paddingBottom: insets.bottom, gap: wp('2%') }}>
         <TouchableOpacity className="flex-1 border border-[#008E96] flex-row items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%'), gap: wp('2%') }}>
           <Ionicons name="chatbubble-outline" size={wp('5%')} color="#008E96" />
-          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>Chat</Text>
+          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('4%') }}>Chat</Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-1 border border-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}>
-          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>View phone</Text>
+          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('4%') }}>View phone</Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-[1.5] bg-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}>
-          <Text className="text-white font-inter-medium" style={{ fontSize: wp('4%') }}>Contact Seller</Text>
+          <Text className="text-white font-medium" style={{ fontSize: wp('4%') }}>Contact Seller</Text>
         </TouchableOpacity>
       </View>
       {/* Configuration Image Lightbox Modal */}
@@ -665,7 +665,7 @@ const ProjectDetails = () => {
             />
           )}
           
-          <Text className="text-white/60 font-inter-regular text-xs mt-4">
+          <Text className="text-white/60 font-normal text-xs mt-4">
             Tap outside or click close to dismiss
           </Text>
         </View>

@@ -34,14 +34,14 @@ const TestimonialCardPG = ({ name, subtitle, comment, image }) => {
         <View style={{ gap: 4 }}>
           <Text
             className="text-[16px] leading-[24px] text-[#101828]"
-            style={{ fontFamily: 'Inter-SemiBold' }}
+            style={{ fontWeight: '600' }}
             numberOfLines={1}
           >
             {name}
           </Text>
           <Text
             className="text-[13px] leading-[16px] text-[#9CA3AF]"
-            style={{ fontFamily: 'Inter-Regular' }}
+            style={{ fontWeight: '400' }}
             numberOfLines={1}
           >
             {subtitle}
@@ -52,7 +52,7 @@ const TestimonialCardPG = ({ name, subtitle, comment, image }) => {
       {/* Testimonial Text */}
       <Text
         className="text-[14px] leading-[23px] text-[#4A5565] mt-4"
-        style={{ fontFamily: 'Inter-Regular' }}
+        style={{ fontWeight: '400' }}
         numberOfLines={7}
       >
         {comment}

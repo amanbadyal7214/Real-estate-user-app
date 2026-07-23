@@ -39,7 +39,7 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
         
         <View style={{ paddingHorizontal: wp('3.2%'), paddingTop: hp('1%'), paddingBottom: hp('1.5%'), gap: hp('0.5%') }}>
           <Text 
-            className="font-inter-bold text-[#101828]" 
+            className="font-bold text-[#101828]" 
             style={{ fontSize: wp('3.6%'), lineHeight: hp('2.5%') }}
             numberOfLines={1}
           >
@@ -52,14 +52,14 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
               style={{ width: wp('5.6%'), height: wp('5.6%'), borderRadius: wp('2.8%') }}
             >
               <Text 
-                className="font-inter-bold text-white text-center" 
+                className="font-bold text-white text-center" 
                 style={{ fontSize: wp('2.2%'), lineHeight: hp('1.5%') }}
               >
                 {marketerInitial}
               </Text>
             </View>
             <Text 
-              className="font-inter-regular text-[#6A7282]" 
+              className="font-normal text-[#6A7282]" 
               style={{ fontSize: wp('2.8%'), lineHeight: hp('2%'), flex: 1 }}
               numberOfLines={1}
             >
@@ -68,7 +68,7 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
           </View>
 
           <Text 
-            className="font-inter-regular text-[#4A5565]" 
+            className="font-normal text-[#4A5565]" 
             style={{ fontSize: wp('2.8%'), lineHeight: hp('2%') }}
             numberOfLines={1}
           >
@@ -76,7 +76,7 @@ const BetterPricedPropertyCard = ({ id, image, title, marketer, details, priceRa
           </Text>
 
           <Text 
-            className="font-inter-bold text-[#101828]" 
+            className="font-bold text-[#101828]" 
             style={{ fontSize: wp('3.4%'), lineHeight: hp('2.3%') }}
             numberOfLines={1}
           >

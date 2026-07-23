@@ -12,7 +12,7 @@ const ProjectDisclaimerCard = () => {
         elevation: 2 
       }}
     >
-      <Text className="font-inter-regular text-[#6A7282] text-[12px] leading-[20px]">
+      <Text className="font-normal text-[#6A7282] text-[12px] leading-[20px]">
         Housing.com is only acting as a marketing partner for this project and is not 
         responsible for any delays, functional issues, or quality concerns. All information 
         provided is for reference only and should be verified independently before 
@@ -20,7 +20,7 @@ const ProjectDisclaimerCard = () => {
       </Text>
 
       <TouchableOpacity>
-        <Text className="font-inter-medium text-[#101828] text-[14px] underline">Read disclaimer</Text>
+        <Text className="font-medium text-[#101828] text-[14px] underline">Read disclaimer</Text>
       </TouchableOpacity>
     </View>
   );

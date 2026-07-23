@@ -88,7 +88,7 @@ const InsightPropertyCard = ({
         {isRera && (
           <View className="absolute bg-[#008E96] flex-row items-center" style={{ left: wp('1.8%'), top: hp('0.8%'), borderRadius: wp('1.8%'), paddingVertical: hp('0.4%'), paddingHorizontal: wp('1.8%'), gap: wp('0.8%') }}>
             <Check size={wp('2.7%')} color="#FFFFFF" strokeWidth={3} />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.5%'), lineHeight: hp('1.8%') }} className="text-white">RERA</Text>
+            <Text style={{ fontWeight: '500', fontSize: wp('2.5%'), lineHeight: hp('1.8%') }} className="text-white">RERA</Text>
           </View>
         )}
         <TouchableOpacity 
@@ -106,22 +106,22 @@ const InsightPropertyCard = ({
       </View>
 
       <View style={{ marginTop: hp('0.5%') }}>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%'), lineHeight: hp('1.9%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: wp('2.7%'), lineHeight: hp('1.9%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
           {possession}
         </Text>
-        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.6%'), lineHeight: hp('2.5%'), marginBottom: hp('0.2%') }} className="text-[#101828]" numberOfLines={1}>
+        <Text style={{ fontWeight: '600', fontSize: wp('3.6%'), lineHeight: hp('2.5%'), marginBottom: hp('0.2%') }} className="text-[#101828]" numberOfLines={1}>
           {title}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
           {location}
         </Text>
-        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.4%'), lineHeight: hp('2.3%'), marginBottom: hp('0.2%') }} className="text-[#101828]">
+        <Text style={{ fontWeight: '600', fontSize: wp('3.4%'), lineHeight: hp('2.3%'), marginBottom: hp('0.2%') }} className="text-[#101828]">
           {price}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.2%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.2%') }} className="text-[#6A7282]">
           {bhk}
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.8%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.8%') }} className="text-[#6A7282]">
           {area}
         </Text>
 
@@ -136,7 +136,7 @@ const InsightPropertyCard = ({
             className="flex-1 bg-[#008E96]/10 items-center justify-center"
             style={{ height: hp('4.2%'), borderRadius: wp('3.2%') }}
           >
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#008E96] text-center">
+            <Text style={{ fontWeight: '500', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#008E96] text-center">
               View Phone
             </Text>
           </TouchableOpacity>
@@ -163,7 +163,7 @@ const InsightPropertyCard = ({
             elevation: 5,
           }}
         >
-          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: wp('2.7%'), textAlign: 'center' }}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: wp('2.7%'), textAlign: 'center' }}>
             {toast}
           </Text>
         </View>

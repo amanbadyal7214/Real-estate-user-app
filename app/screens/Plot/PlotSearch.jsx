@@ -71,7 +71,7 @@ const PlotSearch = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Header */}
       <View className="flex-row items-center px-4 py-3 justify-between">
         <View className="flex-row items-center gap-3">
@@ -81,14 +81,14 @@ const PlotSearch = () => {
           >
             <ArrowLeft size={20} color="#101828" />
           </TouchableOpacity>
-          <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[18px] text-[#101828]">Plot</Text>
+          <Text style={{ fontWeight: '700' }} className="text-[18px] text-[#101828]">Plot</Text>
         </View>
 
         <View 
           className="flex-row items-center bg-gray-50/50 px-3 py-1.5 rounded-xl border border-gray-100 gap-1.5"
         >
           <MapPin size={14} color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#4A5565]">
+          <Text style={{ fontWeight: '500' }} className="text-[14px] text-[#4A5565]">
             {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
@@ -104,7 +104,7 @@ const PlotSearch = () => {
               <TextInput 
                 placeholder="Enter City"
                 placeholderTextColor="#6A7282"
-                style={{ fontFamily: 'Inter-Medium' }}
+                style={{ fontWeight: '500' }}
                 className="flex-1 ml-3 text-[14px] text-[#101828]"
                 value={city}
                 onChangeText={setCity}
@@ -118,7 +118,7 @@ const PlotSearch = () => {
                 <TextInput 
                   placeholder="Enter Locality"
                   placeholderTextColor="#6A7282"
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  style={{ fontWeight: '500' }}
                   className="flex-1 ml-3 text-[14px] text-[#101828]"
                   value={locality}
                   onChangeText={(text) => {
@@ -142,7 +142,7 @@ const PlotSearch = () => {
                         className="px-4 py-3 border-b border-gray-50 flex-row items-center gap-2"
                       >
                         <MapPin size={14} color="#667085" />
-                        <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#101828]">
+                        <Text style={{ fontWeight: '500' }} className="text-[14px] text-[#101828]">
                           {item.name}
                         </Text>
                       </TouchableOpacity>
@@ -159,7 +159,7 @@ const PlotSearch = () => {
             >
               <View className="flex-row items-center gap-2">
                 <Search size={18} color="white" />
-                <Text style={{ fontFamily: 'Inter-Bold' }} className="text-white text-[15px]">Search Plots</Text>
+                <Text style={{ fontWeight: '700' }} className="text-white text-[15px]">Search Plots</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -169,7 +169,7 @@ const PlotSearch = () => {
         <View className="mx-4 mt-4 p-4 rounded-3xl bg-[#EDFBFA]">
           <View className="flex-row items-center gap-2 mb-3">
             <TrendingUp size={16} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Popular Localities</Text>
+            <Text style={{ fontWeight: '500' }} className="text-[16px] text-[#101828]">Popular Localities</Text>
           </View>
           
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
@@ -184,8 +184,8 @@ const PlotSearch = () => {
                 onPress={() => handleLocalitySelect(locality.name)}
                 className="w-[140px] p-3 mr-3 bg-[#F7F9FA] border border-[#E4E7EC] rounded-2xl shadow-sm"
               >
-                <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[15px] text-[#101828] mb-1">{locality.name}</Text>
-                <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#6A7282]">{locality.price}</Text>
+                <Text style={{ fontWeight: '500' }} className="text-[15px] text-[#101828] mb-1">{locality.name}</Text>
+                <Text style={{ fontWeight: '400' }} className="text-[13px] text-[#6A7282]">{locality.price}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -195,7 +195,7 @@ const PlotSearch = () => {
         <View className="mt-6">
           <View className="flex-row items-center px-4 gap-2 mb-4">
             <MapPin size={16} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Popular Landmarks</Text>
+            <Text style={{ fontWeight: '500' }} className="text-[16px] text-[#101828]">Popular Landmarks</Text>
           </View>
           
           <View className="flex-row flex-wrap px-4 gap-2">
@@ -209,7 +209,7 @@ const PlotSearch = () => {
                 className="flex-row items-center px-4 py-2.5 bg-white border border-[#E4E7EC] rounded-full gap-2"
               >
                 <MapPin size={14} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[13px] text-[#4A5565]">{landmark}</Text>
+                <Text style={{ fontWeight: '500' }} className="text-[13px] text-[#4A5565]">{landmark}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -219,7 +219,7 @@ const PlotSearch = () => {
         <View className="mt-8 mb-6">
           <View className="flex-row items-center px-4 gap-2 mb-4">
             <LayoutGrid size={16} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[16px] text-[#101828]">Trending Projects</Text>
+            <Text style={{ fontWeight: '500' }} className="text-[16px] text-[#101828]">Trending Projects</Text>
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row px-4">
@@ -239,9 +239,9 @@ const PlotSearch = () => {
                   />
                 </View>
                 <View className="p-3">
-                  <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[14px] text-[#101828]">{project.name}</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[12px] text-[#6A7282] mt-0.5">{project.area}</Text>
-                  <Text style={{ fontFamily: 'Inter-Bold' }} className="text-[13px] text-[#008E96] mt-2">{project.price}</Text>
+                  <Text style={{ fontWeight: '500' }} className="text-[14px] text-[#101828]">{project.name}</Text>
+                  <Text style={{ fontWeight: '400' }} className="text-[12px] text-[#6A7282] mt-0.5">{project.area}</Text>
+                  <Text style={{ fontWeight: '700' }} className="text-[13px] text-[#008E96] mt-2">{project.price}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -257,7 +257,7 @@ const PlotSearch = () => {
             <View className="w-9 h-9 bg-white items-center justify-center rounded-full border border-gray-100">
                <ArrowLeft size={16} color="#008E96" style={{ transform: [{ rotate: '180deg'}] }} />
             </View>
-            <Text style={{ fontFamily: 'Inter-Medium' }} className="text-[15px] text-[#101828]">Explore nearby plots</Text>
+            <Text style={{ fontWeight: '500' }} className="text-[15px] text-[#101828]">Explore nearby plots</Text>
           </View>
           <ChevronRight size={20} color="#008E96" />
         </TouchableOpacity>

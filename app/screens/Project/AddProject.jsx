@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
@@ -11,7 +12,6 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
@@ -73,7 +73,7 @@ const EMPTY_FORM = {
 // ─── Helper Components ────────────────────────────────────────────────────────
 
 const SectionLabel = ({ children, required }) => (
-  <Text style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: wp('3.5%'), marginBottom: hp('0.7%') }}>
+  <Text style={{ fontWeight: '600', color: '#374151', fontSize: wp('3.5%'), marginBottom: hp('0.7%') }}>
     {children}
     {required ? <Text style={{ color: '#EF4444' }}> *</Text> : null}
   </Text>
@@ -119,7 +119,7 @@ const StyledInput = ({
       numberOfLines={numberOfLines}
       style={{
         flex: 1,
-        fontFamily: 'Inter-Regular',
+        fontWeight: '400',
         fontSize: wp('3.7%'),
         color: '#111827',
         minHeight: multiline ? hp('11%') : hp('6%'),
@@ -234,7 +234,7 @@ const DateInput = ({ placeholder, value, onPress, icon }) => (
     <Text
       style={{
         flex: 1,
-        fontFamily: 'Inter-Regular',
+        fontWeight: '400',
         fontSize: wp('3.7%'),
         color: value ? '#111827' : '#9CA3AF',
       }}
@@ -257,7 +257,7 @@ const SelectModal = ({ visible, onClose, title, options = [], onSelect }) => {
       <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
         <View style={{ backgroundColor: '#FFFFFF', borderTopLeftRadius: wp('6.4%'), borderTopRightRadius: wp('6.4%'), height: '60%', padding: wp('5.3%') }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: hp('2%') }}>
-            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%'), color: '#111827' }}>{title}</Text>
+            <Text style={{ fontWeight: '700', fontSize: wp('4.3%'), color: '#111827' }}>{title}</Text>
             <TouchableOpacity onPress={onClose}>
               <MaterialIcons name="close" size={wp('6.4%')} color="#6B7280" />
             </TouchableOpacity>
@@ -272,7 +272,7 @@ const SelectModal = ({ visible, onClose, title, options = [], onSelect }) => {
               borderColor: '#E5E7EB',
               borderRadius: wp('2.7%'),
               paddingHorizontal: wp('3.2%'),
-              fontFamily: 'Inter-Regular',
+              fontWeight: '400',
               fontSize: wp('3.7%'),
               marginBottom: hp('2%'),
               backgroundColor: '#F9FAFB',
@@ -296,11 +296,11 @@ const SelectModal = ({ visible, onClose, title, options = [], onSelect }) => {
                   borderBottomColor: '#F3F4F6',
                 }}
               >
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), color: '#374151' }}>{opt.label}</Text>
+                <Text style={{ fontWeight: '500', fontSize: wp('3.7%'), color: '#374151' }}>{opt.label}</Text>
               </TouchableOpacity>
             ))}
             {filteredOptions.length === 0 && (
-              <Text style={{ textAlign: 'center', color: '#9CA3AF', marginTop: hp('2.5%'), fontFamily: 'Inter-Regular' }}>No results found</Text>
+              <Text style={{ textAlign: 'center', color: '#9CA3AF', marginTop: hp('2.5%'), fontWeight: '400' }}>No results found</Text>
             )}
           </ScrollView>
         </View>
@@ -339,7 +339,7 @@ const SectionCard = ({ title, icon, children }) => (
       >
         <MaterialIcons name={icon} size={wp('4.8%')} color="#008E96" />
       </View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%'), color: '#111827' }}>{title}</Text>
+      <Text style={{ fontWeight: '700', fontSize: wp('4%'), color: '#111827' }}>{title}</Text>
     </View>
     {children}
   </View>
@@ -587,7 +587,7 @@ const AddProject = () => {
               marginTop: hp('1.2%'),
             }}
           >
-            <Text style={{ fontFamily: 'Inter-SemiBold', color: '#FFFFFF', fontSize: wp('3.7%') }}>Done</Text>
+            <Text style={{ fontWeight: '600', color: '#FFFFFF', fontSize: wp('3.7%') }}>Done</Text>
           </TouchableOpacity>
         </View>
       );
@@ -820,10 +820,10 @@ const AddProject = () => {
   // ─── Step 1: Project Details ─────────────────────────────────────────────────
   const renderStep1 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
+      <Text style={{ fontWeight: '700', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Create New Project
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
+      <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Enter the project name, possession status, and description below.
       </Text>
 
@@ -840,7 +840,7 @@ const AddProject = () => {
         {lookupLoading && !(apiPossessionStatus && apiPossessionStatus.length > 0) ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: wp('2.1%'), marginBottom: hp('1.7%') }}>
             <ActivityIndicator size="small" color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#9CA3AF' }}>Loading...</Text>
+            <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), color: '#9CA3AF' }}>Loading...</Text>
           </View>
         ) : (
           <ChipSelector
@@ -892,16 +892,16 @@ const AddProject = () => {
   // ─── Step 2: Schedule & Approvals + Area & Pricing ──────────────────────────
   const renderStep2 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
+      <Text style={{ fontWeight: '700', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Schedule & Area
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
+      <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Timeline, legal approvals, and space metrics.
       </Text>
 
       {/* Schedule & Approvals */}
       <SectionCard title="Schedule & Approvals" icon="event-note">
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6B7280', marginBottom: hp('1.7%') }}>
+        <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#6B7280', marginBottom: hp('1.7%') }}>
           Timeline and legal approvals.
         </Text>
 
@@ -926,7 +926,7 @@ const AddProject = () => {
 
       {/* Area & Pricing */}
       <SectionCard title="Area & Pricing" icon="straighten">
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6B7280', marginBottom: hp('1.7%') }}>
+        <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#6B7280', marginBottom: hp('1.7%') }}>
           Space metrics and price rates.
         </Text>
 
@@ -978,10 +978,10 @@ const AddProject = () => {
   // ─── Step 3: Location Details ────────────────────────────────────────────────
   const renderStep3 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
+      <Text style={{ fontWeight: '700', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Location Details
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
+      <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Exact address and locality information.
       </Text>
 
@@ -1032,10 +1032,10 @@ const AddProject = () => {
   // ─── Step 4: Project Media ────────────────────────────────────────────────────
   const renderStep4 = () => (
     <View>
-      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
+      <Text style={{ fontWeight: '700', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
         Project Media
       </Text>
-      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
+      <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
         Upload images, brochures, or documents.
       </Text>
 
@@ -1069,10 +1069,10 @@ const AddProject = () => {
           >
             <MaterialIcons name="cloud-upload" size={wp('6.9%')} color="#008E96" />
           </View>
-          <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%'), color: '#008E96' }}>
+          <Text style={{ fontWeight: '600', fontSize: wp('3.7%'), color: '#008E96' }}>
             Tap to Upload Images
           </Text>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#9CA3AF' }}>
+          <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#9CA3AF' }}>
             JPG, PNG • Multiple selection supported
           </Text>
         </TouchableOpacity>
@@ -1080,7 +1080,7 @@ const AddProject = () => {
         {/* Selected images list with labels */}
         {form.media.length > 0 && (
           <View style={{ marginBottom: hp('1.2%') }}>
-            <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%'), color: '#374151', marginBottom: hp('1.2%') }}>
+            <Text style={{ fontWeight: '600', fontSize: wp('3.5%'), color: '#374151', marginBottom: hp('1.2%') }}>
               Selected ({form.media.length})
             </Text>
             {form.media.map((item) => (
@@ -1105,7 +1105,7 @@ const AddProject = () => {
                 />
                 
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%'), color: '#374151' }} numberOfLines={1}>
+                  <Text style={{ fontWeight: '600', fontSize: wp('3.5%'), color: '#374151' }} numberOfLines={1}>
                     {item.name}
                   </Text>
                   {/* Label input field */}
@@ -1120,7 +1120,7 @@ const AddProject = () => {
                       borderColor: '#D1D5DB',
                       borderRadius: wp('2.1%'),
                       paddingHorizontal: wp('2.7%'),
-                      fontFamily: 'Inter-Regular',
+                      fontWeight: '400',
                       fontSize: wp('3.2%'),
                       marginTop: hp('0.7%'),
                       backgroundColor: '#FFFFFF',
@@ -1162,9 +1162,9 @@ const AddProject = () => {
           }}
         >
           <MaterialIcons name="info" size={wp('4.3%')} color="#3B82F6" style={{ marginTop: hp('0.12%') }} />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#1E40AF', flex: 1, lineHeight: hp('2.2%') }}>
+          <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#1E40AF', flex: 1, lineHeight: hp('2.2%') }}>
             Projects with high-quality images receive{' '}
-            <Text style={{ fontFamily: 'Inter-Bold' }}>2× more enquiries.</Text>{' '}
+            <Text style={{ fontWeight: '700' }}>2× more enquiries.</Text>{' '}
             Brochures and floor plans also help buyers decide faster.
           </Text>
         </View>
@@ -1187,11 +1187,11 @@ const AddProject = () => {
           gap: wp('2.1%'),
         }}
       >
-        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%'), color: '#6B7280', flex: 1 }}>
+        <Text style={{ fontWeight: '500', fontSize: wp('3.5%'), color: '#6B7280', flex: 1 }}>
           {label}
         </Text>
         <Text
-          style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%'), color: '#111827', flex: 2, textAlign: 'right' }}
+          style={{ fontWeight: '600', fontSize: wp('3.5%'), color: '#111827', flex: 2, textAlign: 'right' }}
           numberOfLines={3}
         >
           {value}
@@ -1268,10 +1268,10 @@ const AddProject = () => {
 
     return (
       <View>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
+        <Text style={{ fontWeight: '700', fontSize: wp('5.3%'), color: '#111827', marginBottom: hp('0.5%') }}>
           Review & Submit
         </Text>
-        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
+        <Text style={{ fontWeight: '400', fontSize: wp('3.5%'), color: '#6B7280', marginBottom: hp('2.5%') }}>
           Double-check your project details before publishing.
         </Text>
 
@@ -1305,14 +1305,14 @@ const AddProject = () => {
               >
                 <MaterialIcons name={section.icon} size={wp('4.3%')} color="#008E96" />
               </View>
-              <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), color: '#374151' }}>
+              <Text style={{ fontWeight: '700', fontSize: wp('3.7%'), color: '#374151' }}>
                 {section.title}
               </Text>
               <TouchableOpacity
                 onPress={() => { setCurrentStep(section.step); scrollToTop(); }}
                 style={{ marginLeft: 'auto' }}
               >
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), color: '#008E96' }}>Edit</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.2%'), color: '#008E96' }}>Edit</Text>
               </TouchableOpacity>
             </View>
             {section.rows.map((row) => (
@@ -1335,7 +1335,7 @@ const AddProject = () => {
           }}
         >
           <MaterialIcons name="warning" size={wp('4.8%')} color="#D97706" style={{ marginTop: hp('0.12%') }} />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#92400E', flex: 1, lineHeight: hp('2.2%') }}>
+          <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#92400E', flex: 1, lineHeight: hp('2.2%') }}>
             Once submitted, your project will be reviewed by our team before appearing in search results.
           </Text>
         </View>
@@ -1382,10 +1382,10 @@ const AddProject = () => {
           <Ionicons name="arrow-back" size={wp('5.3%')} color="white" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%'), color: 'white' }}>
+          <Text style={{ fontWeight: '700', fontSize: wp('4.8%'), color: 'white' }}>
             {editProjectId ? 'Edit Project' : 'Add New Project'}
           </Text>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: 'rgba(255,255,255,0.75)', marginTop: hp('0.12%') }}>
+          <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: 'rgba(255,255,255,0.75)', marginTop: hp('0.12%') }}>
             Step {currentStep} of {STEPS.length} — {STEPS[currentStep - 1].title}
           </Text>
         </View>
@@ -1397,7 +1397,7 @@ const AddProject = () => {
             borderRadius: wp('5.3%'),
           }}
         >
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), color: 'white' }}>
+          <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), color: 'white' }}>
             {currentStep}/{STEPS.length}
           </Text>
         </View>
@@ -1496,7 +1496,7 @@ const AddProject = () => {
               }}
             >
               <Ionicons name="arrow-back" size={wp('4.3%')} color="#6B7280" />
-              <Text style={{ fontFamily: 'Inter-SemiBold', color: '#6B7280', fontSize: wp('3.7%') }}>Back</Text>
+              <Text style={{ fontWeight: '600', color: '#6B7280', fontSize: wp('3.7%') }}>Back</Text>
             </TouchableOpacity>
           )}
 
@@ -1520,7 +1520,7 @@ const AddProject = () => {
                 elevation: canProceed() ? 4 : 0,
               }}
             >
-              <Text style={{ fontFamily: 'Inter-Bold', color: canProceed() ? 'white' : '#9CA3AF', fontSize: wp('4%') }}>
+              <Text style={{ fontWeight: '700', color: canProceed() ? 'white' : '#9CA3AF', fontSize: wp('4%') }}>
                 Continue
               </Text>
               <Ionicons name="arrow-forward" size={wp('4.3%')} color={canProceed() ? 'white' : '#9CA3AF'} />
@@ -1550,7 +1550,7 @@ const AddProject = () => {
               ) : (
                 <>
                   <MaterialIcons name="rocket-launch" size={wp('4.8%')} color="white" />
-                  <Text style={{ fontFamily: 'Inter-Bold', color: 'white', fontSize: wp('4%') }}>
+                  <Text style={{ fontWeight: '700', color: 'white', fontSize: wp('4%') }}>
                     {editProjectId ? 'Update Project' : 'Publish Project'}
                   </Text>
                 </>

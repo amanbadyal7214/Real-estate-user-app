@@ -143,7 +143,7 @@ const CommercialSearch = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Header */}
       <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('1.2%') }}>
         <View className="flex-row items-center" style={{ gap: wp('2.5%') }}>
@@ -154,7 +154,7 @@ const CommercialSearch = () => {
           >
             <ArrowLeft size={wp('4.5%')} color="#101828" />
           </TouchableOpacity>
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828]">Commercial</Text>
+          <Text style={{ fontWeight: '700', fontSize: wp('4%') }} className="text-[#101828]">Commercial</Text>
         </View>
 
         <View
@@ -162,7 +162,7 @@ const CommercialSearch = () => {
           style={{ paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.5%'), borderRadius: wp('2.7%'), gap: wp('1.6%') }}
         >
           <MapPin size={wp('3.2%')} color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-[#4A5565]">
+          <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-[#4A5565]">
             {currentLocation?.city || 'Mohali'}
           </Text>
         </View>
@@ -178,7 +178,7 @@ const CommercialSearch = () => {
               <TextInput
                 placeholder="Enter City"
                 placeholderTextColor="#6A7282"
-                style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
+                style={{ fontWeight: '500', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
                 className="flex-1 text-[#101828]"
                 value={city}
                 onChangeText={setCity}
@@ -192,7 +192,7 @@ const CommercialSearch = () => {
                 <TextInput
                   placeholder="Enter Locality"
                   placeholderTextColor="#6A7282"
-                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
+                  style={{ fontWeight: '500', fontSize: wp('3.2%'), marginLeft: wp('2.5%') }}
                   className="flex-1 text-[#101828]"
                   value={locality}
                   onChangeText={(text) => {
@@ -217,7 +217,7 @@ const CommercialSearch = () => {
                         style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('1.1%'), gap: wp('1.8%') }}
                       >
                         <MapPin size={wp('3.2%')} color="#667085" />
-                        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-[#101828]">
+                        <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-[#101828]">
                           {item.name}
                         </Text>
                       </TouchableOpacity>
@@ -235,7 +235,7 @@ const CommercialSearch = () => {
             >
               <View className="flex-row items-center" style={{ gap: wp('1.8%') }}>
                 <Search size={wp('4%')} color="white" />
-                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.4%') }} className="text-white">Search Properties</Text>
+                <Text style={{ fontWeight: '700', fontSize: wp('3.4%') }} className="text-white">Search Properties</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -245,7 +245,7 @@ const CommercialSearch = () => {
         <View className="bg-[#EDFBFA]" style={{ marginHorizontal: wp('3.5%'), marginTop: hp('1.5%'), padding: wp('3.5%'), borderRadius: wp('4.8%') }}>
           <View className="flex-row items-center" style={{ gap: wp('1.8%'), marginBottom: hp('1%') }}>
             <TrendingUp size={wp('3.7%')} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">Popular Localities</Text>
+            <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-[#101828]">Popular Localities</Text>
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
@@ -261,8 +261,8 @@ const CommercialSearch = () => {
                 className="bg-[#F7F9FA] border border-[#E4E7EC] shadow-sm"
                 style={{ width: wp('32%'), padding: wp('2.8%'), marginRight: wp('2.8%'), borderRadius: wp('3.8%') }}
               >
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.4%'), marginBottom: hp('0.3%') }} className="text-[#101828]" numberOfLines={1}>{loc.name}</Text>
-                <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%') }} className="text-[#6A7282]">{loc.price}</Text>
+                <Text style={{ fontWeight: '500', fontSize: wp('3.4%'), marginBottom: hp('0.3%') }} className="text-[#101828]" numberOfLines={1}>{loc.name}</Text>
+                <Text style={{ fontWeight: '400', fontSize: wp('3%') }} className="text-[#6A7282]">{loc.price}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -272,7 +272,7 @@ const CommercialSearch = () => {
         <View style={{ marginTop: hp('3%'), marginBottom: hp('2.5%') }}>
           <View className="flex-row items-center" style={{ paddingHorizontal: wp('3.5%'), gap: wp('1.8%'), marginBottom: hp('1.5%') }}>
             <LayoutGrid size={wp('3.7%')} color="#008E96" />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#101828]">Trending Projects</Text>
+            <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-[#101828]">Trending Projects</Text>
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row" style={{ paddingHorizontal: wp('3.5%') }}>
@@ -294,9 +294,9 @@ const CommercialSearch = () => {
                   />
                 </View>
                 <View style={{ padding: wp('2.8%') }}>
-                  <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-[#101828]" numberOfLines={1}>{project.name}</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%'), marginTop: hp('0.2%') }} className="text-[#6A7282]" numberOfLines={1}>{project.area}</Text>
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3%'), marginTop: hp('0.8%') }} className="text-[#008E96]" numberOfLines={1}>{project.price}</Text>
+                  <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-[#101828]" numberOfLines={1}>{project.name}</Text>
+                  <Text style={{ fontWeight: '400', fontSize: wp('2.8%'), marginTop: hp('0.2%') }} className="text-[#6A7282]" numberOfLines={1}>{project.area}</Text>
+                  <Text style={{ fontWeight: '700', fontSize: wp('3%'), marginTop: hp('0.8%') }} className="text-[#008E96]" numberOfLines={1}>{project.price}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -313,7 +313,7 @@ const CommercialSearch = () => {
             <View className="bg-white items-center justify-center rounded-full border border-gray-100" style={{ width: wp('8%'), height: wp('8%') }}>
               <ArrowLeft size={wp('3.7%')} color="#008E96" style={{ transform: [{ rotate: '180deg' }] }} />
             </View>
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.4%') }} className="text-[#101828]">Explore nearby properties</Text>
+            <Text style={{ fontWeight: '500', fontSize: wp('3.4%') }} className="text-[#101828]">Explore nearby properties</Text>
           </View>
           <ChevronRight size={wp('4.5%')} color="#008E96" />
         </TouchableOpacity>

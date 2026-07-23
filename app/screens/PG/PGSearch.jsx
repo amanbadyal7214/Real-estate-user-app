@@ -13,7 +13,7 @@ const PGSearch = () => {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="px-4 pt-2">
         <TouchableOpacity 
@@ -24,11 +24,11 @@ const PGSearch = () => {
         </TouchableOpacity>
 
         <View className="mt-4 mb-6">
-          <Text className="font-inter-regular text-[15px] text-[#4A5565] mb-1">
+          <Text className="font-normal text-[15px] text-[#4A5565] mb-1">
             You are looking to Pg in
           </Text>
           <TouchableOpacity className="flex-row items-center gap-2">
-            <Text className="font-inter-bold text-[22px] text-[#101828]">
+            <Text className="font-bold text-[22px] text-[#101828]">
               Select Locality or Landmark in Mohali
             </Text>
             <ChevronDown size={22} color="#101828" />
@@ -43,7 +43,7 @@ const PGSearch = () => {
             <TextInput
               placeholder="Locality, Landmark, Project..."
               placeholderTextColor="#9CA3AF"
-              className="flex-1 font-inter-regular text-[15px] color-[#101828]"
+              className="flex-1 font-normal text-[15px] color-[#101828]"
             />
             <TouchableOpacity className="w-9 h-9 items-center justify-center bg-transparent">
               <Mic size={20} color="#008E96" />
@@ -54,14 +54,14 @@ const PGSearch = () => {
         {/* Current Location CTA */}
         <TouchableOpacity className="flex-row items-center px-4 py-3 gap-2 border-b border-[#E4E7EC]">
           <Target size={20} color="#008E96" />
-          <Text className="font-inter-medium text-[15px] text-[#008E96]">
+          <Text className="font-medium text-[15px] text-[#008E96]">
             Use my current location
           </Text>
         </TouchableOpacity>
 
         {/* Popular Localities Section */}
         <View className="mt-6">
-          <Text className="px-4 font-inter-medium text-[14px] text-[#9CA3AF] mb-1">
+          <Text className="px-4 font-medium text-[14px] text-[#9CA3AF] mb-1">
             Popular Localities
           </Text>
           {popularLocalities.map((item) => (
@@ -70,12 +70,12 @@ const PGSearch = () => {
               onPress={() => router.push('/screens/PG/PG')}
               className="flex-row justify-between items-center px-4 py-4 border-b border-[#E4E7EC]"
             >
-              <Text className="font-inter-medium text-[16px] text-[#101828]">{item.name}</Text>
-              <Text className="font-inter-medium text-[14px] text-[#9CA3AF]">Locality</Text>
+              <Text className="font-medium text-[16px] text-[#101828]">{item.name}</Text>
+              <Text className="font-medium text-[14px] text-[#9CA3AF]">Locality</Text>
             </TouchableOpacity>
           ))}
           <TouchableOpacity className="flex-row items-center justify-end px-4 py-3 gap-1">
-            <Text className="font-inter-medium text-[14px] text-[#008E96]">more</Text>
+            <Text className="font-medium text-[14px] text-[#008E96]">more</Text>
             <ChevronDown size={16} color="#008E96" />
           </TouchableOpacity>
         </View>

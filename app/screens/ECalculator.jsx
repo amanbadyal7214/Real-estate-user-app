@@ -192,7 +192,7 @@ const ECalculator = () => {
               style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1%'), borderRadius: wp('3.7%') }}
             >
               <Ionicons name="home-outline" size={wp('4.3%')} color="white" />
-              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), marginLeft: wp('2.1%') }} className="text-white font-medium">Home Loans</Text>
+              <Text style={{ fontWeight: '500', fontSize: wp('3.7%'), marginLeft: wp('2.1%') }} className="text-white font-medium">Home Loans</Text>
             </TouchableOpacity>
           </View>
 
@@ -206,7 +206,7 @@ const ECalculator = () => {
               
               {/* Main Card */}
               <View className="bg-white shadow-sm border border-gray-100" style={{ borderRadius: wp('4.3%'), padding: wp('4.3%') }}>
-                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%'), marginBottom: hp('3%') }} className="font-semibold text-[#101828]">
+                <Text style={{ fontWeight: '700', fontSize: wp('4.8%'), marginBottom: hp('3%') }} className="font-semibold text-[#101828]">
                   Home Loan Eligibility Calculator
                 </Text>
 
@@ -214,11 +214,11 @@ const ECalculator = () => {
                   {/* Monthly Salary */}
                   <View>
                     <View className="flex-row justify-between items-center" style={{ marginBottom: hp('1.5%') }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828]">Your Monthly Salary (INR)</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('4.3%') }} className="text-[#101828]">Your Monthly Salary (INR)</Text>
                       <View className="bg-white border border-[#E5E7EB] flex-row items-center justify-end" style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.5%'), minWidth: wp('29.3%') }}>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828] mr-1">₹</Text>
+                        <Text style={{ fontWeight: '400', fontSize: wp('4.3%') }} className="text-[#101828] mr-1">₹</Text>
                         <TextInput
-                          style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'right', minWidth: wp('20%') }}
+                          style={{ fontWeight: '400', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'right', minWidth: wp('20%') }}
                           value={salaryInput}
                           onChangeText={handleSalaryText}
                           onBlur={handleSalaryBlur}
@@ -238,18 +238,18 @@ const ECalculator = () => {
                       thumbTintColor="#008E96"
                     />
                     <View className="flex-row justify-between" style={{ marginTop: 0 }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">₹0</Text>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">₹1 Cr</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">₹0</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">₹1 Cr</Text>
                     </View>
                   </View>
 
                   {/* Tenure */}
                   <View>
                     <View className="flex-row justify-between items-center" style={{ marginBottom: hp('1.5%') }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828]">Tenure (Years)</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('4.3%') }} className="text-[#101828]">Tenure (Years)</Text>
                       <View className="bg-white border border-[#E5E7EB] items-center justify-center" style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.5%'), minWidth: wp('12%') }}>
                         <TextInput
-                          style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'center' }}
+                          style={{ fontWeight: '400', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'center' }}
                           value={tenureInput}
                           onChangeText={handleTenureText}
                           onBlur={handleTenureBlur}
@@ -269,24 +269,24 @@ const ECalculator = () => {
                       thumbTintColor="#008E96"
                     />
                     <View className="flex-row justify-between" style={{ marginTop: 0 }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">2 Years</Text>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">30 Years</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">2 Years</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">30 Years</Text>
                     </View>
                   </View>
 
                   {/* Interest Rate */}
                   <View>
                     <View className="flex-row justify-between items-center" style={{ marginBottom: hp('1.5%') }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828]">Interest Rates (%P.A.)</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('4.3%') }} className="text-[#101828]">Interest Rates (%P.A.)</Text>
                       <View className="bg-white border border-[#E5E7EB] flex-row items-center justify-center" style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.5%'), minWidth: wp('16%') }}>
                         <TextInput
-                          style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'center' }}
+                          style={{ fontWeight: '400', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'center' }}
                           value={interestRateInput}
                           onChangeText={handleInterestRateText}
                           onBlur={handleInterestRateBlur}
                           keyboardType="numeric"
                         />
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', marginLeft: 1 }}>%</Text>
+                        <Text style={{ fontWeight: '400', fontSize: wp('4.3%'), color: '#101828', marginLeft: 1 }}>%</Text>
                       </View>
                     </View>
                     <Slider
@@ -301,19 +301,19 @@ const ECalculator = () => {
                       thumbTintColor="#008E96"
                     />
                     <View className="flex-row justify-between" style={{ marginTop: 0 }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">1%</Text>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">30%</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">1%</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">30%</Text>
                     </View>
                   </View>
 
                   {/* Other EMIs */}
                   <View>
                     <View className="flex-row justify-between items-center" style={{ marginBottom: hp('1.5%') }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828]">Other monthly EMI's (INR)</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('4.3%') }} className="text-[#101828]">Other monthly EMI's (INR)</Text>
                       <View className="bg-white border border-[#E5E7EB] flex-row items-center justify-end" style={{ borderRadius: wp('2.7%'), paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.5%'), minWidth: wp('29.3%') }}>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }} className="text-[#101828] mr-1">₹</Text>
+                        <Text style={{ fontWeight: '400', fontSize: wp('4.3%') }} className="text-[#101828] mr-1">₹</Text>
                         <TextInput
-                          style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'right', minWidth: wp('20%') }}
+                          style={{ fontWeight: '400', fontSize: wp('4.3%'), color: '#101828', padding: 0, textAlign: 'right', minWidth: wp('20%') }}
                           value={otherEmiInput}
                           onChangeText={handleOtherEmiText}
                           onBlur={handleOtherEmiBlur}
@@ -333,8 +333,8 @@ const ECalculator = () => {
                       thumbTintColor="#008E96"
                     />
                     <View className="flex-row justify-between" style={{ marginTop: 0 }}>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">₹0</Text>
-                      <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-500">₹1 Cr</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">₹0</Text>
+                      <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-500">₹1 Cr</Text>
                     </View>
                   </View>
 
@@ -344,38 +344,38 @@ const ECalculator = () => {
                     className="bg-[#008E96] w-full items-center justify-center"
                     style={{ height: hp('6.4%'), borderRadius: wp('3.7%'), marginTop: hp('1%') }}
                   >
-                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.3%') }} className="text-white font-semibold">Calculate Eligibility</Text>
+                    <Text style={{ fontWeight: '700', fontSize: wp('4.3%') }} className="text-white font-semibold">Calculate Eligibility</Text>
                   </TouchableOpacity>
 
                   {showEligibilityResult && eligibilityResult && (
                     <View style={{ marginTop: hp('2%'), borderRadius: wp('3.2%'), padding: wp('3.2%') }} className="border border-[#E5E7EB] bg-[#F9FAFB]">
                       <View className="flex-row items-center justify-between" style={{ marginBottom: hp('1%') }}>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">Eligible Loan Amount</Text>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#008E96]">
+                        <Text style={{ fontWeight: '400', fontSize: wp('3.7%') }} className="text-[#4A5565]">Eligible Loan Amount</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#008E96]">
                           {formatCurrency(eligibilityResult.eligibleLoanAmount)}
                         </Text>
                       </View>
                       <View className="flex-row items-center justify-between" style={{ marginBottom: hp('1%') }}>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">Available EMI Capacity</Text>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">
+                        <Text style={{ fontWeight: '400', fontSize: wp('3.7%') }} className="text-[#4A5565]">Available EMI Capacity</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">
                           {formatCurrency(eligibilityResult.availableEmiCapacity)}
                         </Text>
                       </View>
                       <View className="flex-row items-center justify-between" style={{ marginBottom: hp('1%') }}>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">Estimated Property Budget</Text>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">
+                        <Text style={{ fontWeight: '400', fontSize: wp('3.7%') }} className="text-[#4A5565]">Estimated Property Budget</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">
                           {formatCurrency(eligibilityResult.estimatedPropertyCost)}
                         </Text>
                       </View>
                       <View className="flex-row items-center justify-between" style={{ marginBottom: hp('1%') }}>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">Estimated Down Payment</Text>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">
+                        <Text style={{ fontWeight: '400', fontSize: wp('3.7%') }} className="text-[#4A5565]">Estimated Down Payment</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">
                           {formatCurrency(eligibilityResult.estimatedDownPayment)}
                         </Text>
                       </View>
                       <View className="flex-row items-center justify-between">
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%') }} className="text-[#4A5565]">FOIR Used</Text>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">
+                        <Text style={{ fontWeight: '400', fontSize: wp('3.7%') }} className="text-[#4A5565]">FOIR Used</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">
                           {`${Math.round((eligibilityResult.foir || 0) * 100)}%`}
                         </Text>
                       </View>
@@ -397,15 +397,15 @@ const ECalculator = () => {
                 </View>
                 
                 <View className="z-10">
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('6.4%'), marginBottom: hp('1%') }} className="font-bold text-white">Home Loans</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.3%'), marginBottom: hp('3%'), maxWidth: wp('53.3%') }} className="text-white/90">
+                  <Text style={{ fontWeight: '700', fontSize: wp('6.4%'), marginBottom: hp('1%') }} className="font-bold text-white">Home Loans</Text>
+                  <Text style={{ fontWeight: '400', fontSize: wp('3.7%'), lineHeight: wp('5.3%'), marginBottom: hp('3%'), maxWidth: wp('53.3%') }} className="text-white/90">
                     One place to compare offers from all the best bank
                   </Text>
                   <TouchableOpacity
                     className="bg-[#1CB2A9] self-start"
                     style={{ paddingHorizontal: wp('6.4%'), paddingVertical: hp('1.5%'), borderRadius: wp('3.7%') }}
                   >
-                    <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-white font-semibold">Explore Home Loan</Text>
+                    <Text style={{ fontWeight: '500', fontSize: wp('4.3%') }} className="text-white font-semibold">Explore Home Loan</Text>
                   </TouchableOpacity>
                 </View>
               </LinearGradient>
@@ -417,14 +417,14 @@ const ECalculator = () => {
                   className="flex-row justify-between items-center"
                   style={{ marginBottom: showInfo ? hp('1.5%') : 0 }}
                 >
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%') }} className="font-semibold text-[#101828] flex-1">
+                  <Text style={{ fontWeight: '700', fontSize: wp('4.8%') }} className="font-semibold text-[#101828] flex-1">
                     What is Home Loan Eligibility?
                   </Text>
                   <Ionicons name={showInfo ? "chevron-up" : "chevron-down"} size={wp('5.3%')} color="#008E96" />
                 </TouchableOpacity>
                 
                 {showInfo && (
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%') }} className="text-[#4A5565]">
+                  <Text style={{ fontWeight: '400', fontSize: wp('3.7%'), lineHeight: wp('5.9%') }} className="text-[#4A5565]">
                     Home loan eligibility is defined as a set of criteria based on which a financial institution assesses the creditworthiness of a customer to understand their capacity of repaying the loan. It depends on various factors such as age, income, existing debts, and the property&apos;s value.
                   </Text>
                 )}

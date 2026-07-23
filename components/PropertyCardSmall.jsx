@@ -105,16 +105,16 @@ const PropertyCardSmall = ({
       </View>
 
       <View className="px-2.5 pb-2.5 pt-2">
-        <Text className="font-inter-semibold text-[14px] leading-5 text-[#101828]">
+        <Text className="font-semibold text-[14px] leading-5 text-[#101828]">
           {price}
         </Text>
-        <Text className="mt-0.5 font-inter-medium text-[13px] leading-[17px] text-[#101828]" numberOfLines={1}>
+        <Text className="mt-0.5 font-medium text-[13px] leading-[17px] text-[#101828]" numberOfLines={1}>
           {title}
         </Text>
-        <Text className="mt-0.5 font-inter-medium text-[11px] leading-[18px] text-[#6A7282]">
+        <Text className="mt-0.5 font-medium text-[11px] leading-[18px] text-[#6A7282]">
           {area}
         </Text>
-        <Text className="font-inter-medium text-[11px] leading-[18px] text-[#6A7282]" numberOfLines={1}>
+        <Text className="font-medium text-[11px] leading-[18px] text-[#6A7282]" numberOfLines={1}>
           {location}
         </Text>
       </View>
@@ -135,7 +135,7 @@ const PropertyCardSmall = ({
             zIndex: 999,
           }}
         >
-          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: 11, textAlign: 'center' }}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 11, textAlign: 'center' }}>
             {toast}
           </Text>
         </View>

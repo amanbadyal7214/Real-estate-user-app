@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as ImagePicker from 'expo-image-picker';
@@ -9,7 +10,6 @@ import {
   Alert,
   Image,
   Modal,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
@@ -20,7 +20,7 @@ import api from '../../api';
 
 // Custom Label Component
 const SectionLabel = ({ children, required }) => (
-  <Text style={{ fontFamily: 'Inter-SemiBold', color: '#374151', fontSize: wp('3.5%'), marginBottom: hp('0.7%') }}>
+  <Text style={{ fontWeight: '600', color: '#374151', fontSize: wp('3.5%'), marginBottom: hp('0.7%') }}>
     {children}
     {required ? <Text style={{ color: '#EF4444' }}> *</Text> : null}
   </Text>
@@ -50,7 +50,7 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
           }`}
       >
         <Text
-          style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%') }}
+          style={{ fontWeight: '400', fontSize: wp('3.5%') }}
           className={`${selectedOption ? 'text-[#101828]' : 'text-gray-400'}`}
         >
           {selectedOption ? selectedOption.label : placeholder}
@@ -72,7 +72,7 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
           />
           <View style={{ padding: wp('5%'), paddingBottom: hp('3%'), borderTopLeftRadius: wp('7%'), borderTopRightRadius: wp('7%'), height: '60%' }} className="bg-white shadow-2xl">
             <View style={{ marginBottom: hp('1.8%') }} className="flex-row justify-between items-center">
-              <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828]">
+              <Text style={{ fontWeight: '700', fontSize: wp('4%') }} className="text-[#101828]">
                 Select {label || 'Option'}
               </Text>
               <TouchableOpacity onPress={() => setModalVisible(false)} style={{ padding: wp('1%') }}>
@@ -87,7 +87,7 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
                 placeholderTextColor="#9CA3AF"
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%'), marginLeft: wp('2%') }}
+                style={{ fontWeight: '400', fontSize: wp('3.5%'), marginLeft: wp('2%') }}
                 className="flex-1 text-[#101828] h-full"
               />
             </View>
@@ -117,7 +117,7 @@ const CustomPicker = ({ label, placeholder, value, options, onSelect, disabled }
                 ))
               ) : (
                 <View className="py-10 items-center justify-center">
-                  <Text style={{ fontFamily: 'Inter-Medium' }} className="text-gray-400">
+                  <Text style={{ fontWeight: '500' }} className="text-gray-400">
                     No options found
                   </Text>
                 </View>
@@ -582,18 +582,18 @@ export default function PropertySummary() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F9FAFB]">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }}>
       {/* Header bar */}
       <LinearGradient colors={['#006B73', '#008E96']} style={{ paddingHorizontal: wp('4%'), paddingTop: hp('5%'), paddingBottom: hp('2.5%'), borderBottomLeftRadius: wp('7%'), borderBottomRightRadius: wp('7%') }} className="shadow-sm">
         <View style={{ gap: wp('3%') }} className="flex-row items-center">
           <TouchableOpacity onPress={() => router.back()} style={{ padding: wp('1%') }}>
             <Ionicons name="arrow-back" size={wp('6%')} color="white" />
           </TouchableOpacity>
-          <View className="flex-1">
-            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%'), lineHeight: wp('6%') }} className="text-white">
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontWeight: '700', fontSize: wp('4.8%'), lineHeight: wp('6%') }} className="text-white">
               Property Specifications
             </Text>
-            <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-white/85">
+            <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-white/85">
               Project: {projectName || 'N/A'}
             </Text>
           </View>
@@ -631,7 +631,7 @@ export default function PropertySummary() {
       {loadingMetadata ? (
         <View style={{ paddingVertical: hp('8%') }} className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Medium', marginTop: hp('1.8%'), fontSize: wp('3.5%') }} className="text-gray-500">
+          <Text style={{ fontWeight: '500', marginTop: hp('1.8%'), fontSize: wp('3.5%') }} className="text-gray-500">
             Loading summaries context data...
           </Text>
         </View>
@@ -646,7 +646,7 @@ export default function PropertySummary() {
             <View>
               {/* Category selections */}
               <View style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('1.8%') }} className="bg-white border border-gray-100 shadow-sm">
-                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), marginBottom: hp('1.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
+                <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), marginBottom: hp('1.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
                   Category Selections
                 </Text>
 
@@ -672,25 +672,25 @@ export default function PropertySummary() {
 
                 {isGroupTower && (
                   <View style={{ gap: wp('3%'), paddingTop: hp('0.8%'), marginTop: hp('0.8%') }} className="flex-row border-t border-gray-50">
-                    <View className="flex-1">
+                    <View style={{ flex: 1 }}>
                       <SectionLabel required>Total Towers</SectionLabel>
                       <TextInput
                         placeholder="e.g. 5"
                         keyboardType="numeric"
                         value={totalTowers}
                         onChangeText={setTotalTowers}
-                        style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                        style={{ fontWeight: '400', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
                         className="border border-gray-200 bg-white text-[#101828]"
                       />
                     </View>
-                    <View className="flex-1">
+                    <View style={{ flex: 1 }}>
                       <SectionLabel required>Floors Per Tower</SectionLabel>
                       <TextInput
                         placeholder="e.g. 12"
                         keyboardType="numeric"
                         value={floorsPerTower}
                         onChangeText={setFloorsPerTower}
-                        style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                        style={{ fontWeight: '400', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
                         className="border border-gray-200 bg-white text-[#101828]"
                       />
                     </View>
@@ -701,7 +701,7 @@ export default function PropertySummary() {
               {/* Dynamic rows */}
               <View style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('1.8%') }} className="bg-white border border-gray-100 shadow-sm">
                 <View style={{ paddingBottom: hp('1.2%'), marginBottom: hp('1.8%') }} className="flex-row justify-between items-center border-b border-gray-100">
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
+                  <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
                     Inventory Specification Lines
                   </Text>
                   <TouchableOpacity
@@ -710,7 +710,7 @@ export default function PropertySummary() {
                     className="flex-row items-center bg-[#E6F7F6] border border-[#008E96]/20"
                   >
                     <Ionicons name="add" size={wp('3.5%')} color="#008E96" />
-                    <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginLeft: wp('1%') }} className="text-[#008E96]">
+                    <Text style={{ fontWeight: '600', fontSize: wp('3.2%'), marginLeft: wp('1%') }} className="text-[#008E96]">
                       Add Row
                     </Text>
                   </TouchableOpacity>
@@ -719,12 +719,12 @@ export default function PropertySummary() {
                 {rows.map((row, index) => (
                   <View key={row.id} style={{ paddingBottom: index === rows.length - 1 ? 0 : hp('2.5%'), marginBottom: index === rows.length - 1 ? 0 : hp('2.5%') }} className={`border-b border-gray-100 ${index === rows.length - 1 ? 'border-b-0' : ''}`}>
                     <View style={{ marginBottom: hp('1.2%') }} className="flex-row justify-between items-center">
-                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%'), borderRadius: wp('1.5%') }} className="text-gray-500 bg-gray-100">
+                      <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%'), borderRadius: wp('1.5%') }} className="text-gray-500 bg-gray-100">
                         Specification #{index + 1}
                       </Text>
                       {rows.length > 1 && (
                         <TouchableOpacity onPress={() => handleRemoveRow(row.id)}>
-                          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-red-500">
+                          <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-red-500">
                             Remove Line
                           </Text>
                         </TouchableOpacity>
@@ -743,14 +743,14 @@ export default function PropertySummary() {
                     )}
 
                     <View style={{ gap: wp('3%'), marginBottom: hp('1.2%') }} className="flex-row">
-                      <View className="flex-1">
+                      <View style={{ flex: 1 }}>
                         <SectionLabel required>Area</SectionLabel>
                         <TextInput
                           placeholder="e.g. 1200"
                           keyboardType="numeric"
                           value={row.area}
                           onChangeText={val => handleRowChange(row.id, 'area', val)}
-                          style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                          style={{ fontWeight: '400', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
                           className="border border-gray-200 bg-white text-[#101828]"
                         />
                       </View>
@@ -774,11 +774,11 @@ export default function PropertySummary() {
                             keyboardType="numeric"
                             value={row.structureValue}
                             onChangeText={val => handleRowChange(row.id, 'structureValue', val)}
-                            style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                            style={{ fontWeight: '400', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
                             className="border border-gray-200 bg-white text-[#101828]"
                           />
                         </View>
-                        <View className="flex-1">
+                        <View style={{ flex: 1 }}>
                           <CustomPicker
                             label="Structure Type *"
                             placeholder="Select Type"
@@ -791,21 +791,21 @@ export default function PropertySummary() {
                     )}
 
                     <View style={{ gap: wp('3%'), marginBottom: hp('1.2%') }} className="flex-row">
-                      <View className="flex-1">
+                      <View style={{ flex: 1 }}>
                         <SectionLabel required>Quantity (Units)</SectionLabel>
                         <TextInput
                           placeholder="e.g. 1"
                           keyboardType="numeric"
                           value={row.quantity}
                           onChangeText={val => handleRowChange(row.id, 'quantity', val)}
-                          style={{ fontFamily: 'Inter-Regular', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
+                          style={{ fontWeight: '400', height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%'), fontSize: wp('3.5%') }}
                           className="border border-gray-200 bg-white text-[#101828]"
                         />
                       </View>
-                      <View className="flex-1">
+                      <View style={{ flex: 1 }}>
                         <SectionLabel>Price (₹)</SectionLabel>
                         <View style={{ height: hp('6%'), borderRadius: wp('3%'), paddingHorizontal: wp('3%') }} className="flex-row items-center border border-gray-200 bg-white">
-                          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.5%'), marginRight: wp('1.5%') }} className="text-gray-500">
+                          <Text style={{ fontWeight: '500', fontSize: wp('3.5%'), marginRight: wp('1.5%') }} className="text-gray-500">
                             ₹
                           </Text>
                           <TextInput
@@ -813,7 +813,7 @@ export default function PropertySummary() {
                             keyboardType="numeric"
                             value={row.price}
                             onChangeText={val => handleRowChange(row.id, 'price', val)}
-                            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.5%') }}
+                            style={{ fontWeight: '400', fontSize: wp('3.5%') }}
                             className="flex-1 text-[#101828] h-full"
                           />
                         </View>
@@ -829,7 +829,7 @@ export default function PropertySummary() {
                         className="border border-dashed border-gray-300 bg-gray-50 flex-row items-center justify-center"
                       >
                         <Ionicons name="camera-outline" size={wp('4%')} color="#008E96" />
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%') }} className="text-[#008E96]">
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.2%') }} className="text-[#008E96]">
                           Choose Photos
                         </Text>
                       </TouchableOpacity>
@@ -858,7 +858,7 @@ export default function PropertySummary() {
               {/* Amenities block */}
               {fetchedAmenities.length > 0 && (
                 <View style={{ borderRadius: wp('4%'), padding: wp('4%'), marginBottom: hp('2.5%') }} className="bg-white border border-gray-100 shadow-sm">
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), marginBottom: hp('1.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
+                  <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), marginBottom: hp('1.2%'), letterSpacing: 1 }} className="text-[#008E96] uppercase">
                     Include Category Amenities
                   </Text>
                   <View style={{ gap: wp('2%') }} className="flex-row flex-wrap">
@@ -895,7 +895,7 @@ export default function PropertySummary() {
                   className="flex-1 bg-[#008E96] items-center justify-center shadow-md shadow-[#008E96]/20 flex-row"
                 >
                   {submitting && <ActivityIndicator size="small" color="white" />}
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%') }} className="text-white">
+                  <Text style={{ fontWeight: '600', fontSize: wp('3.5%') }} className="text-white">
                     Submit Setup
                   </Text>
                 </TouchableOpacity>
@@ -904,7 +904,7 @@ export default function PropertySummary() {
                   style={{ width: wp('28%'), height: hp('6%'), borderRadius: wp('3%') }}
                   className="bg-gray-200 items-center justify-center"
                 >
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.5%') }} className="text-gray-700">
+                  <Text style={{ fontWeight: '600', fontSize: wp('3.5%') }} className="text-gray-700">
                     Clear
                   </Text>
                 </TouchableOpacity>
@@ -918,10 +918,10 @@ export default function PropertySummary() {
                   <View style={{ width: wp('16%'), height: wp('16%'), marginBottom: hp('1.8%') }} className="rounded-full bg-[#E6F7F6] items-center justify-center">
                     <MaterialCommunityIcons name="home-city" size={wp('8%')} color="#008E96" />
                   </View>
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828] text-center">
+                  <Text style={{ fontWeight: '700', fontSize: wp('4%') }} className="text-[#101828] text-center">
                     No specifications added yet
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), marginTop: hp('0.8%') }} className="text-gray-500 text-center">
+                  <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), marginTop: hp('0.8%') }} className="text-gray-500 text-center">
                     Add configurations, sizes, prices, and photos for the property types inside this project.
                   </Text>
                   <TouchableOpacity
@@ -929,7 +929,7 @@ export default function PropertySummary() {
                     style={{ marginTop: hp('2.5%'), paddingHorizontal: wp('5%'), paddingVertical: hp('1.5%'), borderRadius: wp('3%') }}
                     className="bg-[#008E96] shadow-md"
                   >
-                    <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), letterSpacing: 1 }} className="text-white uppercase">
+                    <Text style={{ fontWeight: '600', fontSize: wp('3.2%'), letterSpacing: 1 }} className="text-white uppercase">
                       Add First Setup
                     </Text>
                   </TouchableOpacity>
@@ -970,11 +970,11 @@ export default function PropertySummary() {
                       >
                         <View style={{ gap: wp('2%') }} className="flex-row items-center">
                           <Ionicons name="business" size={wp('4%')} color="#008E96" />
-                          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%'), maxWidth: wp('50%') }} className="text-[#101828]" numberOfLines={1}>
+                          <Text style={{ fontWeight: '700', fontSize: wp('3.5%'), maxWidth: wp('50%') }} className="text-[#101828]" numberOfLines={1}>
                             {pt.details?.label || pt.details?.name || 'Property Group'}
                           </Text>
                           <View style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%') }} className="bg-[#E6F7F6] border border-[#008E96]/20 rounded-full">
-                            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }} className="text-[#008E96]">
+                            <Text style={{ fontWeight: '700', fontSize: wp('2.7%') }} className="text-[#008E96]">
                               {ptTotalUnits} Units
                             </Text>
                           </View>
@@ -1018,7 +1018,7 @@ export default function PropertySummary() {
                                   </Text>
                                   <View style={{ paddingHorizontal: wp('1.5%'), paddingVertical: hp('0.25%') }} className={`rounded-full ${isActive ? 'bg-white/20' : 'bg-gray-100'}`}>
                                     <Text
-                                      style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.4%') }}
+                                      style={{ fontWeight: '700', fontSize: wp('2.4%') }}
                                       className={`${isActive ? 'text-white' : 'text-gray-600'}`}
                                     >
                                       {subTotalUnits}
@@ -1032,7 +1032,7 @@ export default function PropertySummary() {
                           {/* Specification Items list */}
                           {activeSummaries.length === 0 ? (
                             <View style={{ paddingVertical: hp('2.5%') }} className="items-center">
-                              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-gray-400">
+                              <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-gray-400">
                                 Select a sub-category tab above to view specification rows.
                               </Text>
                             </View>
@@ -1052,20 +1052,20 @@ export default function PropertySummary() {
                                         <View style={{ marginBottom: hp('0.8%') }} className="flex-row justify-between items-start">
                                           <View style={{ gap: wp('1.5%') }} className="flex-row items-center">
                                             <View style={{ width: wp('5%'), height: wp('5%') }} className="rounded-full bg-gray-200 items-center justify-center">
-                                              <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }} className="text-gray-600">
+                                              <Text style={{ fontWeight: '700', fontSize: wp('2.7%') }} className="text-gray-600">
                                                 {rIdx + 1}
                                               </Text>
                                             </View>
-                                            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%') }} className="text-[#101828]">
+                                            <Text style={{ fontWeight: '700', fontSize: wp('3.5%') }} className="text-[#101828]">
                                               {structText || row.propertyItem?.label || row.propertyItem?.name || 'Specification'}
                                             </Text>
                                             {structText && row.propertyItem && (
-                                              <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-gray-400">
+                                              <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-gray-400">
                                                 ({row.propertyItem?.label})
                                               </Text>
                                             )}
                                           </View>
-                                          <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%') }} className="text-[#008E96]">
+                                          <Text style={{ fontWeight: '700', fontSize: wp('3.5%') }} className="text-[#008E96]">
                                             {row.price ? `₹${row.price.toLocaleString('en-IN')}` : 'Price on Request'}
                                           </Text>
                                         </View>
@@ -1074,13 +1074,13 @@ export default function PropertySummary() {
                                           <View style={{ gap: wp('4%') }} className="flex-row items-center">
                                             <View style={{ gap: wp('1%') }} className="flex-row items-center">
                                               <Ionicons name="expand-outline" size={wp('3.5%')} color="#6B7280" />
-                                              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-gray-500">
+                                              <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-gray-500">
                                                 {row.area} {row.areaUnit?.label || 'Sq. Ft.'}
                                               </Text>
                                             </View>
                                             <View style={{ gap: wp('1%') }} className="flex-row items-center">
                                               <Ionicons name="grid-outline" size={wp('3.5%')} color="#6B7280" />
-                                              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-gray-500">
+                                              <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-gray-500">
                                                 {row.quantity} Units
                                               </Text>
                                             </View>
@@ -1108,7 +1108,7 @@ export default function PropertySummary() {
                                   {/* Summary group amenities */}
                                   {summaryGroup.amenities && summaryGroup.amenities.length > 0 && (
                                     <View style={{ padding: wp('3%'), borderRadius: wp('3%'), marginBottom: hp('1.2%') }} className="bg-teal-50/40 border border-teal-100/50">
-                                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%'), marginBottom: hp('0.7%'), letterSpacing: 1.5 }} className="text-teal-800 uppercase">
+                                      <Text style={{ fontWeight: '700', fontSize: wp('2.7%'), marginBottom: hp('0.7%'), letterSpacing: 1.5 }} className="text-teal-800 uppercase">
                                         Included Amenities
                                       </Text>
                                       <View style={{ gap: wp('1.5%') }} className="flex-row flex-wrap">
@@ -1118,7 +1118,7 @@ export default function PropertySummary() {
                                             style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%'), borderRadius: wp('1%') }}
                                             className="bg-white border border-teal-100 shadow-sm"
                                           >
-                                            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%') }} className="text-teal-700">
+                                            <Text style={{ fontWeight: '500', fontSize: wp('2.7%') }} className="text-teal-700">
                                               {am.label || am.name || 'Amenity'}
                                             </Text>
                                           </View>
@@ -1130,10 +1130,10 @@ export default function PropertySummary() {
                                   {/* Delete specification row group card */}
                                   <View style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }} className="flex-row justify-between items-center bg-gray-50 border border-gray-100">
                                     <View style={{ gap: wp('1.5%') }} className="flex-row items-center">
-                                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%') }} className="text-gray-700">
+                                      <Text style={{ fontWeight: '700', fontSize: wp('3.2%') }} className="text-gray-700">
                                         Group Total:
                                       </Text>
-                                      <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%') }} className="text-[#101828]">
+                                      <Text style={{ fontWeight: '700', fontSize: wp('3.2%') }} className="text-[#101828]">
                                         {totalQty} Units
                                       </Text>
                                     </View>
@@ -1143,7 +1143,7 @@ export default function PropertySummary() {
                                       className="flex-row items-center bg-red-50 border border-red-100"
                                     >
                                       <Ionicons name="trash-outline" size={wp('3.5%')} color="#EF4444" />
-                                      <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginLeft: wp('1%') }} className="text-[#EF4444]">
+                                      <Text style={{ fontWeight: '600', fontSize: wp('3.2%'), marginLeft: wp('1%') }} className="text-[#EF4444]">
                                         Delete Group
                                       </Text>
                                     </TouchableOpacity>

@@ -20,15 +20,15 @@ const UniqueAmenityCard = ({ image, title, properties, onPress }) => {
                     className="flex-1 justify-end p-4 pb-5"
                 >
                     <View className="gap-1">
-                        <Text className="font-inter-semibold text-[22px] text-white leading-[30px]">
+                        <Text className="font-semibold text-[22px] text-white leading-[30px]">
                             {title}
                         </Text>
-                        <Text className="font-inter-regular text-[14px] text-white/90 leading-[21px]">
+                        <Text className="font-normal text-[14px] text-white/90 leading-[21px]">
                             {properties} Properties
                         </Text>
 
                         <View className="flex-row items-center mt-2 gap-1">
-                            <Text className="font-inter-medium text-[15px] text-white underline leading-[22px]">
+                            <Text className="font-medium text-[15px] text-white underline leading-[22px]">
                                 View all
                             </Text>
                             <MaterialCommunityIcons name="chevron-right" size={18} color="white" />

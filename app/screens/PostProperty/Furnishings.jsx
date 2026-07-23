@@ -4,9 +4,9 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5, Entypo, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -74,7 +74,7 @@ const FurnishingScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
       <StatusBar barStyle="light-content" backgroundColor="#008E96" />
       
       {/* Header */}
@@ -82,14 +82,14 @@ const FurnishingScreen = () => {
         <TouchableOpacity onPress={() => router.back()} style={{ marginRight: wp('4.3%') }}>
           <Ionicons name="arrow-back" size={wp('6.4%')} color="white" />
         </TouchableOpacity>
-        <Text className="text-white font-semibold" style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('5.3%') }}>
+        <Text className="text-white font-semibold" style={{ fontWeight: '600', fontSize: wp('5.3%') }}>
           Add Furnishings and Amenities
         </Text>
       </View>
 
-      <ScrollView className="flex-1" style={{ paddingHorizontal: wp('4.3%'), paddingTop: hp('3%') }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1, paddingHorizontal: wp('4.3%'), paddingTop: hp('3%') }} showsVerticalScrollIndicator={false}>
         {/* Society Amenities Section */}
-        <Text className="text-[#6A7282] font-medium" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.8%'), marginTop: hp('3%'), marginBottom: hp('2%') }}>
+        <Text className="text-[#6A7282] font-medium" style={{ fontWeight: '500', fontSize: wp('4.8%'), marginTop: hp('3%'), marginBottom: hp('2%') }}>
           Society Amenities
         </Text>
 
@@ -106,7 +106,7 @@ const FurnishingScreen = () => {
               {renderIcon(item)}
               <Text 
                 className={`text-center leading-tight ${selectedItems.includes(item.name) ? 'text-[#008E96]' : 'text-[#364153]'}`}
-                style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%'), marginTop: hp('1%') }}
+                style={{ fontWeight: '500', fontSize: wp('2.7%'), marginTop: hp('1%') }}
                 numberOfLines={2}
               >
                 {item.name}
@@ -118,7 +118,7 @@ const FurnishingScreen = () => {
           {counterAmenities.map((item, index) => (
             <View key={`counter-${index}`} className="aspect-square border-2 border-[#E5E7EB] bg-white items-center justify-between" style={{ width: wp('31%'), marginBottom: hp('2%'), borderRadius: wp('4.3%'), paddingVertical: hp('1%'), paddingHorizontal: wp('1%') }}>
               <MaterialIcons name={item.icon} size={wp('7.5%')} color="#6A7282" />
-              <Text className="text-[#364153] font-medium text-center" style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%') }} numberOfLines={1}>
+              <Text className="text-[#364153] font-medium text-center" style={{ fontWeight: '500', fontSize: wp('2.7%') }} numberOfLines={1}>
                 {item.name}
               </Text>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
@@ -137,7 +137,7 @@ const FurnishingScreen = () => {
           {!counterAmenities.some(a => a.name === 'Lifts') && (
             <View className="aspect-square border-2 border-[#E5E7EB] bg-white items-center justify-between" style={{ width: wp('31%'), marginBottom: hp('2%'), borderRadius: wp('4.3%'), paddingVertical: hp('1%') }}>
               <MaterialIcons name="elevator" size={wp('7.5%')} color="#6A7282" />
-              <Text className="text-[#364153] font-medium text-center" style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%') }}>
+              <Text className="text-[#364153] font-medium text-center" style={{ fontWeight: '500', fontSize: wp('2.7%') }}>
                 Number of Lifts
               </Text>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
@@ -163,7 +163,7 @@ const FurnishingScreen = () => {
           className="bg-[#008E96] items-center"
           style={{ paddingVertical: hp('2%'), borderRadius: wp('3.2%') }}
         >
-          <Text className="text-white font-bold" style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%') }}>Save & Continue</Text>
+          <Text className="text-white font-bold" style={{ fontWeight: '700', fontSize: wp('4.8%') }}>Save & Continue</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

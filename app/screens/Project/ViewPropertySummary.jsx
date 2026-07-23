@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -7,7 +8,6 @@ import {
     Alert,
     Image,
     Modal,
-    SafeAreaView,
     ScrollView,
     Text,
     TouchableOpacity,
@@ -102,18 +102,18 @@ export default function ViewPropertySummary() {
     );
 
     return (
-        <SafeAreaView className="flex-1 bg-[#F9FAFB]">
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }}>
             {/* Header bar */}
             <LinearGradient colors={['#006B73', '#008E96']} style={{ paddingHorizontal: wp('4%'), paddingTop: hp('5%'), paddingBottom: hp('2.8%'), borderBottomLeftRadius: wp('7%'), borderBottomRightRadius: wp('7%') }} className="shadow-sm">
                 <View style={{ gap: wp('3%') }} className="flex-row items-center">
                     <TouchableOpacity onPress={() => router.back()} style={{ padding: wp('1%') }}>
                         <Ionicons name="arrow-back" size={wp('6%')} color="white" />
                     </TouchableOpacity>
-                    <View className="flex-1">
-                        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.8%'), lineHeight: wp('6%') }} className="text-white">
+                    <View style={{ flex: 1 }}>
+                        <Text style={{ fontWeight: '700', fontSize: wp('4.8%'), lineHeight: wp('6%') }} className="text-white">
                             View Property Summary
                         </Text>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }} className="text-white/85">
+                        <Text style={{ fontWeight: '400', fontSize: wp('3.2%') }} className="text-white/85">
                             Project: {projectName || 'N/A'}
                         </Text>
                     </View>
@@ -123,7 +123,7 @@ export default function ViewPropertySummary() {
             {loading ? (
                 <View style={{ paddingVertical: hp('8%') }} className="flex-1 items-center justify-center">
                     <ActivityIndicator size="large" color="#008E96" />
-                    <Text style={{ fontFamily: 'Inter-Medium', marginTop: hp('1.8%'), fontSize: wp('3.5%') }} className="text-gray-500">
+                    <Text style={{ fontWeight: '500', marginTop: hp('1.8%'), fontSize: wp('3.5%') }} className="text-gray-500">
                         Loading summaries...
                     </Text>
                 </View>
@@ -138,10 +138,10 @@ export default function ViewPropertySummary() {
                             <View style={{ width: wp('16%'), height: wp('16%'), marginBottom: hp('1.8%') }} className="rounded-full bg-[#E6F7F6] items-center justify-center">
                                 <MaterialCommunityIcons name="home-city" size={wp('8%')} color="#008E96" />
                             </View>
-                            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%') }} className="text-[#101828] text-center">
+                            <Text style={{ fontWeight: '700', fontSize: wp('4%') }} className="text-[#101828] text-center">
                                 No summaries found
                             </Text>
-                            <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), marginTop: hp('0.8%') }} className="text-gray-500 text-center">
+                            <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), marginTop: hp('0.8%') }} className="text-gray-500 text-center">
                                 There are no property summaries added for this project yet.
                             </Text>
                         </View>
@@ -181,11 +181,11 @@ export default function ViewPropertySummary() {
                                             <View style={{ width: wp('5%'), height: wp('5%') }} className="rounded-full bg-white/20 items-center justify-center">
                                                 <Ionicons name="checkmark" size={wp('3%')} color="white" />
                                             </View>
-                                            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4%'), maxWidth: wp('50%') }} className="text-white" numberOfLines={1}>
+                                            <Text style={{ fontWeight: '700', fontSize: wp('4%'), maxWidth: wp('50%') }} className="text-white" numberOfLines={1}>
                                                 {pt.details?.label || pt.details?.name || 'Property Group'}
                                             </Text>
                                             <View style={{ paddingHorizontal: wp('2.5%'), paddingVertical: hp('0.3%'), marginLeft: wp('2%') }} className="bg-white/20 rounded-full">
-                                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%') }} className="text-white">
+                                                <Text style={{ fontWeight: '700', fontSize: wp('2.9%') }} className="text-white">
                                                     {ptTotalUnits} Units
                                                 </Text>
                                             </View>
@@ -228,7 +228,7 @@ export default function ViewPropertySummary() {
                                                             </Text>
                                                             <View style={{ paddingHorizontal: wp('1.5%'), paddingVertical: hp('0.25%'), borderRadius: wp('1.5%') }} className={`${isActive ? 'bg-white/20' : 'bg-gray-100'}`}>
                                                                 <Text
-                                                                    style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }}
+                                                                    style={{ fontWeight: '700', fontSize: wp('2.7%') }}
                                                                     className={`${isActive ? 'text-white' : 'text-gray-600'}`}
                                                                 >
                                                                     {subTotalUnits}
@@ -242,7 +242,7 @@ export default function ViewPropertySummary() {
                                             {/* Specification Items Table */}
                                             {activeSummaries.length === 0 ? (
                                                 <View style={{ paddingVertical: hp('2.5%') }} className="items-center">
-                                                    <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }} className="text-gray-400">
+                                                    <Text style={{ fontWeight: '500', fontSize: wp('3.2%') }} className="text-gray-400">
                                                         Select a sub-category tab above to view specification rows.
                                                     </Text>
                                                 </View>
@@ -254,11 +254,11 @@ export default function ViewPropertySummary() {
                                                         <View key={summaryGroup._id} style={{ marginBottom: hp('2.5%'), borderRadius: wp('3%') }} className="overflow-hidden border border-gray-200 bg-white shadow-sm">
                                                             {/* Table Header */}
                                                             <View style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%') }} className="bg-[#1F3E4D] flex-row items-center">
-                                                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%'), width: wp('8%') }} className="text-white">S/N</Text>
-                                                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%') }} className="text-white flex-1">DETAILS</Text>
-                                                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%'), width: wp('17%') }} className="text-white">PRICE</Text>
-                                                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%'), width: wp('10%') }} className="text-white text-center">UNITS</Text>
-                                                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%'), width: wp('19%'), marginLeft: wp('2%') }} className="text-white text-center">ACTION</Text>
+                                                                <Text style={{ fontWeight: '700', fontSize: wp('2.9%'), width: wp('8%') }} className="text-white">S/N</Text>
+                                                                <Text style={{ fontWeight: '700', fontSize: wp('2.9%') }} className="text-white flex-1">DETAILS</Text>
+                                                                <Text style={{ fontWeight: '700', fontSize: wp('2.9%'), width: wp('17%') }} className="text-white">PRICE</Text>
+                                                                <Text style={{ fontWeight: '700', fontSize: wp('2.9%'), width: wp('10%') }} className="text-white text-center">UNITS</Text>
+                                                                <Text style={{ fontWeight: '700', fontSize: wp('2.9%'), width: wp('19%'), marginLeft: wp('2%') }} className="text-white text-center">ACTION</Text>
                                                             </View>
 
                                                             {/* Table Rows */}
@@ -270,16 +270,16 @@ export default function ViewPropertySummary() {
                                                                 return (
                                                                     <View key={row._id || rIdx} style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%') }} className="flex-row items-center border-b border-gray-100 bg-white">
                                                                         {/* S/N */}
-                                                                        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), width: wp('8%') }} className="text-[#4B5563]">
+                                                                        <Text style={{ fontWeight: '500', fontSize: wp('3.2%'), width: wp('8%') }} className="text-[#4B5563]">
                                                                             {rIdx + 1}
                                                                         </Text>
 
                                                                         {/* DETAILS */}
                                                                         <View style={{ paddingRight: wp('1%') }} className="flex-1">
-                                                                            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%') }} className="text-[#101828]">
+                                                                            <Text style={{ fontWeight: '700', fontSize: wp('3.5%') }} className="text-[#101828]">
                                                                                 {structText || row.propertyItem?.label || row.propertyItem?.name || 'Specification'}
                                                                             </Text>
-                                                                            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%'), marginTop: hp('0.25%') }} className="text-gray-500">
+                                                                            <Text style={{ fontWeight: '500', fontSize: wp('2.7%'), marginTop: hp('0.25%') }} className="text-gray-500">
                                                                                 {row.propertyItem?.label || 'Item'} • {row.area} {row.areaUnit?.label || 'Sq.Ft'}
                                                                             </Text>
 
@@ -301,12 +301,12 @@ export default function ViewPropertySummary() {
                                                                         </View>
 
                                                                         {/* PRICE */}
-                                                                        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.9%'), width: wp('17%') }} className="text-[#101828]" numberOfLines={1}>
+                                                                        <Text style={{ fontWeight: '700', fontSize: wp('2.9%'), width: wp('17%') }} className="text-[#101828]" numberOfLines={1}>
                                                                             {row.price ? `₹${row.price.toLocaleString('en-IN')}` : 'N/A'}
                                                                         </Text>
 
                                                                         {/* UNITS */}
-                                                                        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.2%'), width: wp('10%') }} className="text-[#101828] text-center">
+                                                                        <Text style={{ fontWeight: '700', fontSize: wp('3.2%'), width: wp('10%') }} className="text-[#101828] text-center">
                                                                             {row.quantity}
                                                                         </Text>
 
@@ -335,7 +335,7 @@ export default function ViewPropertySummary() {
                                                             {/* Included Amenities (if any) */}
                                                             {summaryGroup.amenities && summaryGroup.amenities.length > 0 && (
                                                                 <View style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%') }} className="bg-gray-50 border-b border-gray-100 flex-row items-center flex-wrap">
-                                                                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%'), marginRight: wp('2%'), letterSpacing: 1.5 }} className="text-gray-500 uppercase">
+                                                                    <Text style={{ fontWeight: '700', fontSize: wp('2.7%'), marginRight: wp('2%'), letterSpacing: 1.5 }} className="text-gray-500 uppercase">
                                                                         Amenities:
                                                                     </Text>
                                                                     <View style={{ gap: wp('1.5%') }} className="flex-row flex-wrap">
@@ -345,7 +345,7 @@ export default function ViewPropertySummary() {
                                                                                 style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.3%'), borderRadius: wp('1%') }}
                                                                                 className="bg-white border border-gray-200 shadow-sm"
                                                                             >
-                                                                                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.7%') }} className="text-gray-600">
+                                                                                <Text style={{ fontWeight: '500', fontSize: wp('2.7%') }} className="text-gray-600">
                                                                                     {am.label || am.name || 'Amenity'}
                                                                                 </Text>
                                                                             </View>
@@ -356,11 +356,11 @@ export default function ViewPropertySummary() {
 
                                                             {/* Grand Total Footer */}
                                                             <View style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%') }} className="bg-[#4D98A4] flex-row justify-between items-center">
-                                                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%') }} className="text-white">
+                                                                <Text style={{ fontWeight: '700', fontSize: wp('3.7%') }} className="text-white">
                                                                     Grand Total:
                                                                 </Text>
                                                                 <View style={{ gap: wp('4%') }} className="flex-row items-center">
-                                                                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%') }} className="text-white">
+                                                                    <Text style={{ fontWeight: '700', fontSize: wp('3.7%') }} className="text-white">
                                                                         {totalQty} Units
                                                                     </Text>
                                                                     <TouchableOpacity

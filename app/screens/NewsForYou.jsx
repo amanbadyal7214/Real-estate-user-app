@@ -1,7 +1,8 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Dimensions, Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Platform, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -209,18 +210,18 @@ const NewsForYou = () => {
             style={{ height: hp('20%') }}
           />
           <View style={{ padding: wp('4%') }}>
-            <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('5%') }}>
+            <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('5%') }}>
               Commercial Real Estate Trends 2025
             </Text>
-            <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.5%'), lineHeight: wp('5.5%'), marginTop: hp('1%') }}>
+            <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.5%'), lineHeight: wp('5.5%'), marginTop: hp('1%') }}>
               Explore the latest market trends and investment opportunities in commercial properties.
             </Text>
             <View className="flex-row items-center" style={{ marginTop: hp('1.5%'), gap: wp('3%') }}>
-              <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3%') }}>Apr 14, 2026</Text>
-              <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3%') }}>•</Text>
+              <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3%') }}>Apr 14, 2026</Text>
+              <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3%') }}>•</Text>
               <View className="flex-row items-center" style={{ gap: wp('1%') }}>
                 <Feather name="clock" size={wp('3%')} color="#6A7282" />
-                <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3%') }}>5 min read</Text>
+                <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3%') }}>5 min read</Text>
               </View>
             </View>
           </View>
@@ -236,7 +237,7 @@ const NewsForYou = () => {
                   onPress={() => setActiveTab(tab)}
                   style={{ paddingBottom: hp('1%') }}
                 >
-                  <Text className={`font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>
+                  <Text className={`font-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>
                     {tab}
                   </Text>
                   {activeTab === tab && (
@@ -250,7 +251,7 @@ const NewsForYou = () => {
 
         {/* Section Title moved to Static area */}
         <View style={{ paddingHorizontal: wp('4%'), marginTop: hp('1.5%') }}>
-          <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('5%'), lineHeight: wp('7.5%') }}>News for you</Text>
+          <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5%'), lineHeight: wp('7.5%') }}>News for you</Text>
         </View>
       </View>
 
@@ -265,14 +266,14 @@ const NewsForYou = () => {
                 style={{ width: wp('18%'), height: wp('18%'), borderRadius: wp('3%') }}
               />
               <View className="flex-1" style={{ marginLeft: wp('3%') }}>
-                <Text className="text-[#101828] font-inter-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('5.5%') }} numberOfLines={2}>
+                <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('5.5%') }} numberOfLines={2}>
                   {item.title}
                 </Text>
-                <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.3%'), lineHeight: wp('4.5%'), marginTop: hp('0.5%') }} numberOfLines={2}>
+                <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.3%'), lineHeight: wp('4.5%'), marginTop: hp('0.5%') }} numberOfLines={2}>
                   {item.description}
                 </Text>
                 <View className="flex-row justify-between items-center" style={{ marginTop: hp('1%') }}>
-                  <Text className="text-[#98A2B3] font-inter-regular" style={{ fontSize: wp('3%') }}>
+                  <Text className="text-[#98A2B3] font-normal" style={{ fontSize: wp('3%') }}>
                     {item.category} • {item.date}
                   </Text>
                   <TouchableOpacity className="rounded-full bg-[#F2F4F7] items-center justify-center" style={{ width: wp('8%'), height: wp('8%') }}>

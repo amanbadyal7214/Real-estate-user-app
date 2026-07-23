@@ -26,11 +26,11 @@ const CalculatorCard = ({ titlePrefix, description, vectorsConfig = [], onPress 
       }}
     >
       <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.1%'), color: '#8B6F47', lineHeight: hp('1.9%') }}>{titlePrefix}</Text>
-        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%'), color: '#8B6F47', marginTop: hp('0.2%') }}>Calculator</Text>
+        <Text style={{ fontWeight: '700', fontSize: wp('3.1%'), color: '#8B6F47', lineHeight: hp('1.9%') }}>{titlePrefix}</Text>
+        <Text style={{ fontWeight: '700', fontSize: wp('2.7%'), color: '#8B6F47', marginTop: hp('0.2%') }}>Calculator</Text>
       </View>
 
-      <Text numberOfLines={2} style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.4%'), color: '#6A7282', marginTop: hp('1.0%'), minHeight: hp('3.5%') }}>
+      <Text numberOfLines={2} style={{ fontWeight: '400', fontSize: wp('2.4%'), color: '#6A7282', marginTop: hp('1.0%'), minHeight: hp('3.5%') }}>
         {description}
       </Text>
 

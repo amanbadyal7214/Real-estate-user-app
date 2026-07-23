@@ -381,7 +381,7 @@ const PropertyDetails = () => {
     return (
       <SafeAreaView className="flex-1 bg-white items-center justify-center">
         <ActivityIndicator size="large" color="#008E96" />
-        <Text className="text-[#6A7282] font-inter-medium" style={{ marginTop: hp('2%'), fontSize: wp('4%') }}>Loading property details...</Text>
+        <Text className="text-[#6A7282] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('4%') }}>Loading property details...</Text>
       </SafeAreaView>
     );
   }
@@ -389,7 +389,7 @@ const PropertyDetails = () => {
   if (!propertyData && !fetching) {
     return (
       <SafeAreaView className="flex-1 bg-white items-center justify-center">
-        <Text className="text-red-500 font-inter-medium" style={{ marginBottom: hp('2%'), fontSize: wp('4%') }}>No property data found</Text>
+        <Text className="text-red-500 font-medium" style={{ marginBottom: hp('2%'), fontSize: wp('4%') }}>No property data found</Text>
         <TouchableOpacity onPress={() => router.back()} className="bg-[#008E96]" style={{ paddingHorizontal: wp('6%'), paddingVertical: hp('1.5%'), borderRadius: wp('2%') }}>
           <Text className="text-white" style={{ fontSize: wp('3.5%') }}>Go Back</Text>
         </TouchableOpacity>
@@ -398,7 +398,7 @@ const PropertyDetails = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top']}>
       <View className="flex-1 bg-[#F9FAFB]">
         <ScrollView showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
           {/* Header Section */}
@@ -443,16 +443,16 @@ const PropertyDetails = () => {
               <View className="absolute" style={{ bottom: hp('4%'), left: wp('4%'), gap: hp('0.5%') }}>
                 <View className="bg-[#008E96] self-start flex-row items-center" style={{ paddingHorizontal: wp('2%'), paddingVertical: hp('0.5%'), borderRadius: wp('1%'), gap: wp('1%') }}>
                   <Ionicons name="flash" size={wp('2.5%')} color="white" />
-                  <Text className="text-white font-inter-bold uppercase" style={{ fontSize: wp('2.5%') }}>
+                  <Text className="text-white font-bold uppercase" style={{ fontSize: wp('2.5%') }}>
                     {capitalize(getDisplayValue(normalizedProperty.propertyType)) || 'Residential'}
                   </Text>
                 </View>
-                <Text className="text-white font-inter-semibold" numberOfLines={2} style={{ fontSize: wp('5%') }}>
+                <Text className="text-white font-semibold" numberOfLines={2} style={{ fontSize: wp('5%') }}>
                   {normalizedProperty.title || 'Spacious Property'}
                 </Text>
                 <View className="flex-row items-center" style={{ gap: wp('1%') }}>
                   <Ionicons name="location" size={wp('3%')} color="white" />
-                  <Text className="text-white font-inter-regular" style={{ fontSize: wp('3.5%') }}>
+                  <Text className="text-white font-normal" style={{ fontSize: wp('3.5%') }}>
                     {getDisplayValue(normalizedProperty.city)}, {getDisplayValue(normalizedProperty.state)}
                   </Text>
                 </View>
@@ -460,7 +460,7 @@ const PropertyDetails = () => {
 
               {/* Image Counter */}
               <View className="absolute bg-black/60 rounded-full" style={{ bottom: hp('3%'), right: wp('4%'), paddingHorizontal: wp('3%'), paddingVertical: hp('0.5%') }}>
-                <Text className="text-white font-inter-regular" style={{ fontSize: wp('3%') }}>
+                <Text className="text-white font-normal" style={{ fontSize: wp('3%') }}>
                   {currentImageIndex + 1}/{heroImages.length}
                 </Text>
               </View>
@@ -475,7 +475,7 @@ const PropertyDetails = () => {
                   className={`flex-1 items-center ${activeTab === tab ? 'bg-[#E6F7F7]' : 'bg-[#F2F4F7]'}`}
                   style={{ paddingVertical: hp('1%'), borderRadius: wp('3.5%') }}
                 >
-                  <Text className={`font-inter-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>{tab}</Text>
+                  <Text className={`font-medium ${activeTab === tab ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontSize: wp('3.5%') }}>{tab}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -486,34 +486,34 @@ const PropertyDetails = () => {
               {/* Price & Summary Card */}
               <View className="bg-white p-4 border rounded-[16px] border-[#E5E7EB] shadow-sm">
                 <View className="flex-row justify-between items-start">
-                  <View className="flex-1">
+                  <View style={{ flex: 1 }}>
                     <View className="flex-row items-center gap-2 mb-1">
                       <View className="w-8 h-8 rounded-full bg-[#E6F7F7] items-center justify-center">
                         <MaterialCommunityIcons name="cash-multiple" size={16} color="#008E96" />
                       </View>
                       <View>
-                        <Text className="text-[#667085] text-[11px] font-inter-medium">
+                        <Text className="text-[#667085] text-[11px] font-medium">
                           {isRent ? 'Monthly Rent' : 'Total Price'}
                         </Text>
-                        <Text className="text-[#0A0A0A] text-[18px] font-inter-bold">
+                        <Text className="text-[#0A0A0A] text-[18px] font-bold">
                           {formatPrice(normalizedProperty.price)}{isRent ? ' / month' : ''}
                         </Text>
                       </View>
                     </View>
                     {isRent && typeof normalizedProperty.securityDeposit !== 'undefined' && (
                       <View className="flex-row items-center gap-1.5 mt-1 mb-2">
-                        <Text className="text-[#667085] text-[11px] font-inter-medium">Security Deposit:</Text>
-                        <Text className="text-[#101828] text-[12px] font-inter-semibold">
+                        <Text className="text-[#667085] text-[11px] font-medium">Security Deposit:</Text>
+                        <Text className="text-[#101828] text-[12px] font-semibold">
                           {normalizedProperty.securityDeposit > 0 ? formatPrice(normalizedProperty.securityDeposit) : 'Nil'}
                         </Text>
                       </View>
                     )}
-                    <Text className="text-[#6A7282] text-[12px] font-inter-regular">
+                    <Text className="text-[#6A7282] text-[12px] font-normal">
                       {subtitle}
                     </Text>
                   </View>
                   <View className="bg-[#F0F9FA] rounded-[12px] px-3 py-1.5 border border-[#D2F0F2]">
-                    <Text className="text-[#008E96] text-[12px] font-inter-semibold">
+                    <Text className="text-[#008E96] text-[12px] font-semibold">
                       {formatArea(normalizedProperty.area || commercialInfo.builtUpArea?.value || residentialInfo.builtUpArea?.value)}
                     </Text>
                   </View>
@@ -528,17 +528,17 @@ const PropertyDetails = () => {
                       <View className="w-7 h-7 rounded-full bg-[#F0F9FA] items-center justify-center">
                         <Ionicons name={item.icon} size={14} color="#008E96" />
                       </View>
-                      <Text className="text-[#667085] text-[11px] font-inter-medium">{item.label}</Text>
+                      <Text className="text-[#667085] text-[11px] font-medium">{item.label}</Text>
                     </View>
-                    <Text className="text-[#101828] text-[14px] font-inter-semibold">{item.value}</Text>
+                    <Text className="text-[#101828] text-[14px] font-semibold">{item.value}</Text>
                   </View>
                 ))}
               </View>
 
               {/* Description Card */}
               <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] shadow-sm">
-                <Text className="text-[#101828] text-[16px] font-inter-semibold mb-2">Description</Text>
-                <Text className="text-[#344054] text-[13px] leading-[22px] font-inter-regular">
+                <Text className="text-[#101828] text-[16px] font-semibold mb-2">Description</Text>
+                <Text className="text-[#344054] text-[13px] leading-[22px] font-normal">
                   {normalizedProperty.description || 'This beautifully designed property offers modern living with premium finishes. Located in a prime residential area, it provides the perfect balance of comfort and convenience.'}
                 </Text>
               </View>
@@ -551,8 +551,8 @@ const PropertyDetails = () => {
                       <MaterialCommunityIcons name="office-building" size={20} color="#008E96" />
                     </View>
                     <View>
-                      <Text className="text-[#667085] text-[11px] font-inter-medium">Part of Project</Text>
-                      <Text className="text-[#101828] text-[15px] font-inter-semibold">{projectInfo.projectName}</Text>
+                      <Text className="text-[#667085] text-[11px] font-medium">Part of Project</Text>
+                      <Text className="text-[#101828] text-[15px] font-semibold">{projectInfo.projectName}</Text>
                     </View>
                   </View>
                   <TouchableOpacity
@@ -567,13 +567,13 @@ const PropertyDetails = () => {
               {/* Seller Card */}
               <View className="bg-white rounded-[16px] p-4 border border-[#E5E7EB] shadow-sm flex-row items-center gap-3">
                 <View className="w-12 h-12 bg-[#008E96] rounded-full items-center justify-center">
-                  <Text className="text-white font-inter-bold text-[18px]">
+                  <Text className="text-white font-bold text-[18px]">
                     {(sellerInfo.name || 'S').charAt(0).toUpperCase()}
                   </Text>
                 </View>
-                <View className="flex-1">
-                  <Text className="text-[#101828] text-[15px] font-inter-semibold">{sellerInfo.name || 'Owner'}</Text>
-                  <Text className="text-[#667085] text-[12px] font-inter-regular">Posted by Property Owner</Text>
+                <View style={{ flex: 1 }}>
+                  <Text className="text-[#101828] text-[15px] font-semibold">{sellerInfo.name || 'Owner'}</Text>
+                  <Text className="text-[#667085] text-[12px] font-normal">Posted by Property Owner</Text>
                 </View>
                 <TouchableOpacity className="bg-[#E6F7F7] p-2 rounded-full">
                   <Ionicons name="call" size={18} color="#008E96" />
@@ -594,22 +594,22 @@ const PropertyDetails = () => {
             <View className="p-4 gap-6">
               {/* Amenities Section */}
               <View className="gap-3">
-                <Text className="text-[#101828] text-[18px] font-inter-semibold">Amenities</Text>
+                <Text className="text-[#101828] text-[18px] font-semibold">Amenities</Text>
                 <View className="flex-row flex-wrap gap-2">
                   {amenities.length > 0 ? (
                     amenities.map((item, idx) => (
                       <View key={idx} className="w-[31.5%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-1">
                         {getAmenityIcon(item.amenity)}
-                        <Text className="text-[#101828] text-[11px] text-center font-inter-medium mt-2" numberOfLines={2}>
+                        <Text className="text-[#101828] text-[11px] text-center font-medium mt-2" numberOfLines={2}>
                           {item.amenity?.label || item.amenity?.name || 'Amenity'}
                         </Text>
                         {item.count > 1 && (
-                          <Text className="text-[#667085] text-[9px] font-inter-regular">Count: {item.count}</Text>
+                          <Text className="text-[#667085] text-[9px] font-normal">Count: {item.count}</Text>
                         )}
                       </View>
                     ))
                   ) : (
-                    <Text className="text-[#667085] font-inter-regular italic">No amenities specified</Text>
+                    <Text className="text-[#667085] font-normal italic">No amenities specified</Text>
                   )}
                 </View>
               </View>
@@ -631,7 +631,7 @@ const PropertyDetails = () => {
             <View className="p-4 gap-6">
               {/* Property Details Grid Moved to Property Tour */}
               <View className="gap-3">
-                <Text className="text-[#101828] text-[18px] font-inter-semibold">Property Facts</Text>
+                <Text className="text-[#101828] text-[18px] font-semibold">Property Facts</Text>
                 <View className="flex-row flex-wrap justify-between">
                   {[
                     { label: 'Property Type', value: capitalize(getDisplayValue(normalizedProperty.propertyType)), icon: 'business-outline' },
@@ -679,9 +679,9 @@ const PropertyDetails = () => {
                         <View className="w-8 h-8 rounded-full bg-[#F0F9FA] items-center justify-center">
                           <Ionicons name={fact.icon} size={16} color="#008E96" />
                         </View>
-                        <Text className="text-[#667085] text-[10px] font-inter-medium flex-1">{fact.label}</Text>
+                        <Text className="text-[#667085] text-[10px] font-medium flex-1">{fact.label}</Text>
                       </View>
-                      <Text className="text-[#101828] text-[13px] font-inter-semibold" numberOfLines={1}>
+                      <Text className="text-[#101828] text-[13px] font-semibold" numberOfLines={1}>
                         {fact.value || 'N/A'}
                       </Text>
                     </View>
@@ -692,7 +692,7 @@ const PropertyDetails = () => {
               {/* Placeholder for Video/Tour */}
               {/* <View className="bg-white rounded-[16px] p-6 items-center justify-center border border-[#E5E7EB] border-dashed">
                 <MaterialCommunityIcons name="video-outline" size={32} color="#008E96" />
-                <Text className="text-[#101828] font-inter-medium mt-2">Virtual Tour coming soon</Text>
+                <Text className="text-[#101828] font-medium mt-2">Virtual Tour coming soon</Text>
               </View> */}
             </View>
           )}
@@ -706,16 +706,16 @@ const PropertyDetails = () => {
           className="flex-1 border border-[#008E96] flex-row items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%'), gap: wp('2%') }}
         >
           <Ionicons name="chatbubble-outline" size={wp('5%')} color="#008E96" />
-          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>Chat</Text>
+          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('4%') }}>Chat</Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-1 border border-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}>
-          <Text className="text-[#008E96] font-inter-medium" style={{ fontSize: wp('4%') }}>View phone</Text>
+          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('4%') }}>View phone</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/screens/ContactSeller', params: { propertyId } })}
           className="flex-[1.5] bg-[#008E96] items-center justify-center" style={{ height: hp('6%'), borderRadius: wp('3.5%') }}
         >
-          <Text className="text-white font-inter-medium" style={{ fontSize: wp('4%') }}>Contact Seller</Text>
+          <Text className="text-white font-medium" style={{ fontSize: wp('4%') }}>Contact Seller</Text>
         </TouchableOpacity>
       </View>
       {toast && (
@@ -739,7 +739,7 @@ const PropertyDetails = () => {
             elevation: 8,
           }}
         >
-          <Text style={{ color: 'white', fontFamily: 'Inter-Medium', fontSize: 13, textAlign: 'center' }}>
+          <Text style={{ color: 'white', fontWeight: '500', fontSize: 13, textAlign: 'center' }}>
             {toast}
           </Text>
         </View>

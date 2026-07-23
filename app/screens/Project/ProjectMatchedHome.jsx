@@ -69,7 +69,7 @@ const ProjectMatchedHome = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top', 'left', 'right']}>
       <View 
         className="flex-row items-center"
         style={{
@@ -86,7 +86,7 @@ const ProjectMatchedHome = () => {
           <ArrowLeft size={wp('6.4%')} color="#4A5565" />
         </TouchableOpacity>
         <Text 
-          className="font-inter-bold text-[#101828]"
+          className="font-bold text-[#101828]"
           style={{ fontSize: wp('5.3%') }}
         >Perfectly Matched Projects</Text>
       </View>
@@ -125,7 +125,7 @@ const ProjectMatchedHome = () => {
                     />
                     <Text
                       style={{
-                        fontFamily: 'Inter-SemiBold',
+                        fontWeight: '600',
                         fontSize: wp('3.7%'),
                         lineHeight: hp('2.5%'),
                         textAlign: 'center',
@@ -147,7 +147,7 @@ const ProjectMatchedHome = () => {
                   >
                     <Text
                       style={{
-                        fontFamily: 'Inter-SemiBold',
+                        fontWeight: '600',
                         fontSize: wp('3.7%'),
                         lineHeight: hp('2.5%'),
                         textAlign: 'center',
@@ -175,7 +175,7 @@ const ProjectMatchedHome = () => {
           >
             <ActivityIndicator size="large" color="#008E96" />
             <Text 
-              className="text-[#6A7282] font-inter-medium"
+              className="text-[#6A7282] font-medium"
               style={{ marginTop: hp('1.8%'), fontSize: wp('3.7%') }}
             >Searching...</Text>
           </View>

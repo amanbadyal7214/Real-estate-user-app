@@ -11,7 +11,7 @@ const ContinueCards = ({ data = [] }) => {
     <View style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3%') }}>
       <View className="flex-row items-center" style={{ gap: wp('2.1%'), marginBottom: hp('2%') }}>
         <History size={wp('5.3%')} color="#667085" />
-        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#4A5565]">
+        <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-[#4A5565]">
           Pick up where you left off
         </Text>
       </View>
@@ -36,7 +36,7 @@ const ContinueCards = ({ data = [] }) => {
             <View className="flex-1" style={{ marginRight: wp('2.1%') }}>
               <Text 
                 numberOfLines={1} 
-                style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.5%') }} 
+                style={{ fontWeight: '700', fontSize: wp('3.5%') }} 
                 className="text-[#101828]"
               >
                 {item.title}
@@ -44,7 +44,7 @@ const ContinueCards = ({ data = [] }) => {
               <Text 
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{ fontFamily: 'Inter-Regular', fontSize: wp('3%'), marginTop: hp('0.3%') }} 
+                style={{ fontWeight: '400', fontSize: wp('3%'), marginTop: hp('0.3%') }} 
                 className="text-[#667085]"
               >
                 {item.subtitle}
@@ -58,9 +58,9 @@ const ContinueCards = ({ data = [] }) => {
     </View>
      {/* Locality Banner */}
         {/* <View className="bg-[#F0FBFA] flex-row items-center justify-between" style={{ marginHorizontal: wp('4.3%'), marginTop: hp('3%'), padding: wp('4.3%'), borderRadius: wp('4.3%') }}>
-          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#344054]">Not sure about locality?</Text>
+          <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-[#344054]">Not sure about locality?</Text>
           <TouchableOpacity className="flex-row items-center">
-            <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%'), marginRight: wp('1.1%') }} className="text-[#101828] underline">Explore options</Text>
+            <Text style={{ fontWeight: '700', fontSize: wp('3.7%'), marginRight: wp('1.1%') }} className="text-[#101828] underline">Explore options</Text>
             <ChevronRight size={wp('4.3%')} color="#101828" />
           </TouchableOpacity>
         </View> */}

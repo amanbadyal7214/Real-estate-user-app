@@ -8,13 +8,13 @@ const TrendingProjectCard = ({ name, location, price, image }) => {
     >
       <Image source={image} className="w-full h-20 bg-gray-200" resizeMode="cover" />
       <View className="p-3">
-        <Text className="text-[#101828] font-inter-medium text-sm mb-0.5" numberOfLines={1}>
+        <Text className="text-[#101828] font-medium text-sm mb-0.5" numberOfLines={1}>
           {name}
         </Text>
-        <Text className="text-[#6A7282] text-[12px] font-inter-regular mb-1.5" numberOfLines={1}>
+        <Text className="text-[#6A7282] text-[12px] font-normal mb-1.5" numberOfLines={1}>
           {location}
         </Text>
-        <Text className="text-[#008E96] font-inter-medium text-[13px]">
+        <Text className="text-[#008E96] font-medium text-[13px]">
           {price}
         </Text>
       </View>

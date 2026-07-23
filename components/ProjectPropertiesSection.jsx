@@ -49,28 +49,28 @@ const ProjectPropertyCard = ({ property }) => {
         source={{ uri: typeof image === 'string' ? image : image?.url }}
         className="w-full h-[128px] rounded-[10px] mb-3"
       />
-      <Text className="font-inter-medium text-[#0A0A0A] text-[14px] mb-1" numberOfLines={1}>{name}</Text>
-      <Text className="font-inter-regular text-[#6A7282] text-[12px] mb-4" numberOfLines={1}>{localityName}</Text>
+      <Text className="font-medium text-[#0A0A0A] text-[14px] mb-1" numberOfLines={1}>{name}</Text>
+      <Text className="font-normal text-[#6A7282] text-[12px] mb-4" numberOfLines={1}>{localityName}</Text>
 
       <View className="gap-2 mb-4">
         <View className="flex-row justify-between items-center">
-          <Text className="font-inter-regular text-[#6A7282] text-[12px]">Property Type</Text>
+          <Text className="font-normal text-[#6A7282] text-[12px]">Property Type</Text>
           <View className="flex-row items-center">
-            <Text className="font-inter-regular text-[#0A0A0A] text-[12px] mr-1">{bhk}</Text>
+            <Text className="font-normal text-[#0A0A0A] text-[12px] mr-1">{bhk}</Text>
           </View>
         </View>
         <View className="flex-row justify-between items-center">
-          <Text className="font-inter-regular text-[#6A7282] text-[12px]">Area</Text>
+          <Text className="font-normal text-[#6A7282] text-[12px]">Area</Text>
           <View className="flex-row items-center">
-            <Text className="font-inter-regular text-[#0A0A0A] text-[12px] mr-1">{area}</Text>
+            <Text className="font-normal text-[#0A0A0A] text-[12px] mr-1">{area}</Text>
           </View>
         </View>
       </View>
 
-      <Text className="font-inter-regular text-[#0A0A0A] text-[18px] mb-3">{price}</Text>
+      <Text className="font-normal text-[#0A0A0A] text-[18px] mb-3">{price}</Text>
 
       <TouchableOpacity className="border-2 border-[#008E96] rounded-[10px] h-[40px] items-center justify-center">
-        <Text className="text-[#008E96] font-inter-medium text-[14px]">Contact</Text>
+        <Text className="text-[#008E96] font-medium text-[14px]">Contact</Text>
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -175,9 +175,9 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, pro
   return (
     <View className="w-full">
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="font-inter-medium text-[#101828] text-[18px]">{title}</Text>
+        <Text className="font-medium text-[#101828] text-[18px]">{title}</Text>
         <TouchableOpacity className="border border-[#E5E7EB] rounded-full px-3 py-1 bg-white">
-          <Text className="font-inter-medium text-[#0A0A0A] text-[14px]">Top ↑</Text>
+          <Text className="font-medium text-[#0A0A0A] text-[14px]">Top ↑</Text>
         </TouchableOpacity>
       </View>
 
@@ -188,7 +188,7 @@ const ProjectPropertiesSection = ({ projectId, localityId, cityId, cityName, pro
       </ScrollView>
 
       <TouchableOpacity className="mx-4 bg-[#008E96] rounded-[14px] h-[48px] items-center justify-center">
-        <Text className="text-white font-inter-medium text-[16px]">Contact sellers</Text>
+        <Text className="text-white font-medium text-[16px]">Contact sellers</Text>
       </TouchableOpacity>
     </View>
   );

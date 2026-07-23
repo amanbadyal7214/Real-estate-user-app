@@ -8,12 +8,12 @@ import {
   FlatList,
   Image,
   Modal,
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useLookup } from '../../../hooks/useLookup';
 import api from '../../api';
@@ -318,9 +318,9 @@ const MyProperties = () => {
               <View className="bg-gray-200 rounded-full" style={{ width: wp('10.7%'), height: hp('0.5%') }} />
             </View>
             <View className="border-b border-gray-100 flex-row justify-between items-center" style={{ paddingHorizontal: wp('5.3%'), paddingBottom: hp('1.5%') }}>
-              <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.8%') }}>{title}</Text>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.8%') }}>{title}</Text>
               <TouchableOpacity onPress={() => setActiveFilterDropdown(null)}>
-                <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.7%') }}>Cancel</Text>
+                <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.7%') }}>Cancel</Text>
               </TouchableOpacity>
             </View>
             <ScrollView style={{ paddingHorizontal: wp('5.3%'), marginTop: hp('1%') }} showsVerticalScrollIndicator={false}>
@@ -353,7 +353,7 @@ const MyProperties = () => {
                 })
               ) : (
                 <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
-                  <Text className="text-gray-400 font-inter-medium">No options available</Text>
+                  <Text className="text-gray-400 font-medium">No options available</Text>
                 </View>
               )}
             </ScrollView>
@@ -379,7 +379,7 @@ const MyProperties = () => {
           <View className="bg-white shadow-2xl w-full" style={{ borderRadius: wp('7.5%'), padding: wp('6.4%'), maxWidth: wp('96%') }}>
             {/* Header */}
             <View className="flex-row justify-between items-center" style={{ marginBottom: hp('2%') }}>
-              <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.3%') }} className="text-[#0F172A]">
+              <Text style={{ fontWeight: '700', fontSize: wp('5.3%') }} className="text-[#0F172A]">
                 Deactivate Listing
               </Text>
               <TouchableOpacity
@@ -395,7 +395,7 @@ const MyProperties = () => {
             </View>
 
             {/* Subtitle */}
-            <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), marginBottom: hp('3%'), lineHeight: hp('2.5%') }} className="text-[#64748B]">
+            <Text style={{ fontWeight: '400', fontSize: wp('3.7%'), marginBottom: hp('3%'), lineHeight: hp('2.5%') }} className="text-[#64748B]">
               Please tell us why you are deactivating this property. This helps us improve our service.
             </Text>
 
@@ -448,7 +448,7 @@ const MyProperties = () => {
                 }}
                 style={{ paddingVertical: hp('1.5%'), paddingHorizontal: wp('4.3%') }}
               >
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#64748B]">
+                <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-[#64748B]">
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -461,7 +461,7 @@ const MyProperties = () => {
                   backgroundColor: deactivateReason ? '#F87171' : '#FCA5A5'
                 }}
               >
-                <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%') }} className="text-white">
+                <Text style={{ fontWeight: '700', fontSize: wp('3.7%') }} className="text-white">
                   Deactivate
                 </Text>
               </TouchableOpacity>
@@ -501,14 +501,14 @@ const MyProperties = () => {
                 className="rounded-full"
                 style={{ width: wp('1.6%'), height: wp('1.6%'), backgroundColor: item.isActive ? '#10B981' : '#F97316' }}
               />
-              <Text className="font-inter-semibold text-gray-700 uppercase" style={{ fontSize: wp('2.7%') }}>
+              <Text className="font-semibold text-gray-700 uppercase" style={{ fontSize: wp('2.7%') }}>
                 {item.isActive ? 'Active' : 'Reviewing'}
               </Text>
             </View>
             {/* Photo Count */}
             {hasPhotos && (
               <View className="absolute bg-black/60" style={{ top: hp('1%'), right: wp('2.1%'), paddingHorizontal: wp('1.6%'), paddingVertical: hp('0.3%'), borderRadius: wp('1.6%') }}>
-                <Text className="font-inter-bold text-white" style={{ fontSize: wp('2.4%') }}>
+                <Text className="font-bold text-white" style={{ fontSize: wp('2.4%') }}>
                   {item.images.length} imgs
                 </Text>
               </View>
@@ -527,28 +527,28 @@ const MyProperties = () => {
           <View className="flex-1 justify-between" style={{ marginLeft: wp('4.3%') }}>
             <View>
               <View className="flex-row items-center" style={{ gap: wp('1%'), marginBottom: hp('0.5%') }}>
-                <Text className="font-inter-bold text-blue-600 uppercase tracking-wider" style={{ fontSize: wp('2.7%') }}>
+                <Text className="font-bold text-blue-600 uppercase tracking-wider" style={{ fontSize: wp('2.7%') }}>
                   Featured Listing
                 </Text>
                 <Text className="text-gray-400" style={{ fontSize: wp('2.7%') }}>•</Text>
-                <Text className="text-gray-500 font-inter-semibold uppercase" style={{ fontSize: wp('2.7%') }}>
+                <Text className="text-gray-500 font-semibold uppercase" style={{ fontSize: wp('2.7%') }}>
                   {propertyTypeName}
                 </Text>
               </View>
-              <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.3%') }} numberOfLines={1}>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.3%') }} numberOfLines={1}>
                 {item.title || 'Property on Sale'}
               </Text>
-              <Text className="text-[#008E96] font-inter-bold" style={{ fontSize: wp('4%'), marginTop: hp('0.3%') }}>
+              <Text className="text-[#008E96] font-bold" style={{ fontSize: wp('4%'), marginTop: hp('0.3%') }}>
                 {formatPrice(item.price)}
               </Text>
             </View>
             <View className="flex-row items-center" style={{ gap: wp('2.1%'), marginTop: hp('1%') }}>
-              <Text className="text-gray-500 font-inter-regular" style={{ fontSize: wp('3.2%') }}>
+              <Text className="text-gray-500 font-normal" style={{ fontSize: wp('3.2%') }}>
                 {item.area || 'N/A'} {item.areaUnit?.name || 'sq.ft.'}
               </Text>
               <Text className="text-gray-300">|</Text>
               <View className="bg-gray-100" style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.3%'), borderRadius: wp('1.6%') }}>
-                <Text className="font-inter-medium text-gray-600 uppercase" style={{ fontSize: wp('2.7%') }}>
+                <Text className="font-medium text-gray-600 uppercase" style={{ fontSize: wp('2.7%') }}>
                   {getLocalityName(item.locality) || 'Sector 71'}
                 </Text>
               </View>
@@ -560,12 +560,12 @@ const MyProperties = () => {
         <View className="border-t border-gray-50" style={{ marginTop: hp('2%'), paddingTop: hp('1.5%') }}>
           <View className="flex-row justify-between items-center" style={{ marginBottom: hp('0.7%') }}>
             <View className="flex-row items-center" style={{ gap: wp('1%') }}>
-              <Text className="text-gray-500 font-inter-bold uppercase tracking-wider" style={{ fontSize: wp('2.9%') }}>
+              <Text className="text-gray-500 font-bold uppercase tracking-wider" style={{ fontSize: wp('2.9%') }}>
                 Live Visibility
               </Text>
               <Ionicons name="information-circle-outline" size={wp('3.5%')} color="#98A2B3" />
             </View>
-            <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('3.7%') }}>
+            <Text className="text-[#101828] font-bold" style={{ fontSize: wp('3.7%') }}>
               {visibilityScore}%
             </Text>
           </View>
@@ -580,7 +580,7 @@ const MyProperties = () => {
           </View>
           <View className="flex-row justify-between" style={{ marginTop: hp('0.5%'), paddingHorizontal: wp('0.5%') }}>
             {['0%', '30%', '60%', '90%', '100%'].map(mark => (
-              <Text key={mark} className="text-gray-400 font-inter-medium" style={{ fontSize: wp('2.4%') }}>
+              <Text key={mark} className="text-gray-400 font-medium" style={{ fontSize: wp('2.4%') }}>
                 {mark}
               </Text>
             ))}
@@ -592,11 +592,11 @@ const MyProperties = () => {
           <View className="bg-amber-50/50 border border-amber-100 flex-row items-center justify-between" style={{ marginTop: hp('2%'), padding: wp('3.2%'), borderRadius: wp('3.2%') }}>
             <View className="flex-1 flex-row items-center" style={{ paddingRight: wp('3.2%'), gap: wp('2.1%') }}>
               <Ionicons name="warning" size={wp('4.3%')} color="#D08700" />
-              <View className="flex-1">
-                <Text className="text-gray-800 font-inter-semibold" style={{ fontSize: wp('2.9%') }}>
+              <View style={{ flex: 1 }}>
+                <Text className="text-gray-800 font-semibold" style={{ fontSize: wp('2.9%') }}>
                   Visibility Optimization
                 </Text>
-                <Text className="text-gray-500 font-inter-regular" style={{ fontSize: wp('2.4%'), marginTop: hp('0.3%') }}>
+                <Text className="text-gray-500 font-normal" style={{ fontSize: wp('2.4%'), marginTop: hp('0.3%') }}>
                   Listing is average. Complete tasks to boost views.
                 </Text>
               </View>
@@ -609,7 +609,7 @@ const MyProperties = () => {
                   style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('2.1%'), gap: wp('1%') }}
                 >
                   <Ionicons name="camera-outline" size={wp('2.7%')} color="#10B981" />
-                  <Text className="text-green-600 font-inter-semibold" style={{ fontSize: wp('2.4%') }}>+15%</Text>
+                  <Text className="text-green-600 font-semibold" style={{ fontSize: wp('2.4%') }}>+15%</Text>
                 </TouchableOpacity>
               )}
               {!hasAmenities && (
@@ -619,7 +619,7 @@ const MyProperties = () => {
                   style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('2.1%'), gap: wp('1%') }}
                 >
                   <Ionicons name="checkmark-circle-outline" size={wp('2.7%')} color="#10B981" />
-                  <Text className="text-green-600 font-inter-semibold" style={{ fontSize: wp('2.4%') }}>+10%</Text>
+                  <Text className="text-green-600 font-semibold" style={{ fontSize: wp('2.4%') }}>+10%</Text>
                 </TouchableOpacity>
               )}
               {!hasDesc && (
@@ -629,7 +629,7 @@ const MyProperties = () => {
                   style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%'), borderRadius: wp('2.1%'), gap: wp('1%') }}
                 >
                   <Ionicons name="document-text-outline" size={wp('2.7%')} color="#10B981" />
-                  <Text className="text-green-600 font-inter-semibold" style={{ fontSize: wp('2.4%') }}>+30%</Text>
+                  <Text className="text-green-600 font-semibold" style={{ fontSize: wp('2.4%') }}>+30%</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -660,7 +660,7 @@ const MyProperties = () => {
               color={item.isActive ? '#EF4444' : '#10B981'}
             />
             <Text
-              className="font-inter-semibold"
+              className="font-semibold"
               style={{
                 fontSize: wp('3.2%'), marginLeft: wp('1%'),
                 color: item.isActive ? '#DC2626' : '#16A34A'
@@ -676,7 +676,7 @@ const MyProperties = () => {
             style={{ borderRadius: wp('3.2%'), paddingVertical: hp('1.2%'), paddingHorizontal: wp('3.2%') }}
           >
             <Ionicons name="create-outline" size={wp('3.7%')} color="white" />
-            <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.2%'), marginLeft: wp('1%') }}>Edit</Text>
+            <Text className="text-white font-semibold" style={{ fontSize: wp('3.2%'), marginLeft: wp('1%') }}>Edit</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -693,7 +693,7 @@ const MyProperties = () => {
             style={{ borderRadius: wp('3.2%'), paddingVertical: hp('1.2%'), paddingHorizontal: wp('3.2%') }}
           >
             <Ionicons name="open-outline" size={wp('3.7%')} color="#008E96" />
-            <Text className="text-[#008E96] font-inter-semibold" style={{ fontSize: wp('3.2%'), marginLeft: wp('1%') }}>View</Text>
+            <Text className="text-[#008E96] font-semibold" style={{ fontSize: wp('3.2%'), marginLeft: wp('1%') }}>View</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -701,7 +701,7 @@ const MyProperties = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F9FAFB]">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
       {/* Header Bar */}
       <LinearGradient colors={['#006B73', '#008E96']} className="shadow-md" style={{ paddingHorizontal: wp('4.3%'), paddingTop: hp('5%'), paddingBottom: hp('3%'), borderBottomLeftRadius: wp('8.5%'), borderBottomRightRadius: wp('8.5%') }}>
         <View className="flex-row justify-between items-center" style={{ marginBottom: hp('2%') }}>
@@ -714,7 +714,7 @@ const MyProperties = () => {
             >
               <Ionicons name="arrow-back" size={wp('6.4%')} color="white" />
             </TouchableOpacity>
-            <Text className="text-white font-inter-bold" style={{ fontSize: wp('4.8%') }}>My Listings</Text>
+            <Text className="text-white font-bold" style={{ fontSize: wp('4.8%') }}>My Listings</Text>
           </View>
           <TouchableOpacity
             onPress={() => router.push('/screens/PostProperty/PropertyDetails')}
@@ -722,7 +722,7 @@ const MyProperties = () => {
             style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('0.7%'), gap: wp('1%') }}
           >
             <Ionicons name="add" size={wp('4.3%')} color="white" />
-            <Text className="text-white font-inter-semibold" style={{ fontSize: wp('3.2%') }}>Add New</Text>
+            <Text className="text-white font-semibold" style={{ fontSize: wp('3.2%') }}>Add New</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -754,7 +754,7 @@ const MyProperties = () => {
         </ScrollView>
         {(selectedLocality || selectedPropertyType || selectedBhk) && (
           <TouchableOpacity onPress={clearFilters} style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.5%') }}>
-            <Text className="text-[#EF4444] font-inter-bold uppercase tracking-wider" style={{ fontSize: wp('2.9%') }}>
+            <Text className="text-[#EF4444] font-bold uppercase tracking-wider" style={{ fontSize: wp('2.9%') }}>
               Reset
             </Text>
           </TouchableOpacity>
@@ -762,11 +762,11 @@ const MyProperties = () => {
       </View>
 
       {/* Properties List */}
-      <View className="flex-1" style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2%') }}>
+      <View style={{ flex: 1, paddingHorizontal: wp('4.3%'), marginTop: hp('2%') }}>
         {loading ? (
           <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
             <ActivityIndicator size="large" color="#008E96" />
-            <Text className="text-gray-500 font-inter-medium" style={{ marginTop: hp('2%') }}>Loading your listings...</Text>
+            <Text className="text-gray-500 font-medium" style={{ marginTop: hp('2%') }}>Loading your listings...</Text>
           </View>
         ) : filteredProperties.length > 0 ? (
           <FlatList
@@ -778,7 +778,7 @@ const MyProperties = () => {
             refreshing={refreshing}
             onRefresh={handleRefresh}
             ListHeaderComponent={() => (
-              <Text className="text-gray-500 font-inter-medium" style={{ fontSize: wp('3.2%'), marginBottom: hp('1.5%') }}>
+              <Text className="text-gray-500 font-medium" style={{ fontSize: wp('3.2%'), marginBottom: hp('1.5%') }}>
                 Showing {filteredProperties.length} out of {properties.length} properties
               </Text>
             )}
@@ -788,10 +788,10 @@ const MyProperties = () => {
             <View className="rounded-full bg-[#E6F7F7] items-center justify-center" style={{ width: wp('17%'), height: wp('17%'), marginBottom: hp('2%') }}>
               <Ionicons name="home-outline" size={wp('8.5%')} color="#008E96" />
             </View>
-            <Text className="text-[#101828] font-inter-bold text-center" style={{ fontSize: wp('4.8%') }}>
+            <Text style={{ color: '#101828', fontWeight: '700', textAlign: 'center', fontSize: wp('4.8%') }}>
               No Listings Found
             </Text>
-            <Text className="text-gray-500 font-inter-regular text-center" style={{ fontSize: wp('3.7%'), marginTop: hp('1%') }}>
+            <Text className="text-gray-500 font-normal text-center" style={{ fontSize: wp('3.7%'), marginTop: hp('1%') }}>
               {properties.length > 0
                 ? 'Try resetting or changing your search filters.'
                 : "You haven't posted any property listings yet. Click below to post."}
@@ -802,7 +802,7 @@ const MyProperties = () => {
                 className="bg-[#008E96] shadow-md"
                 style={{ marginTop: hp('3%'), paddingHorizontal: wp('6.4%'), paddingVertical: hp('1.5%'), borderRadius: wp('3.2%') }}
               >
-                <Text className="text-white font-inter-semibold">Post Property for FREE</Text>
+                <Text className="text-white font-semibold">Post Property for FREE</Text>
               </TouchableOpacity>
             )}
           </View>

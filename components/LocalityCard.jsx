@@ -24,9 +24,9 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
       />
 
       <View className="flex-row justify-between items-start z-10" style={{ padding: wp('3.2%') }}>
-        <View className="flex-1">
+        <View style={{ flex: 1 }}>
           <Text
-            className="font-inter-semibold text-[#101828]"
+            className="font-semibold text-[#101828]"
             style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginBottom: hp('0.3%'), marginTop: hp('-0.5%') }}
             numberOfLines={1}
             ellipsizeMode="tail"
@@ -36,11 +36,11 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
           <View className="flex-row items-center" style={{ gap: wp('1.6%'), marginBottom: hp('0.5%') }}>
             <View className="flex-row items-center" style={{ gap: wp('0.5%') }}>
               <Ionicons name="star" size={wp('3.5%')} color="#00A63E" />
-              <Text className="font-inter-semibold text-[#101828]" style={{ fontSize: wp('3%'), lineHeight: hp('2%') }}>{rating}</Text>
+              <Text className="font-semibold text-[#101828]" style={{ fontSize: wp('3%'), lineHeight: hp('2%') }}>{rating}</Text>
             </View>
-            <Text className="font-inter-regular text-[#4A5565]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>({reviews})</Text>
+            <Text className="font-normal text-[#4A5565]" style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}>({reviews})</Text>
           </View>
-          <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>{price}</Text>
+          <Text className="font-bold text-[#101828]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>{price}</Text>
         </View>
 
         <View
@@ -52,7 +52,7 @@ const LocalityCard = ({ title, rating, reviews, price, iconColor = '#1CB2A9' }) 
       </View>
 
       <View className="flex-row items-center absolute bottom-0 left-0 z-10" style={{ padding: wp('3.2%') }}>
-        <Text className="font-inter-medium text-[#2B7571]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>Read all reviews</Text>
+        <Text className="font-medium text-[#2B7571]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}>Read all reviews</Text>
         <Ionicons name="chevron-forward" size={wp('3.7%')} color="#2B7571" style={{ marginLeft: wp('1.1%') }} />
       </View>
     </View>

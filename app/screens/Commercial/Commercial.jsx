@@ -269,7 +269,7 @@ const Commercial = () => {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Top Header */}
       <UserHeader />
 
@@ -322,11 +322,11 @@ const Commercial = () => {
               <TrendingUp size={wp('6%')} color="#F59E0B" strokeWidth={2} />
             </LinearGradient>
 
-            <View className="flex-1">
-              <Text className="font-inter-semibold text-[13px] leading-[17px] text-[#101828]">
+            <View style={{ flex: 1 }}>
+              <Text className="font-semibold text-[13px] leading-[17px] text-[#101828]">
                 Properties with Great Returns!
               </Text>
-              <Text className="mt-0.5 font-inter-regular text-[12px] leading-[15px] text-[#6A7282]">
+              <Text className="mt-0.5 font-normal text-[12px] leading-[15px] text-[#6A7282]">
                 Explore high ROI investments
               </Text>
             </View>
@@ -399,10 +399,10 @@ const Commercial = () => {
         <View className="mt-1 px-4">
           <View className="mb-2 flex-row items-start justify-between">
             <View>
-              <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828]">
+              <Text className="font-semibold text-[15px] leading-[22px] text-[#101828]">
                 Recently Added
               </Text>
-              <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
+              <Text className="font-normal text-[12px] leading-4 text-[#6A7282]">
                 Fresh listings in your area
               </Text>
             </View>
@@ -421,7 +421,7 @@ const Commercial = () => {
                 });
               }}
             >
-              <Text className="font-inter-semibold text-[12px] leading-[18px] text-[#008E96]">See all</Text>
+              <Text className="font-semibold text-[12px] leading-[18px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -443,7 +443,7 @@ const Commercial = () => {
                   }}
                 >
                   <Text
-                    className="font-inter-medium text-[12px] leading-[18px]"
+                    className="font-medium text-[12px] leading-[18px]"
                     style={{ color: isActive ? '#008E96' : '#4A5565' }}
                   >
                     {tab}
@@ -473,7 +473,7 @@ const Commercial = () => {
             </View>
           ) : (
             <View className="rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6 items-center justify-center">
-              <Text className="font-inter-medium text-[13px] text-[#6A7282] text-center">No properties available in this location.</Text>
+              <Text className="font-medium text-[13px] text-[#6A7282] text-center">No properties available in this location.</Text>
             </View>
           )}
         </View>
@@ -487,8 +487,8 @@ const Commercial = () => {
         <View className="px-4 my-3">
           <View className="mb-4 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[15px] text-[#101828]">Recommended Sellers</Text>
-              <Text className="font-inter-regular text-[12px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+              <Text className="font-semibold text-[15px] text-[#101828]">Recommended Sellers</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
             </View>
           </View>
 
@@ -517,10 +517,10 @@ const Commercial = () => {
         <View className="mt-1 mb-4">
           <View className="px-4 mb-4 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828]">
+              <Text className="font-semibold text-[15px] leading-[22px] text-[#101828]">
                 Recommended for You
               </Text>
-              <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
+              <Text className="font-normal text-[12px] leading-4 text-[#6A7282]">
                 Based on your preferences
               </Text>
             </View>
@@ -538,7 +538,7 @@ const Commercial = () => {
                 });
               }}
             >
-              <Text className="font-inter-semibold text-[12px] leading-[18px] text-[#008E96]">See all</Text>
+              <Text className="font-semibold text-[12px] leading-[18px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -567,7 +567,7 @@ const Commercial = () => {
             </ScrollView>
           ) : (
             <View className="mx-4 rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6 items-center justify-center">
-              <Text className="font-inter-medium text-[13px] text-[#6A7282] text-center">No recommendations available in this location.</Text>
+              <Text className="font-medium text-[13px] text-[#6A7282] text-center">No recommendations available in this location.</Text>
             </View>
           )}
         </View>
@@ -575,10 +575,10 @@ const Commercial = () => {
         <View className="mt-1 mb-4">
           <View className="px-4 mb-3 flex-row items-center justify-between">
             <View>
-              <Text className="font-inter-semibold text-[15px] leading-[22px] text-[#101828]">
+              <Text className="font-semibold text-[15px] leading-[22px] text-[#101828]">
                 Curated Collections
               </Text>
-              <Text className="font-inter-regular text-[12px] leading-4 text-[#6A7282]">
+              <Text className="font-normal text-[12px] leading-4 text-[#6A7282]">
                 Handpicked properties for you
               </Text>
             </View>
@@ -639,14 +639,14 @@ const Commercial = () => {
 
                     <View className="absolute inset-0 justify-end p-4">
                       <Text
-                        className="font-inter-semibold text-[14px] leading-[18px] text-center"
+                        className="font-semibold text-[14px] leading-[18px] text-center"
                         style={{ color: isActive ? '#FFFFFF' : '#101828' }}
                         numberOfLines={1}
                       >
                         {collection.title}
                       </Text>
                       <Text
-                        className="font-inter-medium text-[11px] leading-4 text-center"
+                        className="font-medium text-[11px] leading-4 text-center"
                         style={{ color: isActive ? '#FFFFFF' : '#4A5565' }}
                         numberOfLines={1}
                       >
@@ -667,11 +667,11 @@ const Commercial = () => {
         <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[15px] text-[#101828]">News For You</Text>
-              <Text className="font-inter-regular text-[12px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
+              <Text className="font-semibold text-[15px] text-[#101828]">News For You</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
             <TouchableOpacity>
-              <Text className="font-inter-medium text-[12px] text-primary">See all</Text>
+              <Text className="font-medium text-[12px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 

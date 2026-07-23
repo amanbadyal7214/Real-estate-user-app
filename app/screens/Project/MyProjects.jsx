@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -9,7 +10,6 @@ import {
   FlatList,
   Image,
   Modal,
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -364,7 +364,7 @@ const MyProjects = () => {
               <Text 
                 className="text-[#101828]"
                 style={{
-                  fontFamily: 'Inter-Bold',
+                  fontWeight: '700',
                   fontSize: wp('4.8%'),
                 }}
               >{title}</Text>
@@ -372,7 +372,7 @@ const MyProjects = () => {
                 <Text 
                   className="text-[#6A7282]"
                   style={{
-                    fontFamily: 'Inter-Medium',
+                    fontWeight: '500',
                     fontSize: wp('3.7%'),
                   }}
                 >Cancel</Text>
@@ -428,7 +428,7 @@ const MyProjects = () => {
                     paddingVertical: hp('5%'),
                   }}
                 >
-                  <Text className="text-gray-400 font-inter-medium">No options available</Text>
+                  <Text className="text-gray-400 font-medium">No options available</Text>
                 </View>
               )}
             </ScrollView>
@@ -494,7 +494,7 @@ const MyProjects = () => {
                 }}
               />
               <Text 
-                className="font-inter-semibold text-gray-700 uppercase"
+                className="font-semibold text-gray-700 uppercase"
                 style={{ fontSize: wp('2.6%') }}
               >
                 {item.isActive ? 'Active' : 'Reviewing'}
@@ -513,7 +513,7 @@ const MyProjects = () => {
                 }}
               >
                 <Text 
-                  className="font-inter-bold text-white"
+                  className="font-bold text-white"
                   style={{ fontSize: wp('2.4%') }}
                 >
                   {item.images.length} imgs
@@ -547,21 +547,21 @@ const MyProjects = () => {
                 style={{ gap: wp('1%'), marginBottom: hp('0.4%') }}
               >
                 <Text 
-                  className="font-inter-bold text-blue-600 uppercase tracking-wider"
+                  className="font-bold text-blue-600 uppercase tracking-wider"
                   style={{ fontSize: wp('2.6%') }}
                 >
                   Featured Project
                 </Text>
                 <Text className="text-gray-400" style={{ fontSize: wp('2.6%') }}>•</Text>
                 <Text 
-                  className="text-gray-500 font-inter-semibold uppercase"
+                  className="text-gray-500 font-semibold uppercase"
                   style={{ fontSize: wp('2.6%') }}
                 >
                   {item.projectType}
                 </Text>
               </View>
               <Text 
-                className="text-[#101828] font-inter-bold" 
+                className="text-[#101828] font-bold" 
                 style={{ fontSize: wp('4.2%') }}
                 numberOfLines={1}
               >
@@ -580,7 +580,7 @@ const MyProjects = () => {
               style={{ gap: wp('2%'), marginTop: hp('0.8%') }}
             >
               <Text 
-                className="text-gray-500 font-inter-regular"
+                className="text-gray-500 font-normal"
                 style={{ fontSize: wp('3.2%') }}
               >
                 {item.completionDate ? `Date: ${formatDateOnly(item.completionDate)}` : 'Completion N/A'}
@@ -595,7 +595,7 @@ const MyProjects = () => {
                 }}
               >
                 <Text 
-                  className="font-inter-medium text-gray-600 uppercase"
+                  className="font-medium text-gray-600 uppercase"
                   style={{ fontSize: wp('2.6%') }}
                 >
                   {getCityName(item.city)}
@@ -655,7 +655,7 @@ const MyProjects = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F9FAFB]">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }}>
       {/* Header Bar */}
       <LinearGradient 
         colors={['#006B73', '#008E96']} 
@@ -685,7 +685,7 @@ const MyProjects = () => {
               <Ionicons name="arrow-back" size={wp('6%')} color="white" />
             </TouchableOpacity>
             <Text 
-              className="text-white font-inter-bold"
+              className="text-white font-bold"
               style={{ fontSize: wp('4.8%') }}
             >
               {userName ? `${userName}'s Console` : "My Projects"}
@@ -703,7 +703,7 @@ const MyProjects = () => {
           >
             <Ionicons name="add" size={wp('4%')} color="white" />
             <Text 
-              className="text-white font-inter-semibold"
+              className="text-white font-semibold"
               style={{ fontSize: wp('3.2%') }}
             >
               Add New
@@ -751,7 +751,7 @@ const MyProjects = () => {
             }}
           >
             <Text 
-              className="text-[#EF4444] font-inter-bold uppercase tracking-wider"
+              className="text-[#EF4444] font-bold uppercase tracking-wider"
               style={{ fontSize: wp('3%') }}
             >
               Reset
@@ -775,7 +775,7 @@ const MyProjects = () => {
           >
             <ActivityIndicator size="large" color="#008E96" />
             <Text 
-              className="text-gray-500 font-inter-medium"
+              className="text-gray-500 font-medium"
               style={{ marginTop: hp('1.8%'), fontSize: wp('3.7%') }}
             >
               Loading your projects...
@@ -792,7 +792,7 @@ const MyProjects = () => {
             onRefresh={handleRefresh}
             ListHeaderComponent={() => (
               <Text 
-                className="text-gray-500 font-inter-medium"
+                className="text-gray-500 font-medium"
                 style={{ fontSize: wp('3.2%'), marginBottom: hp('1.2%') }}
               >
                 Showing {filteredProjects.length} out of {projects.length} projects
@@ -819,13 +819,13 @@ const MyProjects = () => {
               <Ionicons name="business-outline" size={wp('8%')} color="#008E96" />
             </View>
             <Text 
-              className="text-[#101828] font-inter-bold text-center"
+              className="text-[#101828] font-bold text-center"
               style={{ fontSize: wp('4.8%') }}
             >
               No Projects Found
             </Text>
             <Text 
-              className="text-gray-500 font-inter-regular text-center"
+              className="text-gray-500 font-normal text-center"
               style={{ fontSize: wp('3.7%'), marginTop: hp('0.8%') }}
             >
               {projects.length > 0
@@ -844,7 +844,7 @@ const MyProjects = () => {
                 }}
               >
                 <Text 
-                  className="text-white font-inter-semibold"
+                  className="text-white font-semibold"
                   style={{ fontSize: wp('3.7%') }}
                 >
                   Post Project for FREE
@@ -891,10 +891,10 @@ const MyProjects = () => {
               {/* Project Name Header */}
               {menuProject && (
                 <View style={{ paddingHorizontal: wp('6%'), paddingBottom: hp('2%'), borderBottomWidth: 1, borderBottomColor: '#F3F4F6' }}>
-                  <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('4.2%'), color: '#101828' }} numberOfLines={1}>
+                  <Text style={{ fontWeight: '700', fontSize: wp('4.2%'), color: '#101828' }} numberOfLines={1}>
                     {menuProject.projectName || menuProject.title || 'Project'}
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#6B7280', marginTop: hp('0.2%') }}>
+                  <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#6B7280', marginTop: hp('0.2%') }}>
                     Manage project content
                   </Text>
                 </View>
@@ -925,10 +925,10 @@ const MyProjects = () => {
                   <Ionicons name="add-circle-outline" size={wp('5.5%')} color="#059669" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), color: '#0F172A' }}>
+                  <Text style={{ fontWeight: '600', fontSize: wp('4%'), color: '#0F172A' }}>
                     Add Property Summary
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#9CA3AF', marginTop: hp('0.2%') }}>
+                  <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#9CA3AF', marginTop: hp('0.2%') }}>
                     Write a description for this project
                   </Text>
                 </View>
@@ -958,10 +958,10 @@ const MyProjects = () => {
                   <Ionicons name="document-text-outline" size={wp('5.5%')} color="#2563EB" />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), color: '#0F172A' }}>
+                  <Text style={{ fontWeight: '600', fontSize: wp('4%'), color: '#0F172A' }}>
                     View Property Summary
                   </Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#9CA3AF', marginTop: hp('0.2%') }}>
+                  <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#9CA3AF', marginTop: hp('0.2%') }}>
                     Preview the existing summary
                   </Text>
                 </View>
@@ -981,7 +981,7 @@ const MyProjects = () => {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4%'), color: '#4B5563' }}>Cancel</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('4%'), color: '#4B5563' }}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>

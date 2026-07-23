@@ -101,7 +101,7 @@ const ProjectInFocus = () => {
   }, [city, locality, pincode]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Header */}
       <View className="flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingTop: hp('2%'), paddingBottom: hp('2.5%') }}>
         <TouchableOpacity
@@ -110,7 +110,7 @@ const ProjectInFocus = () => {
         >
           <ArrowLeft size={wp('6%')} color="#101828" />
         </TouchableOpacity>
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('6%'), marginLeft: wp('2%') }}>
+        <Text className="font-bold text-[#101828]" style={{ fontSize: wp('6%'), marginLeft: wp('2%') }}>
           Project in Focus
         </Text>
       </View>
@@ -119,18 +119,18 @@ const ProjectInFocus = () => {
       {loading && projectsList.length === 0 ? (
         <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
           <ActivityIndicator size="large" color="#008E96" />
-          <Text className="font-inter-medium text-[#6A7282]" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Fetching focus projects...</Text>
+          <Text className="font-medium text-[#6A7282]" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Fetching focus projects...</Text>
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%'), paddingHorizontal: wp('10%') }}>
-          <Text className="text-red-500 font-inter-semibold text-center" style={{ marginBottom: hp('2%'), fontSize: wp('3.5%') }}>{error}</Text>
+          <Text className="text-red-500 font-semibold text-center" style={{ marginBottom: hp('2%'), fontSize: wp('3.5%') }}>{error}</Text>
           <TouchableOpacity
             onPress={() => loadFocusProjects(1, false)}
             className="flex-row items-center bg-[#008E96]"
             style={{ gap: wp('2%'), paddingHorizontal: wp('6%'), paddingVertical: hp('1.5%'), borderRadius: wp('3%') }}
           >
             <RefreshCcw size={wp('4.5%')} color="white" />
-            <Text className="text-white font-inter-bold" style={{ fontSize: wp('3.5%') }}>Retry</Text>
+            <Text className="text-white font-bold" style={{ fontSize: wp('3.5%') }}>Retry</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -159,7 +159,7 @@ const ProjectInFocus = () => {
           onEndReachedThreshold={0.2}
           ListEmptyComponent={
             <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
-              <Text className="font-inter-medium text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>No focus projects found.</Text>
+              <Text className="font-medium text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>No focus projects found.</Text>
             </View>
           }
           ListFooterComponent={

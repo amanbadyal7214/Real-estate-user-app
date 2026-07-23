@@ -8,18 +8,18 @@ const ProjectConfigCard = ({ title, areaRange, priceRange, onPress }) => {
       className="bg-white border border-[#E5E7EB] rounded-[14px] p-[12.6px] mr-3"
       style={{ width: 170, height: 166 }}
     >
-      <View className="flex-1">
-        <Text className="font-inter-medium text-[#101828] text-[16px] leading-[24px] mb-2">{title}</Text>
+      <View style={{ flex: 1 }}>
+        <Text className="font-medium text-[#101828] text-[16px] leading-[24px] mb-2">{title}</Text>
         
         <View className="mb-4">
-          <Text className="font-inter-regular text-[#6A7282] text-[12px] leading-[16px]">Super Builtup Area</Text>
+          <Text className="font-normal text-[#6A7282] text-[12px] leading-[16px]">Super Builtup Area</Text>
           <View className="flex-row items-center gap-1">
-             <Text className="font-inter-regular text-[#101828] text-[12px] leading-[16px]">{areaRange}</Text>
+             <Text className="font-normal text-[#101828] text-[12px] leading-[16px]">{areaRange}</Text>
           </View>
         </View>
 
         <View className="border-t border-dashed border-[#E5E7EB] pt-2 mb-2">
-          <Text className="font-inter-regular text-[#101828] text-[16px] leading-[24px]">{priceRange}</Text>
+          <Text className="font-normal text-[#101828] text-[16px] leading-[24px]">{priceRange}</Text>
         </View>
 
         {/* See Floor Plan button removed per request */}

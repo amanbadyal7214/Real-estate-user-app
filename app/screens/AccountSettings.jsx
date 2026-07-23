@@ -8,7 +8,7 @@ const AccountSettings = () => {
   const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Top Header Back Button */}
       <View style={{ paddingHorizontal: wp('5.3%'), paddingTop: hp('1.5%') }}>
         <TouchableOpacity
@@ -28,7 +28,7 @@ const AccountSettings = () => {
       >
         {/* Title */}
         <Text
-          style={{ fontFamily: 'Inter-Bold', fontSize: wp('7.5%'), marginTop: hp('2%'), marginBottom: hp('3.9%') }}
+          style={{ fontWeight: '700', fontSize: wp('7.5%'), marginTop: hp('2%'), marginBottom: hp('3.9%') }}
           className="text-[#101828]"
         >
           Account Settings
@@ -44,7 +44,7 @@ const AccountSettings = () => {
             <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
               <UserMinus size={wp('5.9%')} color="#008E96" strokeWidth={2} />
               <Text
-                style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.8%') }}
+                style={{ fontWeight: '600', fontSize: wp('4.8%') }}
                 className="text-[#008E96]"
               >
                 Deactivate my account
@@ -53,7 +53,7 @@ const AccountSettings = () => {
             <ChevronRight size={wp('5.3%')} color="#008E96" />
           </TouchableOpacity>
           <Text
-            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginTop: hp('1%') }}
+            style={{ fontWeight: '400', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginTop: hp('1%') }}
             className="text-[#4A5565]"
           >
             Deactivating an account means temporarily disabling your account without permanently deleting it.Your profile and content may be hidden from other users.The platform usually keeps your data and account information stored.{"\n\n"}You can typically reactivate the account later by logging back in.
@@ -70,7 +70,7 @@ const AccountSettings = () => {
             <View className="flex-row items-center" style={{ gap: wp('3.2%') }}>
               <UserX size={wp('5.9%')} color="#008E96" strokeWidth={2} />
               <Text
-                style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.8%') }}
+                style={{ fontWeight: '600', fontSize: wp('4.8%') }}
                 className="text-[#008E96]"
               >
                 Delete my account
@@ -79,7 +79,7 @@ const AccountSettings = () => {
             <ChevronRight size={wp('5.3%')} color="#008E96" />
           </TouchableOpacity>
           <Text
-            style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginTop: hp('1%') }}
+            style={{ fontWeight: '400', fontSize: wp('3.7%'), lineHeight: wp('5.9%'), marginTop: hp('1%') }}
             className="text-[#4A5565]"
           >
             Deleting an account means permanently removing your account from a platform.Once deleted, you may lose access to your profile, data, and settings.In many cases, deleted accounts cannot be recovered after a certain period.This action is usually irreversible and removes your presence from the service.
@@ -91,7 +91,7 @@ const AccountSettings = () => {
       <View className="items-center justify-center bg-white" style={{ paddingVertical: hp('2.9%') }}>
         <TouchableOpacity activeOpacity={0.7}>
           <Text
-            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }}
+            style={{ fontWeight: '500', fontSize: wp('3.7%') }}
             className="text-[#008E96]"
           >
             Terms & Conditions

@@ -247,7 +247,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
           </View>
 
           <View className="flex-row justify-between items-center mb-1">
-            <Text className="text-[#101828] text-2xl font-inter-bold">
+            <Text className="text-[#101828] text-2xl font-bold">
               {step === 1 ? "Forgot Password" : step === 2 ? "Verify Phone" : "Reset Password"}
             </Text>
             <TouchableOpacity
@@ -264,11 +264,11 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
 
           {step === 1 && (
             <>
-              <Text className="text-[#475467] text-sm font-inter-regular text-center mb-6 leading-5 px-4">
+              <Text className="text-[#475467] text-sm font-normal text-center mb-6 leading-5 px-4">
                 Enter your registered mobile number to receive a verification OTP.
               </Text>
 
-              <Text className="text-[#344054] text-sm font-inter-medium mb-1.5">
+              <Text className="text-[#344054] text-sm font-medium mb-1.5">
                 Mobile Number
               </Text>
               <View
@@ -280,13 +280,13 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                 }}
               >
                 <View className="bg-[#F2F4F7] px-3.5 py-2.5 border-r border-[#E4E7EC]">
-                  <Text className="text-[#344054] font-inter-semibold">+91</Text>
+                  <Text className="text-[#344054] font-semibold">+91</Text>
                 </View>
                 <TextInput
                   placeholder="Enter 10-digit number"
                   keyboardType="numeric"
                   maxLength={10}
-                  className="flex-1 px-3.5 py-2.5 text-[#101828] text-sm font-inter-regular bg-transparent"
+                  className="flex-1 px-3.5 py-2.5 text-[#101828] text-sm font-normal bg-transparent"
                   placeholderTextColor="#9CA3AF"
                   value={mobileNumber}
                   onChangeText={setMobileNumber}
@@ -303,7 +303,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                 disabled={loading}
               >
                 {loading && <ActivityIndicator size="small" color="white" />}
-                <Text className="text-white font-inter-semibold text-base">
+                <Text className="text-white font-semibold text-base">
                   {loading ? "Sending..." : "Send OTP"}
                 </Text>
               </TouchableOpacity>
@@ -312,11 +312,11 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
 
           {step === 2 && (
             <>
-              <Text className="text-[#475467] text-sm font-inter-regular text-center mb-5 leading-5 px-4">
+              <Text className="text-[#475467] text-sm font-normal text-center mb-5 leading-5 px-4">
                 We&apos;ve sent a 6-digit verification code to your phone number.
               </Text>
 
-              <Text className="text-[#344054] text-sm font-inter-medium mb-2 text-center">
+              <Text className="text-[#344054] text-sm font-medium mb-2 text-center">
                 Enter OTP sent to +91 {mobileNumber}
               </Text>
 
@@ -342,7 +342,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                           borderWidth: isFocusedBox ? 1.5 : 1,
                         }}
                       >
-                        <Text className="text-[#101828] text-lg font-inter-semibold">
+                        <Text className="text-[#101828] text-lg font-semibold">
                           {char}
                         </Text>
                       </View>
@@ -370,12 +370,12 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
 
               <View className="items-center mb-4">
                 {timer > 0 ? (
-                  <Text className="text-[#6A7282] text-sm font-inter-regular">
-                    Resend code in <Text className="font-inter-semibold text-[#101828]">{timer}s</Text>
+                  <Text className="text-[#6A7282] text-sm font-normal">
+                    Resend code in <Text className="font-semibold text-[#101828]">{timer}s</Text>
                   </Text>
                 ) : (
                   <TouchableOpacity onPress={handleSendOtp} className="py-1">
-                    <Text className="font-inter-semibold text-sm" style={{ color: PRIMARY_COLOR }}>
+                    <Text className="font-semibold text-sm" style={{ color: PRIMARY_COLOR }}>
                       Resend OTP
                     </Text>
                   </TouchableOpacity>
@@ -388,7 +388,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                   onPress={handleBack}
                   disabled={loading}
                 >
-                  <Text className="text-[#344054] font-inter-semibold text-sm">
+                  <Text className="text-[#344054] font-semibold text-sm">
                     Back
                   </Text>
                 </TouchableOpacity>
@@ -399,7 +399,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                   disabled={loading}
                 >
                   {loading && <ActivityIndicator size="small" color="white" />}
-                  <Text className="text-white font-inter-semibold text-sm">
+                  <Text className="text-white font-semibold text-sm">
                     {loading ? "Verifying..." : "Verify OTP"}
                   </Text>
                 </TouchableOpacity>
@@ -409,7 +409,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
 
           {step === 3 && (
             <>
-              <Text className="text-[#344054] text-sm font-inter-medium mb-1.5">
+              <Text className="text-[#344054] text-sm font-medium mb-1.5">
                 New Password
               </Text>
               <View
@@ -422,7 +422,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                 <TextInput
                   placeholder="Enter New Password"
                   secureTextEntry={!showNewPassword}
-                  className="flex-1 text-[#101828] text-sm font-inter-regular"
+                  className="flex-1 text-[#101828] text-sm font-normal"
                   placeholderTextColor="#9CA3AF"
                   value={newPassword}
                   onChangeText={setNewPassword}
@@ -436,7 +436,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
               </View>
               <PasswordValidator password={newPassword} />
 
-              <Text className="text-[#344054] text-sm font-inter-medium mb-1.5">
+              <Text className="text-[#344054] text-sm font-medium mb-1.5">
                 Confirm Password
               </Text>
               <View
@@ -449,7 +449,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                 <TextInput
                   placeholder="Confirm Password"
                   secureTextEntry={!showConfirmPassword}
-                  className="flex-1 text-[#101828] text-sm font-inter-regular"
+                  className="flex-1 text-[#101828] text-sm font-normal"
                   placeholderTextColor="#9CA3AF"
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
@@ -469,7 +469,7 @@ const ForgotPasswordModal = ({ visible, onClose, setToast, onLoginSuccess }) => 
                 disabled={loading}
               >
                 {loading && <ActivityIndicator size="small" color="white" />}
-                <Text className="text-white font-inter-semibold text-base">
+                <Text className="text-white font-semibold text-base">
                   {loading ? "Resetting..." : "Reset Password"}
                 </Text>
               </TouchableOpacity>

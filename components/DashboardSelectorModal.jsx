@@ -170,14 +170,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: 'Inter-Bold',
+    fontWeight: '700',
     color: '#111827',
     textAlign: 'center',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: 'Inter-Regular',
+    fontWeight: '400',
     color: '#6B7280',
     textAlign: 'center',
     lineHeight: 20,
@@ -214,13 +214,13 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontFamily: 'Inter-SemiBold',
+    fontWeight: '600',
     color: '#1F2937',
     marginBottom: 4,
   },
   cardSubtitle: {
     fontSize: 12,
-    fontFamily: 'Inter-Regular',
+    fontWeight: '400',
     color: '#6B7280',
     lineHeight: 16,
   },
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     fontSize: 15,
-    fontFamily: 'Inter-Medium',
+    fontWeight: '500',
     color: '#4B5563',
   },
 });

@@ -496,7 +496,7 @@ const Buy = () => {
   const visibleLocalities = bestLocalities.slice(0, 4);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Top Header */}
       <UserHeader />
 
@@ -528,7 +528,7 @@ const Buy = () => {
         {/* Matches Section */}
         <View className="px-4 mt-8 mb-6">
           <View className="flex-row items-center justify-between mb-2">
-            <Text className="font-inter-bold text-[16px] text-[#101828]">Top picks for you</Text>
+            <Text className="font-bold text-[16px] text-[#101828]">Top picks for you</Text>
             <TouchableOpacity
               onPress={() => handleProtectedViewMore({
                 pathname: '/screens/PrefectlyMatchedHome',
@@ -539,10 +539,10 @@ const Buy = () => {
                 }
               })}
             >
-              <Text className="font-inter-medium text-[12px] text-primary">View more</Text>
+              <Text className="font-medium text-[12px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
-          <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[12px] text-[#667085] mb-4">Homes built by people you can trust</Text>
+          <Text style={{ fontWeight: '400' }} className="text-[12px] text-[#667085] mb-4">Homes built by people you can trust</Text>
 
           {discoveryLoading ? (
             <ActivityIndicator color="#008E96" />
@@ -569,7 +569,7 @@ const Buy = () => {
           {/* Section Header */}
           <View className="flex-row items-center gap-2 mb-4">
             <Text className="text-[#FB2C36] text-[18px]">⭐</Text>
-            <Text className="font-inter-bold text-[15px] text-[#101828]">Popular on HousingMania</Text>
+            <Text className="font-bold text-[15px] text-[#101828]">Popular on HousingMania</Text>
           </View>
 
           {/* Tools Grid Card */}
@@ -592,7 +592,7 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
                   <Ionicons name="bulb-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Top Picks</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">Top Picks</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -601,7 +601,7 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
                   <Ionicons name="pricetag-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Best Offers</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">Best Offers</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -610,7 +610,7 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
                   <Ionicons name="newspaper-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[12px] text-[#364153] text-center leading-[18px]">Market Updates</Text>
+                <Text className="font-medium text-[12px] text-[#364153] text-center leading-[18px]">Market Updates</Text>
               </TouchableOpacity>
             </View>
 
@@ -621,7 +621,7 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
                   <Ionicons name="calculator-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Payment Plan</Text>
+                <Text className="font-medium text-[11px] text-[#364153] text-center leading-[14px]">Payment Plan</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -630,7 +630,7 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
                   <Ionicons name="stats-chart-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">What&apos;s my budget?</Text>
+                <Text className="font-medium text-[11px] text-[#364153] text-center leading-[14px]">What&apos;s my budget?</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -639,7 +639,7 @@ const Buy = () => {
                 <View className="w-12 h-12 bg-[#DBEAEB]/45 rounded-[14px] items-center justify-center mb-2" style={{ width: wp('12.8%'), height: wp('12.8%'), borderRadius: wp('3.7%') }}>
                   <Ionicons name="checkmark-done-circle-outline" size={wp('6.4%')} color="#008E96" />
                 </View>
-                <Text className="font-inter-medium text-[11px] text-[#364153] text-center leading-[14px]">Eligibility Calculator</Text>
+                <Text className="font-medium text-[11px] text-[#364153] text-center leading-[14px]">Eligibility Calculator</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -666,7 +666,7 @@ const Buy = () => {
           >
             <View className="flex-1 pr-2" style={{ gap: 12 }}>
               <Text
-                className="font-inter-bold text-[12px] text-[#101828] leading-[18px]"
+                className="font-bold text-[12px] text-[#101828] leading-[18px]"
                 style={{ width: wp('51.5%') }}
               >
                 Want to sell or rent out your place?
@@ -677,14 +677,14 @@ const Buy = () => {
                   <View className="w-4 h-4 bg-[#008E96] rounded-full items-center justify-center">
                     <MaterialCommunityIcons name="check" size={10} color="white" />
                   </View>
-                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Pay zero fees</Text>
+                  <Text className="font-normal text-[12px] text-[#364153] leading-[18px]">Pay zero fees</Text>
                 </View>
 
                 <View className="flex-row items-center" style={{ gap: 8 }}>
                   <View className="w-4 h-4 bg-[#008E96] rounded-full items-center justify-center">
                     <MaterialCommunityIcons name="check" size={10} color="white" />
                   </View>
-                  <Text className="font-inter-regular text-[12px] text-[#364153] leading-[18px]">Talk to real, verified buyers</Text>
+                  <Text className="font-normal text-[12px] text-[#364153] leading-[18px]">Talk to real, verified buyers</Text>
                 </View>
               </View>
             </View>
@@ -731,13 +731,13 @@ const Buy = () => {
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
               <Text
-                className="font-inter-bold text-[#101828]"
+                className="font-bold text-[#101828]"
                 style={{ fontSize: 15, lineHeight: 18 }}
               >
                 Most popular right now
               </Text>
               <Text
-                className="font-inter-regular text-[#6A7282]"
+                className="font-normal text-[#6A7282]"
                 style={{ fontSize: 11, lineHeight: 16 }}
               >
                 Limited homes available — don&apos;t miss out
@@ -753,7 +753,7 @@ const Buy = () => {
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text
-                className="font-inter-medium text-[#008E96]"
+                className="font-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
               >
                 View more
@@ -785,13 +785,13 @@ const Buy = () => {
           <View className="flex-row items-center justify-between">
             <View style={{ gap: 1 }}>
               <Text
-                className="font-inter-bold text-[#101828]"
+                className="font-bold text-[#101828]"
                 style={{ fontSize: 17, lineHeight: 21 }}
               >
                 Expert&apos;s choice
               </Text>
               <Text
-                className="font-inter-regular text-[#6A7282]"
+                className="font-normal text-[#6A7282]"
                 style={{ fontSize: 13, lineHeight: 20 }}
               >
                 The best places to live for you and your family
@@ -809,7 +809,7 @@ const Buy = () => {
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Text
-                className="font-inter-medium text-[#008E96]"
+                className="font-medium text-[#008E96]"
                 style={{ fontSize: 14, lineHeight: 21 }}
               >
                 View more
@@ -842,9 +842,9 @@ const Buy = () => {
         {/* Best Rated Localities Section */}
         <View className="px-4 mb-4 " >
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="font-inter-bold text-[15px] text-[#101828]">Top-rated neighborhoods</Text>
+            <Text className="font-bold text-[15px] text-[#101828]">Top-rated neighborhoods</Text>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestRatedLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -854,7 +854,7 @@ const Buy = () => {
             </View>
           ) : visibleLocalities.length === 0 ? (
             <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
-              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No best-rated locality data available right now.</Text>
+              <Text className="font-medium text-[13px] text-[#6A7282]">No best-rated locality data available right now.</Text>
             </View>
           ) : (
             <View className="relative">
@@ -882,11 +882,11 @@ const Buy = () => {
         <View className="px-4 ">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-bold text-[15px] text-[#101828]">Trusted Home Builders</Text>
-              <Text className="font-inter-regular text-[11px] text-[#6A7282]">Builders with the best track record</Text>
+              <Text className="font-bold text-[15px] text-[#101828]">Trusted Home Builders</Text>
+              <Text className="font-normal text-[11px] text-[#6A7282]">Builders with the best track record</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/TopRatedDevelopers')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-medium text-[14px] text-primary">View more</Text>
+              <Text className="font-medium text-[14px] text-primary">View more</Text>
             </TouchableOpacity>
           </View>
 
@@ -906,7 +906,7 @@ const Buy = () => {
                 </View>
               ))
             ) : (
-              <Text className="font-inter-regular text-[13px] text-[#6A7282]">No top developers available right now.</Text>
+              <Text className="font-normal text-[13px] text-[#6A7282]">No top developers available right now.</Text>
             )}
           </View>
 
@@ -937,7 +937,7 @@ const Buy = () => {
                     />
                   ))
                 ) : (
-                  <Text className="font-inter-regular text-[13px] text-[#6A7282]">No projects found for this developer.</Text>
+                  <Text className="font-normal text-[13px] text-[#6A7282]">No projects found for this developer.</Text>
                 )}
               </ScrollView>
             )}
@@ -949,11 +949,11 @@ const Buy = () => {
         <View className="px-4 py-6">
           <View className="flex-row justify-between items-center mb-4">
             <View>
-              <Text className="font-inter-bold text-[16px] text-[#101828]">Handpicked for you</Text>
-              <Text className="font-inter-regular text-[12px] text-[#667085]">Homes that fit what you’re looking for</Text>
+              <Text className="font-bold text-[16px] text-[#101828]">Handpicked for you</Text>
+              <Text className="font-normal text-[12px] text-[#667085]">Homes that fit what you’re looking for</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore({ pathname: '/screens/RecommendedProperties', params: { lookingFor: 'sell' } })} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-regular text-[16px] text-[#008E96]">See all</Text>
+              <Text className="font-normal text-[16px] text-[#008E96]">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -979,8 +979,8 @@ const Buy = () => {
         {/* Recommended Sellers Section */}
         <View className="px-4 mb-3">
           <View className="mb-4">
-            <Text className="font-inter-semibold text-[15px] text-[#101828]">Recommended Sellers</Text>
-            <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
+            <Text className="font-semibold text-[15px] text-[#101828]">Recommended Sellers</Text>
+            <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
           </View>
 
           <ScrollView
@@ -1004,11 +1004,11 @@ const Buy = () => {
         <View className="px-4 mb-3">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[15px] text-[#101828]">Better Priced Properties</Text>
-              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Based on properties you viewed</Text>
+              <Text className="font-semibold text-[15px] text-[#101828]">Better Priced Properties</Text>
+              <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">Based on properties you viewed</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/BestPriceProperty')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -1036,11 +1036,11 @@ const Buy = () => {
           <View className="px-4 mb-1">
             <View className="flex-row items-center justify-between mb-4">
               <View className="flex-1 mr-4">
-                <Text className="font-inter-semibold text-[15px] text-[#101828]">Last Searched</Text>
-                <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Collection for Ready to Move-In, Buy, Mohali, ...</Text>
+                <Text className="font-semibold text-[15px] text-[#101828]">Last Searched</Text>
+                <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">Collection for Ready to Move-In, Buy, Mohali, ...</Text>
               </View>
               <TouchableOpacity onPress={() => router.push('/screens/LastSearched')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
-                <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+                <Text className="font-medium text-[14px] text-primary">See all</Text>
               </TouchableOpacity>
             </View>
 
@@ -1066,8 +1066,8 @@ const Buy = () => {
         {/* Recommended Insights Section */}
         <View className="px-4 ">
           <View className="mb-4">
-            <Text className="font-inter-semibold text-[15px] text-[#101828]">Recommended Insights</Text>
-            <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Based on your Top Preference</Text>
+            <Text className="font-semibold text-[15px] text-[#101828]">Recommended Insights</Text>
+            <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">Based on your Top Preference</Text>
           </View>
 
           <View className="flex-row justify-center w-full" style={{ gap: 12 }}>
@@ -1104,15 +1104,15 @@ const Buy = () => {
                 <View className="flex-row items-center justify-between">
                   <View className="flex-row items-center" style={{ gap: 4 }}>
                     <MapPin size={12} color="#364153" />
-                    <Text className="font-inter-semibold text-[13px] text-[#101828]">Locality</Text>
+                    <Text className="font-semibold text-[13px] text-[#101828]">Locality</Text>
                   </View>
                   <ChevronRight size={14} color="#4A5565" />
                 </View>
                 <View>
-                  <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
+                  <Text className="font-normal text-[12px] text-[#364153] mb-0.5 leading-4">
                     {currentLocation?.locality || 'Mohali'}
                   </Text>
-                  <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
+                  <Text className="font-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -1152,15 +1152,15 @@ const Buy = () => {
                 <View className="flex-row items-start justify-between">
                   <View className="flex-row items-start" style={{ gap: 4 }}>
                     <Home size={12} color="#364153" style={{ marginTop: 2, marginLeft: -2 }} />
-                    <Text className="font-inter-semibold text-[13px] text-[#101828] leading-4" style={{ width: 50 }}>Price range</Text>
+                    <Text className="font-semibold text-[13px] text-[#101828] leading-4" style={{ width: 50 }}>Price range</Text>
                   </View>
                   <ChevronRight size={14} color="#4A5565" style={{ marginTop: 2 }} />
                 </View>
                 <View>
-                  <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">
+                  <Text className="font-normal text-[12px] text-[#364153] mb-0.5 leading-4">
                     {cityStats ? `${formatPrice(cityStats.minPrice)} - ${formatPrice(cityStats.maxPrice)}` : '₹ 75 L - ₹ 1 Cr'}
                   </Text>
-                  <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">
+                  <Text className="font-bold text-[12px] text-[#101828] leading-4">
                     {cityStats ? `${cityStats.totalProperties} Properties` : '738 Properties'}
                   </Text>
                 </View>
@@ -1201,13 +1201,13 @@ const Buy = () => {
                 <View className="flex-row items-center justify-between">
                   <View className="flex-row items-center" style={{ gap: 4 }}>
                     <LayoutGrid size={12} color="#364153" />
-                    <Text className="font-inter-semibold text-[13px] text-[#101828]">BHK</Text>
+                    <Text className="font-semibold text-[13px] text-[#101828]">BHK</Text>
                   </View>
                   <ChevronRight size={14} color="#4A5565" />
                 </View>
                 <View>
-                  <Text className="font-inter-regular text-[12px] text-[#364153] mb-0.5 leading-4">3 BHK</Text>
-                  <Text className="font-inter-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
+                  <Text className="font-normal text-[12px] text-[#364153] mb-0.5 leading-4">3 BHK</Text>
+                  <Text className="font-bold text-[12px] text-[#101828] leading-4">View Properties</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -1218,11 +1218,11 @@ const Buy = () => {
         <View className="px-4  mt-6">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[15px] text-[#101828]">Explore Localities</Text>
-              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">See insights and videos in {currentLocation?.city || 'Mohali'}</Text>
+              <Text className="font-semibold text-[15px] text-[#101828]">Explore Localities</Text>
+              <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">See insights and videos in {currentLocation?.city || 'Mohali'}</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 
@@ -1232,11 +1232,11 @@ const Buy = () => {
             </View>
           ) : localityError ? (
             <View className="rounded-[20px] bg-[#FFF5F5] border border-[#FEE2E2] px-4 py-3">
-              <Text className="font-inter-medium text-[13px] text-[#B42318]">{localityError}</Text>
+              <Text className="font-medium text-[13px] text-[#B42318]">{localityError}</Text>
             </View>
           ) : exploreLocalities.length === 0 ? (
             <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-5">
-              <Text className="font-inter-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
+              <Text className="font-medium text-[13px] text-[#6A7282]">No locality pricing data available right now.</Text>
             </View>
           ) : (
             <ScrollView
@@ -1262,11 +1262,11 @@ const Buy = () => {
         <View className="px-4  mt-4">
           <View className="flex-row items-center justify-between mb-4">
             <View>
-              <Text className="font-inter-semibold text-[15px] text-[#101828]">News For You</Text>
-              <Text className="font-inter-regular text-[11px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
+              <Text className="font-semibold text-[15px] text-[#101828]">News For You</Text>
+              <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">Read whats happening in real estate</Text>
             </View>
             <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/NewsForYou')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} >
-              <Text className="font-inter-medium text-[14px] text-primary">See all</Text>
+              <Text className="font-medium text-[14px] text-primary">See all</Text>
             </TouchableOpacity>
           </View>
 

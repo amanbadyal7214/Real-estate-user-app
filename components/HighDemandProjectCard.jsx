@@ -70,7 +70,7 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           {/* Price Range */}
           <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('1.2%'), width: wp('53.4%'), height: hp('2.2%') }}>
             <Text
-                className="font-inter-bold text-[#101828]"
+                className="font-bold text-[#101828]"
                 style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%') }}
               >
                 {(() => {
@@ -100,7 +100,7 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           {/* Title */}
             <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('3.2%'), width: wp('53.4%'), height: hp('2.2%') }}>
               <Text
-                className="font-inter-semibold text-[#101828]"
+                className="font-semibold text-[#101828]"
                 style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -112,19 +112,19 @@ const HighDemandProjectCard = ({ image, priceRange, title, developer, location, 
           {/* Developer */}
             <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('5.4%'), width: wp('53.4%') }}>
               <Text
-                className="font-inter-regular text-[#4A5565]"
+                className="font-normal text-[#4A5565]"
                 style={{ fontSize: wp('2.3%'), lineHeight: hp('1.6%') }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                by <Text className="font-inter-medium">{developer}</Text>
+                by <Text className="font-medium">{developer}</Text>
               </Text>
             </View>
 
           {/* Location (allow wrapping, up to 2 lines) */}
             <View style={{ position: 'absolute', left: wp('4.3%'), top: hp('7.4%'), width: wp('53.4%') }}>
               <Text
-                className="font-inter-regular text-[#4A5565]"
+                className="font-normal text-[#4A5565]"
                 style={{ fontSize: wp('2.3%'), lineHeight: hp('1.6%'), flexWrap: 'wrap' }}
                 numberOfLines={2}
                 ellipsizeMode="tail"

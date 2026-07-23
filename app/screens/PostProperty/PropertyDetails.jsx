@@ -3,7 +3,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLookup } from '../../../hooks/useLookup';
 import { useProperty } from '../../../hooks/useProperty';
 import { useProject } from '../../../hooks/useProject';
@@ -535,11 +536,11 @@ const PropertyDetails = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F9FAFB]">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }}>
       {(lookupLoading || loadingEditData) && currentStep === 1 && (
         <View className="absolute inset-0 bg-white/80 z-[999] items-center justify-center">
           <ActivityIndicator size="large" color="#008E96" />
-          <Text className="text-[#008E96] font-inter-semibold mt-4">Loading listing details...</Text>
+          <Text className="text-[#008E96] font-semibold mt-4">Loading listing details...</Text>
         </View>
       )}
       {/* Header Background */}
@@ -560,7 +561,7 @@ const PropertyDetails = () => {
           >
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('7.2%') }}>Post Property</Text>
+          <Text className="text-white" style={{ fontWeight: '700', fontSize: wp('7.2%') }}>Post Property</Text>
           <View style={{ width: 24 }} />
         </View>
 
@@ -587,7 +588,7 @@ const PropertyDetails = () => {
                   </Text>
                 )}
               </View>
-              <Text className={`mt-2 ${step.id <= currentStep ? 'text-white' : 'text-white/50'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.4%') }}>{step.label}</Text>
+              <Text className={`mt-2 ${step.id <= currentStep ? 'text-white' : 'text-white/50'}`} style={{ fontWeight: '500', fontSize: wp('2.4%') }}>{step.label}</Text>
             </View>
           ))}
         </View>
@@ -611,7 +612,7 @@ const PropertyDetails = () => {
                       onPress={() => setSelectedCategory(cat.label || cat.name)}
                       className={`flex-1 py-4 rounded-2xl items-center border-2 ${selectedCategory === (cat.label || cat.name) ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
                     >
-                      <Text className={`text-base ${selectedCategory === (cat.label || cat.name) ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>
+                      <Text className={`text-base ${selectedCategory === (cat.label || cat.name) ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontWeight: '500' }}>
                         {cat.label || cat.name}
                       </Text>
                     </TouchableOpacity>
@@ -619,7 +620,7 @@ const PropertyDetails = () => {
                 </View>
 
                 {/* Property Type Section */}
-                <Text className="text-[#6A7282] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Property Type</Text>
+                <Text className="text-[#6A7282] text-sm mb-4" style={{ fontWeight: '500' }}>Property Type</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
                   <View className="flex-row gap-3">
                     {propertyTypes.map((item) => (
@@ -629,7 +630,7 @@ const PropertyDetails = () => {
                         className={`rounded-2xl items-center justify-center border-2 ${selectedPropertyType === item.label ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`} style={{ width: wp('26.7%'), height: wp('26.7%') }}
                       >
                         <Ionicons name={item.icon} size={28} color={selectedPropertyType === item.label ? '#008E96' : '#99A1AF'} />
-                        <Text className={`text-center mt-1.5 px-1 ${selectedPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.9%') }}>{item.label}</Text>
+                        <Text className={`text-center mt-1.5 px-1 ${selectedPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontWeight: '500', fontSize: wp('2.9%') }}>{item.label}</Text>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -638,7 +639,7 @@ const PropertyDetails = () => {
                 {/* Sub-Property Type Section */}
                 {subPropertyTypes.length > 0 && (
                   <>
-                    <Text className="text-[#6A7282] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Sub Property Type</Text>
+                    <Text className="text-[#6A7282] text-sm mb-4" style={{ fontWeight: '500' }}>Sub Property Type</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
                       <View className="flex-row gap-3">
                         {subPropertyTypes.map((item) => (
@@ -648,7 +649,7 @@ const PropertyDetails = () => {
                             className={`rounded-2xl items-center justify-center border-2 ${selectedSubPropertyType === item.label ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`} style={{ width: wp('26.7%'), height: wp('26.7%') }}
                           >
                             <Ionicons name={item.icon} size={28} color={selectedSubPropertyType === item.label ? '#008E96' : '#99A1AF'} />
-                            <Text className={`text-center mt-1.5 px-1 ${selectedSubPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.9%') }}>{item.label}</Text>
+                            <Text className={`text-center mt-1.5 px-1 ${selectedSubPropertyType === item.label ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontWeight: '500', fontSize: wp('2.9%') }}>{item.label}</Text>
                           </TouchableOpacity>
                         ))}
                       </View>
@@ -662,23 +663,23 @@ const PropertyDetails = () => {
                     placeholder="Property Title (e.g. 2BHK Apartment in Sector 45)" 
                     placeholderTextColor="#A0A0A0"
                     className="text-base py-1"
-                    style={{ fontFamily: 'Inter-Regular' }}
+                    style={{ fontWeight: '400' }}
                     value={postData.propertyDetails.title}
                     onChangeText={(val) => updatePropertyDetails({ title: val })}
                   />
                 </View>
 
                 <View className="flex-row items-center justify-between mb-4">
-                  <Text className="text-[#6A7282] text-sm" style={{ fontFamily: 'Inter-Medium' }}>Location Details</Text>
+                  <Text className="text-[#6A7282] text-sm" style={{ fontWeight: '500' }}>Location Details</Text>
                 </View>
                 {/* Country and Pincode Section (swapped with City) */}
                 <View className="flex-row gap-4 mb-6">
-                  <View className="flex-1">
+                  <View style={{ flex: 1 }}>
                     <TouchableOpacity 
                       onPress={() => setShowCountryDropdown(!showCountryDropdown)}
                       className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                     >
-                      <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                      <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                         {postData.propertyDetails.country || 'Select Country'}
                       </Text>
                       <Ionicons name={showCountryDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
@@ -698,7 +699,7 @@ const PropertyDetails = () => {
                             }}
                             className="px-4 py-3 border-b border-[#F3F4F6]"
                           >
-                            <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{c.label || c.name || c.country || c.title}</Text>
+                            <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{c.label || c.name || c.country || c.title}</Text>
                           </TouchableOpacity>
                         ))}
                       </View>
@@ -710,7 +711,7 @@ const PropertyDetails = () => {
                       placeholderTextColor="#A0A0A0"
                       className="text-base py-1"
                       keyboardType="numeric"
-                      style={{ fontFamily: 'Inter-Regular' }}
+                      style={{ fontWeight: '400' }}
                       value={postData.propertyDetails.pincode}
                       onChangeText={(val) => updatePropertyDetails({ pincode: val })}
                     />
@@ -719,14 +720,14 @@ const PropertyDetails = () => {
 
                 {/* State and Country Section */}
                 <View className="flex-row gap-4 mb-6">
-                  <View className="flex-1">
+                  <View style={{ flex: 1 }}>
                     {selectedCountryId ? (
                       <>
                         <TouchableOpacity 
                           onPress={() => setShowStateDropdown(!showStateDropdown)}
                           className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                         >
-                          <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                             {postData.propertyDetails.state || 'Select State'}
                           </Text>
                           <Ionicons name={showStateDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
@@ -739,7 +740,7 @@ const PropertyDetails = () => {
                                 onPress={() => { updatePropertyDetails({ state: s.label || s.name, stateId: s._id || s.id, city: '', cityId: '' }); setShowStateDropdown(false); setCitiesList([]); fetchCities(s._id || s.id); }}
                                 className="px-4 py-3 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{s.label || s.name}</Text>
+                                <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{s.label || s.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -751,14 +752,14 @@ const PropertyDetails = () => {
                       </View>
                     )}
                   </View>
-                  <View className="flex-1">
+                  <View style={{ flex: 1 }}>
                     {selectedStateId ? (
                       <>
                         <TouchableOpacity 
                           onPress={() => setShowCityDropdown(!showCityDropdown)}
                           className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                         >
-                          <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                             {postData.propertyDetails.city || 'Select City'}
                           </Text>
                           <Ionicons name={showCityDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
@@ -771,7 +772,7 @@ const PropertyDetails = () => {
                                 onPress={() => { updatePropertyDetails({ city: c.label || c.name, cityId: c._id || c.id }); setShowCityDropdown(false); }}
                                 className="px-4 py-3 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{c.label || c.name}</Text>
+                                <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{c.label || c.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -791,7 +792,7 @@ const PropertyDetails = () => {
                       placeholder="Building/ Project/ Society (Optional)" 
                       placeholderTextColor="#A0A0A0"
                       className="text-base py-1 flex-1"
-                      style={{ fontFamily: 'Inter-Regular' }}
+                      style={{ fontWeight: '400' }}
                       value={postData.propertyDetails.buildingName}
                       onChangeText={(val) => updatePropertyDetails({ buildingName: val, projectId: '' })}
                     />
@@ -814,12 +815,12 @@ const PropertyDetails = () => {
                             className="px-4 py-3 border-b border-[#F3F4F6] flex-row items-center gap-2"
                           >
                             <Ionicons name="business-outline" size={16} color="#6A7282" />
-                            <View className="flex-1">
-                              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-sm text-[#364153]">
+                            <View style={{ flex: 1 }}>
+                              <Text style={{ fontWeight: '500' }} className="text-sm text-[#364153]">
                                 {item.projectName || item.name}
                               </Text>
                               {item.locality && (
-                                <Text className="text-[#6A7282]" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.9%') }}>
+                                <Text className="text-[#6A7282]" style={{ fontWeight: '400', fontSize: wp('2.9%') }}>
                                   {item.locality?.name || item.locality}
                                 </Text>
                               )}
@@ -837,7 +838,7 @@ const PropertyDetails = () => {
                         placeholder="Enter Locality" 
                         placeholderTextColor="#A0A0A0"
                         className="text-base py-1 flex-1"
-                        style={{ fontFamily: 'Inter-Regular' }}
+                        style={{ fontWeight: '400' }}
                         value={postData.propertyDetails.locality}
                         onChangeText={(val) => updatePropertyDetails({ locality: val, localityId: '' })}
                       />
@@ -860,7 +861,7 @@ const PropertyDetails = () => {
                               className="px-4 py-3 border-b border-[#F3F4F6] flex-row items-center gap-2"
                             >
                               <Ionicons name="location-outline" size={16} color="#6A7282" />
-                              <Text style={{ fontFamily: 'Inter-Medium' }} className="text-sm text-[#364153]">
+                              <Text style={{ fontWeight: '500' }} className="text-sm text-[#364153]">
                                 {item.name}
                               </Text>
                             </TouchableOpacity>
@@ -873,7 +874,7 @@ const PropertyDetails = () => {
                 {selectedPropertyType === 'Residential' ? (
                   <>
                     {/* Bedroom & Structure Section */}
-                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Bedroom & Structure</Text>
+                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Bedroom & Structure</Text>
                     <View className="flex-row gap-4 mb-6 z-[60]">
                       <View className="flex-1 border-b border-[#D1D5DC] pb-2">
                         <TextInput 
@@ -881,17 +882,17 @@ const PropertyDetails = () => {
                           placeholderTextColor="#A0A0A0"
                           className="text-base py-1"
                           keyboardType="numeric"
-                          style={{ fontFamily: 'Inter-Regular' }}
+                          style={{ fontWeight: '400' }}
                           value={postData.propertyDetails.bedrooms?.toString()}
                           onChangeText={(val) => updatePropertyDetails({ bedrooms: val })}
                         />
                       </View>
-                      <View className="flex-1">
+                      <View style={{ flex: 1 }}>
                         <TouchableOpacity 
                           onPress={() => setShowStructureDropdown(!showStructureDropdown)}
                           className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-2.5 rounded-lg"
                         >
-                          <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                             {postData.propertyDetails.structure || 'Select Structure'}
                           </Text>
                           <Ionicons name={showStructureDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
@@ -908,7 +909,7 @@ const PropertyDetails = () => {
                                 }}
                                 className="px-4 py-3 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{type.label || type.name}</Text>
+                                <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{type.label || type.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -924,7 +925,7 @@ const PropertyDetails = () => {
                           placeholderTextColor="#A0A0A0"
                           className="text-base py-1"
                           keyboardType="numeric"
-                          style={{ fontFamily: 'Inter-Regular' }}
+                          style={{ fontWeight: '400' }}
                           value={postData.propertyDetails.floor?.toString()}
                           onChangeText={(val) => updatePropertyDetails({ floor: val })}
                         />
@@ -935,7 +936,7 @@ const PropertyDetails = () => {
                           placeholderTextColor="#A0A0A0"
                           className="text-base py-1"
                           keyboardType="numeric"
-                          style={{ fontFamily: 'Inter-Regular' }}
+                          style={{ fontWeight: '400' }}
                           value={postData.propertyDetails.totalFloors?.toString()}
                           onChangeText={(val) => updatePropertyDetails({ totalFloors: val })}
                         />
@@ -943,13 +944,13 @@ const PropertyDetails = () => {
                     </View>
 
                     {/* Construction Status Section */}
-                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Construction Status</Text>
+                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Construction Status</Text>
                     <View className="mb-6 z-[50]">
                       <TouchableOpacity 
                         onPress={() => setShowStatusDropdown(!showStatusDropdown)}
                         className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                       >
-                        <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                        <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                           {postData.propertyDetails.constructionStatus || 'Select Status'}
                         </Text>
                         <Ionicons name={showStatusDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
@@ -966,7 +967,7 @@ const PropertyDetails = () => {
                               }}
                               className="px-4 py-3 border-b border-[#F3F4F6]"
                             >
-                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{status.label || status.name}</Text>
+                              <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{status.label || status.name}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
@@ -976,13 +977,13 @@ const PropertyDetails = () => {
                 ) : (
                   <>
                     {/* Commercial Specific Fields */}
-                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Possession Status</Text>
+                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Possession Status</Text>
                     <View className="mb-6 z-[80]">
                       <TouchableOpacity 
                         onPress={() => setShowStatusDropdown(!showStatusDropdown)}
                         className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                       >
-                        <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                        <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                           {postData.propertyDetails.possessionStatus || 'Select Status'}
                         </Text>
                         <Ionicons name={showStatusDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
@@ -998,21 +999,21 @@ const PropertyDetails = () => {
                               }}
                               className="px-4 py-3 border-b border-[#F3F4F6]"
                             >
-                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{status.label || status.name}</Text>
+                              <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{status.label || status.name}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
                       )}
                     </View>
 
-                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Available From</Text>
+                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Available From</Text>
                     <TouchableOpacity 
                       onPress={() => setShowDatePicker(true)}
                       className="border-b border-[#D1D5DC] pb-2 mb-6 flex-row justify-between items-center"
                     >
                       <Text 
                         className={`text-base py-1 ${postData.propertyDetails.availableFrom ? 'text-[#364153]' : 'text-[#A0A0A0]'}`}
-                        style={{ fontFamily: 'Inter-Regular' }}
+                        style={{ fontWeight: '400' }}
                       >
                         {postData.propertyDetails.availableFrom || "Select Date"}
                       </Text>
@@ -1030,13 +1031,13 @@ const PropertyDetails = () => {
                     )}
 
                     <View className="flex-row gap-4 mb-6">
-                      <View className="flex-1">
-                        <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Zone Type</Text>
+                      <View style={{ flex: 1 }}>
+                        <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Zone Type</Text>
                         <TouchableOpacity 
                           onPress={() => setShowZoneDropdown(!showZoneDropdown)}
                           className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                         >
-                          <Text className="text-[#364153] text-xs" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-[#364153] text-xs" style={{ fontWeight: '500' }}>
                             {postData.propertyDetails.zoneType || 'Select Zone'}
                           </Text>
                           <Ionicons name={showZoneDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
@@ -1052,19 +1053,19 @@ const PropertyDetails = () => {
                                 }}
                                 className="px-3 py-2 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-xs text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{zone.label || zone.name}</Text>
+                                <Text className="text-xs text-[#364153]" style={{ fontWeight: '500' }}>{zone.label || zone.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
                         )}
                       </View>
-                      <View className="flex-1">
-                        <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Location Hub</Text>
+                      <View style={{ flex: 1 }}>
+                        <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Location Hub</Text>
                         <TouchableOpacity 
                           onPress={() => setShowHubDropdown(!showHubDropdown)}
                           className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                         >
-                          <Text className="text-[#364153] text-xs" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-[#364153] text-xs" style={{ fontWeight: '500' }}>
                             {postData.propertyDetails.locationHub || 'Select Hub'}
                           </Text>
                           <Ionicons name={showHubDropdown ? "chevron-up" : "chevron-down"} size={14} color="#6A7282" />
@@ -1080,7 +1081,7 @@ const PropertyDetails = () => {
                                 }}
                                 className="px-3 py-2 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-xs text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{hub.label || hub.name}</Text>
+                                <Text className="text-xs text-[#364153]" style={{ fontWeight: '500' }}>{hub.label || hub.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -1088,7 +1089,7 @@ const PropertyDetails = () => {
                       </View>
                     </View>
 
-                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Built Up Area</Text>
+                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Built Up Area</Text>
                     <View className="flex-row gap-4 mb-6 items-end z-[60]">
                       <View className="flex-1 border-b border-[#D1D5DC] pb-2">
                         <TextInput 
@@ -1096,7 +1097,7 @@ const PropertyDetails = () => {
                           placeholderTextColor="#A0A0A0"
                           className="text-base py-1"
                           keyboardType="numeric"
-                          style={{ fontFamily: 'Inter-Regular' }}
+                          style={{ fontWeight: '400' }}
                           value={postData.propertyDetails.builtUpArea}
                           onChangeText={(val) => updatePropertyDetails({ builtUpArea: val })}
                         />
@@ -1106,7 +1107,7 @@ const PropertyDetails = () => {
                           onPress={() => setShowUnitDropdown(!showUnitDropdown)}
                           className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-2 rounded-lg border border-[#E5E7EB]"
                         >
-                          <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                             {postData.propertyDetails.measurementUnit || 'Sq. Ft'}
                           </Text>
                           <Ionicons name={showUnitDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
@@ -1123,7 +1124,7 @@ const PropertyDetails = () => {
                                 }}
                                 className="px-4 py-3 border-b border-[#F3F4F6]"
                               >
-                                <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{unit.label || unit.name}</Text>
+                                <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{unit.label || unit.name}</Text>
                               </TouchableOpacity>
                             ))}
                           </View>
@@ -1131,13 +1132,13 @@ const PropertyDetails = () => {
                       </View>
                     </View>
 
-                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>Ownership Type</Text>
+                    <Text className="text-[#6A7282] text-sm mb-2" style={{ fontWeight: '500' }}>Ownership Type</Text>
                     <View className="mb-6 z-[70]">
                       <TouchableOpacity 
                         onPress={() => setShowOwnershipDropdown(!showOwnershipDropdown)}
                         className="flex-row items-center justify-between bg-[#F3F4F6] px-3 py-3 rounded-lg border border-[#E5E7EB]"
                       >
-                        <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Medium' }}>
+                        <Text className="text-[#364153] text-sm" style={{ fontWeight: '500' }}>
                           {postData.propertyDetails.ownershipType || 'Select Type'}
                         </Text>
                         <Ionicons name={showOwnershipDropdown ? "chevron-up" : "chevron-down"} size={16} color="#6A7282" />
@@ -1153,7 +1154,7 @@ const PropertyDetails = () => {
                               }}
                               className="px-4 py-3 border-b border-[#F3F4F6]"
                             >
-                              <Text className="text-sm text-[#364153]" style={{ fontFamily: 'Inter-Medium' }}>{type.label || type.name}</Text>
+                              <Text className="text-sm text-[#364153]" style={{ fontWeight: '500' }}>{type.label || type.name}</Text>
                             </TouchableOpacity>
                           ))}
                         </View>
@@ -1166,7 +1167,7 @@ const PropertyDetails = () => {
                 <View className="mb-4" />
 
                 {/* Furnish Type Section */}
-                <Text className="text-[#6A7282] text-sm mb-4" style={{ fontFamily: 'Inter-Medium' }}>Furnish Type</Text>
+                <Text className="text-[#6A7282] text-sm mb-4" style={{ fontWeight: '500' }}>Furnish Type</Text>
                 <View className="flex-row gap-3 mb-8">
                   {furnishingStatus.map((status) => (
                     <TouchableOpacity 
@@ -1174,7 +1175,7 @@ const PropertyDetails = () => {
                       onPress={() => setSelectedFurnish(status.label || status.name)}
                       className={`flex-1 py-4 rounded-2xl items-center border-2 ${selectedFurnish === (status.label || status.name) ? 'border-[#008E96] bg-[#F0F9F9]' : 'border-[#E5E7EB] bg-white'}`}
                     >
-                      <Text className={`text-base ${selectedFurnish === (status.label || status.name) ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontFamily: 'Inter-Medium' }}>{status.label || status.name}</Text>
+                      <Text className={`text-base ${selectedFurnish === (status.label || status.name) ? 'text-[#008E96]' : 'text-[#364153]'}`} style={{ fontWeight: '500' }}>{status.label || status.name}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -1183,7 +1184,7 @@ const PropertyDetails = () => {
                   onPress={() => router.push('/screens/PostProperty/Furnishings')}
                  
                 >
-                  <Text className="text-[#008E96] text-base text-center" style={{ fontFamily: 'Inter-Bold' }}>+ Add Furnishings / Amenities</Text>
+                  <Text className="text-[#008E96] text-base text-center" style={{ fontWeight: '700' }}>+ Add Furnishings / Amenities</Text>
                   
                   {(postData.furnishings.selectedItems.length > 0 || Object.values(postData.furnishings.counters).some(v => v > 0)) && (
                     <View className="mt-6 flex-row flex-wrap gap-2">
@@ -1192,7 +1193,7 @@ const PropertyDetails = () => {
                         value > 0 && (
                           <View key={key} className="flex-row items-center bg-[#F0F9F9] border border-[#008E96] px-3 py-1.5 rounded-full">
                             <RenderIcon name={key} size={14} color="#008E96" apiAmenities={apiAmenities} />
-                            <Text className="text-[#008E96] ml-1.5" style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}>
+                            <Text className="text-[#008E96] ml-1.5" style={{ fontWeight: '500', fontSize: wp('3.2%') }}>
                               {key} ({value})
                             </Text>
                           </View>
@@ -1203,7 +1204,7 @@ const PropertyDetails = () => {
                       {postData.furnishings.selectedItems.map((item, index) => (
                         <View key={index} className="flex-row items-center bg-[#F0F9F9] border border-[#008E96] px-3 py-1.5 rounded-full">
                           <RenderIcon name={item} size={14} color="#008E96" apiAmenities={apiAmenities} />
-                          <Text className="text-[#008E96] ml-1.5" style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}>
+                          <Text className="text-[#008E96] ml-1.5" style={{ fontWeight: '500', fontSize: wp('3.2%') }}>
                             {item}
                           </Text>
                         </View>
@@ -1256,7 +1257,7 @@ const PropertyDetails = () => {
           {isSaving ? (
             <ActivityIndicator color="white" />
           ) : (
-            <Text className="text-white text-base" style={{ fontFamily: 'Inter-Bold' }}>
+            <Text className="text-white text-base" style={{ fontWeight: '700' }}>
               {currentStep === 1 ? 'Next, Add Price' : currentStep === 2 ? 'Next, Add Photos' : currentStep === 3 ? 'Next, Advanced Details' : currentStep === 4 ? 'Review & Verify' : 'Post Property'}
             </Text>
           )}

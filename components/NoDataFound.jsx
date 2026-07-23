@@ -13,10 +13,10 @@ const NoDataFound = () => {
         loop
         style={{ width: 280, height: 280 }}
       />
-      <Text className="font-inter-semibold text-[18px] text-[#101828] mt-6 text-center">
+      <Text className="font-semibold text-[18px] text-[#101828] mt-6 text-center">
         No Properties Found
       </Text>
-      <Text className="font-inter-regular text-[14px] text-[#6A7282] mt-2 text-center">
+      <Text className="font-normal text-[14px] text-[#6A7282] mt-2 text-center">
         Try adjusting your filters or search criteria to find what you're looking for.
       </Text>
     </View>

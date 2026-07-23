@@ -192,7 +192,7 @@ const Register = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <View className="flex-row items-center justify-between px-4 py-2">
         <TouchableOpacity onPress={handleSafeBack} className="p-2">
           <Ionicons name="chevron-back" size={28} color="black" />
@@ -210,17 +210,17 @@ const Register = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-6 pb-16">
 
         <View className="mb-8">
-          <Text className="text-[24px] font-inter-bold text-gray-900">
+          <Text className="text-[24px] font-bold text-gray-900">
             Create Your Account
           </Text>
-          <Text className="text-gray-500 mt-3 font-inter-regular">
+          <Text className="text-gray-500 mt-3 font-normal">
             Sign up to access the platform.
           </Text>
         </View>
 
         {/* User Type display */}
         <View className="mb-6">
-          <Text className="text-gray-500 text-sm mb-3 font-inter-medium">
+          <Text className="text-gray-500 text-sm mb-3 font-medium">
             User Type
           </Text>
           <View className="flex-row gap-2">
@@ -228,7 +228,7 @@ const Register = () => {
               className="flex-1 py-3 rounded-2xl border items-center shadow-sm bg-[#E6F7F6] border-[#008E96]"
             >
               <Text
-                className="text-sm font-inter-bold text-[#008E96]"
+                className="text-sm font-bold text-[#008E96]"
               >
                 Buyer
               </Text>
@@ -252,7 +252,7 @@ const Register = () => {
               <TextInput
                 placeholder="Phone Number"
                 keyboardType="phone-pad"
-                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                className="flex-1 ml-3 font-normal text-gray-800"
                 placeholderTextColor="#9CA3AF"
                 value={formData.phone}
                 onChangeText={(value) => updateFormData("phone", value)}
@@ -271,7 +271,7 @@ const Register = () => {
             >
               <Ionicons name="phone-portrait-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
-                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                className="flex-1 ml-3 font-normal text-gray-800"
                 value={formData.phone}
                 editable={false}
                 style={{ fontSize: hp('1.7%'), padding: 0 }}
@@ -294,7 +294,7 @@ const Register = () => {
               <Ionicons name="person-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Your Full Name"
-                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                className="flex-1 ml-3 font-normal text-gray-800"
                 placeholderTextColor="#9CA3AF"
                 value={formData.name}
                 onChangeText={(value) => updateFormData("name", value)}
@@ -318,7 +318,7 @@ const Register = () => {
               <TextInput
                 placeholder="Email address"
                 keyboardType="email-address"
-                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                className="flex-1 ml-3 font-normal text-gray-800"
                 placeholderTextColor="#9CA3AF"
                 value={formData.email}
                 onChangeText={(value) => updateFormData("email", value)}
@@ -343,7 +343,7 @@ const Register = () => {
                 <TextInput
                   placeholder="Password"
                   secureTextEntry={!showPassword}
-                  className="flex-1 ml-3 font-inter-regular text-gray-800"
+                  className="flex-1 ml-3 font-normal text-gray-800"
                   placeholderTextColor="#9CA3AF"
                   value={formData.password}
                   onChangeText={(value) => updateFormData("password", value)}
@@ -354,7 +354,7 @@ const Register = () => {
                 </TouchableOpacity>
               </View>
               {isLogin && (
-                <Text className="text-xs text-gray-500 mt-1 ml-1" style={{ fontFamily: 'Inter-Regular', fontSize: hp('1.4%') }}>
+                <Text className="text-xs text-gray-500 mt-1 ml-1" style={{ fontWeight: '400', fontSize: hp('1.4%') }}>
                   Fill your login password to get a new role
                 </Text>
               )}
@@ -379,7 +379,7 @@ const Register = () => {
               <TextInput
                 placeholder="Confirm Password"
                 secureTextEntry={!showConfirmPassword}
-                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                className="flex-1 ml-3 font-normal text-gray-800"
                 placeholderTextColor="#9CA3AF"
                 value={formData.confirmPassword}
                 onChangeText={(value) => updateFormData("confirmPassword", value)}
@@ -405,7 +405,7 @@ const Register = () => {
               <Ionicons name="location-outline" size={hp('2.2%')} color="#9CA3AF" />
               <TextInput
                 placeholder="Search City"
-                className="flex-1 ml-3 font-inter-regular text-gray-800"
+                className="flex-1 ml-3 font-normal text-gray-800"
                 placeholderTextColor="#9CA3AF"
                 value={formData.city || ''}
                 onChangeText={(value) => updateFormData("city", value)}
@@ -429,7 +429,7 @@ const Register = () => {
                 <Ionicons name="business-outline" size={hp('2.2%')} color="#9CA3AF" />
                 <TextInput
                   placeholder="Company Name"
-                  className="flex-1 ml-3 font-inter-regular text-gray-800"
+                  className="flex-1 ml-3 font-normal text-gray-800"
                   placeholderTextColor="#9CA3AF"
                   value={formData.companyName || ''}
                   onChangeText={(value) => updateFormData("companyName", value)}
@@ -451,7 +451,7 @@ const Register = () => {
                   placeholder="Business Since (Year)"
                   keyboardType="number-pad"
                   maxLength={4}
-                  className="flex-1 ml-3 font-inter-regular text-gray-800"
+                  className="flex-1 ml-3 font-normal text-gray-800"
                   placeholderTextColor="#9CA3AF"
                   value={formData.businessSince || ''}
                   onChangeText={(value) => updateFormData("businessSince", value)}
@@ -507,7 +507,7 @@ const Register = () => {
               isLogin
                 ? (isPhoneVerified ? isExistingUserFormValid : formData.phone.length === 10)
                 : isFormValid
-            ) && !loading ? 'text-white' : 'text-[#99A1AF]'} font-inter-bold text-lg`}>
+            ) && !loading ? 'text-white' : 'text-[#99A1AF]'} font-bold text-lg`}>
               {loading
                 ? "Processing..."
                 : (isLogin
@@ -527,8 +527,8 @@ const Register = () => {
           className="mt-6 mb-4"
           onPress={() => router.push("/(auth)/Login")}
         >
-          <Text className="text-center font-inter-regular text-gray-500">
-            Already have an account? <Text className="font-inter-bold" style={{ color: PRIMARY_COLOR }}>Login</Text>
+          <Text className="text-center font-normal text-gray-500">
+            Already have an account? <Text className="font-bold" style={{ color: PRIMARY_COLOR }}>Login</Text>
           </Text>
         </TouchableOpacity>
       </ScrollView>
@@ -546,7 +546,7 @@ const Register = () => {
         >
           <View className="bg-white rounded-t-3xl p-6">
             <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl" style={{ fontFamily: 'Inter-Bold' }}>
+              <Text className="text-xl" style={{ fontWeight: '700' }}>
                 {step === 1 ? 'Verify Phone' : 'Verify Email'}
               </Text>
               <TouchableOpacity onPress={handleCloseModal}>
@@ -554,7 +554,7 @@ const Register = () => {
               </TouchableOpacity>
             </View>
 
-            <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
+            <Text className="text-gray-500 mb-6" style={{ fontWeight: '400' }}>
               {step === 1
                 ? `Enter the 6-digit code sent to +91 ${formData.phone}`
                 : `Enter the 6-digit code sent to ${formData.email}`
@@ -568,7 +568,7 @@ const Register = () => {
                   ref={(ref) => (otpInputs.current[index] = ref)}
                   className="bg-white border border-gray-200 rounded-xl text-center text-lg"
                   style={{
-                    fontFamily: 'Inter-Bold',
+                    fontWeight: '700',
                     width: 38,
                     height: 46,
                   }}
@@ -585,7 +585,7 @@ const Register = () => {
               onPress={verifyOTP}
               className={`w-full py-4 rounded-xl items-center ${otp.join('').length === 6 ? 'bg-[#008E96]' : 'bg-gray-200'}`}
             >
-              <Text className="text-white text-base" style={{ fontFamily: 'Inter-Medium' }}>
+              <Text className="text-white text-base" style={{ fontWeight: '500' }}>
                 Verify & Continue
               </Text>
             </TouchableOpacity>
@@ -600,7 +600,7 @@ const Register = () => {
                 }
               }}
             >
-              <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Resend Code</Text>
+              <Text className="text-[#008E96]" style={{ fontWeight: '500' }}>Resend Code</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

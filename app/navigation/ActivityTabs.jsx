@@ -74,7 +74,7 @@ const ActivityTabs = ({ activeTab = 'saved', onTabPress, counts = {} }) => {
                     className={`text-[12px] font-bold text-center ${
                       isActive ? 'text-white' : 'text-[#6A7282]'
                     }`}
-                    style={{ fontFamily: 'Inter-SemiBold' }}
+                    style={{ fontWeight: '600' }}
                   >
                     {tab.count}
                   </Text>
@@ -87,7 +87,7 @@ const ActivityTabs = ({ activeTab = 'saved', onTabPress, counts = {} }) => {
                   className={`text-[14px] font-medium leading-[18px] text-center ${
                     isActive ? 'text-[#101828]' : 'text-[#6A7282]'
                   }`}
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  style={{ fontWeight: '500' }}
                 >
                   {tab.label1}
                 </Text>
@@ -95,7 +95,7 @@ const ActivityTabs = ({ activeTab = 'saved', onTabPress, counts = {} }) => {
                   className={`text-[14px] font-medium leading-[18px] text-center ${
                     isActive ? 'text-[#101828]' : 'text-[#6A7282]'
                   }`}
-                  style={{ fontFamily: 'Inter-Medium' }}
+                  style={{ fontWeight: '500' }}
                 >
                   {tab.label2}
                 </Text>

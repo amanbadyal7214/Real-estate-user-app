@@ -56,7 +56,7 @@ const PriceDetailsSection = ({
       <View className="bg-white border border-[#E5E7EB] shadow-sm" style={{ padding: wp('5.3%'), borderRadius: wp('4.3%') }}>
         <View className="flex-row items-center" style={{ marginBottom: hp('2%') }}>
           <MaterialIcons name="receipt-long" size={wp('5.3%')} color="#008E96" />
-          <Text className="text-[#101828] font-semibold" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>
+          <Text className="text-[#101828] font-semibold" style={{ fontWeight: '500', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>
             {isRent ? 'Monthly Rent' : 'Expected Price'}
           </Text>
           <Text className="text-[#FB2C36]" style={{ marginLeft: wp('1%') }}>*</Text>
@@ -71,10 +71,10 @@ const PriceDetailsSection = ({
             keyboardType="numeric"
             value={expectedPrice}
             onChangeText={setExpectedPrice}
-            style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }}
+            style={{ fontWeight: '400', fontSize: wp('4.3%') }}
           />
         </View>
-        <Text className="text-[#6A7282]" style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%') }}>
+        <Text className="text-[#6A7282]" style={{ fontWeight: '400', fontSize: wp('3.2%') }}>
           {isRent ? 'This is the monthly base rent' : 'Total price including all government charges'}
         </Text>
       </View>
@@ -83,7 +83,7 @@ const PriceDetailsSection = ({
       <View className="bg-white border border-[#E5E7EB] shadow-sm" style={{ padding: wp('5.3%'), borderRadius: wp('4.3%') }}>
         <View className="flex-row items-center" style={{ marginBottom: hp('2%') }}>
           <Ionicons name="calendar-outline" size={wp('5.3%')} color="#008E96" />
-          <Text className="text-[#101828] font-semibold" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Available From</Text>
+          <Text className="text-[#101828] font-semibold" style={{ fontWeight: '500', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Available From</Text>
           <Text className="text-[#FB2C36]" style={{ marginLeft: wp('1%') }}>*</Text>
         </View>
 
@@ -92,7 +92,7 @@ const PriceDetailsSection = ({
           className="bg-[#F9FAFB] flex-row items-center justify-between"
           style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.5%'), borderRadius: wp('3.2%') }}
         >
-          <Text className={`${postData.propertyDetails.availableFrom ? 'text-[#101828]' : 'text-[#99A1AF]'}`} style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }}>
+          <Text className={`${postData.propertyDetails.availableFrom ? 'text-[#101828]' : 'text-[#99A1AF]'}`} style={{ fontWeight: '400', fontSize: wp('4.3%') }}>
             {postData.propertyDetails.availableFrom || 'mm/dd/yyyy'}
           </Text>
           <Ionicons name="calendar-sharp" size={wp('4.8%')} color="#008E96" />
@@ -114,7 +114,7 @@ const PriceDetailsSection = ({
         <View className="bg-white border border-[#E5E7EB] shadow-sm" style={{ padding: wp('5.3%'), borderRadius: wp('4.3%') }}>
           <View className="flex-row items-center" style={{ marginBottom: hp('2%') }}>
             <MaterialIcons name="security" size={wp('5.3%')} color="#008E96" />
-            <Text className="text-[#101828] font-semibold" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Security Deposit</Text>
+            <Text className="text-[#101828] font-semibold" style={{ fontWeight: '500', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Security Deposit</Text>
           </View>
 
           <View className="flex-row flex-wrap" style={{ gap: wp('2.1%'), marginBottom: hp('2%') }}>
@@ -125,7 +125,7 @@ const PriceDetailsSection = ({
                 className={`flex-1 border items-center ${securityType === opt ? 'bg-[#E6F7F7] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
                 style={{ minWidth: wp('22%'), paddingVertical: hp('1.2%'), borderRadius: wp('2.1%') }}
               >
-                <Text className={`${securityType === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}>{opt}</Text>
+                <Text className={`${securityType === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontWeight: '500', fontSize: wp('3.2%') }}>{opt}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -140,7 +140,7 @@ const PriceDetailsSection = ({
                     keyboardType="numeric"
                     value={postData.priceDetails.securityDeposit}
                     onChangeText={handleDepositChange}
-                    style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }}
+                    style={{ fontWeight: '400', fontSize: wp('4.3%') }}
                 />
             </View>
           )}
@@ -152,7 +152,7 @@ const PriceDetailsSection = ({
         <View className="bg-white border border-[#E5E7EB] shadow-sm" style={{ padding: wp('5.3%'), borderRadius: wp('4.3%') }}>
           <View className="flex-row items-center" style={{ marginBottom: hp('2%') }}>
             <Feather name="settings" size={wp('4.8%')} color="#008E96" />
-            <Text className="text-[#101828] font-semibold" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Maintenance</Text>
+            <Text className="text-[#101828] font-semibold" style={{ fontWeight: '500', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Maintenance</Text>
           </View>
 
           <View className="flex-row" style={{ gap: wp('2.1%'), marginBottom: hp('2%') }}>
@@ -166,7 +166,7 @@ const PriceDetailsSection = ({
                       className={`flex-1 border items-center ${maintenanceType === opt ? 'bg-[#E6F7F7] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
                       style={{ paddingVertical: hp('1.2%'), borderRadius: wp('2.1%') }}
                   >
-                      <Text className={`${maintenanceType === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }}>{opt}</Text>
+                      <Text className={`${maintenanceType === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontWeight: '500', fontSize: wp('3.7%') }}>{opt}</Text>
                   </TouchableOpacity>
               ))}
           </View>
@@ -181,7 +181,7 @@ const PriceDetailsSection = ({
                       keyboardType="numeric"
                       value={maintenance}
                       onChangeText={setMaintenance}
-                      style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }}
+                      style={{ fontWeight: '400', fontSize: wp('4.3%') }}
                   />
               </View>
           )}
@@ -193,7 +193,7 @@ const PriceDetailsSection = ({
         <View className="bg-white border border-[#E5E7EB] shadow-sm" style={{ padding: wp('5.3%'), borderRadius: wp('4.3%'), marginBottom: hp('2%') }}>
           <View className="flex-row items-center" style={{ marginBottom: hp('2%') }}>
             <Ionicons name="car-outline" size={wp('5.3%')} color="#008E96" />
-            <Text className="text-[#101828] font-semibold" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Parking</Text>
+            <Text className="text-[#101828] font-semibold" style={{ fontWeight: '500', fontSize: wp('4.8%'), marginLeft: wp('2.1%') }}>Parking</Text>
           </View>
 
           <View className="flex-row" style={{ gap: wp('2.1%'), marginBottom: hp('2%') }}>
@@ -207,7 +207,7 @@ const PriceDetailsSection = ({
                       className={`flex-1 border items-center ${parkingType === opt ? 'bg-[#E6F7F7] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
                       style={{ paddingVertical: hp('1.2%'), borderRadius: wp('2.1%') }}
                   >
-                      <Text className={`${parkingType === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }}>{opt}</Text>
+                      <Text className={`${parkingType === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`} style={{ fontWeight: '500', fontSize: wp('3.7%') }}>{opt}</Text>
                   </TouchableOpacity>
               ))}
           </View>
@@ -222,7 +222,7 @@ const PriceDetailsSection = ({
                       keyboardType="numeric"
                       value={postData.priceDetails.parkingAmount}
                       onChangeText={(val) => updatePriceDetails({ parkingAmount: val })}
-                      style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%') }}
+                      style={{ fontWeight: '400', fontSize: wp('4.3%') }}
                   />
               </View>
           )}
@@ -240,7 +240,7 @@ const PriceDetailsSection = ({
           size={wp('6.4%')} 
           color={isNegotiable ? "#008E96" : "#99A1AF"} 
         />
-        <Text className="text-[#364153]" style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }}>Price is Negotiable</Text>
+        <Text className="text-[#364153]" style={{ fontWeight: '500', fontSize: wp('4.3%') }}>Price is Negotiable</Text>
       </TouchableOpacity>
     </View>
   );

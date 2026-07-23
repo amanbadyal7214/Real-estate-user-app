@@ -75,12 +75,12 @@ const AdvancedDetailsStep = () => {
       ];
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <ScrollView contentContainerStyle={{ padding: wp('4.3%'), gap: hp('3%'), paddingBottom: hp('3%') }}>
         {/* Info Banner */}
         <View className="bg-[#E6F7F6] border border-[#008E96]/20 flex-row items-start" style={{ padding: wp('4.3%'), borderRadius: wp('3.7%'), gap: wp('2.7%') }}>
           <Ionicons name="information-circle-outline" size={wp('5.3%')} color="#008E96" />
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: hp('2%') }} className="text-[#364153] flex-1">
+          <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), lineHeight: hp('2%') }} className="text-[#364153] flex-1">
             Providing accurate details helps buyers make informed decisions and increases response rate
           </Text>
         </View>
@@ -91,7 +91,7 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <MaterialCommunityIcons name="shower" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Bathrooms</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Bathrooms</Text>
               </View>
               {isStudio ? (
                 <View className="bg-[#F9FAFB] border-2 border-[#E5E7EB] flex-row items-center" style={{ borderRadius: wp('3.7%'), height: hp('6.9%'), paddingHorizontal: wp('4.3%') }}>
@@ -99,7 +99,7 @@ const AdvancedDetailsStep = () => {
                     placeholder="Enter number of bathrooms"
                     placeholderTextColor="#A0A0A0"
                     className="flex-1 text-[#101828]"
-                    style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }}
+                    style={{ fontWeight: '500', fontSize: wp('4.3%') }}
                     value={bathrooms}
                     onChangeText={(val) => updateAdvancedDetails({ bathrooms: val })}
                     keyboardType="numeric"
@@ -114,7 +114,7 @@ const AdvancedDetailsStep = () => {
                       className={`border items-center justify-center ${bathrooms === opt ? 'bg-[#E6F7F6] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
                       style={{ height: hp('5.9%'), paddingHorizontal: wp('4.3%'), borderRadius: wp('3.2%'), minWidth: wp('16%') }}
                     >
-                      <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className={`${bathrooms === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{opt}</Text>
+                      <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className={`${bathrooms === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{opt}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -125,7 +125,7 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <MaterialCommunityIcons name="balcony" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Balconies</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Balconies</Text>
               </View>
               <View className="flex-row" style={{ gap: wp('2.1%') }}>
                 {balconyOptions.map(opt => (
@@ -135,7 +135,7 @@ const AdvancedDetailsStep = () => {
                     className={`flex-1 border items-center justify-center ${balconies === opt ? 'bg-[#E6F7F7] border-[#008E96]' : 'bg-white border-[#E5E7EB]'}`}
                     style={{ height: hp('5.9%'), borderRadius: wp('3.2%') }}
                   >
-                    <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className={`${balconies === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{opt}</Text>
+                    <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className={`${balconies === opt ? 'text-[#008E96]' : 'text-[#6A7282]'}`}>{opt}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -145,7 +145,7 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <MaterialCommunityIcons name="calendar-clock" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Property Age (Years)</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Property Age (Years)</Text>
               </View>
               <View className="border-b border-[#D1D5DC]" style={{ paddingBottom: hp('1%') }}>
                 <TextInput
@@ -153,7 +153,7 @@ const AdvancedDetailsStep = () => {
                   placeholderTextColor="#A0A0A0"
                   className="text-[#101828]"
                   keyboardType="numeric"
-                  style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), paddingVertical: hp('0.5%') }}
+                  style={{ fontWeight: '400', fontSize: wp('4.3%'), paddingVertical: hp('0.5%') }}
                   value={ageOfProperty}
                   onChangeText={(val) => updateAdvancedDetails({ ageOfProperty: val })}
                 />
@@ -164,7 +164,7 @@ const AdvancedDetailsStep = () => {
             <View className="z-[60]" style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <MaterialCommunityIcons name="floor-plan" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Carpet Area</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Carpet Area</Text>
               </View>
               <View className="flex-row" style={{ gap: wp('4.3%') }}>
                 <View className="flex-1 border-b border-[#D1D5DC]" style={{ paddingBottom: hp('1%') }}>
@@ -173,7 +173,7 @@ const AdvancedDetailsStep = () => {
                     placeholderTextColor="#A0A0A0"
                     className="text-[#101828]"
                     keyboardType="numeric"
-                    style={{ fontFamily: 'Inter-Regular', fontSize: wp('4.3%'), paddingVertical: hp('0.5%') }}
+                    style={{ fontWeight: '400', fontSize: wp('4.3%'), paddingVertical: hp('0.5%') }}
                     value={carpetArea}
                     onChangeText={(val) => updateAdvancedDetails({ carpetArea: val })}
                   />
@@ -184,7 +184,7 @@ const AdvancedDetailsStep = () => {
                     className="flex-row items-center justify-between bg-[#F3F4F6] border border-[#E5E7EB]"
                     style={{ paddingHorizontal: wp('3.2%'), paddingVertical: hp('1%'), borderRadius: wp('2.1%') }}
                   >
-                    <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#364153]">
+                    <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-[#364153]">
                       {measurementUnit || 'Sq. Ft'}
                     </Text>
                     <Ionicons name={showUnitDropdown ? "chevron-up" : "chevron-down"} size={wp('4.3%')} color="#6A7282" />
@@ -201,7 +201,7 @@ const AdvancedDetailsStep = () => {
                           className="border-b border-[#F3F4F6]"
                           style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.5%') }}
                         >
-                          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%') }} className="text-[#364153]">{unit.label}</Text>
+                          <Text style={{ fontWeight: '500', fontSize: wp('3.7%') }} className="text-[#364153]">{unit.label}</Text>
                         </TouchableOpacity>
                       ))}
                     </View>
@@ -214,13 +214,13 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <Ionicons name="shield-checkmark-outline" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">RERA ID</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">RERA ID</Text>
               </View>
               <TextInput
                 placeholder="RERA Number"
                 placeholderTextColor="#A0A0A0"
                 className="bg-[#F9FAFB] border-2 border-[#E5E7EB] text-[#101828]"
-                style={{ fontFamily: 'Inter-Medium', borderRadius: wp('3.7%'), height: hp('6.9%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
+                style={{ fontWeight: '500', borderRadius: wp('3.7%'), height: hp('6.9%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
                 value={reraId}
                 onChangeText={(val) => updateAdvancedDetails({ reraId: val })}
               />
@@ -230,14 +230,14 @@ const AdvancedDetailsStep = () => {
             <View className="z-[50]" style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <MaterialCommunityIcons name="compass-outline" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Facing</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Facing</Text>
               </View>
               <TouchableOpacity
                 onPress={() => setShowFacingDropdown(!showFacingDropdown)}
                 className="flex-row items-center justify-between bg-[#F3F4F6] border border-[#E5E7EB]"
                 style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.7%'), borderRadius: wp('3.2%') }}
               >
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#364153]">
+                <Text style={{ fontWeight: '500', fontSize: wp('4.3%') }} className="text-[#364153]">
                   {facing || 'East'}
                 </Text>
                 <Ionicons name={showFacingDropdown ? "chevron-up" : "chevron-down"} size={wp('5.3%')} color="#6A7282" />
@@ -254,7 +254,7 @@ const AdvancedDetailsStep = () => {
                       className="border-b border-[#F3F4F6]"
                       style={{ paddingHorizontal: wp('4.3%'), paddingVertical: hp('1.7%') }}
                     >
-                      <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4.3%') }} className="text-[#364153]">{face.label}</Text>
+                      <Text style={{ fontWeight: '500', fontSize: wp('4.3%') }} className="text-[#364153]">{face.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -265,7 +265,7 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <Ionicons name="location-outline" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Detailed Address</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Detailed Address</Text>
               </View>
               <TextInput
                 placeholder="e.g. Flat 101, Sector 45, CHANDIGARH"
@@ -273,7 +273,7 @@ const AdvancedDetailsStep = () => {
                 multiline
                 numberOfLines={2}
                 className="bg-[#F9FAFB] border-2 border-[#E5E7EB] text-[#101828] text-start"
-                style={{ fontFamily: 'Inter-Medium', height: hp('9.9%'), borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
+                style={{ fontWeight: '500', height: hp('9.9%'), borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
                 value={postData.propertyDetails.detailedAddress}
                 onChangeText={(val) => updatePropertyDetails({ detailedAddress: val })}
               />
@@ -283,7 +283,7 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <Ionicons name="document-text-outline" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Property Description</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Property Description</Text>
               </View>
               <TextInput
                 placeholder="Tell us more about your property..."
@@ -291,7 +291,7 @@ const AdvancedDetailsStep = () => {
                 multiline
                 numberOfLines={4}
                 className="bg-[#F9FAFB] border-2 border-[#E5E7EB] text-[#101828] text-start"
-                style={{ fontFamily: 'Inter-Medium', height: hp('14.8%'), textAlignVertical: 'top', borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
+                style={{ fontWeight: '500', height: hp('14.8%'), textAlignVertical: 'top', borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
                 value={postData.propertyDetails.description}
                 onChangeText={(val) => updatePropertyDetails({ description: val })}
               />
@@ -306,14 +306,14 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <Ionicons name="location-outline" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Full Address</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Full Address</Text>
               </View>
               <TextInput
                 placeholder="Enter complete address..."
                 placeholderTextColor="#A0A0A0"
                 multiline
                 className="bg-[#F9FAFB] border-2 border-[#E5E7EB] text-[#101828] text-start"
-                style={{ fontFamily: 'Inter-Medium', height: hp('9.9%'), borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
+                style={{ fontWeight: '500', height: hp('9.9%'), borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
                 value={postData.propertyDetails.detailedAddress}
                 onChangeText={(val) => updatePropertyDetails({ detailedAddress: val })}
               />
@@ -323,7 +323,7 @@ const AdvancedDetailsStep = () => {
             <View style={{ gap: hp('1.5%') }}>
               <View className="flex-row items-center" style={{ gap: wp('2.1%') }}>
                 <Ionicons name="document-text-outline" size={wp('4.8%')} color="#008E96" />
-                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">About the Property</Text>
+                <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">About the Property</Text>
               </View>
               <TextInput
                 placeholder="Tell us more about your property..."
@@ -331,7 +331,7 @@ const AdvancedDetailsStep = () => {
                 multiline
                 numberOfLines={4}
                 className="bg-[#F9FAFB] border-2 border-[#E5E7EB] text-[#101828] text-start"
-                style={{ fontFamily: 'Inter-Medium', height: hp('14.8%'), textAlignVertical: 'top', borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
+                style={{ fontWeight: '500', height: hp('14.8%'), textAlignVertical: 'top', borderRadius: wp('3.7%'), paddingVertical: hp('2%'), paddingHorizontal: wp('4.3%'), fontSize: wp('4.3%') }}
                 value={postData.propertyDetails.description}
                 onChangeText={(val) => updatePropertyDetails({ description: val })}
               />

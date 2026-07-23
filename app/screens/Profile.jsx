@@ -54,7 +54,7 @@ const ProfileHeader = ({ userData }) => {
           >
             <Text
               className="text-white font-semibold"
-              style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('5.1%'), marginTop: -2 }}
+              style={{ fontWeight: '600', fontSize: wp('5.1%'), marginTop: -2 }}
             >
               {initialLetter}
             </Text>
@@ -65,19 +65,19 @@ const ProfileHeader = ({ userData }) => {
         <View style={{ marginLeft: wp('1%'), justifyContent: 'center' }}>
           <Text
             className="text-[#101828] font-semibold"
-            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%') }}
+            style={{ fontWeight: '600', fontSize: wp('3.8%') }}
           >
             Hello {name}!
           </Text>
           <Text
             className="text-[#4A5565] font-normal"
-            style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%'), marginTop: hp('0.4%') }}
+            style={{ fontWeight: '400', fontSize: wp('2.8%'), marginTop: hp('0.4%') }}
           >
             {email}
           </Text>
           <Text
             className="text-[#4A5565] font-normal"
-            style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%') }}
+            style={{ fontWeight: '400', fontSize: wp('2.8%') }}
           >
             {phone}
           </Text>
@@ -92,7 +92,7 @@ const ProfileHeader = ({ userData }) => {
       >
         <Text
           className="text-[#101828] font-medium"
-          style={{ fontFamily: 'Inter-Medium', fontSize: wp('3%') }}
+          style={{ fontWeight: '500', fontSize: wp('3%') }}
         >
           Edit
         </Text>
@@ -122,7 +122,7 @@ const ActivityTabCard = ({ id, label1, label2, count, icon: Icon, isActive, onPr
             >
               <Text
                 className={`font-bold ${isActive ? 'text-white' : 'text-[#6A7282]'}`}
-                style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.1%') }}
+                style={{ fontWeight: '700', fontSize: wp('2.1%') }}
               >
                 {count}
               </Text>
@@ -135,14 +135,14 @@ const ActivityTabCard = ({ id, label1, label2, count, icon: Icon, isActive, onPr
           <Text
             className={`font-medium text-center ${isActive ? 'text-[#101828]' : 'text-[#6A7282]'
               }`}
-            style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.8%'), lineHeight: wp('3.4%') }}
+            style={{ fontWeight: '500', fontSize: wp('2.8%'), lineHeight: wp('3.4%') }}
           >
             {label1}
           </Text>
           <Text
             className={`font-medium text-center ${isActive ? 'text-[#101828]' : 'text-[#6A7282]'
               }`}
-            style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.8%'), lineHeight: wp('3.4%') }}
+            style={{ fontWeight: '500', fontSize: wp('2.8%'), lineHeight: wp('3.4%') }}
           >
             {label2}
           </Text>
@@ -181,7 +181,7 @@ const SellRentBanner = () => {
         <View className="flex-1 justify-center">
           <Text
             className="text-[#101828] font-semibold"
-            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.4%'), lineHeight: wp('4.3%'), marginBottom: hp('1.2%') }}
+            style={{ fontWeight: '600', fontSize: wp('3.4%'), lineHeight: wp('4.3%'), marginBottom: hp('1.2%') }}
           >
             {`Looking to sell/rent\nyour property?`}
           </Text>
@@ -201,7 +201,7 @@ const SellRentBanner = () => {
           >
             <Text
               className="text-[#101828] font-medium"
-              style={{ fontFamily: 'Inter-Medium', fontSize: wp('3%') }}
+              style={{ fontWeight: '500', fontSize: wp('3%') }}
             >
               Post property for
             </Text>
@@ -226,10 +226,10 @@ const MenuItem = ({ label, icon: Icon, isNew = false, indicator = 'ChevronRight'
         <Icon size={wp('5.1%')} color="#4A5565" strokeWidth={1.5} />
       </View>
 
-      <View className="flex-1">
+      <View style={{ flex: 1 }}>
         <Text
           className="text-[#101828] font-medium"
-          style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), lineHeight: wp('4.7%') }}
+          style={{ fontWeight: '500', fontSize: wp('3.2%'), lineHeight: wp('4.7%') }}
         >
           {label}
         </Text>
@@ -240,7 +240,7 @@ const MenuItem = ({ label, icon: Icon, isNew = false, indicator = 'ChevronRight'
           <View className="bg-[#E4E7EC] rounded-full items-center justify-center" style={{ paddingHorizontal: wp('2.1%'), paddingVertical: hp('0.2%') }}>
             <Text
               className="text-[#6A7282] font-semibold"
-              style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('2.8%'), lineHeight: wp('4.3%') }}
+              style={{ fontWeight: '600', fontSize: wp('2.8%'), lineHeight: wp('4.3%') }}
             >
               {count}
             </Text>
@@ -250,7 +250,7 @@ const MenuItem = ({ label, icon: Icon, isNew = false, indicator = 'ChevronRight'
           <View className="bg-[#008E96] rounded-[4px] items-center justify-center" style={{ paddingHorizontal: wp('1.7%'), paddingVertical: hp('0.2%') }}>
             <Text
               className="text-white font-bold uppercase"
-              style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.4%'), lineHeight: wp('3.4%') }}
+              style={{ fontWeight: '700', fontSize: wp('2.4%'), lineHeight: wp('3.4%') }}
             >
               NEW
             </Text>
@@ -271,7 +271,7 @@ const QuickLinks = () => {
         <HandCoins size={wp('5.1%')} color="#101828" strokeWidth={1.5} />
         <Text
           className="flex-1 text-[#101828] font-semibold"
-          style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%') }}
+          style={{ fontWeight: '600', fontSize: wp('3.8%') }}
         >
           Quick Links
         </Text>
@@ -291,7 +291,7 @@ const QuickLinks = () => {
           <View className="absolute bg-[#008E96] rounded-[4px]" style={{ top: hp('0.8%'), right: wp('1.7%'), paddingHorizontal: wp('1.7%'), paddingVertical: hp('0.2%') }}>
             <Text
               className="text-white font-bold uppercase"
-              style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.4%'), lineHeight: wp('3.4%') }}
+              style={{ fontWeight: '700', fontSize: wp('2.4%'), lineHeight: wp('3.4%') }}
             >
               FREE
             </Text>
@@ -300,7 +300,7 @@ const QuickLinks = () => {
           <HandCoins size={wp('6.8%')} color="#008E96" strokeWidth={1.5} />
           <Text
             className="text-[#101828] font-medium"
-            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3%') }}
+            style={{ fontWeight: '500', fontSize: wp('3%') }}
           >
             Sell/Rent property
           </Text>
@@ -549,14 +549,14 @@ const Profile = () => {
 
             return (
               <View key={item._id || index} className="w-full bg-[#F7F9FA] border border-[#E4E7EC] rounded-2xl p-4 mb-3 flex-row justify-between items-center">
-                <View className="flex-1">
-                  <Text style={{ fontFamily: 'Inter-SemiBold' }} className="text-[15px] font-semibold text-[#101828] mb-1">{name}</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[13px] text-[#6A7282]">
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontWeight: '600' }} className="text-[15px] font-semibold text-[#101828] mb-1">{name}</Text>
+                  <Text style={{ fontWeight: '400' }} className="text-[13px] text-[#6A7282]">
                     {city && `City: ${city}`} {category && ` • Category: ${category}`}
                   </Text>
                 </View>
                 {date && (
-                  <Text style={{ fontFamily: 'Inter-Regular' }} className="text-[12px] text-[#6A7282]">
+                  <Text style={{ fontWeight: '400' }} className="text-[12px] text-[#6A7282]">
                     {date}
                   </Text>
                 )}
@@ -629,7 +629,7 @@ const Profile = () => {
         >
           <Text
             className="text-[#008E96] font-semibold text-center"
-            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%') }}
+            style={{ fontWeight: '600', fontSize: wp('3.8%') }}
           >
             Start new search
           </Text>
@@ -639,7 +639,7 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top']}>
       {/* Navigator Back Header */}
       <View className="justify-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%') }}>
         <TouchableOpacity onPress={() => router.back()}>
@@ -654,7 +654,7 @@ const Profile = () => {
         <View>
           <Text
             className="text-[#101828] font-semibold"
-            style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.8%'), marginBottom: hp('1.7%'), paddingHorizontal: wp('4%') }}
+            style={{ fontWeight: '600', fontSize: wp('3.8%'), marginBottom: hp('1.7%'), paddingHorizontal: wp('4%') }}
           >
             My Activity
           </Text>
@@ -725,7 +725,7 @@ const Profile = () => {
                 <Home size={wp('6.8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
                   className="text-[#101828] font-medium"
-                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3%') }}
+                  style={{ fontWeight: '500', fontSize: wp('3%') }}
                 >
                   Buy Property
                 </Text>
@@ -741,7 +741,7 @@ const Profile = () => {
                 <Building size={wp('6.8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
                   className="text-[#101828] font-medium"
-                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('3%') }}
+                  style={{ fontWeight: '500', fontSize: wp('3%') }}
                 >
                   Rent Property
                 </Text>
@@ -766,7 +766,7 @@ const Profile = () => {
                 <Calculator size={wp('6.8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
                   className="text-[#101828] font-medium text-center"
-                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.8%') }}
+                  style={{ fontWeight: '500', fontSize: wp('2.8%') }}
                 >
                   EMI Calculator
                 </Text>
@@ -782,7 +782,7 @@ const Profile = () => {
                 <Percent size={wp('6.8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
                   className="text-[#101828] font-medium text-center"
-                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.8%') }}
+                  style={{ fontWeight: '500', fontSize: wp('2.8%') }}
                 >
                   Eligibility Calculator
                 </Text>
@@ -798,7 +798,7 @@ const Profile = () => {
                 <HandCoins size={wp('6.8%')} color="#008E96" strokeWidth={1.5} />
                 <Text
                   className="text-[#101828] font-medium text-center"
-                  style={{ fontFamily: 'Inter-Medium', fontSize: wp('2.8%') }}
+                  style={{ fontWeight: '500', fontSize: wp('2.8%') }}
                 >
                   Affordability Calculator
                 </Text>
@@ -838,7 +838,7 @@ const Profile = () => {
             <CircleHelp size={wp('5.1%')} color="#4A5565" strokeWidth={1.5} />
             <Text
               className="text-[#101828] font-medium"
-              style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}
+              style={{ fontWeight: '500', fontSize: wp('3.2%') }}
             >
               Help Centre
             </Text>
@@ -856,7 +856,7 @@ const Profile = () => {
             <LogOut size={wp('4.3%')} color="#4A5565" strokeWidth={1.5} />
             <Text
               className="text-[#101828] font-medium text-center"
-              style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}
+              style={{ fontWeight: '500', fontSize: wp('3.2%') }}
             >
               {isLoggedIn ? "Log Out" : "Login"}
             </Text>

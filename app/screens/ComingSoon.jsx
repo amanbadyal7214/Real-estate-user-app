@@ -37,14 +37,14 @@ const ComingSoon = () => {
             />
 
             <Text
-              style={{ fontFamily: 'Inter-Bold', fontSize: wp('7.5%'), marginTop: hp('1%') }}
+              style={{ fontWeight: '700', fontSize: wp('7.5%'), marginTop: hp('1%') }}
               className="text-[#101828] text-center"
             >
               Coming Soon
             </Text>
 
             <Text
-              style={{ fontFamily: 'Inter-Regular', fontSize: wp('4%'), lineHeight: wp('5.9%'), marginTop: hp('1.5%') }}
+              style={{ fontWeight: '400', fontSize: wp('4%'), lineHeight: wp('5.9%'), marginTop: hp('1.5%') }}
               className="text-[#4A5565] text-center"
             >
               We are building something exciting for you. This feature will be available very soon.
@@ -55,7 +55,7 @@ const ComingSoon = () => {
               className="bg-[#008E96]"
               style={{ marginTop: hp('3%'), paddingHorizontal: wp('6.4%'), paddingVertical: hp('1.5%'), borderRadius: wp('3.7%') }}
             >
-              <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('4%') }} className="text-white">
+              <Text style={{ fontWeight: '500', fontSize: wp('4%') }} className="text-white">
                 Go Back
               </Text>
             </TouchableOpacity>

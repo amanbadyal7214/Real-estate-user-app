@@ -312,7 +312,7 @@ const OwnerProperties = () => {
         style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%'), gap: wp('1.5%') }}
       >
         <Text
-          style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.3%'), lineHeight: wp('5%') }}
+          style={{ fontWeight: '600', fontSize: wp('3.3%'), lineHeight: wp('5%') }}
           className="text-white"
         >
           {label}
@@ -430,9 +430,9 @@ const OwnerProperties = () => {
             </View>
 
             <View className="border-b border-gray-100 flex-row justify-between items-center" style={{ paddingHorizontal: wp('5%'), paddingBottom: hp('1.5%') }}>
-              <Text className="text-[#101828] font-inter-bold" style={{ fontSize: wp('4.5%') }}>{title}</Text>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.5%') }}>{title}</Text>
               <TouchableOpacity onPress={() => setActiveFilterDropdown(null)}>
-                <Text className="text-[#6A7282] font-inter-medium" style={{ fontSize: wp('3.5%') }}>Cancel</Text>
+                <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.5%') }}>Cancel</Text>
               </TouchableOpacity>
             </View>
 
@@ -469,7 +469,7 @@ const OwnerProperties = () => {
                 })
               ) : (
                 <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
-                  <Text className="text-gray-400 font-inter-medium" style={{ fontSize: wp('3.5%') }}>No options available</Text>
+                  <Text className="text-gray-400 font-medium" style={{ fontSize: wp('3.5%') }}>No options available</Text>
                 </View>
               )}
             </ScrollView>
@@ -480,13 +480,13 @@ const OwnerProperties = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('2%'), gap: wp('3%') }}>
         <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%') }}>
           <ArrowLeft size={wp('7%')} color="#4A5565" />
         </TouchableOpacity>
-        <Text className="font-inter-bold text-[#101828]" style={{ fontSize: wp('5%') }}>Owner Properties</Text>
+        <Text className="font-bold text-[#101828]" style={{ fontSize: wp('5%') }}>Owner Properties</Text>
       </View>
 
       {/* Scrollable Filter Bar */}
@@ -533,7 +533,7 @@ const OwnerProperties = () => {
       {loading && properties.length === 0 ? (
         <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
           <ActivityIndicator size="large" color="#008E96" />
-          <Text className="text-[#6A7282] font-inter-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Searching owner listings...</Text>
+          <Text className="text-[#6A7282] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Searching owner listings...</Text>
         </View>
       ) : mapped.length > 0 ? (
         <FlatList
@@ -559,7 +559,7 @@ const OwnerProperties = () => {
               </View>
             ) : !hasMore && mapped.length > 0 ? (
               <View className="items-center" style={{ paddingVertical: hp('2%') }}>
-                <Text className="text-[#6A7282] font-inter-regular" style={{ fontSize: wp('3.3%') }}>You've seen all owner properties</Text>
+                <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.3%') }}>You've seen all owner properties</Text>
               </View>
             ) : null
           }

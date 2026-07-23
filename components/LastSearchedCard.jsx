@@ -29,7 +29,7 @@ const LastSearchedCard = ({ image, price, title, builder, location }) => {
       
       <View style={{ paddingTop: hp('1.5%'), paddingLeft: wp('3.2%'), paddingRight: wp('3.2%'), flex: 1, justifyContent: 'flex-start' }}>
         <Text 
-          className="font-inter-bold text-[#101828]" 
+          className="font-bold text-[#101828]" 
           style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginBottom: hp('0.5%') }}
           numberOfLines={1}
         >
@@ -37,7 +37,7 @@ const LastSearchedCard = ({ image, price, title, builder, location }) => {
         </Text>
         
         <Text 
-          className="font-inter-semibold text-[#101828]" 
+          className="font-semibold text-[#101828]" 
           style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginBottom: hp('0.7%') }}
           numberOfLines={1}
         >
@@ -45,7 +45,7 @@ const LastSearchedCard = ({ image, price, title, builder, location }) => {
         </Text>
         
         <Text 
-          className="font-inter-regular text-[#6A7282]" 
+          className="font-normal text-[#6A7282]" 
           style={{ fontSize: wp('2.8%'), lineHeight: hp('2%'), marginBottom: hp('0.2%') }}
           numberOfLines={1}
         >
@@ -53,7 +53,7 @@ const LastSearchedCard = ({ image, price, title, builder, location }) => {
         </Text>
         
         <Text 
-          className="font-inter-regular text-[#6A7282]" 
+          className="font-normal text-[#6A7282]" 
           style={{ fontSize: wp('2.8%'), lineHeight: hp('2%') }}
           numberOfLines={1}
         >

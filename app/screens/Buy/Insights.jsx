@@ -274,7 +274,7 @@ const Insights = () => {
     }, [currentLocation]);
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
             <Stack.Screen options={{ animation: 'slide_from_bottom', gestureEnabled: true }} />
             <ScrollView contentContainerStyle={{ paddingBottom: hp('3.7%') }} showsVerticalScrollIndicator={false}>
 
@@ -286,19 +286,19 @@ const Insights = () => {
                         onPress={() => router.back()}
                     >
                         <ArrowLeft size={wp('4.8%')} color="#6A7282" />
-                        <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.7%'), marginLeft: wp('2.1%') }} className="text-[#6A7282]">Back to Home</Text>
+                        <Text style={{ fontWeight: '500', fontSize: wp('3.7%'), marginLeft: wp('2.1%') }} className="text-[#6A7282]">Back to Home</Text>
                     </TouchableOpacity>
                 </Animated.View>
 
                 <Animated.View entering={FadeInDown.duration(600).delay(200)} style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('2.5%'), marginBottom: hp('1.2%') }}>
-                    <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3%') }} className="text-[#6A7282]">Hi  {userName},</Text>
-                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('5.5%'), marginTop: hp('0.4%') }} className="text-[#101828]">Welcome back!</Text>
+                    <Text style={{ fontWeight: '500', fontSize: wp('3%') }} className="text-[#6A7282]">Hi  {userName},</Text>
+                    <Text style={{ fontWeight: '700', fontSize: wp('5.5%'), marginTop: hp('0.4%') }} className="text-[#101828]">Welcome back!</Text>
                 </Animated.View>
 
                 {/* New Listings Section */}
                 <Animated.View entering={FadeInDown.duration(600).delay(300)} style={{ paddingLeft: wp('4.3%') }}>
                     <View className="flex-row items-center" style={{ paddingRight: wp('4.3%'), marginBottom: hp('1.5%') }}>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">New Listings added nearby</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">New Listings added nearby</Text>
                     </View>
                     <ScrollView
                         horizontal
@@ -330,7 +330,7 @@ const Insights = () => {
                 {/* Revisit Properties Section */}
                 <Animated.View entering={FadeInDown.duration(600).delay(400)} style={{ paddingLeft: wp('4.3%'), marginTop: hp('3.9%') }}>
                     <View className="flex-row items-center justify-between" style={{ paddingRight: wp('4.3%'), marginBottom: hp('1.5%') }}>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%') }} className="text-[#101828]">Revisit properties seen by you</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%') }} className="text-[#101828]">Revisit properties seen by you</Text>
                     </View>
                     <ScrollView
                         horizontal
@@ -364,9 +364,9 @@ const Insights = () => {
                 {/* Explore Localities Nearby Section */}
                 <Animated.View entering={FadeInDown.duration(600).delay(500)} style={{ paddingLeft: wp('4.3%'), marginTop: hp('3%') }}>
                     <View className="flex-row items-center justify-between" style={{ paddingRight: wp('4.3%'), marginBottom: hp('1.5%') }}>
-                        <Text style={{ fontFamily: 'Inter-Bold', fontSize: wp('3.7%') }} className="text-[#101828]">Explore localities nearby</Text>
+                        <Text style={{ fontWeight: '700', fontSize: wp('3.7%') }} className="text-[#101828]">Explore localities nearby</Text>
                         <TouchableOpacity onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')}>
-                            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3%') }} className="text-[#008E96]">See all</Text>
+                            <Text style={{ fontWeight: '500', fontSize: wp('3%') }} className="text-[#008E96]">See all</Text>
                         </TouchableOpacity>
                     </View>
                     <ScrollView
@@ -395,8 +395,8 @@ const Insights = () => {
                 {/* Explore by your preferences Section */}
                 <Animated.View entering={FadeInDown.duration(600).delay(900)} style={{ paddingHorizontal: wp('4.3%'), marginTop: hp('3%') }}>
                     <View style={{ marginBottom: hp('2.5%') }}>
-                        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.7%'), lineHeight: hp('3.2%') }} className="text-[#101828]">Explore by what matters to you</Text>
-                        <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#6A7282]">See properties based on your top preferences</Text>
+                        <Text style={{ fontWeight: '600', fontSize: wp('3.7%'), lineHeight: hp('3.2%') }} className="text-[#101828]">Explore by what matters to you</Text>
+                        <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#6A7282]">See properties based on your top preferences</Text>
                     </View>
                     <View className="flex-row flex-wrap" style={{ marginLeft: wp('2.1%'), columnGap: wp('4.3%') }}>
                         {preferencesData.map((pref) => (

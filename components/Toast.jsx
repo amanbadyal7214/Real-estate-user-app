@@ -83,7 +83,7 @@ const Toast = ({ message, type = 'success', onDismiss }) => {
         <Ionicons name={iconName} size={22} color={iconColor} />
         <Text 
           className={`ml-3 flex-1 text-[13px] leading-5 ${textClass}`}
-          style={{ fontFamily: 'Inter-Medium' }}
+          style={{ fontWeight: '500' }}
         >
           {message}
         </Text>

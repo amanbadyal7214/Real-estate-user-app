@@ -70,7 +70,7 @@ const Login = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <View className="px-4 pt-2">
         <TouchableOpacity onPress={handleSafeBack} className="p-2 self-start">
           <Ionicons name="chevron-back" size={32} color="black" />
@@ -85,10 +85,10 @@ const Login = () => {
               style={{ width: 240, height: 70 }}
               resizeMode="contain"
             />
-            <Text className="text-2xl font-inter-bold text-[#101828] mt-4">
+            <Text className="text-2xl font-bold text-[#101828] mt-4">
               Login to Your Account
             </Text>
-            <Text className="text-[#6A7282] mt-1.5 text-center text-sm font-inter-regular">
+            <Text className="text-[#6A7282] mt-1.5 text-center text-sm font-normal">
               Welcome back! Please enter your details.
             </Text>
           </View>
@@ -107,7 +107,7 @@ const Login = () => {
               <TextInput
                 placeholder="Phone Number"
                 keyboardType="email-address"
-                className="flex-1 ml-2.5 text-[#101828] font-inter-regular"
+                className="flex-1 ml-2.5 text-[#101828] font-normal"
                 placeholderTextColor="#9CA3AF"
                 value={formData.email}
                 onChangeText={(value) => updateFormData("email", value)}
@@ -128,7 +128,7 @@ const Login = () => {
               <TextInput
                 placeholder="Password"
                 secureTextEntry={!showPassword}
-                className="flex-1 ml-2.5 text-[#101828] font-inter-regular"
+                className="flex-1 ml-2.5 text-[#101828] font-normal"
                 placeholderTextColor="#9CA3AF"
                 value={formData.password}
                 onChangeText={(value) => updateFormData("password", value)}
@@ -141,7 +141,7 @@ const Login = () => {
           </View>
 
           <TouchableOpacity className="mt-3 self-end" onPress={() => setForgotPasswordVisible(true)}>
-            <Text className="font-inter-medium text-sm" style={{ color: PRIMARY_COLOR }}>Forgot Password?</Text>
+            <Text className="font-medium text-sm" style={{ color: PRIMARY_COLOR }}>Forgot Password?</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -150,7 +150,7 @@ const Login = () => {
             onPress={() => handleLogin({ onSuccess: handleLoginSuccess })}
             disabled={loading}
           >
-            <Text className="text-white font-inter-semibold text-base">
+            <Text className="text-white font-semibold text-base">
               {loading ? "Logging in..." : "Login"}
             </Text>
           </TouchableOpacity>
@@ -162,8 +162,8 @@ const Login = () => {
           className="mt-auto py-6"
           onPress={() => router.push("/(auth)/Register")}
         >
-          <Text className="text-center text-[#6A7282] text-sm font-inter-regular">
-            Don&apos;t have an account? <Text className="font-inter-semibold" style={{ color: PRIMARY_COLOR }}>Sign up</Text>
+          <Text className="text-center text-[#6A7282] text-sm font-normal">
+            Don&apos;t have an account? <Text className="font-semibold" style={{ color: PRIMARY_COLOR }}>Sign up</Text>
           </Text>
         </TouchableOpacity>
       </ScrollView>

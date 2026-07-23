@@ -114,13 +114,13 @@ const styles = StyleSheet.create({
   },
   initialText: {
     color: '#FFFFFF',
-    fontFamily: 'Inter-Bold',
+    fontWeight: '700',
     fontSize: wp('2.7%'),
     lineHeight: hp('1.9%'),
   },
   devNameText: {
     color: '#101828',
-    fontFamily: 'Inter-Bold',
+    fontWeight: '700',
     fontSize: wp('2.3%'),
     lineHeight: hp('1.7%'),
     letterSpacing: 0.3,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   },
   priceLabel: {
     color: '#FFFFFF',
-    fontFamily: 'Inter-Bold',
+    fontWeight: '700',
     fontSize: wp('4.1%'),
     lineHeight: hp('2.7%'),
     textShadowColor: 'rgba(0, 0, 0, 0.15)',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   titleLabel: {
     color: '#FFFFFF',
-    fontFamily: 'Inter-Bold',
+    fontWeight: '700',
     fontSize: wp('3.2%'),
     lineHeight: hp('2.1%'),
     textShadowColor: 'rgba(0, 0, 0, 0.15)',
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     color: 'rgba(255, 255, 255, 0.9)',
-    fontFamily: 'Inter-Medium',
+    fontWeight: '500',
     fontSize: wp('2.5%'),
     lineHeight: hp('1.7%'),
     textShadowColor: 'rgba(0, 0, 0, 0.15)',

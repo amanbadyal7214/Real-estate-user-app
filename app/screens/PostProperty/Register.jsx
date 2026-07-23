@@ -217,7 +217,7 @@ const PostProperty = () => {
   }, [step]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Header Section with Gradient - Fixed in Background */}
       <View className="absolute top-0 left-0 right-0 z-0">
         <LinearGradient
@@ -243,10 +243,10 @@ const PostProperty = () => {
             </View>
           </View>
 
-          <Text className="text-white text-2xl leading-8" style={{ fontFamily: 'Inter-Medium' }}>
+          <Text className="text-white text-2xl leading-8" style={{ fontWeight: '500' }}>
             Sell or rent your property
           </Text>
-          <Text className="text-white text-2xl leading-8" style={{ fontFamily: 'Inter-Medium' }}>
+          <Text className="text-white text-2xl leading-8" style={{ fontWeight: '500' }}>
             faster with HousingMania
           </Text>
           <View className="w-24 h-1 bg-[#FDC700] rounded-full mt-2 mb-6" />
@@ -256,19 +256,19 @@ const PostProperty = () => {
               <View className="w-5 h-5 rounded-full bg-[#FDC700] items-center justify-center">
                 <Ionicons name="checkmark" size={14} color="#006B73" />
               </View>
-              <Text className="text-white text-sm" style={{ fontFamily: 'Inter-Regular' }}>Post property for free</Text>
+              <Text className="text-white text-sm" style={{ fontWeight: '400' }}>Post property for free</Text>
             </View>
             <View className="flex-row items-center gap-2">
               <View className="w-5 h-5 rounded-full bg-[#FDC700] items-center justify-center">
                 <Ionicons name="checkmark" size={14} color="#006B73" />
               </View>
-              <Text className="text-white text-sm" style={{ fontFamily: 'Inter-Regular' }}>Get verified buyers</Text>
+              <Text className="text-white text-sm" style={{ fontWeight: '400' }}>Get verified buyers</Text>
             </View>
           </View>
         </LinearGradient>
       </View>
 
-      <View className="flex-1">
+      <View style={{ flex: 1 }}>
         <View className="h-64 bg-transparent" />
 
         {/* Floating Form Container */}
@@ -294,7 +294,7 @@ const PostProperty = () => {
                 <Text
                   className="text-sm"
                   style={{
-                    fontFamily: 'Inter-Medium',
+                    fontWeight: '500',
                     color: !isLogin ? '#FFFFFF' : '#4B5563'
                   }}
                 >
@@ -319,7 +319,7 @@ const PostProperty = () => {
                 <Text
                   className="text-sm"
                   style={{
-                    fontFamily: 'Inter-Medium',
+                    fontWeight: '500',
                     color: isLogin ? '#FFFFFF' : '#4B5563'
                   }}
                 >
@@ -331,7 +331,7 @@ const PostProperty = () => {
             {/* User Type Selector for Register mode, or Role Assignment for Existing User */}
             {!isLogin ? (
               <View className="mb-6">
-                <Text className="text-[#4A5565] text-sm mb-3" style={{ fontFamily: 'Inter-Medium' }}>
+                <Text className="text-[#4A5565] text-sm mb-3" style={{ fontWeight: '500' }}>
                   User Type
                 </Text>
                 <View className="flex-row gap-2 flex-wrap">
@@ -346,7 +346,7 @@ const PostProperty = () => {
                     <Text
                       className="text-sm"
                       style={{
-                        fontFamily: 'Inter-Medium',
+                        fontWeight: '500',
                         color: isRoleActive('buyer') ? '#008E96' : '#364153'
                       }}
                     >
@@ -364,7 +364,7 @@ const PostProperty = () => {
                     <Text
                       className="text-sm"
                       style={{
-                        fontFamily: 'Inter-Medium',
+                        fontWeight: '500',
                         color: isRoleActive('owner') ? '#008E96' : '#364153'
                       }}
                     >
@@ -382,7 +382,7 @@ const PostProperty = () => {
                     <Text
                       className="text-sm"
                       style={{
-                        fontFamily: 'Inter-Medium',
+                        fontWeight: '500',
                         color: isRoleActive('builder') ? '#008E96' : '#364153'
                       }}
                     >
@@ -400,7 +400,7 @@ const PostProperty = () => {
                     <Text
                       className="text-sm"
                       style={{
-                        fontFamily: 'Inter-Medium',
+                        fontWeight: '500',
                         color: isRoleActive('realtor') ? '#008E96' : '#364153'
                       }}
                     >
@@ -414,13 +414,13 @@ const PostProperty = () => {
                 <View className="mb-6 gap-4">
                   {/* Already Assigned Roles */}
                   <View>
-                    <Text className="text-[#4A5565] text-sm mb-2" style={{ fontFamily: 'Inter-Medium' }}>
+                    <Text className="text-[#4A5565] text-sm mb-2" style={{ fontWeight: '500' }}>
                       Already Assigned Roles
                     </Text>
                     <View className="flex-row gap-2 flex-wrap">
                       {existingUserDetails?.role && (Array.isArray(existingUserDetails.role) ? existingUserDetails.role : [existingUserDetails.role]).map((r) => (
                         <View key={r} className="bg-gray-100 px-4 py-2 rounded-xl border border-gray-200">
-                          <Text className="text-gray-500 text-xs capitalize font-semibold" style={{ fontFamily: 'Inter-Medium' }}>
+                          <Text className="text-gray-500 text-xs capitalize font-semibold" style={{ fontWeight: '500' }}>
                             {r}
                           </Text>
                         </View>
@@ -430,7 +430,7 @@ const PostProperty = () => {
 
                   {/* Select Your Role (unassigned) */}
                   <View>
-                    <Text className="text-[#4A5565] text-sm mb-3" style={{ fontFamily: 'Inter-Medium' }}>
+                    <Text className="text-[#4A5565] text-sm mb-3" style={{ fontWeight: '500' }}>
                       Select Your Role
                     </Text>
                     {(() => {
@@ -442,7 +442,7 @@ const PostProperty = () => {
 
                       if (unassignedRolesList.length === 0) {
                         return (
-                          <Text className="text-red-500 text-xs italic" style={{ fontFamily: 'Inter-Regular' }}>
+                          <Text className="text-red-500 text-xs italic" style={{ fontWeight: '400' }}>
                             All roles are already assigned to this account.
                           </Text>
                         );
@@ -463,7 +463,7 @@ const PostProperty = () => {
                               <Text
                                 className="text-sm capitalize"
                                 style={{
-                                  fontFamily: 'Inter-Medium',
+                                  fontWeight: '500',
                                   color: formData.role === roleName ? '#008E96' : '#364153'
                                 }}
                               >
@@ -484,13 +484,13 @@ const PostProperty = () => {
               {/* Phone Number Input */}
               {(!isLogin || !isPhoneVerified) ? (
                 <View className="flex-row items-center border-b border-[#E5E7EB] pb-2">
-                  <Text className="text-black text-sm pr-3" style={{ fontFamily: 'Inter-Regular' }}>+91</Text>
+                  <Text className="text-black text-sm pr-3" style={{ fontWeight: '400' }}>+91</Text>
                   <TextInput
                     placeholder="Enter Phone Number"
                     placeholderTextColor="#99A1AF"
                     className="flex-1 text-sm py-1"
                     keyboardType="phone-pad"
-                    style={{ fontFamily: 'Inter-Regular' }}
+                    style={{ fontWeight: '400' }}
                     value={formData.phone}
                     onChangeText={(val) => updateFormData('phone', val)}
                     maxLength={10}
@@ -498,10 +498,10 @@ const PostProperty = () => {
                 </View>
               ) : (
                 <View className="flex-row items-center border-b border-[#E5E7EB] pb-2 opacity-60">
-                  <Text className="text-black text-sm pr-3" style={{ fontFamily: 'Inter-Regular' }}>+91</Text>
+                  <Text className="text-black text-sm pr-3" style={{ fontWeight: '400' }}>+91</Text>
                   <TextInput
                     className="flex-1 text-sm py-1"
-                    style={{ fontFamily: 'Inter-Regular' }}
+                    style={{ fontWeight: '400' }}
                     value={formData.phone}
                     editable={false}
                   />
@@ -516,7 +516,7 @@ const PostProperty = () => {
                     placeholder="Your Name"
                     placeholderTextColor="#99A1AF"
                     className="text-sm py-1"
-                    style={{ fontFamily: 'Inter-Regular' }}
+                    style={{ fontWeight: '400' }}
                     value={formData.name}
                     onChangeText={(val) => updateFormData('name', val)}
                   />
@@ -530,7 +530,7 @@ const PostProperty = () => {
                     placeholder="Email Address"
                     placeholderTextColor="#99A1AF"
                     className="text-sm py-1"
-                    style={{ fontFamily: 'Inter-Regular' }}
+                    style={{ fontWeight: '400' }}
                     value={formData.email}
                     onChangeText={(val) => updateFormData('email', val)}
                     keyboardType="email-address"
@@ -547,7 +547,7 @@ const PostProperty = () => {
                       placeholder="Password"
                       placeholderTextColor="#99A1AF"
                       className="flex-1 text-sm py-1"
-                      style={{ fontFamily: 'Inter-Regular' }}
+                      style={{ fontWeight: '400' }}
                       value={formData.password}
                       onChangeText={(val) => {
                         updateFormData('password', val);
@@ -560,7 +560,7 @@ const PostProperty = () => {
                     </TouchableOpacity>
                   </View>
                   {isLogin && (
-                    <Text className="text-xs text-gray-500 mt-1" style={{ fontFamily: 'Inter-Regular' }}>
+                    <Text className="text-xs text-gray-500 mt-1" style={{ fontWeight: '400' }}>
                       Fill your login password to get a new role
                     </Text>
                   )}
@@ -578,7 +578,7 @@ const PostProperty = () => {
                     placeholder="City"
                     placeholderTextColor="#99A1AF"
                     className="flex-1 text-sm px-2 py-1"
-                    style={{ fontFamily: 'Inter-Regular' }}
+                    style={{ fontWeight: '400' }}
                     value={formData.city || ''}
                     onChangeText={(val) => updateFormData('city', val)}
                   />
@@ -593,7 +593,7 @@ const PostProperty = () => {
                       placeholder="Company Name"
                       placeholderTextColor="#99A1AF"
                       className="text-sm py-1"
-                      style={{ fontFamily: 'Inter-Regular' }}
+                      style={{ fontWeight: '400' }}
                       value={formData.companyName || ''}
                       onChangeText={(val) => updateFormData('companyName', val)}
                     />
@@ -604,7 +604,7 @@ const PostProperty = () => {
                       placeholderTextColor="#99A1AF"
                       className="text-sm py-1"
                       keyboardType="number-pad"
-                      style={{ fontFamily: 'Inter-Regular' }}
+                      style={{ fontWeight: '400' }}
                       value={formData.businessSince || ''}
                       onChangeText={(val) => updateFormData('businessSince', val)}
                       maxLength={4}
@@ -644,7 +644,7 @@ const PostProperty = () => {
               <Text
                 className="text-base"
                 style={{
-                  fontFamily: 'Inter-Medium',
+                  fontWeight: '500',
                   color: (loading || (
                     isLogin
                       ? (isPhoneVerified ? !isExistingUserFormValid : formData.phone.length !== 10)
@@ -666,9 +666,9 @@ const PostProperty = () => {
               onPress={() => router.push('/(auth)/Login')}
               className="w-full bg-[#008E9614] py-3 rounded-xl items-center mb-6"
             >
-              <Text className="text-[#364153] text-sm" style={{ fontFamily: 'Inter-Regular' }}>
+              <Text className="text-[#364153] text-sm" style={{ fontWeight: '400' }}>
                 Existing user?{' '}
-                <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>
+                <Text className="text-[#008E96]" style={{ fontWeight: '500' }}>
                   Login Here
                 </Text>
               </Text>
@@ -686,7 +686,7 @@ const PostProperty = () => {
               >
                 <View className="bg-white rounded-t-3xl p-6">
                   <View className="flex-row justify-between items-center mb-6">
-                    <Text className="text-xl" style={{ fontFamily: 'Inter-Bold' }}>
+                    <Text className="text-xl" style={{ fontWeight: '700' }}>
                       {step === 1 ? 'Verify Phone' : 'Verify Email'}
                     </Text>
                     <TouchableOpacity onPress={() => setShowOTPModal(false)}>
@@ -694,7 +694,7 @@ const PostProperty = () => {
                     </TouchableOpacity>
                   </View>
 
-                  <Text className="text-gray-500 mb-6" style={{ fontFamily: 'Inter-Regular' }}>
+                  <Text className="text-gray-500 mb-6" style={{ fontWeight: '400' }}>
                     {step === 1
                       ? `Enter the 6-digit code sent to +91 ${formData.phone}`
                       : `Enter the 6-digit code sent to ${formData.email}`
@@ -707,7 +707,7 @@ const PostProperty = () => {
                         key={index}
                         ref={(ref) => (otpInputs.current[index] = ref)}
                         className="w-11 h-14 border-2 border-gray-200 rounded-lg text-center text-xl"
-                        style={{ fontFamily: 'Inter-Bold' }}
+                        style={{ fontWeight: '700' }}
                         keyboardType="number-pad"
                         maxLength={1}
                         value={digit}
@@ -727,7 +727,7 @@ const PostProperty = () => {
                     <Text
                       className="text-base"
                       style={{
-                        fontFamily: 'Inter-Medium',
+                        fontWeight: '500',
                         color: otp.join('').length === 6 ? '#FFFFFF' : '#99A1AF'
                       }}
                     >
@@ -745,7 +745,7 @@ const PostProperty = () => {
                       }
                     }}
                   >
-                    <Text className="text-[#008E96]" style={{ fontFamily: 'Inter-Medium' }}>Resend Code</Text>
+                    <Text className="text-[#008E96]" style={{ fontWeight: '500' }}>Resend Code</Text>
                   </TouchableOpacity>
                 </View>
               </KeyboardAvoidingView>
@@ -754,22 +754,22 @@ const PostProperty = () => {
             {/* Statistics Banner */}
             <View className="mt-6 bg-[#008E96] rounded-2xl p-4 flex-row justify-between items-center">
               <View className="items-center flex-1">
-                <Text className="text-white text-lg" style={{ fontFamily: 'Inter-Bold' }}>No.1</Text>
-                <Text className="text-white opacity-90 text-center mt-1" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%') }}>Property Destination</Text>
+                <Text className="text-white text-lg" style={{ fontWeight: '700' }}>No.1</Text>
+                <Text className="text-white opacity-90 text-center mt-1" style={{ fontWeight: '400', fontSize: wp('2.7%') }}>Property Destination</Text>
               </View>
               <View className="items-center flex-1 border-x border-white/20">
-                <Text className="text-white text-lg" style={{ fontFamily: 'Inter-Bold' }}>1 Lakh+</Text>
-                <Text className="text-white opacity-90 text-center mt-1" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%') }}>Owners</Text>
+                <Text className="text-white text-lg" style={{ fontWeight: '700' }}>1 Lakh+</Text>
+                <Text className="text-white opacity-90 text-center mt-1" style={{ fontWeight: '400', fontSize: wp('2.7%') }}>Owners</Text>
               </View>
               <View className="items-center flex-1">
-                <Text className="text-white text-lg" style={{ fontFamily: 'Inter-Bold' }}>1.5 Cr+</Text>
-                <Text className="text-white opacity-90 text-center mt-1" style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.7%') }}>Tenants/Buyers</Text>
+                <Text className="text-white text-lg" style={{ fontWeight: '700' }}>1.5 Cr+</Text>
+                <Text className="text-white opacity-90 text-center mt-1" style={{ fontWeight: '400', fontSize: wp('2.7%') }}>Tenants/Buyers</Text>
               </View>
             </View>
 
             {/* Why List With Us Section */}
             <View className="mt-8">
-              <Text className="text-[#101828] text-xl mb-6" style={{ fontFamily: 'Inter-Bold' }}>Why should you list with us</Text>
+              <Text className="text-[#101828] text-xl mb-6" style={{ fontWeight: '700' }}>Why should you list with us</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
                 {/* Card 1 */}
                 <View className="bg-white border border-[#E5E7EB] rounded-2xl p-4 mr-4" style={{ width: wp('74.7%') }}>
@@ -779,31 +779,31 @@ const PostProperty = () => {
                     </View>
                     <View>
                       <View className="flex-row items-center">
-                        <Text className="text-[#0A0A0A] text-sm" style={{ fontFamily: 'Inter-Medium' }}>Amit Chakrapani</Text>
+                        <Text className="text-[#0A0A0A] text-sm" style={{ fontWeight: '500' }}>Amit Chakrapani</Text>
                         <Ionicons name="checkmark-circle" size={16} color="#99A1AF" className="ml-1" />
                       </View>
                       <View className="flex-row items-center">
-                        <Text className="text-[#6A7282] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Lead Score </Text>
-                        <Text className="text-[#F6339A] text-xs" style={{ fontFamily: 'Inter-Bold' }}>★ 4.3</Text>
+                        <Text className="text-[#6A7282] text-xs" style={{ fontWeight: '400' }}>Lead Score </Text>
+                        <Text className="text-[#F6339A] text-xs" style={{ fontWeight: '700' }}>★ 4.3</Text>
                       </View>
                     </View>
                   </View>
                   <View className="gap-2">
                     <View className="flex-row justify-between">
-                      <Text className="text-[#4A5565] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Budget</Text>
-                      <Text className="text-[#101828] text-xs" style={{ fontFamily: 'Inter-Medium' }}>₹ 20000-25000</Text>
+                      <Text className="text-[#4A5565] text-xs" style={{ fontWeight: '400' }}>Budget</Text>
+                      <Text className="text-[#101828] text-xs" style={{ fontWeight: '500' }}>₹ 20000-25000</Text>
                     </View>
                     <View className="flex-row justify-between">
-                      <Text className="text-[#4A5565] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Searching Since</Text>
-                      <Text className="text-[#101828] text-xs" style={{ fontFamily: 'Inter-Medium' }}>Today</Text>
+                      <Text className="text-[#4A5565] text-xs" style={{ fontWeight: '400' }}>Searching Since</Text>
+                      <Text className="text-[#101828] text-xs" style={{ fontWeight: '500' }}>Today</Text>
                     </View>
                     <View className="flex-row justify-between">
-                      <Text className="text-[#4A5565] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Locality</Text>
-                      <Text className="text-[#101828] text-xs text-right flex-1 ml-4" numberOfLines={1} style={{ fontFamily: 'Inter-Medium' }}>Koramangla, whitefield</Text>
+                      <Text className="text-[#4A5565] text-xs" style={{ fontWeight: '400' }}>Locality</Text>
+                      <Text className="text-[#101828] text-xs text-right flex-1 ml-4" numberOfLines={1} style={{ fontWeight: '500' }}>Koramangla, whitefield</Text>
                     </View>
                   </View>
                   <TouchableOpacity className="items-center mt-4">
-                    <Text className="text-[#5E35B1] text-xs" style={{ fontFamily: 'Inter-Medium' }}>View Contact Details</Text>
+                    <Text className="text-[#5E35B1] text-xs" style={{ fontWeight: '500' }}>View Contact Details</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -815,31 +815,31 @@ const PostProperty = () => {
                     </View>
                     <View>
                       <View className="flex-row items-center">
-                        <Text className="text-[#0A0A0A] text-sm" style={{ fontFamily: 'Inter-Medium' }}>Jitesh Prakash</Text>
+                        <Text className="text-[#0A0A0A] text-sm" style={{ fontWeight: '500' }}>Jitesh Prakash</Text>
                         <Ionicons name="checkmark-circle" size={16} color="#99A1AF" className="ml-1" />
                       </View>
                       <View className="flex-row items-center">
-                        <Text className="text-[#6A7282] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Lead Score </Text>
-                        <Text className="text-[#F6339A] text-xs" style={{ fontFamily: 'Inter-Bold' }}>★ 2.3</Text>
+                        <Text className="text-[#6A7282] text-xs" style={{ fontWeight: '400' }}>Lead Score </Text>
+                        <Text className="text-[#F6339A] text-xs" style={{ fontWeight: '700' }}>★ 2.3</Text>
                       </View>
                     </View>
                   </View>
                   <View className="gap-2">
                     <View className="flex-row justify-between">
-                      <Text className="text-[#4A5565] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Budget</Text>
-                      <Text className="text-[#101828] text-xs" style={{ fontFamily: 'Inter-Medium' }}>₹ 20000-25000</Text>
+                      <Text className="text-[#4A5565] text-xs" style={{ fontWeight: '400' }}>Budget</Text>
+                      <Text className="text-[#101828] text-xs" style={{ fontWeight: '500' }}>₹ 20000-25000</Text>
                     </View>
                     <View className="flex-row justify-between">
-                      <Text className="text-[#4A5565] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Searching Since</Text>
-                      <Text className="text-[#101828] text-xs" style={{ fontFamily: 'Inter-Medium' }}>Today</Text>
+                      <Text className="text-[#4A5565] text-xs" style={{ fontWeight: '400' }}>Searching Since</Text>
+                      <Text className="text-[#101828] text-xs" style={{ fontWeight: '500' }}>Today</Text>
                     </View>
                     <View className="flex-row justify-between">
-                      <Text className="text-[#4A5565] text-xs" style={{ fontFamily: 'Inter-Regular' }}>Locality</Text>
-                      <Text className="text-[#101828] text-xs text-right flex-1 ml-4" numberOfLines={1} style={{ fontFamily: 'Inter-Medium' }}>Koramangla, whitefield</Text>
+                      <Text className="text-[#4A5565] text-xs" style={{ fontWeight: '400' }}>Locality</Text>
+                      <Text className="text-[#101828] text-xs text-right flex-1 ml-4" numberOfLines={1} style={{ fontWeight: '500' }}>Koramangla, whitefield</Text>
                     </View>
                   </View>
                   <TouchableOpacity className="items-center mt-4">
-                    <Text className="text-[#5E35B1] text-xs" style={{ fontFamily: 'Inter-Medium' }}>View Contact Details</Text>
+                    <Text className="text-[#5E35B1] text-xs" style={{ fontWeight: '500' }}>View Contact Details</Text>
                   </TouchableOpacity>
                 </View>
               </ScrollView>
@@ -847,28 +847,28 @@ const PostProperty = () => {
 
             {/* Verified Seekers Cards */}
             <View className="mt-8">
-              <Text className="text-[#101828] text-xl mb-6" style={{ fontFamily: 'Inter-Bold' }}>Verified seekers</Text>
+              <Text className="text-[#101828] text-xl mb-6" style={{ fontWeight: '700' }}>Verified seekers</Text>
               <View className="flex-row gap-3">
                 <View className="flex-1 bg-white border border-[#E5E7EB] rounded-2xl p-4">
                   <View className="w-12 h-12 bg-[#F3E8FF] rounded-xl items-center justify-center mb-3">
                     <Ionicons name="eye-outline" size={24} color="#5E35B1" />
                   </View>
-                  <Text className="text-[#0A0A0A] text-base mb-2" style={{ fontFamily: 'Inter-Bold' }}>Maximum visibility</Text>
-                  <Text className="text-[#4A5565] text-xs leading-4" style={{ fontFamily: 'Inter-Regular' }}>Showcase your property to thousands of seekers eve</Text>
+                  <Text className="text-[#0A0A0A] text-base mb-2" style={{ fontWeight: '700' }}>Maximum visibility</Text>
+                  <Text className="text-[#4A5565] text-xs leading-4" style={{ fontWeight: '400' }}>Showcase your property to thousands of seekers eve</Text>
                 </View>
                 <View className="flex-1 bg-white border border-[#E5E7EB] rounded-2xl p-4">
                   <View className="w-12 h-12 bg-[#FEF9C2] rounded-xl items-center justify-center mb-3">
                     <Ionicons name="calculator-outline" size={24} color="#D08700" />
                   </View>
-                  <Text className="text-[#0A0A0A] text-base mb-2" style={{ fontFamily: 'Inter-Bold' }}>Price calculator</Text>
-                  <Text className="text-[#4A5565] text-xs leading-4" style={{ fontFamily: 'Inter-Regular' }}>Get estimated market price of your property, makin</Text>
+                  <Text className="text-[#0A0A0A] text-base mb-2" style={{ fontWeight: '700' }}>Price calculator</Text>
+                  <Text className="text-[#4A5565] text-xs leading-4" style={{ fontWeight: '400' }}>Get estimated market price of your property, makin</Text>
                 </View>
               </View>
             </View>
 
             {/* How It Works Section */}
             <View className="mt-12 items-center">
-              <Text className="text-[#101828] text-xl text-center" style={{ fontFamily: 'Inter-Bold' }}>How it works</Text>
+              <Text className="text-[#101828] text-xl text-center" style={{ fontWeight: '700' }}>How it works</Text>
               <View className="w-12 h-1 bg-[#008E96] rounded-full mt-2 mb-8" />
 
               <View className="w-full bg-slate-50 border border-slate-100 rounded-3xl p-6">
@@ -877,14 +877,14 @@ const PostProperty = () => {
                   <View className="items-center">
                     <View className="w-16 h-16 rounded-full border-2 border-[#5E35B1] bg-white items-center justify-center">
                       <View className="w-6 h-6 rounded-full bg-[#5E35B1] items-center justify-center mb-1">
-                        <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }}>1</Text>
+                        <Text className="text-white" style={{ fontWeight: '700', fontSize: wp('2.7%') }}>1</Text>
                       </View>
                       <Text className="text-lg">🏢</Text>
                     </View>
                   </View>
-                  <View className="flex-1">
-                    <Text className="text-[#0A0A0A] text-sm mb-1" style={{ fontFamily: 'Inter-Bold' }}>Upload your property in 3 quick steps</Text>
-                    <Text className="text-[#4A5565] text-xs leading-4" style={{ fontFamily: 'Inter-Regular' }}>Tell us a few basic details about your property, a</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text className="text-[#0A0A0A] text-sm mb-1" style={{ fontWeight: '700' }}>Upload your property in 3 quick steps</Text>
+                    <Text className="text-[#4A5565] text-xs leading-4" style={{ fontWeight: '400' }}>Tell us a few basic details about your property, a</Text>
                   </View>
                 </View>
 
@@ -893,14 +893,14 @@ const PostProperty = () => {
                   <View className="items-center">
                     <View className="w-16 h-16 rounded-full border-2 border-[#5E35B1] bg-white items-center justify-center">
                       <View className="w-6 h-6 rounded-full bg-[#5E35B1] items-center justify-center mb-1">
-                        <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }}>2</Text>
+                        <Text className="text-white" style={{ fontWeight: '700', fontSize: wp('2.7%') }}>2</Text>
                       </View>
                       <Text className="text-lg">🏘️</Text>
                     </View>
                   </View>
-                  <View className="flex-1">
-                    <Text className="text-[#0A0A0A] text-sm mb-1" style={{ fontFamily: 'Inter-Bold' }}>Property reaches to 10 lacs+ tenants & buyers</Text>
-                    <Text className="text-[#4A5565] text-xs leading-4" style={{ fontFamily: 'Inter-Regular' }}>As the largest property search website of India, y</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text className="text-[#0A0A0A] text-sm mb-1" style={{ fontWeight: '700' }}>Property reaches to 10 lacs+ tenants & buyers</Text>
+                    <Text className="text-[#4A5565] text-xs leading-4" style={{ fontWeight: '400' }}>As the largest property search website of India, y</Text>
                   </View>
                 </View>
 
@@ -909,14 +909,14 @@ const PostProperty = () => {
                   <View className="items-center">
                     <View className="w-16 h-16 rounded-full border-2 border-[#5E35B1] bg-white items-center justify-center">
                       <View className="w-6 h-6 rounded-full bg-[#5E35B1] items-center justify-center mb-1">
-                        <Text className="text-white" style={{ fontFamily: 'Inter-Bold', fontSize: wp('2.7%') }}>3</Text>
+                        <Text className="text-white" style={{ fontWeight: '700', fontSize: wp('2.7%') }}>3</Text>
                       </View>
                       <Text className="text-lg">🔍</Text>
                     </View>
                   </View>
-                  <View className="flex-1">
-                    <Text className="text-[#0A0A0A] text-sm mb-1" style={{ fontFamily: 'Inter-Bold' }}>Start getting enquiries</Text>
-                    <Text className="text-[#4A5565] text-xs leading-4" style={{ fontFamily: 'Inter-Regular' }}>You will start getting enquiries from interested b</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text className="text-[#0A0A0A] text-sm mb-1" style={{ fontWeight: '700' }}>Start getting enquiries</Text>
+                    <Text className="text-[#4A5565] text-xs leading-4" style={{ fontWeight: '400' }}>You will start getting enquiries from interested b</Text>
                   </View>
                 </View>
               </View>
@@ -924,7 +924,7 @@ const PostProperty = () => {
 
             {/* FAQs Section */}
             <View className="mt-12 mb-10">
-              <Text className="text-[#101828] text-xl text-center mb-2" style={{ fontFamily: 'Inter-Bold' }}>Frequently asked questions</Text>
+              <Text className="text-[#101828] text-xl text-center mb-2" style={{ fontWeight: '700' }}>Frequently asked questions</Text>
               <View className="items-center mb-8">
                 <View className="w-12 h-1 bg-[#008E96] rounded-full" />
               </View>
@@ -937,7 +937,7 @@ const PostProperty = () => {
                   "Can I post a property for free?"
                 ].map((faq, index) => (
                   <View key={index} className="flex-row justify-between items-center bg-white border border-[#E5E7EB] rounded-2xl p-4">
-                    <Text className="text-[#101828] text-sm flex-1" style={{ fontFamily: 'Inter-Regular' }}>{faq}</Text>
+                    <Text className="text-[#101828] text-sm flex-1" style={{ fontWeight: '400' }}>{faq}</Text>
                     <Ionicons name="chevron-down" size={20} color="#5E35B1" />
                   </View>
                 ))}
@@ -960,7 +960,7 @@ const PostProperty = () => {
           <Text
             className="text-base"
             style={{
-              fontFamily: 'Inter-Bold',
+              fontWeight: '700',
               color: isFormValid ? '#FFFFFF' : '#99A1AF'
             }}
           >

@@ -72,7 +72,7 @@ const LocalityExploreCard = ({ title, rating, price, properties, onPress }) => {
       <View style={{ flex: 1, marginLeft: wp('3.5%'), justifyContent: 'center' }}>
         <Text
           style={{
-            fontFamily: 'Inter-SemiBold',
+            fontWeight: '600',
             fontSize: wp('3.4%'),
             color: '#101828',
             marginBottom: hp('0.4%'),
@@ -86,19 +86,19 @@ const LocalityExploreCard = ({ title, rating, price, properties, onPress }) => {
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: hp('0.5%') }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name="star" size={wp('3.7%')} color="#101828" />
-            <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), color: '#101828', marginLeft: wp('0.8%') }}>
+            <Text style={{ fontWeight: '500', fontSize: wp('3.2%'), color: '#101828', marginLeft: wp('0.8%') }}>
               {rating}
             </Text>
           </View>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.7%'), color: '#6A7282', marginHorizontal: wp('1.8%') }}>•</Text>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('3.2%'), color: '#4A5565' }}>
+          <Text style={{ fontWeight: '400', fontSize: wp('3.7%'), color: '#6A7282', marginHorizontal: wp('1.8%') }}>•</Text>
+          <Text style={{ fontWeight: '400', fontSize: wp('3.2%'), color: '#4A5565' }}>
             {price}
           </Text>
         </View>
 
         <Text
           style={{
-            fontFamily: 'Inter-Regular',
+            fontWeight: '400',
             fontSize: wp('3%'),
             color: '#6A7282',
             marginBottom: hp('1%'),
@@ -111,7 +111,7 @@ const LocalityExploreCard = ({ title, rating, price, properties, onPress }) => {
             onPress={onPress}
             style={{ flexDirection: 'row', alignItems: 'center' }}
         >
-          <Text style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%'), color: '#008E96', marginRight: wp('0.8%') }}>
+          <Text style={{ fontWeight: '500', fontSize: wp('3.2%'), color: '#008E96', marginRight: wp('0.8%') }}>
             Know more
           </Text>
           <Ionicons name="chevron-forward" size={wp('3.2%')} color="#008E96" />

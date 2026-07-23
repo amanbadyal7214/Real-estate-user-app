@@ -208,14 +208,14 @@ const Saved = () => {
 
             return (
               <View key={item._id || index} className="w-full bg-[#F7F9FA] border border-[#E4E7EC] flex-row justify-between items-center" style={{ borderRadius: wp('3.4%'), padding: wp('3.4%'), marginBottom: hp('1.2%') }}>
-                <View className="flex-1">
-                  <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('3.2%'), marginBottom: hp('0.4%') }} className="font-semibold text-[#101828]">{name}</Text>
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.8%') }} className="text-[#6A7282]">
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontWeight: '600', fontSize: wp('3.2%'), marginBottom: hp('0.4%') }} className="font-semibold text-[#101828]">{name}</Text>
+                  <Text style={{ fontWeight: '400', fontSize: wp('2.8%') }} className="text-[#6A7282]">
                     {city && `City: ${city}`} {category && ` • Category: ${category}`}
                   </Text>
                 </View>
                 {date && (
-                  <Text style={{ fontFamily: 'Inter-Regular', fontSize: wp('2.5%') }} className="text-[#6A7282]">
+                  <Text style={{ fontWeight: '400', fontSize: wp('2.5%') }} className="text-[#6A7282]">
                     {date}
                   </Text>
                 )}
@@ -253,7 +253,7 @@ const Saved = () => {
         >
           <Text 
             className="text-[#008E96] font-medium text-center"
-            style={{ fontFamily: 'Inter-Medium', fontSize: wp('3.2%') }}
+            style={{ fontWeight: '500', fontSize: wp('3.2%') }}
           >
             Start new search
           </Text>
@@ -263,7 +263,7 @@ const Saved = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/* Header - Based on ActivityPage Header CSS */}
       <View className="flex-row items-center border-b border-[#E4E7EC]" style={{ paddingHorizontal: wp('4%'), height: hp('7.2%') }}>
         <TouchableOpacity 
@@ -273,7 +273,7 @@ const Saved = () => {
         >
           <ArrowLeft size={wp('5.1%')} color="#101828" />
         </TouchableOpacity>
-        <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: wp('4.5%') }} className="font-semibold text-[#101828]">
+        <Text style={{ fontWeight: '600', fontSize: wp('4.5%') }} className="font-semibold text-[#101828]">
           My Activity
         </Text>
       </View>

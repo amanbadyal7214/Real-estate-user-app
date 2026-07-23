@@ -39,14 +39,14 @@ const ProjectReviewCard = ({
           )}
 
           {/* Text Container */}
-          <View className="flex-1">
-            <Text className="font-inter-semibold text-[16px] leading-[24px] text-[#101828]">
+          <View style={{ flex: 1 }}>
+            <Text className="font-semibold text-[16px] leading-[24px] text-[#101828]">
               {name}
             </Text>
-            <Text className="font-inter-regular text-[13px] leading-[20px] text-[#6A7282] mt-[2px]">
+            <Text className="font-normal text-[13px] leading-[20px] text-[#6A7282] mt-[2px]">
               {location}
             </Text>
-            <Text className="font-inter-medium text-[14px] leading-[21px] text-[#4A5565] mt-[6px]">
+            <Text className="font-medium text-[14px] leading-[21px] text-[#4A5565] mt-[6px]">
               {price}
             </Text>
           </View>
@@ -54,7 +54,7 @@ const ProjectReviewCard = ({
 
         {/* Right Side: Rating */}
         <View className="items-end gap-[4px]">
-          <Text className="font-inter-bold text-[16px] leading-[24px] text-[#008E96]">
+          <Text className="font-bold text-[16px] leading-[24px] text-[#008E96]">
             {rating}
           </Text>
           <View className="flex-row gap-[2px]">
@@ -62,7 +62,7 @@ const ProjectReviewCard = ({
               <MaterialIcons key={star} name="star" size={16} color="#1CB2A9" />
             ))}
           </View>
-          <Text className="font-inter-regular text-[12px] leading-[18px] text-[#6A7282]">
+          <Text className="font-normal text-[12px] leading-[18px] text-[#6A7282]">
             Based on {reviewsCount} ratings
           </Text>
         </View>
@@ -71,12 +71,12 @@ const ProjectReviewCard = ({
       {/* Bottom Buttons */}
       <View className="flex-row gap-[12px]">
         <TouchableOpacity className="flex-1 h-[41px] items-center justify-center">
-          <Text className="font-inter-medium text-[14px] leading-[21px] text-[#008E96] text-center">
+          <Text className="font-medium text-[14px] leading-[21px] text-[#008E96] text-center">
             Read all reviews
           </Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-1 h-[41px] bg-[#008E96]/10 rounded-[10px] items-center justify-center">
-          <Text className="font-inter-medium text-[14px] leading-[21px] text-[#008E96] text-center">
+          <Text className="font-medium text-[14px] leading-[21px] text-[#008E96] text-center">
             {isProject ? "View Project" : "View Properties"}
           </Text>
         </TouchableOpacity>
