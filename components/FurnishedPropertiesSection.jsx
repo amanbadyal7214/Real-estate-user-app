@@ -111,7 +111,7 @@ const FurnishedPropertiesSection = () => {
         horizontal 
         showsHorizontalScrollIndicator={false}
         className="flex-1"
-        contentContainerClassName="px-4 sm:px-6 gap-4"
+        contentContainerClassName="px-4 sm:px-6 gap-1"
       >
         {data.map(item => (
           <FurnishedPropertyCard key={item.id} {...item} />

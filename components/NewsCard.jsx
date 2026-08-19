@@ -10,8 +10,7 @@ const NewsCard = ({ image, title, meta, description }) => {
         marginRight: wp('4.3%'),
         marginBottom: hp('1%'),
         marginTop: hp('0.5%'),
-        width: wp('62%'),
-        height: hp('25%'),
+        width: wp('65%'),
         borderRadius: wp('3.8%'),
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
@@ -22,7 +21,7 @@ const NewsCard = ({ image, title, meta, description }) => {
         overflow: 'hidden'
       }}
     >
-      <View style={{ width: '100%', height: hp('13.5%') }}>
+      <View style={{ width: '100%', height: hp('15%') }}>
         <Image 
           source={{ uri: image }} 
           style={{ width: '100%', height: '100%' }}
@@ -30,25 +29,22 @@ const NewsCard = ({ image, title, meta, description }) => {
         />
       </View>
       
-      <View style={{ paddingHorizontal: wp('3.7%'), paddingTop: hp('1%'), paddingBottom: hp('1.5%') }}>
+      <View className="px-3.5 py-3.5">
         <Text 
-          className="font-bold text-[#101828]" 
-          style={{ fontSize: wp('3.2%'), lineHeight: hp('2%'), marginBottom: hp('0.5%') }}
+          className="font-bold text-[#101828] text-[14px] leading-[20px] mb-1" 
           numberOfLines={2}
         >
           {title}
         </Text>
         
         <Text 
-          className="font-normal text-[#6A7282]" 
-          style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%'), marginBottom: hp('0.5%') }}
+          className="font-normal text-[#6A7282] text-[11px] leading-[16px] mb-1.5" 
         >
           {meta}
         </Text>
         
         <Text 
-          className="font-normal text-[#4A5565]" 
-          style={{ fontSize: wp('2.5%'), lineHeight: hp('1.7%') }}
+          className="font-normal text-[#4A5565] text-[12px] leading-[18px]" 
           numberOfLines={2}
         >
           {description}

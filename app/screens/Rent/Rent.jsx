@@ -447,6 +447,7 @@ const Rent = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         className="flex-1"
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
         {/* Main Category Blue Container */}
         <View className="mx-2 mt-2 p-4 rounded-[32px] bg-[#E6F4F5]">
