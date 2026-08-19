@@ -66,11 +66,10 @@ const InsightPropertyCard = ({
       style={{
         marginRight: wp('3.5%'),
         marginBottom: hp('1%'),
-        borderRadius: wp('3.2%'),
+        borderRadius: 14,
         borderWidth: 0.67,
-        padding: wp('2.3%'),
-        width: wp('41%'),
-        height: hp('34.5%'),
+        padding: 10,
+        width: wp('42%'),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.06,
@@ -78,7 +77,7 @@ const InsightPropertyCard = ({
         elevation: 3,
       }}
     >
-      <View className="w-full overflow-hidden relative" style={{ height: hp('13.4%'), borderRadius: wp('2.7%') }}>
+      <View className="w-full overflow-hidden relative bg-gray-100" style={{ height: 115, borderRadius: 10 }}>
         <Image 
           source={{ uri: image }} 
           className="w-full h-full"
@@ -86,18 +85,18 @@ const InsightPropertyCard = ({
         />
         {/* RERA Badge */}
         {isRera && (
-          <View className="absolute bg-[#008E96] flex-row items-center" style={{ left: wp('1.8%'), top: hp('0.8%'), borderRadius: wp('1.8%'), paddingVertical: hp('0.4%'), paddingHorizontal: wp('1.8%'), gap: wp('0.8%') }}>
-            <Check size={wp('2.7%')} color="#FFFFFF" strokeWidth={3} />
-            <Text style={{ fontWeight: '500', fontSize: wp('2.5%'), lineHeight: hp('1.8%') }} className="text-white">RERA</Text>
+          <View className="absolute bg-[#008E96] flex-row items-center" style={{ left: 6, top: 6, borderRadius: 4, paddingVertical: 2, paddingHorizontal: 6, gap: 4 }}>
+            <Check size={10} color="#FFFFFF" strokeWidth={3} />
+            <Text style={{ fontWeight: '500', fontSize: 9 }} className="text-white">RERA</Text>
           </View>
         )}
         <TouchableOpacity 
           onPress={toggleWishlist}
           className="absolute bg-white/90 rounded-full items-center justify-center"
-          style={{ right: wp('1.8%'), top: hp('0.8%'), width: wp('7.2%'), height: wp('7.2%') }}
+          style={{ right: 6, top: 6, width: 28, height: 28 }}
         >
           <Heart 
-            size={wp('4%')} 
+            size={16} 
             color={isSaved ? "#F04438" : "#4A5565"} 
             fill={isSaved ? "#F04438" : "transparent"} 
             strokeWidth={2} 
@@ -105,38 +104,38 @@ const InsightPropertyCard = ({
         </TouchableOpacity>
       </View>
 
-      <View style={{ marginTop: hp('0.5%') }}>
-        <Text style={{ fontWeight: '400', fontSize: wp('2.7%'), lineHeight: hp('1.9%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
+      <View style={{ marginTop: 8 }}>
+        <Text style={{ fontWeight: '400', fontSize: 10, marginBottom: 2 }} className="text-[#6A7282]">
           {possession}
         </Text>
-        <Text style={{ fontWeight: '600', fontSize: wp('3.6%'), lineHeight: hp('2.5%'), marginBottom: hp('0.2%') }} className="text-[#101828]" numberOfLines={1}>
+        <Text style={{ fontWeight: '600', fontSize: 13, marginBottom: 2 }} className="text-[#101828]" numberOfLines={1}>
           {title}
         </Text>
-        <Text style={{ fontWeight: '400', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.4%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: 11, marginBottom: 4 }} className="text-[#6A7282]" numberOfLines={1}>
           {location}
         </Text>
-        <Text style={{ fontWeight: '600', fontSize: wp('3.4%'), lineHeight: hp('2.3%'), marginBottom: hp('0.2%') }} className="text-[#101828]">
+        <Text style={{ fontWeight: '600', fontSize: 13, marginBottom: 2 }} className="text-[#101828]">
           {price}
         </Text>
-        <Text style={{ fontWeight: '400', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.2%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: 11, marginBottom: 2 }} className="text-[#6A7282]">
           {bhk}
         </Text>
-        <Text style={{ fontWeight: '400', fontSize: wp('2.9%'), lineHeight: hp('2.1%'), marginBottom: hp('0.8%') }} className="text-[#6A7282]">
+        <Text style={{ fontWeight: '400', fontSize: 11, marginBottom: 8 }} className="text-[#6A7282]">
           {area}
         </Text>
 
-        <View className="flex-row items-center w-full" style={{ gap: wp('1.8%'), height: hp('4.2%') }}>
+        <View className="flex-row items-center w-full" style={{ gap: 6, height: 34 }}>
           <TouchableOpacity 
             className="bg-[#25D366]/10 rounded-full items-center justify-center"
-            style={{ width: wp('9%'), height: wp('9%') }}
+            style={{ width: 34, height: 34 }}
           >
-            <MessageCircle size={wp('4.5%')} color="#25D366" fill="#25D366" />
+            <MessageCircle size={16} color="#25D366" fill="#25D366" />
           </TouchableOpacity>
           <TouchableOpacity 
             className="flex-1 bg-[#008E96]/10 items-center justify-center"
-            style={{ height: hp('4.2%'), borderRadius: wp('3.2%') }}
+            style={{ height: 34, borderRadius: 8 }}
           >
-            <Text style={{ fontWeight: '500', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#008E96] text-center">
+            <Text style={{ fontWeight: '500', fontSize: 12 }} className="text-[#008E96] text-center">
               View Phone
             </Text>
           </TouchableOpacity>

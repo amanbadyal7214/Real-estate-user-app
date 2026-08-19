@@ -3,9 +3,12 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 
 const FurnishedPropertyCard = ({ image, price, title, location, furnishedStatus, area }) => {
   return (
-    <View style={{ width: wp('48%'), height: hp('37%'), marginRight: wp('2.1%') }} className="bg-white rounded-[14px] overflow-hidden border border-[#F3F4F6] shadow-sm">
+    <View 
+      style={{ width: wp('48%'), marginRight: wp('2.1%') }} 
+      className="bg-white rounded-[14px] overflow-hidden border border-[#F3F4F6] shadow-sm pb-4 pt-3 px-3"
+    >
       {/* Property Image */}
-      <View style={{ width: wp('38.6%'), height: hp('17%'), marginTop: hp('1.5%'), marginLeft: wp('3.2%') }} className="rounded-[8px] overflow-hidden">
+      <View style={{ width: '100%', height: hp('17%') }} className="rounded-[8px] overflow-hidden">
         <Image
           source={{ uri: image }}
           style={{ width: '100%', height: '100%' }}
@@ -14,10 +17,10 @@ const FurnishedPropertyCard = ({ image, price, title, location, furnishedStatus,
       </View>
 
       {/* Content Container */}
-      <View style={{ marginTop: hp('1%'), paddingHorizontal: wp('3.2%'), flex: 1 }}>
+      <View style={{ marginTop: hp('1.5%') }}>
         <Text numberOfLines={1} className="font-bold text-[#101828]" style={{ fontSize: wp('4%'), lineHeight: hp('2.7%') }}>{price}</Text>
         <Text numberOfLines={1} className="font-normal text-[#364153]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.2%'), marginTop: hp('0.2%') }}>{title}</Text>
-        <Text numberOfLines={2} className="font-normal text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.1%'), marginTop: hp('0.5%'), height: hp('3.4%') }}>{location}</Text>
+        <Text numberOfLines={2} className="font-normal text-[#6A7282]" style={{ fontSize: wp('3.2%'), lineHeight: hp('2.1%'), marginTop: hp('0.5%') }}>{location}</Text>
 
         <View className="flex-row items-center flex-wrap" style={{ marginTop: hp('1%') }}>
           <Text className="font-bold text-[#101828]" style={{ fontSize: wp('2.9%'), lineHeight: hp('2%') }}>{furnishedStatus}</Text>

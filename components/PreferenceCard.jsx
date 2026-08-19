@@ -6,14 +6,12 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const PreferenceCard = ({ icon, label, value, properties, onPress }) => {
     return (
         <View 
-            className="bg-white border-[#E4E7EC] shadow-sm"
+            className="bg-white border-[#E4E7EC] shadow-sm pb-3 pt-3 px-3.5"
             style={{
-                width: wp('41.5%'),
-                height: hp('14%'),
+                width: wp('42%'),
                 borderWidth: 0.67,
-                borderRadius: wp('3.7%'),
-                padding: wp('3.7%'),
-                marginBottom: hp('1.7%'),
+                borderRadius: 14,
+                marginBottom: 14,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.04,
@@ -21,14 +19,14 @@ const PreferenceCard = ({ icon, label, value, properties, onPress }) => {
                 elevation: 2
             }}
         >
-            <Text style={{ fontWeight: '400', fontSize: wp('3%'), lineHeight: hp('2.1%'), marginBottom: hp('0.8%') }} className="text-[#6A7282]">
+            <Text style={{ fontWeight: '400', fontSize: 11, marginBottom: 6 }} className="text-[#6A7282]">
                 {label}
             </Text>
             
-            <View className="flex-row items-center" style={{ gap: wp('1.8%'), marginBottom: hp('1.2%'), height: hp('2.7%') }}>
-                <MaterialCommunityIcons name={icon} size={wp('4.5%')} color="#101828" />
+            <View className="flex-row items-center" style={{ gap: 6, marginBottom: 10 }}>
+                <MaterialCommunityIcons name={icon} size={18} color="#101828" />
                 <Text 
-                    style={{ fontWeight: '600', fontSize: wp('3.8%'), lineHeight: hp('2.7%') }}
+                    style={{ fontWeight: '600', fontSize: 13, flexShrink: 1 }}
                     className="text-[#101828]"
                     numberOfLines={1}
                 >
@@ -36,10 +34,10 @@ const PreferenceCard = ({ icon, label, value, properties, onPress }) => {
                 </Text>
             </View>
 
-            <View className="w-full border-t-[0.67px] border-dashed border-[#E4E7EC]" style={{ marginBottom: hp('1.2%') }} />
+            <View className="w-full border-t-[0.67px] border-dashed border-[#E4E7EC] mb-3" />
 
             <TouchableOpacity onPress={onPress}>
-                <Text style={{ fontWeight: '500', fontSize: wp('3.2%'), lineHeight: hp('2.2%') }} className="text-[#008E96] text-center">
+                <Text style={{ fontWeight: '500', fontSize: 12 }} className="text-[#008E96] text-center">
                     View {properties}+ properties
                 </Text>
             </TouchableOpacity>
