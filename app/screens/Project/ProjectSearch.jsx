@@ -131,7 +131,10 @@ const ProjectSearch = () => {
       locality: localityName,
       display: `${localityName}, ${selectedCity}`
     });
-    router.replace('/screens/Project/Project');
+    router.replace({
+      pathname: '/screens/Project/ProjectMatchedHome',
+      params: { city: selectedCity, locality: localityName }
+    });
   };
 
   const handleSearchSubmit = () => {
@@ -143,7 +146,10 @@ const ProjectSearch = () => {
       locality: finalLocality,
       display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
     });
-    router.replace('/screens/Project/Project');
+    router.replace({
+      pathname: '/screens/Project/ProjectMatchedHome',
+      params: { city: finalCity, locality: finalLocality }
+    });
   };
 
   const handleExploreNearby = () => {
@@ -155,7 +161,10 @@ const ProjectSearch = () => {
       locality: nearbyLocality,
       display: nearbyLocality ? `${nearbyLocality}, ${nearbyCity}` : nearbyCity
     });
-    router.replace('/screens/Project/Project');
+    router.replace({
+      pathname: '/screens/Project/ProjectMatchedHome',
+      params: { city: nearbyCity, locality: nearbyLocality }
+    });
   };
 
   return (

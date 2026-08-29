@@ -115,8 +115,11 @@ const RentSearch = () => {
       locality: localityName,
       display: `${localityName}, ${selectedCity}`
     });
-    // Navigate to Rent listing screen after selecting locality
-    router.replace('/screens/Rent/Rent');
+    // Navigate to PrefectlyMatchedHome with rent filter
+    router.replace({
+      pathname: '/screens/PrefectlyMatchedHome',
+      params: { lookingFor: 'rent', city: selectedCity, locality: localityName }
+    });
   };
 
   const handleSearchSubmit = () => {
@@ -128,8 +131,11 @@ const RentSearch = () => {
       locality: finalLocality,
       display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
     });
-    // Navigate to Rent listing screen after submitting search
-    router.replace('/screens/Rent/Rent');
+    // Navigate to PrefectlyMatchedHome with rent filter
+    router.replace({
+      pathname: '/screens/PrefectlyMatchedHome',
+      params: { lookingFor: 'rent', city: finalCity, locality: finalLocality }
+    });
   };
 
   const handleExploreNearby = () => {
@@ -142,7 +148,10 @@ const RentSearch = () => {
       locality: nearbyLocality,
       display: nearbyLocality ? `${nearbyLocality}, ${nearbyCity}` : nearbyCity
     });
-    router.replace('/screens/Rent/Rent');
+    router.replace({
+      pathname: '/screens/PrefectlyMatchedHome',
+      params: { lookingFor: 'rent', city: nearbyCity, locality: nearbyLocality }
+    });
   };
 
   return (

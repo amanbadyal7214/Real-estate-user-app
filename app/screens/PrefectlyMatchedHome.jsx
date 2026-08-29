@@ -86,13 +86,16 @@ const PrefectlyMatchedHome = () => {
     'Relevance'
   ];
 
-  const lookOptions = ['Buy'];
+  const lookOptions = [
+    { label: 'Buy', value: 'sell' },
+    { label: 'Rent', value: 'rent' }
+  ];
 
   // Lookups data
   const { propertyTypes = [], subPropertyTypes = [], structures = [], constructionStatus = [], possessionStatus = [], fetchLookups } = useLookup();
 
   // Filter States
-  const [lookingTo] = useState('sell'); // default looking to
+  const [lookingTo, setLookingTo] = useState(searchParams.lookingFor || 'sell'); // default looking to
   const [city, setCity] = useState(searchParams.city || currentLocation?.city || 'Mohali');
   const [selectedPropertyType, setSelectedPropertyType] = useState(null);
   const [selectedSubPropertyType, setSelectedSubPropertyType] = useState(null);
@@ -263,7 +266,7 @@ const PrefectlyMatchedHome = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="flex-row items-center h-[64px]" style={{ paddingHorizontal: wp('4%') }}>
-        <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%'), marginRight: wp('2%') }}>
+        <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/')} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%'), marginRight: wp('2%') }}>
           <Ionicons name="arrow-back" size={wp('6%')} color="#4A5565" />
         </TouchableOpacity>
         <Text className="font-bold text-[#101828]" style={{ fontSize: wp('5%') }}>Perfectly Matched</Text>
@@ -465,18 +468,21 @@ const PrefectlyMatchedHome = () => {
                 <View style={{ marginTop: hp('4%') }}>
                   <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>{"I'm Looking to"}</Text>
                   <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
-                    {lookOptions.map(option => (
-                      <TouchableOpacity
-                        key={option}
-                        activeOpacity={1}
-                        className={`border bg-[#008E96]/10 border-[#008E96]`}
-                        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }}
-                      >
-                        <Text className={`font-medium text-[#008E96]`} style={{ fontSize: wp('3.5%') }}>
-                          {option}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
+                    {lookOptions.map(option => {
+                      const isActive = lookingTo === option.value;
+                      return (
+                        <TouchableOpacity
+                          key={option.value}
+                          onPress={() => setLookingTo(option.value)}
+                          className={`border ${isActive ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
+                          style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }}
+                        >
+                          <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#4A5565]'}`} style={{ fontSize: wp('3.5%') }}>
+                            {option.label}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
                   </View>
                 </View>
 

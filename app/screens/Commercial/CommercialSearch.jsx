@@ -115,7 +115,10 @@ const CommercialSearch = () => {
       locality: localityName,
       display: `${localityName}, ${selectedCity}`
     });
-    router.replace('/screens/Commercial/Commercial');
+    router.replace({
+      pathname: '/screens/RecentlyAddedProperties',
+      params: { city: selectedCity, locality: localityName }
+    });
   };
 
   const handleSearchSubmit = () => {
@@ -127,7 +130,10 @@ const CommercialSearch = () => {
       locality: finalLocality,
       display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
     });
-    router.replace('/screens/Commercial/Commercial');
+    router.replace({
+      pathname: '/screens/RecentlyAddedProperties',
+      params: { city: finalCity, locality: finalLocality }
+    });
   };
 
   const handleExploreNearby = () => {
@@ -139,7 +145,10 @@ const CommercialSearch = () => {
       locality: nearbyLocality,
       display: nearbyLocality ? `${nearbyLocality}, ${nearbyCity}` : nearbyCity
     });
-    router.replace('/screens/Commercial/Commercial');
+    router.replace({
+      pathname: '/screens/RecentlyAddedProperties',
+      params: { city: nearbyCity, locality: nearbyLocality }
+    });
   };
 
   return (
