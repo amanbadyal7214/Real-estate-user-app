@@ -6,9 +6,9 @@ const TAB_ROUTES = {
   Buy: '/screens/Buy/BuySearch',
   Rent: '/screens/Rent/Rentsearch',
   Project: '/screens/Project/ProjectSearch',
-    Plot: '/screens/Plot/PlotSearch',
-    PG: '/screens/PG/PGSearch',
-    Commercial: '/screens/Commercial/CommercialSearch',
+  Plot: '/screens/Plot/PlotSearch',
+  PG: '/screens/PG/PGSearch',
+  Commercial: '/screens/Commercial/CommercialSearch',
 };
 
 export const CategoryTabProvider = ({ children }) => {

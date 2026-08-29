@@ -456,7 +456,10 @@ const Rent = () => {
             onTabPress={setSelectedTab}
           />
 
-          <SearchBox onLocationUpdate={handleLocationUpdate} />
+          <SearchBox 
+            onLocationUpdate={handleLocationUpdate} 
+            onPress={() => router.push('/screens/Rent/Rentsearch')}
+          />
         </View>
 
         {/* Continue where you left Section */}

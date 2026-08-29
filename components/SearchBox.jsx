@@ -64,7 +64,7 @@ const SearchBox = ({
   return (
     <View className="bg-white" style={{ padding: wp('4%'), borderRadius: wp('4.8%') }}>
       <TouchableOpacity 
-        onPress={() => router.push('/screens/Buy/BuySearch')}
+        onPress={onPress}
         className="flex-row items-center"
         style={{ marginBottom: hp('1.2%') }}
       >

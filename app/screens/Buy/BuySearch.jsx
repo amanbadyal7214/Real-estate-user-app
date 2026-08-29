@@ -151,7 +151,7 @@ const BuySearch = () => {
       <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('1.2%') }}>
         <View className="flex-row items-center" style={{ gap: wp('2.5%') }}>
           <TouchableOpacity
-            onPress={() => router.push('/screens/PrefectlyMatchedHome')}
+            onPress={() => router.replace('/screens/Buy/Buy')}
             className="items-center justify-center rounded-full border border-gray-100"
             style={{ width: wp('9%'), height: wp('9%') }}
           >
