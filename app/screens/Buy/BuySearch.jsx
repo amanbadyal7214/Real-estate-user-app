@@ -116,7 +116,7 @@ const BuySearch = () => {
       display: `${localityName}, ${selectedCity}`
     });
     // Navigate to Buy listing screen after selecting locality
-    router.replace('/screens/Buy/Buy');
+    router.replace('/screens/PrefectlyMatchedHome');
   };
 
   const handleSearchSubmit = () => {
@@ -129,7 +129,7 @@ const BuySearch = () => {
       display: finalLocality ? `${finalLocality}, ${finalCity}` : finalCity
     });
     // Navigate to Buy listing screen after submitting search
-    router.replace('/screens/Buy/Buy');
+    router.replace('/screens/PrefectlyMatchedHome');
   };
 
   const handleExploreNearby = () => {
@@ -142,7 +142,7 @@ const BuySearch = () => {
       locality: nearbyLocality,
       display: nearbyLocality ? `${nearbyLocality}, ${nearbyCity}` : nearbyCity
     });
-    router.replace('/screens/Buy/Buy');
+    router.replace('/screens/PrefectlyMatchedHome');
   };
 
   return (
@@ -151,7 +151,7 @@ const BuySearch = () => {
       <View className="flex-row items-center justify-between" style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('1.2%') }}>
         <View className="flex-row items-center" style={{ gap: wp('2.5%') }}>
           <TouchableOpacity
-            onPress={() => router.push('/screens/Buy/Buy')}
+            onPress={() => router.push('/screens/PrefectlyMatchedHome')}
             className="items-center justify-center rounded-full border border-gray-100"
             style={{ width: wp('9%'), height: wp('9%') }}
           >

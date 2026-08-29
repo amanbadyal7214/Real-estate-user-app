@@ -3,7 +3,7 @@ import { ArrowLeft, ChevronDown, ChevronUp, X } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import SafeAreaView from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import NoDataFound from '../../components/NoDataFound';
 import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { useLocality } from '../../hooks/useLocality';
@@ -460,7 +460,11 @@ const BestPriceProperty = () => {
       price: formattedPrice,
       name: property.title || property.projectName || 'Property',
       developer: property.projectName ? `by ${property.projectName}` : `by ${property.owner?.name || property.seller?.name || 'Developer'}`,
-      location: [property.localityName || property.locality?.name || property.locality, property.city?.name || property.city, property.state?.name || property.state].filter(Boolean).join(', ') || 'Location not available',
+      location: [
+        typeof property.locality === 'object' ? (property.locality?.name || '') : (property.localityName || property.locality || ''),
+        typeof property.city === 'object' ? (property.city?.name || '') : (property.city || ''),
+        typeof property.state === 'object' ? (property.state?.name || '') : (property.state || '')
+      ].filter(Boolean).join(', ') || 'Location not available',
       details: `${property.residential?.bedrooms || property.bhk || property.bedrooms || 'N/A'} BHK • ${area} ${areaUnitStr}`,
       seller: property.owner?.name || property.seller?.name || 'Seller',
       images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],

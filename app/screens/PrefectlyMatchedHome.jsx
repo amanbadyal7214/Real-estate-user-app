@@ -1,17 +1,21 @@
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, ChevronDown, ChevronUp, X } from 'lucide-react-native';
 
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, ScrollView, Text, TouchableOpacity, View, Modal } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, Dimensions, FlatList, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import PerfectMatchCard from '../../components/PerfectMatchCard';
 import NoDataFound from '../../components/NoDataFound';
-import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
-import { useLocation } from '../context/LocationContext';
+import PerfectMatchCard from '../../components/PerfectMatchCard';
 import { useLocality } from '../../hooks/useLocality';
 import { useLookup } from '../../hooks/useLookup';
+import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import { useLocation } from '../context/LocationContext';
 import api from '../api';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const PrefectlyMatchedHome = () => {
   const { findPropertiesByLocation } = usePropertyDiscovery();
@@ -23,30 +27,91 @@ const PrefectlyMatchedHome = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
-  
+
   const loading = isInitialLoading || localityLoading;
   const searchQuery = searchParams.city || currentLocation?.city || '';
 
-  // Filter States
-  const [propertyType, setPropertyType] = useState(null);
-  const [lookingFor, setLookingFor] = useState('sell'); // 'sell' -> Buy, 'rent' -> Rent
-  const [city, setCity] = useState(searchParams.city || currentLocation?.city || 'Mohali');
-  const [locality, setLocality] = useState(null);
-  const [budget, setBudget] = useState(null);
+  // Modal States
+  const [sortModalVisible, setSortModalVisible] = useState(false);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [localityModalVisible, setLocalityModalVisible] = useState(false);
+  const [selectedSort, setSelectedSort] = useState('Price: High to Low');
 
-  // Dropdown UI States
-  const [activeFilterDropdown, setActiveFilterDropdown] = useState(null);
-  const [localitiesList, setLocalitiesList] = useState([]);
-  const [loadingLocalities, setLoadingLocalities] = useState(false);
+  // Animation for Bottom Sheet
+  const sheetHeight = useRef(new Animated.Value(0)).current;
+  const isFullScreen = useRef(false);
+
+  const openFilter = () => {
+    setFilterModalVisible(true);
+    Animated.spring(sheetHeight, {
+      toValue: SCREEN_HEIGHT * 0.7,
+      useNativeDriver: false,
+      damping: 20,
+    }).start();
+  };
+
+  const closeFilter = () => {
+    Animated.timing(sheetHeight, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: false,
+    }).start(() => setFilterModalVisible(false));
+  };
+
+  const handleScroll = (event) => {
+    const currentScrollY = event.nativeEvent.contentOffset.y;
+
+    if (currentScrollY > 10 && !isFullScreen.current) {
+      isFullScreen.current = true;
+      Animated.spring(sheetHeight, {
+        toValue: SCREEN_HEIGHT * 0.95,
+        useNativeDriver: false,
+        damping: 20,
+      }).start();
+    } else if (currentScrollY <= 0 && isFullScreen.current) {
+      isFullScreen.current = false;
+      Animated.spring(sheetHeight, {
+        toValue: SCREEN_HEIGHT * 0.7,
+        useNativeDriver: false,
+        damping: 20,
+      }).start();
+    }
+  };
+
+  const sortOptions = [
+    'Price : Low to High',
+    'Price: High to Low',
+    'Area: Low to High',
+    'Area: High to Low',
+    'Relevance'
+  ];
+
+  const lookOptions = ['Buy'];
 
   // Lookups data
-  const { propertyTypes = [], fetchLookups } = useLookup();
+  const { propertyTypes = [], subPropertyTypes = [], structures = [], constructionStatus = [], possessionStatus = [], fetchLookups } = useLookup();
+
+  // Filter States
+  const [lookingTo] = useState('sell'); // default looking to
+  const [city, setCity] = useState(searchParams.city || currentLocation?.city || 'Mohali');
+  const [selectedPropertyType, setSelectedPropertyType] = useState(null);
+  const [selectedSubPropertyType, setSelectedSubPropertyType] = useState(null);
+  const [selectedStructure, setSelectedStructure] = useState(null);
+  const [structureInput, setStructureInput] = useState('');
+  const [selectedConstructionStatus, setSelectedConstructionStatus] = useState(null);
+  const [selectedPossessionStatus, setSelectedPossessionStatus] = useState(null);
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
+  const [minArea, setMinArea] = useState(null);
+  const [maxArea, setMaxArea] = useState(null);
+  const [localitiesList, setLocalitiesList] = useState([]);
+  const [loadingLocalities, setLoadingLocalities] = useState(false);
+  const [selectedLocality, setSelectedLocality] = useState(searchParams.locality || currentLocation?.locality || null);
 
   useEffect(() => {
     fetchLookups();
   }, [fetchLookups]);
 
-  // Fetch localities when selected city changes
   useEffect(() => {
     const loadLocalities = async () => {
       const activeCity = city || currentLocation?.city || 'Mohali';
@@ -87,7 +152,7 @@ const PrefectlyMatchedHome = () => {
       const params = { limit: 10, page: pageToFetch };
 
       // 1. Looking For
-      params.lookingFor = lookingFor;
+      params.lookingFor = lookingTo;
 
       // 2. City
       const effectiveCity = city || searchParams.city || currentLocation?.city;
@@ -105,35 +170,50 @@ const PrefectlyMatchedHome = () => {
         }
       }
 
-      // 3. Property Type
-      if (propertyType) {
-        params.propertyType = propertyType._id;
+      // 3. Property Type & Others
+      if (selectedLocality) {
+        params.locality = selectedLocality.name || selectedLocality;
+      }
+      if (selectedPropertyType) params.propertyType = selectedPropertyType;
+      if (selectedSubPropertyType) params.subPropertyType = selectedSubPropertyType;
+      if (selectedConstructionStatus) params.constructionStatus = selectedConstructionStatus;
+      if (selectedPossessionStatus) params.possessionStatus = selectedPossessionStatus;
+
+      if (selectedStructure) {
+        params.structure = selectedStructure;
+      } else if (structureInput && structureInput.trim().length > 0) {
+        params.structure = structureInput.trim();
       }
 
-      // 4. Locality
-      if (locality) {
-        params.locality = locality.name || locality;
+      if (selectedSort && selectedSort.toLowerCase().includes('price')) {
+        params.PriceAscending = selectedSort.toLowerCase().includes('low');
       }
 
-      // 5. Budget
-      if (budget) {
-        if (budget.minPrice !== null && budget.minPrice !== undefined) {
-          params.minPrice = budget.minPrice;
-        }
-        if (budget.maxPrice !== null && budget.maxPrice !== undefined) {
-          params.maxPrice = budget.maxPrice;
-        }
-      }
+      if (minPrice !== null && minPrice !== undefined && minPrice !== '') params.minPrice = minPrice;
+      if (maxPrice !== null && maxPrice !== undefined && maxPrice !== '') params.maxPrice = maxPrice;
+      if (minArea !== null && minArea !== undefined && minArea !== '') params.minArea = minArea;
+      if (maxArea !== null && maxArea !== undefined && maxArea !== '') params.maxArea = maxArea;
 
       const res = await findPropertiesByLocation(params);
       if (res.success) {
-        const enriched = await resolveLocalities(res.data);
+        let items = res.data;
+
+        if (selectedSort && selectedSort.toLowerCase().includes('area')) {
+          const asc = selectedSort.toLowerCase().includes('low');
+          items = items.sort((a, b) => {
+            const aArea = parseFloat(a.area || a.areaValue || a.builtUpArea || 0) || 0;
+            const bArea = parseFloat(b.area || b.areaValue || b.builtUpArea || 0) || 0;
+            return asc ? aArea - bArea : bArea - aArea;
+          });
+        }
+
+        const enriched = await resolveLocalities(items);
         if (isLoadMore) {
           setProperties((prev) => [...prev, ...enriched]);
         } else {
           setProperties(enriched);
         }
-        
+
         if (enriched.length < params.limit) {
           setHasMore(false);
         } else {
@@ -161,243 +241,594 @@ const PrefectlyMatchedHome = () => {
   useEffect(() => {
     fetchMatches(1, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, propertyType, lookingFor, city, locality, budget]);
+  }, [searchQuery, lookingTo, city, selectedLocality, selectedSort, selectedStructure, structureInput, selectedPropertyType, selectedSubPropertyType, selectedConstructionStatus, selectedPossessionStatus, minPrice, maxPrice, minArea, maxArea]);
 
-  const clearFilter = (type) => {
-    if (type === 'propertyType') setPropertyType(null);
-    else if (type === 'lookingFor') setLookingFor('sell'); // default to Buy
-    else if (type === 'city') setCity('Mohali'); // reset to Mohali
-    else if (type === 'locality') setLocality(null);
-    else if (type === 'budget') setBudget(null);
-    
-    setActiveFilterDropdown(null);
+  const clearAllFilters = () => {
+    setSelectedLocality(null);
+    setSelectedPropertyType(null);
+    setSelectedSubPropertyType(null);
+    setSelectedStructure(null);
+    setStructureInput('');
+    setSelectedConstructionStatus(null);
+    setSelectedPossessionStatus(null);
+    setMinPrice(null);
+    setMaxPrice(null);
+    setMinArea(null);
+    setMaxArea(null);
+    // reload properties after clearing
+    fetchMatches(1, false);
   };
 
-  // Dropdown Options
-  const propertyTypeOptions = propertyTypes.length > 0 ? propertyTypes : [
-    { _id: 'apartment', label: 'Apartment' },
-    { _id: 'independent-house', label: 'Independent House' },
-    { _id: 'independent-floor', label: 'Independent Floor' },
-    { _id: 'villa', label: 'Villa' },
-    { _id: 'commercial', label: 'Commercial' },
-    { _id: 'plot', label: 'Plot' }
-  ];
-
-  const lookingForOptions = [
-    { value: 'sell', label: 'Buy' },
-    { value: 'rent', label: 'Rent' }
-  ];
-
-  const cityOptions = [
-    { value: 'Mohali', label: 'Mohali' },
-    { value: 'Kharar', label: 'Kharar' },
-    { value: 'Zirakpur', label: 'Zirakpur' },
-    { value: 'Sector 125', label: 'Sector 125' },
-    { value: 'Derabassi', label: 'Derabassi' },
-    { value: 'New Chandigarh', label: 'New Chandigarh' }
-  ];
-
-  const buyBudgetOptions = [
-    { label: 'Any Budget', minPrice: null, maxPrice: null },
-    { label: 'Under ₹30 Lakhs', minPrice: 0, maxPrice: 3000000 },
-    { label: '₹30 - ₹50 Lakhs', minPrice: 3000000, maxPrice: 5000000 },
-    { label: '₹50 - ₹80 Lakhs', minPrice: 5000000, maxPrice: 8000000 },
-    { label: '₹80 Lakhs - ₹1.5 Cr', minPrice: 8000000, maxPrice: 15000000 },
-    { label: '₹1.5 - ₹3 Cr', minPrice: 15000000, maxPrice: 30000000 },
-    { label: '₹3 - ₹5 Cr', minPrice: 30000000, maxPrice: 50000000 },
-    { label: 'Above ₹5 Cr', minPrice: 50000000, maxPrice: 999000000 }
-  ];
-
-  const rentBudgetOptions = [
-    { label: 'Any Budget', minPrice: null, maxPrice: null },
-    { label: 'Under ₹10,000', minPrice: 0, maxPrice: 10000 },
-    { label: '₹10,000 - ₹20,000', minPrice: 10000, maxPrice: 20000 },
-    { label: '₹20,000 - ₹35,000', minPrice: 20000, maxPrice: 35000 },
-    { label: '₹35,000 - ₹50,000', minPrice: 35000, maxPrice: 50000 },
-    { label: 'Above ₹50,000', minPrice: 50000, maxPrice: 9999999 }
-  ];
-
-  const renderFilterPill = (type, label, isActive) => {
-    const isDropdownOpen = activeFilterDropdown === type;
-    
-    return (
-      <TouchableOpacity
-        key={type}
-        onPress={() => setActiveFilterDropdown(isDropdownOpen ? null : type)}
-        className={`flex-row items-center border rounded-full justify-center ${
-          isActive 
-            ? 'bg-[#008E96] border-[#008E96]' 
-            : isDropdownOpen
-              ? 'bg-[#008E96]/10 border-[#008E96]'
-              : 'bg-white border-[#E4E7EC]'
-        }`}
-        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%'), gap: wp('1.5%') }}
-      >
-        <Text 
-          style={{ fontFamily: isActive ? 'Inter-SemiBold' : 'Inter-Medium', fontSize: wp('3.3%'), lineHeight: wp('5%') }}
-          className={`${
-            isActive 
-              ? 'text-white' 
-              : isDropdownOpen
-                ? 'text-[#008E96]'
-                : 'text-[#4A5565]'
-          }`}
-        >
-          {label}
-        </Text>
-        {isActive && type !== 'lookingFor' ? (
-          <TouchableOpacity 
-            onPress={(e) => {
-              e.stopPropagation();
-              clearFilter(type);
-            }}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            className="rounded-full bg-white/20 items-center justify-center"
-            style={{ marginLeft: wp('1%'), width: wp('4%'), height: wp('4%') }}
-          >
-            <X size={wp('2.5%')} color="white" strokeWidth={3} />
-          </TouchableOpacity>
-        ) : null}
-        
-        {isDropdownOpen ? (
-          <ChevronUp size={wp('3.5%')} color={isActive ? 'white' : '#008E96'} />
-        ) : (
-          <ChevronDown size={wp('3.5%')} color={isActive ? 'white' : '#6A7282'} />
-        )}
-      </TouchableOpacity>
-    );
-  };
-
-  const renderCityPill = () => {
-    const type = 'city';
-    const label = city || searchParams.city || currentLocation?.city || 'Mohali';
-    const isDropdownOpen = activeFilterDropdown === type;
-    const isActive = true;
-    
-    return (
-      <TouchableOpacity
-        key={type}
-        onPress={() => setActiveFilterDropdown(isDropdownOpen ? null : type)}
-        className={`flex-row items-center border rounded-full justify-center ${
-          isActive 
-            ? 'bg-[#008E96] border-[#008E96]' 
-            : isDropdownOpen
-              ? 'bg-[#008E96]/10 border-[#008E96]'
-              : 'bg-white border-[#E4E7EC]'
-        }`}
-        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1%'), gap: wp('1.5%') }}
-      >
-        <Text 
-          style={{ fontWeight: '600', fontSize: wp('3.3%'), lineHeight: wp('5%') }}
-          className="text-white"
-        >
-          {label}
-        </Text>
-        <TouchableOpacity 
-          onPress={(e) => {
-            e.stopPropagation();
-            clearFilter('city');
-          }}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          className="rounded-full bg-white/20 items-center justify-center"
-          style={{ marginLeft: wp('1%'), width: wp('4%'), height: wp('4%') }}
-        >
-          <X size={wp('2.5%')} color="white" strokeWidth={3} />
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }} edges={['top', 'left', 'right']}>
+      {/* Header */}
+      <View className="flex-row items-center h-[64px]" style={{ paddingHorizontal: wp('4%') }}>
+        <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%'), marginRight: wp('2%') }}>
+          <Ionicons name="arrow-back" size={wp('6%')} color="#4A5565" />
         </TouchableOpacity>
-        {isDropdownOpen ? (
-          <ChevronUp size={wp('3.5%')} color="white" />
+        <Text className="font-bold text-[#101828]" style={{ fontSize: wp('5%') }}>Perfectly Matched</Text>
+      </View>
+
+      {/* Horizontal Filter Chips */}
+      <View style={{ paddingHorizontal: wp('4%'), marginBottom: hp('1.5%') }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: wp('2.5%') }}>
+          <TouchableOpacity 
+            onPress={openFilter}
+            className="flex-row items-center bg-[#008E96] rounded-full"
+            style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('0.8%') }}
+          >
+            <Ionicons name="options-outline" size={wp('3.5%')} color="#ffffff" style={{ marginRight: wp('1.5%') }} />
+            <Text className="text-white font-medium" style={{ fontSize: wp('3%') }}>Filters</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            onPress={() => setSortModalVisible(true)}
+            className="flex-row items-center bg-white border border-[#E4E7EC] rounded-full"
+            style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('0.8%') }}
+          >
+            <Text className="text-[#4A5565] font-medium" style={{ fontSize: wp('3%') }}>
+              Sort: {selectedSort ? selectedSort.split(':')[0] : 'Relevance'}
+            </Text>
+            <Ionicons name="chevron-down" size={wp('3.5%')} color="#4A5565" style={{ marginLeft: wp('1%') }} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            onPress={() => setLocalityModalVisible(true)}
+            className="flex-row items-center bg-white border border-[#E4E7EC] rounded-full"
+            style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('0.8%') }}
+          >
+            <Text className="text-[#4A5565] font-medium" style={{ fontSize: wp('3%'), maxWidth: wp('25%') }} numberOfLines={1}>
+              {selectedLocality ? (typeof selectedLocality === 'string' ? selectedLocality : selectedLocality.name) : 'Locality'}
+            </Text>
+            <Ionicons name="chevron-down" size={wp('3.5%')} color="#4A5565" style={{ marginLeft: wp('1%') }} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            onPress={openFilter}
+            className="flex-row items-center bg-white border border-[#E4E7EC] rounded-full"
+            style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('0.8%') }}
+          >
+            <Text className="text-[#4A5565] font-medium" style={{ fontSize: wp('3%') }}>
+              {(minPrice || maxPrice) ? `₹${minPrice || 0} - ${maxPrice ? '₹'+maxPrice : 'Any'}` : 'Budget'}
+            </Text>
+            <Ionicons name="chevron-down" size={wp('3.5%')} color="#4A5565" style={{ marginLeft: wp('1%') }} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            onPress={openFilter}
+            className="flex-row items-center bg-white border border-[#E4E7EC] rounded-full"
+            style={{ paddingHorizontal: wp('3.5%'), paddingVertical: hp('0.8%') }}
+          >
+            <Text className="text-[#4A5565] font-medium" style={{ fontSize: wp('3%') }}>
+              {selectedPropertyType ? 'Type Selected' : 'Property Type'}
+            </Text>
+            <Ionicons name="chevron-down" size={wp('3.5%')} color="#4A5565" style={{ marginLeft: wp('1%') }} />
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+
+      {/* Property List */}
+      <View style={{ flex: 1 }}>
+        {loading && properties.length === 0 ? (
+          <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
+            <ActivityIndicator size="large" color="#008E96" />
+            <Text className="text-[#6A7282] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Searching...</Text>
+          </View>
+        ) : properties.length > 0 ? (
+          <FlatList
+            className="flex-1"
+            style={{ paddingHorizontal: wp('4%') }}
+            data={properties}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item: property }) => (
+              <View style={{ marginBottom: hp('3%') }}>
+                <PerfectMatchCard
+                  property={{
+                    id: property._id,
+                    price: `₹ ${property.price}`,
+                    name: property.title,
+                    developer: property.projectName || "Unknown Developer",
+                    location: [
+                      typeof property.locality === 'object' ? (property.locality?.name || '') : (property.localityName || property.locality || ''),
+                      typeof property.city === 'object' ? (property.city?.name || '') : (property.city || ''),
+                      typeof property.state === 'object' ? (property.state?.name || '') : (property.state || '')
+                    ].filter(Boolean).join(', '),
+                    details: `${property.residential?.bedrooms || 0} BHK • ${property.area || 0} ${property.areaUnit?.name || 'sq.ft.'}`,
+                    seller: property.owner?.name || "Seller",
+                    images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
+                    photoCount: property.images?.length || 0,
+                    isRera: true,
+                    zeroBrokerage: true,
+                    isWishlisted: property.isWishlisted || false
+                  }}
+                />
+              </View>
+            )}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: hp('12%') }}
+            onEndReached={() => {
+              if (hasMore && !loadingMore && !loading) {
+                fetchMatches(page + 1, true);
+              }
+            }}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={
+              loadingMore ? (
+                <View className="items-center justify-center" style={{ paddingVertical: hp('2%') }}>
+                  <ActivityIndicator size="small" color="#008E96" />
+                </View>
+              ) : null
+            }
+          />
         ) : (
-          <ChevronDown size={wp('3.5%')} color="white" />
+          <View style={{ flex: 1, paddingHorizontal: wp('4%') }}>
+            <NoDataFound />
+          </View>
         )}
-      </TouchableOpacity>
-    );
-  };
+      </View>
 
-  const renderSelectionModal = () => {
-    if (!activeFilterDropdown) return null;
 
-    let title = '';
-    let options = [];
-    let selectedValue = null;
-    let onSelect = () => {};
 
-    if (activeFilterDropdown === 'propertyType') {
-      title = 'Select Property Type';
-      options = propertyTypeOptions.map(opt => ({
-        key: opt._id || opt.value || opt.label || String(opt),
-        label: opt.label || opt.name || String(opt),
-        data: opt
-      }));
-      selectedValue = propertyType?._id || propertyType?.value || propertyType?.label || propertyType?.name || propertyType;
-      onSelect = (item) => {
-        setPropertyType(item.data);
-        setActiveFilterDropdown(null);
-      };
-    } else if (activeFilterDropdown === 'lookingFor') {
-      title = 'Looking For';
-      options = lookingForOptions.map(opt => ({
-        key: opt.value,
-        label: opt.label,
-        data: opt.value
-      }));
-      selectedValue = lookingFor;
-      onSelect = (item) => {
-        setLookingFor(item.data);
-        setBudget(null);
-        setActiveFilterDropdown(null);
-      };
-    } else if (activeFilterDropdown === 'city') {
-      title = 'Select City';
-      options = cityOptions.map(opt => ({
-        key: opt.value,
-        label: opt.label,
-        data: opt.value
-      }));
-      selectedValue = city || searchParams.city || currentLocation?.city || 'Mohali';
-      onSelect = (item) => {
-        setCity(item.data);
-        setLocality(null);
-        setActiveFilterDropdown(null);
-      };
-    } else if (activeFilterDropdown === 'locality') {
-      title = `Select Locality in ${city || currentLocation?.city || 'Mohali'}`;
-      options = localitiesList.map(opt => ({
-        key: opt._id || opt.name,
-        label: opt.name,
-        data: opt
-      }));
-      selectedValue = locality?._id || locality?.name || locality;
-      onSelect = (item) => {
-        setLocality(item.data);
-        setActiveFilterDropdown(null);
-      };
-    } else if (activeFilterDropdown === 'budget') {
-      title = 'Select Budget';
-      const rawOptions = lookingFor === 'sell' ? buyBudgetOptions : rentBudgetOptions;
-      options = rawOptions.map(opt => ({
-        key: opt.label,
-        label: opt.label,
-        data: opt
-      }));
-      selectedValue = budget?.label;
-      onSelect = (item) => {
-        setBudget(item.data.minPrice === null ? null : item.data);
-        setActiveFilterDropdown(null);
-      };
-    }
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={filterModalVisible}
+        onRequestClose={closeFilter}
+      >
+        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <TouchableOpacity
+            activeOpacity={1}
+            className="absolute inset-0"
+            onPress={closeFilter}
+          >
+            <BlurView
+              intensity={90}
+              tint="dark"
+              style={{ flex: 1 }}
+            />
+          </TouchableOpacity>
 
-    return (
+          <Animated.View
+            style={{
+              height: sheetHeight,
+              width: '100%',
+              backgroundColor: 'white',
+              borderTopLeftRadius: wp('6%'),
+              borderTopRightRadius: wp('6%'),
+              overflow: 'hidden'
+            }}
+          >
+            <SafeAreaView style={{ flex: 1, paddingBottom: hp('2.5%') }}>
+              {/* Handle */}
+              <View className="items-center" style={{ paddingVertical: hp('1.5%') }}>
+                <View className="bg-[#D0D5DD] rounded-full" style={{ width: wp('10%'), height: hp('0.5%') }} />
+              </View>
+
+              {/* Header */}
+              <View className="flex-row justify-between items-center" style={{ paddingHorizontal: wp('5%'), paddingBottom: hp('2%') }}>
+                <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5%') }}>Filter</Text>
+                <TouchableOpacity onPress={clearAllFilters}>
+                  <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>Clear all</Text>
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                className="flex-1"
+                style={{ paddingHorizontal: wp('5%') }}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+              >
+                {/* Searching In */}
+                <View className="flex-row justify-between items-center" style={{ marginTop: hp('1.5%') }}>
+                  <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.5%') }}>
+                    You are currently looking in <Text className="font-semibold text-[#101828]">{city}</Text>
+                  </Text>
+                  <TouchableOpacity className="flex-row items-center">
+                    <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('4%') }}>Change Location</Text>
+                    <Ionicons name="chevron-forward" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1%') }} />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Filter Applied Tag */}
+                <View style={{ marginTop: hp('3%') }}>
+                  <Text className="text-[#9CA3AF] font-normal" style={{ fontSize: wp('3.5%') }}>Filter Applied</Text>
+                  <View className="flex-row" style={{ marginTop: hp('1%') }}>
+                    <View className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
+                      <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>{city}</Text>
+                      <Ionicons name="close-circle" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1.5%') }} />
+                    </View>
+                  </View>
+                </View>
+
+                {/* I'm Looking to */}
+                <View style={{ marginTop: hp('4%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>{"I'm Looking to"}</Text>
+                  <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    {lookOptions.map(option => (
+                      <TouchableOpacity
+                        key={option}
+                        activeOpacity={1}
+                        className={`border bg-[#008E96]/10 border-[#008E96]`}
+                        style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }}
+                      >
+                        <Text className={`font-medium text-[#008E96]`} style={{ fontSize: wp('3.5%') }}>
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+
+                {/* Locality */}
+                <View style={{ marginTop: hp('4%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Locality</Text>
+                  <TouchableOpacity 
+                    onPress={() => setLocalityModalVisible(true)}
+                    className="flex-row justify-between items-center border border-[#E4E7EC] bg-white"
+                    style={{ marginTop: hp('1.5%'), paddingHorizontal: wp('4%'), paddingVertical: hp('1.5%'), borderRadius: wp('3%') }}
+                  >
+                    <Text className={selectedLocality ? "text-[#101828] font-medium" : "text-[#6A7282]"} style={{ fontSize: wp('3.8%') }}>
+                      {selectedLocality ? (selectedLocality.name || selectedLocality) : 'Select Locality'}
+                    </Text>
+                    <Ionicons name="chevron-down" size={wp('5%')} color="#6A7282" />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Property Type */}
+                <View style={{ marginTop: hp('2.5%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Property Type <Ionicons name="information-circle-outline" size={wp('4%')} color="#6A7282" /></Text>
+                  <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    {propertyTypes && propertyTypes.length > 0 ? (
+                      propertyTypes.map((pt) => {
+                        const label = pt.label || pt.name || String(pt);
+                        const key = pt._id || label;
+                        const isActive = selectedPropertyType === key;
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            onPress={() => { setSelectedPropertyType(isActive ? null : key); setSelectedSubPropertyType(null); }}
+                            className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+                            style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
+                          >
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      <Text className="text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>Loading property types...</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Sub Property Type */}
+                <View style={{ marginTop: hp('2%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Sub Property Type</Text>
+                  <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    {subPropertyTypes && subPropertyTypes.length > 0 ? (
+                      subPropertyTypes
+                        .filter(s => {
+                          if (!selectedPropertyType) return true;
+                          const ref = s.propertyType || s.property_type || s.parentPropertyType;
+                          if (!ref) return true;
+                          return (ref._id && ref._id === selectedPropertyType) || (ref.label && ref.label === selectedPropertyType) || (ref.name && ref.name === selectedPropertyType);
+                        })
+                        .map((s) => {
+                          const label = s.label || s.name || String(s);
+                          const key = s._id || label;
+                          const isActive = selectedSubPropertyType === key;
+                          return (
+                            <TouchableOpacity
+                              key={key}
+                              onPress={() => setSelectedSubPropertyType(isActive ? null : key)}
+                              className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
+                              style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
+                            >
+                              <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                            </TouchableOpacity>
+                          );
+                        })
+                    ) : (
+                      <Text className="text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>Loading sub property types...</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Budget */}
+                <View style={{ marginTop: hp('4%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Budget</Text>
+                  <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    <TextInput
+                      placeholder="Min (₹)"
+                      value={minPrice !== null && minPrice !== undefined ? String(minPrice) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMinPrice(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white"
+                      style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), fontSize: wp('3.5%') }}
+                    />
+                    <TextInput
+                      placeholder="Max (₹)"
+                      value={maxPrice !== null && maxPrice !== undefined ? String(maxPrice) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMaxPrice(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white"
+                      style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), fontSize: wp('3.5%') }}
+                    />
+                  </View>
+                </View>
+
+                {/* Built-up Area */}
+                <View style={{ marginTop: hp('4%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Built-up Area</Text>
+                  <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    <TextInput
+                      placeholder="Min Area (Sqft)"
+                      value={minArea !== null && minArea !== undefined ? String(minArea) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMinArea(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white"
+                      style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), fontSize: wp('3.5%') }}
+                    />
+                    <TextInput
+                      placeholder="Max Area (Sqft)"
+                      value={maxArea !== null && maxArea !== undefined ? String(maxArea) : ''}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setMaxArea(digits === '' ? null : digits);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      className="flex-1 border border-[#E4E7EC] bg-white"
+                      style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), fontSize: wp('3.5%') }}
+                    />
+                  </View>
+                </View>
+
+                {/* Structure Type */}
+                <View style={{ marginTop: hp('4%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Structure Type</Text>
+                  <View style={{ marginTop: hp('1.5%') }}>
+                    <TextInput
+                      placeholder="Enter structure (numbers only)"
+                      value={structureInput}
+                      onChangeText={(t) => {
+                        const digits = String(t).replace(/[^0-9]/g, '');
+                        setStructureInput(digits);
+                        setSelectedStructure(null);
+                      }}
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      maxLength={10}
+                      className="border border-[#E4E7EC] bg-white"
+                      style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), fontSize: wp('3.5%') }}
+                    />
+                  </View>
+
+                  <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    {structures && structures.length > 0 ? (
+                      structures.map((st) => {
+                        const label = st.label || st.name || String(st);
+                        const key = st._id || label;
+                        const isActive = selectedStructure === (st._id || label);
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            onPress={() => { setSelectedStructure(isActive ? null : (st._id || label)); setStructureInput(''); }}
+                            className={`border justify-center ${isActive ? 'bg-[#008E96]/10 border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
+                            style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
+                          >
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>
+                              {label}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      <Text className="text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>Loading structures...</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Construction Status */}
+                <View style={{ marginTop: hp('2.5%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Construction Status</Text>
+                  <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    {constructionStatus && constructionStatus.length > 0 ? (
+                      constructionStatus.map((cs) => {
+                        const label = cs.label || cs.name || String(cs);
+                        const key = cs._id || label;
+                        const isActive = selectedConstructionStatus === key;
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            onPress={() => setSelectedConstructionStatus(isActive ? null : key)}
+                            className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
+                            style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
+                          >
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      <Text className="text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>Loading construction statuses...</Text>
+                    )}
+                  </View>
+                </View>
+
+                {/* Possession Status */}
+                <View style={{ marginTop: hp('2.5%'), marginBottom: hp('5%') }}>
+                  <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Possession Status</Text>
+                  <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                    {possessionStatus && possessionStatus.length > 0 ? (
+                      possessionStatus.map((ps) => {
+                        const label = ps.label || ps.name || String(ps);
+                        const key = ps._id || label;
+                        const isActive = selectedPossessionStatus === key;
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            onPress={() => setSelectedPossessionStatus(isActive ? null : key)}
+                            className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border-[#E4E7EC]'}`}
+                            style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%'), minWidth: wp('22%') }}
+                          >
+                            <Text className={`font-medium ${isActive ? 'text-[#008E96]' : 'text-[#101828]'}`} style={{ fontSize: wp('3.3%') }}>{label}</Text>
+                          </TouchableOpacity>
+                        );
+                      })
+                    ) : (
+                      <Text className="text-[#6A7282]" style={{ fontSize: wp('3.5%') }}>Loading possession statuses...</Text>
+                    )}
+                  </View>
+                </View>
+              </ScrollView>
+
+              {/* Bottom Fixed Apply Button Container */}
+              <View className="bg-white border-t border-[#F2F4F7]" style={{ paddingHorizontal: wp('5%'), paddingVertical: hp('2.5%') }}>
+                <TouchableOpacity
+                  className="bg-[#008E96] items-center overflow-hidden"
+                  style={{
+                    marginBottom: hp('1%'),
+                    paddingVertical: hp('2%'),
+                    borderRadius: wp('3%'),
+                    shadowColor: '#008E96',
+                    shadowOffset: { width: 0, height: 10 },
+                    shadowOpacity: 0.4,
+                    shadowRadius: 20,
+                    elevation: 10,
+                  }}
+                  onPress={closeFilter}
+                >
+                  <LinearGradient
+                    colors={['#008E96', '#1CB2A9']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderRadius: wp('3%') }}
+                  />
+                  <Text className="text-white font-bold" style={{ fontSize: wp('4%') }}>View Properties</Text>
+                </TouchableOpacity>
+              </View>
+            </SafeAreaView>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* Sort Modal (Based on CSS) */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={sortModalVisible}
+        onRequestClose={() => setSortModalVisible(false)}
+      >
+        <View style={{ flex: 1 }}>
+          {sortModalVisible && (
+            <BlurView
+              intensity={50}
+              tint="light"
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+            />
+          )}
+          <Pressable
+            className="flex-1 justify-end"
+            onPress={() => setSortModalVisible(false)}
+          >
+            <View className="bg-white" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), paddingBottom: hp('5%') }}>
+              {/* Header section (Frame 8) */}
+              <View className="bg-[#E4E7EC]/50" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), paddingTop: hp('2.5%'), paddingHorizontal: wp('5%'), paddingBottom: hp('2.5%') }}>
+                <View className="self-center bg-[#D9D9D9] rounded-full" style={{ width: wp('13.5%'), height: hp('0.8%'), marginBottom: hp('1.5%') }} />
+                <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5%'), lineHeight: wp('7.5%') }}>Sort by</Text>
+              </View>
+
+              {/* Options section (Frame 9) */}
+              <View style={{ paddingHorizontal: wp('4%'), marginTop: hp('1.2%'), gap: hp('1%') }}>
+                {sortOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => setSelectedSort(option)}
+                    className={`items-center rounded-sm ${selectedSort === option ? 'bg-[#1CB2A9]/5' : ''}`}
+                    style={{ paddingVertical: hp('1%') }}
+                  >
+                    <Text className={`font-normal text-center ${selectedSort === option ? 'text-[#008E96]' : 'text-black'}`} style={{ fontSize: wp('3.5%'), lineHeight: wp('5%') }}>
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Apply Button */}
+              <View className="items-center" style={{ paddingHorizontal: wp('4%'), marginTop: hp('3%') }}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setSortModalVisible(false)}
+                  className="w-full"
+                >
+                  <LinearGradient
+                    colors={['#008E96', '#1CB2A9']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    className="items-center justify-center"
+                    style={{
+                      paddingVertical: hp('1.8%'),
+                      borderRadius: wp('3%'),
+                      shadowColor: '#008E96',
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.2,
+                      shadowRadius: 16,
+                      elevation: 4
+                    }}
+                  >
+                    <Text className="text-white font-semibold" style={{ fontSize: wp('4%'), lineHeight: wp('6%') }}>Apply filters</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Pressable>
+        </View>
+      </Modal>
+
+      {/* Locality Dropdown Modal */}
       <Modal
         animationType="slide"
         transparent={true}
-        visible={!!activeFilterDropdown}
-        onRequestClose={() => setActiveFilterDropdown(null)}
+        visible={localityModalVisible}
+        onRequestClose={() => setLocalityModalVisible(false)}
       >
         <View className="flex-1 justify-end bg-black/40">
           <TouchableOpacity 
             activeOpacity={1} 
             className="absolute inset-0"
-            onPress={() => setActiveFilterDropdown(null)}
+            onPress={() => setLocalityModalVisible(false)}
           />
           
           <View className="bg-white max-h-[70%]" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), paddingBottom: hp('5%') }}>
@@ -406,34 +837,42 @@ const PrefectlyMatchedHome = () => {
             </View>
 
             <View className="border-b border-gray-100 flex-row justify-between items-center" style={{ paddingHorizontal: wp('5%'), paddingBottom: hp('1.5%') }}>
-              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.5%') }}>{title}</Text>
-              <TouchableOpacity onPress={() => setActiveFilterDropdown(null)}>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.5%') }}>Select Locality</Text>
+              <TouchableOpacity onPress={() => setLocalityModalVisible(false)}>
                 <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.5%') }}>Cancel</Text>
               </TouchableOpacity>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} style={{ paddingHorizontal: wp('5%'), marginTop: hp('1%') }}>
-              {activeFilterDropdown === 'locality' && loadingLocalities ? (
+              {loadingLocalities ? (
                 <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
                   <ActivityIndicator size="small" color="#008E96" />
                 </View>
-              ) : options.length > 0 ? (
-                options.map((option) => {
-                  const isSelected = selectedValue === option.key || 
-                                     selectedValue === option.label || 
-                                     (selectedValue && typeof selectedValue === 'object' && selectedValue._id === option.key);
+              ) : localitiesList && localitiesList.length > 0 ? (
+                localitiesList.map((loc) => {
+                  const label = loc.name || String(loc);
+                  const key = loc._id || label;
+                  const isSelected = selectedLocality && (
+                    selectedLocality._id === loc._id || 
+                    selectedLocality === loc ||
+                    (typeof selectedLocality === 'string' && selectedLocality === loc.name) ||
+                    (selectedLocality.name && selectedLocality.name === loc.name)
+                  );
                   return (
                     <TouchableOpacity
-                      key={option.key}
-                      onPress={() => onSelect(option)}
+                      key={key}
+                      onPress={() => {
+                        setSelectedLocality(isSelected ? null : loc);
+                        setLocalityModalVisible(false);
+                      }}
                       className="border-b border-gray-50 flex-row justify-between items-center"
                       style={{ paddingVertical: hp('2%') }}
                     >
                       <Text 
-                        style={{ fontFamily: isSelected ? 'Inter-SemiBold' : 'Inter-Regular', fontSize: wp('3.8%') }}
+                        style={{ fontWeight: isSelected ? '600' : '400', fontSize: wp('3.8%') }}
                         className={isSelected ? 'text-[#008E96]' : 'text-[#344054]'}
                       >
-                        {option.label}
+                        {label}
                       </Text>
                       {isSelected && (
                         <View className="rounded-full bg-[#008E96] items-center justify-center" style={{ width: wp('5%'), height: wp('5%') }}>
@@ -445,119 +884,13 @@ const PrefectlyMatchedHome = () => {
                 })
               ) : (
                 <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
-                  <Text className="text-gray-400 font-medium" style={{ fontSize: wp('3.5%') }}>No options available</Text>
+                  <Text className="text-gray-400 font-medium" style={{ fontSize: wp('3.5%') }}>No localities found</Text>
                 </View>
               )}
             </ScrollView>
           </View>
         </View>
       </Modal>
-    );
-  };
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} edges={['top', 'left', 'right']}>
-      {/* Header */}
-      <View className="flex-row items-center" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('2%'), gap: wp('3%') }}>
-        <TouchableOpacity onPress={() => router.back()} className="justify-center items-center" style={{ width: wp('10%'), height: wp('10%') }}>
-          <ArrowLeft size={wp('7%')} color="#4A5565" />
-        </TouchableOpacity>
-        <Text className="font-bold text-[#101828]" style={{ fontSize: wp('5%') }}>Perfectly Matched</Text>
-      </View>
-
-      {/* Scrollable Filter Bar */}
-      <View className="bg-white border-b border-[#F2F4F7]" style={{ marginBottom: hp('2%'), paddingBottom: hp('1.5%') }}>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={{ paddingHorizontal: wp('4%'), gap: wp('2%'), alignItems: 'center' }}
-        >
-          {/* Property Type Pill */}
-          {renderFilterPill(
-            'propertyType',
-            propertyType ? propertyType.label || propertyType.name : 'Property Type',
-            !!propertyType
-          )}
-
-          {/* Looking For Pill */}
-          {renderFilterPill(
-            'lookingFor',
-            lookingFor === 'sell' ? 'Buy' : 'Rent',
-            true
-          )}
-
-          {/* City Pill */}
-          {renderCityPill()}
-
-          {/* Locality Pill */}
-          {renderFilterPill(
-            'locality',
-            locality ? locality.name || locality : 'Locality',
-            !!locality
-          )}
-
-          {/* Budget Pill */}
-          {renderFilterPill(
-            'budget',
-            budget ? budget.label : 'Budget',
-            !!budget
-          )}
-
-        </ScrollView>
-      </View>
-
-      {/* Property List */}
-      {loading && properties.length === 0 ? (
-        <View className="flex-1 items-center justify-center" style={{ paddingVertical: hp('10%') }}>
-          <ActivityIndicator size="large" color="#008E96" />
-          <Text className="text-[#6A7282] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>Searching...</Text>
-        </View>
-      ) : properties.length > 0 ? (
-        <FlatList
-          className="flex-1"
-          style={{ paddingHorizontal: wp('4%') }}
-          data={properties}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item: property }) => (
-            <PerfectMatchCard 
-              property={{
-                id: property._id,
-                price: `₹ ${property.price}`,
-                name: property.title,
-                developer: property.projectName || "Unknown Developer",
-                location: `${property.localityName || property.locality}, ${property.city?.name || ''}, ${property.state?.name || ''}`,
-                details: `${property.residential?.bedrooms || 0} BHK • ${property.area} ${property.areaUnit?.name || 'sq.ft.'}`,
-                seller: property.owner?.name || "Seller",
-                images: property.images?.length > 0 ? property.images : ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600'],
-                photoCount: property.images?.length || 0,
-                isRera: true,
-                zeroBrokerage: true,
-                isWishlisted: property.isWishlisted || false
-              }} 
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: hp('3%') }}
-          onEndReached={() => {
-            if (hasMore && !loadingMore && !loading) {
-              fetchMatches(page + 1, true);
-            }
-          }}
-          onEndReachedThreshold={0.2}
-          ListFooterComponent={
-            loadingMore ? (
-              <View className="items-center justify-center" style={{ paddingVertical: hp('2%') }}>
-                <ActivityIndicator size="small" color="#008E96" />
-              </View>
-            ) : null
-          }
-        />
-      ) : (
-        <NoDataFound />
-      )}
-
-      {/* Dropdown Modals */}
-      {renderSelectionModal()}
     </SafeAreaView>
   );
 };

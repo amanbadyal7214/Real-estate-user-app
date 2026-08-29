@@ -137,7 +137,11 @@ const HighDemandProduct = () => {
           price: formatPrice(price),
           name: property.title || 'Property Name',
           developer: `by ${property.seller?.name || 'Developer'}`,
-          location: `${property.localityName || property.locality?.name || ''}, ${property.city?.name || ''}`,
+          location: [
+            typeof property.locality === 'object' ? (property.locality?.name || '') : (property.localityName || property.locality || ''),
+            typeof property.city === 'object' ? (property.city?.name || '') : (property.city || ''),
+            typeof property.state === 'object' ? (property.state?.name || '') : (property.state || '')
+          ].filter(Boolean).join(', '),
           details: `${property.bhk || 0} BHK ${property.propertyType?.name || property.propertyType || ''} • ₹ ${pricePerSqft} per sq.ft.`,
           seller: property.seller?.name,
           isRera: property.isRera || false,

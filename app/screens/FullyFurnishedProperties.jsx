@@ -89,7 +89,11 @@ const FullyFurnishedProperties = () => {
       price,
       name: property?.title || property?.projectName || property?.name || 'Property',
       developer: property?.owner?.name || property?.sellerName || 'Owner',
-      location: [property?.localityName, property?.city?.name || property?.city, property?.state?.name || property?.state].filter(Boolean).join(', ') || 'Location not available',
+      location: [
+        typeof property?.locality === 'object' ? (property?.locality?.name || '') : (property?.localityName || property?.locality || ''),
+        typeof property?.city === 'object' ? (property?.city?.name || '') : (property?.city || ''),
+        typeof property?.state === 'object' ? (property?.state?.name || '') : (property?.state || '')
+      ].filter(Boolean).join(', ') || 'Location not available',
       details: `${bedrooms} BHK • ${area} ${areaUnit} • ${furnishing}`,
       images: property?.images?.length > 0 ? property.images : [property?.media?.[0]?.fileUrl || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600'],
       photoCount: property?.images?.length || 1,

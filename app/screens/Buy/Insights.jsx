@@ -1,18 +1,16 @@
+import { useIsFocused } from '@react-navigation/native';
 import { router, Stack } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { useIsFocused } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import InsightPropertyCard from '../../../components/InsightPropertyCard';
 import LocalityExploreCard from '../../../components/LocalityExploreCard';
 import PreferenceCard from '../../../components/PreferenceCard';
 import RevisitPropertyCard from '../../../components/RevisitPropertyCard';
-import TopRatedProjectCard from '../../../components/TopRatedProjectCard';
-import UniqueAmenityCard from '../../../components/UniqueAmenityCard';
 import { useLocality } from '../../../hooks/useLocality';
 import { useLocalityAveragePrice } from '../../../hooks/useLocalityAveragePrice';
 import { usePropertyDiscovery } from '../../../hooks/usePropertyDiscovery';
@@ -177,8 +175,8 @@ const formatPrice = (value) => {
 
 const getPropertyLocation = (property) => {
     if (!property) return '';
-    const locality = property.locality?.label || property.localityName || property.locality || '';
-    const city = property.city?.name || property.city || '';
+    const locality = typeof property.locality === 'object' ? (property.locality?.name || property.locality?.label || '') : (property.localityName || property.locality || '');
+    const city = typeof property.city === 'object' ? (property.city?.name || '') : (property.city || '');
     return [locality, city].filter(Boolean).join(', ');
 };
 
@@ -223,18 +221,18 @@ const Insights = () => {
     }, [isFocused, fetchRecentlyViewed]);
 
     const handleProtectedViewMore = async (destination) => {
-      const token = await SecureStore.getItemAsync('token');
-      const redirectTo = encodeURIComponent(JSON.stringify(destination));
+        const token = await SecureStore.getItemAsync('token');
+        const redirectTo = encodeURIComponent(JSON.stringify(destination));
 
-      if (!token) {
-        router.replace({
-          pathname: '/(auth)/Login',
-          params: { redirectTo },
-        });
-        return;
-      }
+        if (!token) {
+            router.replace({
+                pathname: '/(auth)/Login',
+                params: { redirectTo },
+            });
+            return;
+        }
 
-      router.push(destination);
+        router.push(destination);
     };
 
     const loading = discoveryLoading || localityLoading || localityPriceLoading;
@@ -247,7 +245,7 @@ const Insights = () => {
                 const locality = currentLocation?.locality;
                 const params = { limit: 10, city, lookingFor: 'sell' };
                 if (locality) params.locality = locality;
-                
+
                 const res = await findPropertiesByLocation(params);
                 if (res.success) {
                     const enriched = await resolveLocalities(res.data);
@@ -310,13 +308,13 @@ const Insights = () => {
                                 <ActivityIndicator size="small" color="#008E96" />
                             </View>
                         ) : (nearbyProperties.length > 0 ? nearbyProperties : mockProperties).map((prop) => (
-                            <InsightPropertyCard 
-                                key={prop._id || prop.id} 
+                            <InsightPropertyCard
+                                key={prop._id || prop.id}
                                 id={prop._id || prop.id}
                                 image={prop.images?.[0] || prop.image || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=400&auto=format&fit=crop'}
                                 possession={prop.possessionStatus || prop.possession || 'Ready to Move'}
                                 title={prop.title || prop.projectName || 'Premium Residence'}
-                                location={prop.localityName ? `${prop.localityName}, ${prop.city?.name || prop.city || ''}` : prop.location}
+                                location={getPropertyLocation(prop) || prop.location || 'Mohali'}
                                 price={prop.price ? (typeof prop.price === 'number' ? `₹ ${prop.price}` : prop.price) : 'Price on Request'}
                                 bhk={prop.residential ? `${prop.residential?.bedrooms || 0} BHK Apartment` : prop.bhk}
                                 area={prop.area ? `${prop.area} ${prop.areaUnit?.name || 'sq.ft.'}` : prop.area}
@@ -376,10 +374,10 @@ const Insights = () => {
                     >
                         {nearbyLocalities.length > 0 ? nearbyLocalities.map((item, index) => (
                             <View key={`locality-${index}`} style={{ marginRight: wp('4.3%') }}>
-                                <LocalityExploreCard 
+                                <LocalityExploreCard
                                     title={item.localityName || item.locality}
                                     rating={item.rating || (4 + Math.random()).toFixed(1)}
-                                    price={item.averagePricePerSqft ? `₹${(item.averagePricePerSqft/1000).toFixed(1)}K/sq.ft.` : 'N/A'}
+                                    price={item.averagePricePerSqft ? `₹${(item.averagePricePerSqft / 1000).toFixed(1)}K/sq.ft.` : 'N/A'}
                                     properties={item.totalProperties || Math.floor(Math.random() * 50) + 10 + '+'}
                                     onPress={() => handleProtectedViewMore('/screens/ExploreLocalities')}
                                 />

@@ -4,8 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, Dimensions, FlatList, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropertyListingCard from '../../components/PropertyListingCard';
 import { useLookup } from '../../hooks/useLookup';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
@@ -21,41 +21,41 @@ const LastSearched = () => {
   const [lookingTo] = useState('sell');
 
   // Animation for Bottom Sheet
-  const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const sheetHeight = useRef(new Animated.Value(0)).current;
   const isFullScreen = useRef(false);
 
   const openFilter = () => {
     setFilterModalVisible(true);
-    Animated.spring(translateY, {
-      toValue: SCREEN_HEIGHT * 0.4, // Open to 60% of screen (staring at 40% from top)
-      useNativeDriver: true,
+    Animated.spring(sheetHeight, {
+      toValue: SCREEN_HEIGHT * 0.7,
+      useNativeDriver: false,
       damping: 20,
     }).start();
   };
 
   const closeFilter = () => {
-    Animated.timing(translateY, {
-      toValue: SCREEN_HEIGHT,
+    Animated.timing(sheetHeight, {
+      toValue: 0,
       duration: 250,
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start(() => setFilterModalVisible(false));
   };
 
   const handleScroll = (event) => {
     const currentScrollY = event.nativeEvent.contentOffset.y;
-    
+
     if (currentScrollY > 10 && !isFullScreen.current) {
       isFullScreen.current = true;
-      Animated.spring(translateY, {
-        toValue: SCREEN_HEIGHT * 0.05, // Almost full screen
-        useNativeDriver: true,
+      Animated.spring(sheetHeight, {
+        toValue: SCREEN_HEIGHT * 0.95,
+        useNativeDriver: false,
         damping: 20,
       }).start();
     } else if (currentScrollY <= 0 && isFullScreen.current) {
       isFullScreen.current = false;
-      Animated.spring(translateY, {
-        toValue: SCREEN_HEIGHT * 0.4,
-        useNativeDriver: true,
+      Animated.spring(sheetHeight, {
+        toValue: SCREEN_HEIGHT * 0.7,
+        useNativeDriver: false,
         damping: 20,
       }).start();
     }
@@ -266,47 +266,47 @@ const LastSearched = () => {
 
       {/* Floating Action Buttons */}
       <View 
-        className="absolute self-center flex-row bg-white rounded-full border border-[#E4E7EC]" 
+        className="absolute self-center flex-row bg-[#101828] rounded-full" 
         style={{ 
-          bottom: hp('3.5%'),
-          width: wp('55%'), 
-          height: hp('7%'),
+          bottom: hp('8%'),
+          width: wp('65%'), 
+          height: hp('6.5%'),
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 16,
-          elevation: 5
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.25,
+          shadowRadius: 10,
+          elevation: 8,
+          zIndex: 50
         }}
       >
         <TouchableOpacity 
           className="flex-1 items-center justify-center flex-row"
-          style={{ gap: wp('1%') }}
+          style={{ gap: wp('1.5%') }}
           onPress={() => setSortModalVisible(true)}
         >
-          <MaterialIcons name="sort" size={wp('5%')} color="#008E96" />
-          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.3%') }}>Sort</Text>
+          <MaterialIcons name="sort" size={wp('5%')} color="#ffffff" />
+          <Text className="text-white font-semibold" style={{ fontSize: wp('3.8%') }}>Sort</Text>
         </TouchableOpacity>
-        <View className="bg-[#E4E7EC] self-center" style={{ width: 1, height: hp('4%') }} />
+        <View className="bg-white/20 self-center" style={{ width: 1, height: hp('3%') }} />
         <TouchableOpacity 
           className="flex-1 items-center justify-center flex-row"
-          style={{ gap: wp('1%') }}
+          style={{ gap: wp('1.5%') }}
           onPress={openFilter}
         >
-          <Ionicons name="options-outline" size={wp('5%')} color="#008E96" />
-          <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.3%') }}>Filters</Text>
+          <Ionicons name="options-outline" size={wp('5%')} color="#ffffff" />
+          <Text className="text-white font-semibold" style={{ fontSize: wp('3.8%') }}>Filters</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Filter Modal */}
       <Modal
         animationType="none"
         transparent={true}
         visible={filterModalVisible}
         onRequestClose={closeFilter}
       >
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity 
-            activeOpacity={1} 
+        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <TouchableOpacity
+            activeOpacity={1}
             className="absolute inset-0"
             onPress={closeFilter}
           >
@@ -316,16 +316,18 @@ const LastSearched = () => {
               style={{ flex: 1 }}
             />
           </TouchableOpacity>
-          
+
           <Animated.View 
             style={{ 
-              transform: [{ translateY }],
-              height: SCREEN_HEIGHT,
+              height: sheetHeight,
               width: '100%',
-              position: 'absolute'
+              backgroundColor: 'white',
+              borderTopLeftRadius: wp('6%'),
+              borderTopRightRadius: wp('6%'),
+              overflow: 'hidden'
             }}
           >
-            <SafeAreaView className="bg-white" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), flex: 1, paddingBottom: hp('2.5%') }}>
+            <SafeAreaView style={{ flex: 1, paddingBottom: hp('2.5%') }}>
               {/* Handle */}
               <View className="items-center" style={{ paddingVertical: hp('1.5%') }}>
                 <View className="bg-[#D0D5DD] rounded-full" style={{ width: wp('10%'), height: hp('0.5%') }} />
@@ -339,8 +341,8 @@ const LastSearched = () => {
                 </TouchableOpacity>
               </View>
 
-              <ScrollView 
-                showsVerticalScrollIndicator={false} 
+              <ScrollView
+                showsVerticalScrollIndicator={false}
                 className="flex-1"
                 style={{ paddingHorizontal: wp('5%') }}
                 onScroll={handleScroll}
@@ -373,7 +375,7 @@ const LastSearched = () => {
                   <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>{"I'm Looking to"}</Text>
                   <View className="flex-row flex-wrap" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
                     {lookOptions.map(option => (
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         key={option}
                         activeOpacity={1}
                         className={`border bg-[#008E96]/10 border-[#008E96]`}
@@ -391,7 +393,7 @@ const LastSearched = () => {
                 <View style={{ marginTop: hp('4%') }}>
                   <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Localities</Text>
                   <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       className="flex-row items-center overflow-hidden"
                       style={{ backgroundColor: '#008E96', paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }}
                     >
@@ -420,7 +422,7 @@ const LastSearched = () => {
                         const key = pt._id || label;
                         const isActive = selectedPropertyType === key;
                         return (
-                          <TouchableOpacity 
+                          <TouchableOpacity
                             key={key}
                             onPress={() => { setSelectedPropertyType(isActive ? null : key); setSelectedSubPropertyType(null); }}
                             className={`justify-center ${isActive ? 'bg-[#008E96]/10 border border-[#008E96]' : 'bg-white border border-[#E4E7EC]'}`}
@@ -631,16 +633,16 @@ const LastSearched = () => {
 
               {/* Bottom Fixed Apply Button Container */}
               <View className="bg-white border-t border-[#F2F4F7]" style={{ paddingHorizontal: wp('5%'), paddingVertical: hp('2.5%') }}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   className="bg-[#008E96] items-center overflow-hidden"
-                  style={{ 
+                  style={{
                     marginBottom: hp('1%'),
                     paddingVertical: hp('2%'),
                     borderRadius: wp('3%'),
-                    shadowColor: '#008E96', 
-                    shadowOffset: { width: 0, height: 10 }, 
-                    shadowOpacity: 0.4, 
-                    shadowRadius: 20, 
+                    shadowColor: '#008E96',
+                    shadowOffset: { width: 0, height: 10 },
+                    shadowOpacity: 0.4,
+                    shadowRadius: 20,
                     elevation: 10,
                   }}
                   onPress={closeFilter}
@@ -674,7 +676,7 @@ const LastSearched = () => {
               style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
             />
           )}
-          <Pressable 
+          <Pressable
             className="flex-1 justify-end"
             onPress={() => setSortModalVisible(false)}
           >
@@ -684,11 +686,11 @@ const LastSearched = () => {
                 <View className="self-center bg-[#D9D9D9] rounded-full" style={{ width: wp('13.5%'), height: hp('0.8%'), marginBottom: hp('1.5%') }} />
                 <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('5%'), lineHeight: wp('7.5%') }}>Sort by</Text>
               </View>
-              
+
               {/* Options section (Frame 9) */}
               <View style={{ paddingHorizontal: wp('4%'), marginTop: hp('1.2%'), gap: hp('1%') }}>
                 {sortOptions.map((option) => (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     key={option}
                     onPress={() => setSelectedSort(option)}
                     className={`items-center rounded-sm ${selectedSort === option ? 'bg-[#1CB2A9]/5' : ''}`}
@@ -703,7 +705,7 @@ const LastSearched = () => {
 
               {/* Apply Button */}
               <View className="items-center" style={{ paddingHorizontal: wp('4%'), marginTop: hp('3%') }}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => setSortModalVisible(false)}
                   className="w-full"
@@ -713,7 +715,7 @@ const LastSearched = () => {
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     className="items-center justify-center"
-                    style={{ 
+                    style={{
                       paddingVertical: hp('1.8%'),
                       borderRadius: wp('3%'),
                       shadowColor: '#008E96',
