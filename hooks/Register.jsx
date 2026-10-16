@@ -1,9 +1,13 @@
+import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert } from "react-native";
 import api from "../app/api";
 import { validatePasswordRules } from "../components/PasswordValidator";
+
+// Required for the OAuth redirect to close the browser automatically
+WebBrowser.maybeCompleteAuthSession();
 
 export const performRoleBasedRedirect = (role, defaultTarget, setRoleSelector) => {
     let roleArray = [];
@@ -118,6 +122,12 @@ export const extractApiError = (error, defaultMessage = "Something went wrong. P
 
 export const useRegister = () => {
     const [loading, setLoading] = useState(false);
+
+    // Google OAuth client IDs
+    const GOOGLE_WEB_CLIENT_ID = "312477495308-8ldl1it97plfb19qok06h4nde71ib692.apps.googleusercontent.com";
+    const GOOGLE_ANDROID_CLIENT_ID = "312477495308-rldc9onq3eooefknt50q6363qg6ks25q.apps.googleusercontent.com";
+    // App scheme from app.json — used as the OAuth redirect URI
+    const APP_SCHEME = "realestateuser";
     const [step, setStep] = useState(1); // 1: Phone Validation, 2: Details Form, 3: Email OTP Verification
     const [roleSelector, setRoleSelector] = useState({ visible: false, roles: [] });
 
@@ -127,6 +137,11 @@ export const useRegister = () => {
 
     const [toast, setToast] = useState(null);
     const toastTimeoutRef = useRef(null);
+
+    // Google signup state — tracks mid-flight Google auth that needs phone verification
+    const [googleSignupState, setGoogleSignupState] = useState(null);
+    // { idToken, googleUser: { name, email, photo } }
+    const [googlePhoneOtpSent, setGooglePhoneOtpSent] = useState(false);
 
     const showToast = (message, type = "info") => {
         if (toastTimeoutRef.current) {
@@ -429,6 +444,229 @@ export const useRegister = () => {
         }
     };
 
+    // ─── Google Auth Flow (expo-web-browser — no extra package needed) ──────────
+
+    // Ref to persist the onSuccess / defaultRole options across the async OAuth popup
+    const googleOptionsRef = useRef({});
+
+    /**
+     * Called once we have an id_token from Google OAuth.
+     * Sends it to POST /auth/google and handles existing vs new-user response.
+     */
+    const _processGoogleIdToken = async (idToken, googleUser) => {
+        const { onSuccess, defaultRole = "buyer" } = googleOptionsRef.current;
+        setLoading(true);
+        try {
+            console.log("API Request: POST /auth/google (initial)", { idToken: "[redacted]" });
+            const response = await api.post("/auth/google", { idToken });
+            console.log("API Response: /auth/google", response.data);
+
+            if (response.data.success) {
+                // ── Existing Google user – logged in directly ──
+                const { token, role, user } = response.data;
+                await Promise.all([
+                    SecureStore.setItemAsync("token", token),
+                    SecureStore.setItemAsync("userRole", typeof role === "string" ? role : JSON.stringify(role)),
+                    SecureStore.setItemAsync("userData", JSON.stringify(user)),
+                ]);
+                showToast("Signed in with Google!", "success");
+                if (typeof onSuccess === "function") {
+                    onSuccess(response.data);
+                } else {
+                    performRoleBasedRedirect(role, "/screens/Buy/Buy", setRoleSelector);
+                }
+            } else if (response.data.isNewUser) {
+                // ── New Google user – needs phone verification ──
+                setGoogleSignupState({ idToken, googleUser, role: defaultRole });
+                setFormData(prev => ({
+                    ...prev,
+                    name: googleUser?.name || prev.name,
+                    email: googleUser?.email || prev.email,
+                    role: defaultRole,
+                    phone: "",
+                }));
+                showToast("Almost there! Verify your phone to complete sign-up.", "info");
+            } else {
+                showToast(extractResponseError(response.data, "Google sign-in failed."), "error");
+            }
+        } catch (error) {
+            console.error("API Error: /auth/google", error.response?.data || error.message);
+            showToast(extractApiError(error, "Google sign-in failed. Please try again."), "error");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Opens Google OAuth in a Chrome Custom Tab using expo-web-browser.
+     * On redirect, parses id_token from the URL fragment and calls _processGoogleIdToken.
+     *
+     * Redirect URI registered in Google Cloud Console must be:
+     *   https://auth.expo.io/@<expo-username>/REALESTATE-USER
+     * OR for Android native:
+     *   com.amanbadyal94.REALESTATEUSER:/oauth2redirect
+     */
+    const handleGoogleSignIn = async (options = {}) => {
+        googleOptionsRef.current = options;
+        const { defaultRole = "buyer" } = options;
+
+        // Build Google OAuth 2.0 authorization URL
+        const redirectUri = `https://auth.expo.io/@anonymous/${APP_SCHEME}`;
+        const params = new URLSearchParams({
+            client_id: GOOGLE_WEB_CLIENT_ID,
+            redirect_uri: redirectUri,
+            response_type: "token id_token",
+            scope: "openid profile email",
+            nonce: Math.random().toString(36).substring(2),
+        });
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+
+        setLoading(true);
+        try {
+            const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUri);
+            console.log("Google OAuth result:", result?.type);
+
+            if (result.type === "success" && result.url) {
+                // id_token is in the URL fragment (#id_token=...)
+                const fragment = result.url.split("#")[1] || "";
+                const fragParams = new URLSearchParams(fragment);
+                const idToken = fragParams.get("id_token");
+
+                if (idToken) {
+                    await _processGoogleIdToken(idToken, {});
+                } else {
+                    showToast("Google sign-in failed – no ID token received.", "error");
+                }
+            } else if (result.type === "cancel" || result.type === "dismiss") {
+                // User closed the browser – silent
+            } else {
+                showToast("Google sign-in was cancelled.", "info");
+            }
+        } catch (error) {
+            console.error("Google OAuth error:", error.message);
+            showToast("Google sign-in failed. Please try again.", "error");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Sends a phone OTP as part of the Google new-user registration flow.
+     * Validates phone length first.
+     */
+    const sendGooglePhoneOtp = async () => {
+        if (formData.phone.length !== 10) {
+            showToast("Please enter a valid 10-digit phone number.", "error");
+            return false;
+        }
+        setLoading(true);
+        try {
+            const payload = { phone: formData.phone };
+            console.log("API Request: POST /auth/send-phone-otp (Google signup)", payload);
+            const response = await api.post("/auth/send-phone-otp", payload);
+            console.log("API Response: /auth/send-phone-otp (Google signup)", response.data);
+            if (response.data.success) {
+                setGooglePhoneOtpSent(true);
+                showToast("OTP sent to your phone.", "success");
+                return true;
+            } else {
+                showToast(extractResponseError(response.data, "Failed to send OTP."), "error");
+                return false;
+            }
+        } catch (error) {
+            console.error("API Error: /auth/send-phone-otp (Google signup)", error.response?.data || error.message);
+            showToast(extractApiError(error, "Failed to send OTP."), "error");
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Step 2 of Google new-user flow:
+     *  - POST /auth/verify-phone-otp  (validate the OTP entered by user)
+     *  - POST /auth/google             (complete registration with phone + role)
+     */
+    const completeGoogleSignup = async (options = {}) => {
+        const { enteredOtp, onSuccess } = options;
+
+        if (!googleSignupState) {
+            showToast("Google sign-in state lost. Please try again.", "error");
+            return false;
+        }
+
+        if (!enteredOtp || enteredOtp.length !== 6) {
+            showToast("Please enter the 6-digit OTP.", "error");
+            return false;
+        }
+
+        if (formData.phone.length !== 10) {
+            showToast("Please enter a valid 10-digit phone number.", "error");
+            return false;
+        }
+
+        setLoading(true);
+        try {
+            // 1. Verify the phone OTP
+            console.log("API Request: POST /auth/verify-phone-otp (Google signup verify)");
+            const verifyRes = await api.post("/auth/verify-phone-otp", {
+                phone: formData.phone,
+                otp: enteredOtp.trim(),
+            });
+            console.log("API Response: /auth/verify-phone-otp (Google signup verify)", verifyRes.data);
+
+            if (!verifyRes.data.success) {
+                showToast(extractResponseError(verifyRes.data, "Incorrect OTP. Please try again."), "error");
+                return false;
+            }
+
+            // 2. Complete Google signup
+            const role = googleSignupState.role || formData.role || "buyer";
+            const payload = {
+                idToken: googleSignupState.idToken,
+                phone: formData.phone,
+                role,
+            };
+            console.log("API Request: POST /auth/google (complete signup)", { ...payload, idToken: "[redacted]" });
+            const signupRes = await api.post("/auth/google", payload);
+            console.log("API Response: /auth/google (complete signup)", signupRes.data);
+
+            if (signupRes.data.success) {
+                const { token, role: userRole, user } = signupRes.data;
+                await Promise.all([
+                    SecureStore.setItemAsync("token", token),
+                    SecureStore.setItemAsync("userRole", typeof userRole === "string" ? userRole : JSON.stringify(userRole)),
+                    SecureStore.setItemAsync("userData", JSON.stringify(user)),
+                ]);
+                setGoogleSignupState(null);
+                setGooglePhoneOtpSent(false);
+                showToast("Account created successfully!", "success");
+                if (typeof onSuccess === "function") {
+                    onSuccess(signupRes.data);
+                } else {
+                    performRoleBasedRedirect(userRole, "/screens/Buy/Buy", setRoleSelector);
+                }
+                return true;
+            } else {
+                showToast(extractResponseError(signupRes.data, "Failed to complete sign-up."), "error");
+                return false;
+            }
+        } catch (error) {
+            console.error("API Error: completeGoogleSignup", error.response?.data || error.message);
+            showToast(extractApiError(error, "Sign-up failed. Please try again."), "error");
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /** Resets the mid-flight Google signup state (user cancelled the modal) */
+    const cancelGoogleSignup = () => {
+        setGoogleSignupState(null);
+        setGooglePhoneOtpSent(false);
+        setFormData(prev => ({ ...prev, phone: "", name: "", email: "", role: "buyer" }));
+    };
+
     return {
         step,
         setStep,
@@ -446,6 +684,13 @@ export const useRegister = () => {
         handleRegister,
         handleVerifyEmailOtp,
         handleLogin,
+        // Google auth
+        handleGoogleSignIn,
+        sendGooglePhoneOtp,
+        completeGoogleSignup,
+        cancelGoogleSignup,
+        googleSignupState,
+        googlePhoneOtpSent,
         roleSelector,
         setRoleSelector,
         existingUserDetails,

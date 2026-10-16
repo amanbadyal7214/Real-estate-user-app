@@ -27,6 +27,21 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
 
+  // Google phone-OTP modal state
+  const [googleOtpModalVisible, setGoogleOtpModalVisible] = useState(false);
+  const [googleOtp, setGoogleOtp] = useState(["", "", "", "", "", ""]);
+  const [googleSelectedRole, setGoogleSelectedRole] = useState("buyer");
+  const googleOtpInputs = useRef([]);
+
+  // Supported signup roles (admin excluded)
+  const SIGNUP_ROLES = [
+    { key: "buyer",   label: "Buyer" },
+    { key: "owner",   label: "Owner" },
+    { key: "builder", label: "Builder" },
+    { key: "broker",  label: "Broker" },
+    { key: "realtor", label: "Realtor" },
+  ];
+
   const {
     step,
     setStep,
@@ -46,12 +61,27 @@ const Register = () => {
     resetForm,
     toast,
     setToast,
+    // Google auth
+    handleGoogleSignIn,
+    sendGooglePhoneOtp,
+    completeGoogleSignup,
+    cancelGoogleSignup,
+    googleSignupState,
+    googlePhoneOtpSent,
   } = useRegister();
 
   useEffect(() => {
     checkToken();
     updateFormData("role", "buyer");
   }, []);
+
+  // When the hook sets googleSignupState (new Google user), open the modal
+  useEffect(() => {
+    if (googleSignupState) {
+      setGoogleSelectedRole(googleSignupState.role || "buyer");
+      setGoogleOtpModalVisible(true);
+    }
+  }, [googleSignupState]);
 
   const checkToken = async () => {
     const token = await SecureStore.getItemAsync("token");
@@ -188,7 +218,60 @@ const Register = () => {
   };
 
   const handleSafeBack = () => {
-    router.replace('/screens/Buy/Buy');
+    router.replace("/screens/Buy/Buy");
+  };
+
+  // ─── Google OTP modal helpers ─────────────────────────────────────────────
+  const handleGoogleOtpChange = (value, index) => {
+    const next = [...googleOtp];
+    next[index] = value;
+    setGoogleOtp(next);
+    if (value && index < 5) {
+      googleOtpInputs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleGoogleOtpKeyPress = (e, index) => {
+    if (e.nativeEvent.key === "Backspace" && !googleOtp[index] && index > 0) {
+      googleOtpInputs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleGoogleOtpSend = async () => {
+    await sendGooglePhoneOtp();
+  };
+
+  const handleGoogleOtpVerify = async () => {
+    const enteredOtp = googleOtp.join("");
+    const success = await completeGoogleSignup({
+      enteredOtp,
+      onSuccess: (data) => {
+        performRoleBasedRedirect(data.role, "/screens/Buy/Buy", setRoleSelector);
+      },
+    });
+    if (success) {
+      setGoogleOtpModalVisible(false);
+      setGoogleOtp(["", "", "", "", "", ""]);
+    }
+  };
+
+  const handleGoogleOtpModalClose = () => {
+    setGoogleOtpModalVisible(false);
+    setGoogleOtp(["", "", "", "", "", ""]);
+    cancelGoogleSignup();
+  };
+
+  const handleGoogleRoleSelect = (roleKey) => {
+    setGoogleSelectedRole(roleKey);
+    // Sync to hook's googleSignupState via formData role (completeGoogleSignup reads googleSignupState.role)
+    updateFormData("role", roleKey);
+    if (googleSignupState) {
+      googleSignupState.role = roleKey; // mutate in-place so completeGoogleSignup picks it up
+    }
+  };
+
+  const handleGoogleSignUpPress = () => {
+    handleGoogleSignIn({ defaultRole: "buyer" });
   };
 
   return (
@@ -531,6 +614,46 @@ const Register = () => {
             Already have an account? <Text className="font-bold" style={{ color: PRIMARY_COLOR }}>Login</Text>
           </Text>
         </TouchableOpacity>
+
+        {/* Divider */}
+        <View className="flex-row items-center mb-5">
+          <View className="flex-1 h-px bg-[#E4E7EC]" />
+          <Text className="mx-3 text-[#9CA3AF] text-sm font-normal">or sign up with</Text>
+          <View className="flex-1 h-px bg-[#E4E7EC]" />
+        </View>
+
+        {/* Google Sign-Up Button */}
+        <TouchableOpacity
+          onPress={handleGoogleSignUpPress}
+          disabled={loading}
+          className="mb-8"
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            borderWidth: 1.5,
+            borderColor: "#E4E7EC",
+            borderRadius: 12,
+            paddingVertical: hp("1.4%"),
+            backgroundColor: "#FFFFFF",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.06,
+            shadowRadius: 4,
+            elevation: 2,
+          }}
+        >
+          <Image
+            source={{
+              uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/480px-Google_%22G%22_logo.svg.png",
+            }}
+            style={{ width: 20, height: 20, marginRight: 10 }}
+            resizeMode="contain"
+          />
+          <Text style={{ fontSize: hp("1.8%"), fontWeight: "600", color: "#101828" }}>
+            {loading ? "Please wait..." : "Sign up with Google"}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
 
       {/* OTP Modal */}
@@ -615,6 +738,203 @@ const Register = () => {
         onClose={() => setRoleSelector(prev => ({ ...prev, visible: false }))}
       />
       <Toast message={toast?.message} type={toast?.type} onDismiss={() => setToast(null)} />
+
+      {/* ─── Google New-User Phone Verification Modal ────────────────────────── */}
+      <Modal
+        visible={googleOtpModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={handleGoogleOtpModalClose}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <ScrollView
+            style={{ backgroundColor: "#fff", borderTopLeftRadius: 24, borderTopRightRadius: 24 }}
+            contentContainerStyle={{ padding: 24 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Header */}
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <Text style={{ fontSize: 20, fontWeight: "700", color: "#101828" }}>
+                {googlePhoneOtpSent ? "Verify Your Phone" : "Complete Google Sign-Up"}
+              </Text>
+              <TouchableOpacity onPress={handleGoogleOtpModalClose}>
+                <Ionicons name="close" size={24} color="#6A7282" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Google user info banner */}
+            {googleSignupState?.googleUser?.name ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor: "#F0FDF9",
+                  borderRadius: 10,
+                  padding: 10,
+                  marginBottom: 16,
+                }}
+              >
+                <Ionicons name="person-circle-outline" size={28} color={PRIMARY_COLOR} />
+                <View style={{ marginLeft: 8 }}>
+                  <Text style={{ fontWeight: "600", color: "#101828", fontSize: 13 }}>
+                    {googleSignupState.googleUser.name}
+                  </Text>
+                  <Text style={{ color: "#6A7282", fontSize: 12 }}>
+                    {googleSignupState.googleUser.email}
+                  </Text>
+                </View>
+              </View>
+            ) : null}
+
+            {!googlePhoneOtpSent ? (
+              <>
+                <Text style={{ color: "#6A7282", marginBottom: 14, fontSize: 14 }}>
+                  A verified phone number is required. Choose your role and enter your number below.
+                </Text>
+
+                {/* Role selector */}
+                <Text style={{ color: "#374151", fontWeight: "600", marginBottom: 8, fontSize: 14 }}>Sign up as</Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+                  {SIGNUP_ROLES.map((r) => (
+                    <TouchableOpacity
+                      key={r.key}
+                      onPress={() => handleGoogleRoleSelect(r.key)}
+                      style={{
+                        paddingHorizontal: 16,
+                        paddingVertical: 8,
+                        borderRadius: 20,
+                        borderWidth: 1.5,
+                        borderColor: googleSelectedRole === r.key ? PRIMARY_COLOR : "#E4E7EC",
+                        backgroundColor: googleSelectedRole === r.key ? "#E6F7F6" : "#F9FAFB",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: googleSelectedRole === r.key ? PRIMARY_COLOR : "#6A7282",
+                          fontWeight: googleSelectedRole === r.key ? "700" : "500",
+                          fontSize: 13,
+                        }}
+                      >
+                        {r.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                {/* Phone input */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderColor: "#E4E7EC",
+                    borderRadius: 12,
+                    paddingHorizontal: 14,
+                    paddingVertical: hp("1.2%"),
+                    backgroundColor: "#F9FAFB",
+                    marginBottom: 20,
+                  }}
+                >
+                  <Ionicons name="phone-portrait-outline" size={20} color="#9CA3AF" />
+                  <TextInput
+                    placeholder="10-digit phone number"
+                    keyboardType="phone-pad"
+                    maxLength={10}
+                    placeholderTextColor="#9CA3AF"
+                    value={formData.phone}
+                    onChangeText={(v) => updateFormData("phone", v)}
+                    style={{ flex: 1, marginLeft: 10, fontSize: 15, color: "#101828", padding: 0 }}
+                  />
+                </View>
+
+                <TouchableOpacity
+                  onPress={handleGoogleOtpSend}
+                  disabled={loading || formData.phone.length !== 10}
+                  style={{
+                    backgroundColor: formData.phone.length === 10 && !loading ? PRIMARY_COLOR : "#E5E7EB",
+                    borderRadius: 12,
+                    paddingVertical: 14,
+                    alignItems: "center",
+                    marginBottom: 24,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: formData.phone.length === 10 && !loading ? "#fff" : "#9CA3AF",
+                      fontWeight: "700",
+                      fontSize: 16,
+                    }}
+                  >
+                    {loading ? "Sending OTP..." : "Send OTP"}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={{ color: "#6A7282", marginBottom: 20, fontSize: 14 }}>
+                  Enter the 6-digit code sent to +91 {formData.phone}
+                </Text>
+
+                {/* OTP inputs */}
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 24, paddingHorizontal: 4 }}>
+                  {googleOtp.map((digit, index) => (
+                    <TextInput
+                      key={index}
+                      ref={(ref) => (googleOtpInputs.current[index] = ref)}
+                      style={{
+                        width: 44,
+                        height: 52,
+                        borderWidth: 1.5,
+                        borderColor: digit ? PRIMARY_COLOR : "#E4E7EC",
+                        borderRadius: 12,
+                        textAlign: "center",
+                        fontSize: 20,
+                        fontWeight: "700",
+                        color: "#101828",
+                        backgroundColor: "#F9FAFB",
+                      }}
+                      keyboardType="number-pad"
+                      maxLength={1}
+                      value={digit}
+                      onChangeText={(value) => handleGoogleOtpChange(value, index)}
+                      onKeyPress={(e) => handleGoogleOtpKeyPress(e, index)}
+                    />
+                  ))}
+                </View>
+
+                <TouchableOpacity
+                  onPress={handleGoogleOtpVerify}
+                  disabled={loading || googleOtp.join("").length !== 6}
+                  style={{
+                    backgroundColor: googleOtp.join("").length === 6 && !loading ? PRIMARY_COLOR : "#E5E7EB",
+                    borderRadius: 12,
+                    paddingVertical: 14,
+                    alignItems: "center",
+                    marginBottom: 12,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: googleOtp.join("").length === 6 && !loading ? "#fff" : "#9CA3AF",
+                      fontWeight: "700",
+                      fontSize: 16,
+                    }}
+                  >
+                    {loading ? "Creating account..." : "Verify & Create Account"}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={handleGoogleOtpSend} style={{ alignItems: "center", marginBottom: 24 }}>
+                  <Text style={{ color: PRIMARY_COLOR, fontWeight: "500", fontSize: 14 }}>Resend Code</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 };
