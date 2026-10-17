@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PropertyListingCard from '../../components/PropertyListingCard';
 import { useLookup } from '../../hooks/useLookup';
 import { usePropertyDiscovery } from '../../hooks/usePropertyDiscovery';
+import api from '../api';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -16,7 +17,13 @@ const LastSearched = () => {
   const router = useRouter();
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [cityModalVisible, setCityModalVisible] = useState(false);
+  const [localityModalVisible, setLocalityModalVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Price: High to Low');
+  const [city, setCity] = useState('Mohali');
+  const [selectedLocality, setSelectedLocality] = useState(null);
+  const [localitiesList, setLocalitiesList] = useState([]);
+  const [loadingLocalities, setLoadingLocalities] = useState(false);
   // Lock searching to Buy (which maps to API lookingFor: 'sell') and prevent changes
   const [lookingTo] = useState('sell');
 
@@ -87,6 +94,26 @@ const LastSearched = () => {
   const { fetchProperties, loading: apiLoading } = usePropertyDiscovery();
   const [properties, setProperties] = useState([]);
 
+  const cityOptions = ['Mohali', 'Chandigarh', 'Panchkula', 'Zirakpur', 'Kharar'];
+
+  useEffect(() => {
+    const loadLocalities = async () => {
+      try {
+        setLoadingLocalities(true);
+        const response = await api.get('/localities', { params: { city } });
+        const data = response?.data?.data || [];
+        setLocalitiesList(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error fetching localities for filter:', error);
+        setLocalitiesList([]);
+      } finally {
+        setLoadingLocalities(false);
+      }
+    };
+
+    loadLocalities();
+  }, [city]);
+
   // Pagination states
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -111,7 +138,11 @@ const LastSearched = () => {
     }
 
     try {
-      const params = { city: 'Mohali', lookingFor: lookingTo, limit: 10, page: pageToFetch };
+      const params = { city, lookingFor: lookingTo, limit: 10, page: pageToFetch };
+
+      if (selectedLocality) {
+        params.locality = typeof selectedLocality === 'string' ? selectedLocality : (selectedLocality.name || selectedLocality.label || selectedLocality._id);
+      }
 
       // include selected property/sub-property/structure in params when present
       if (selectedPropertyType) params.propertyType = selectedPropertyType;
@@ -185,9 +216,11 @@ const LastSearched = () => {
   useEffect(() => {
     loadProperties(1, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lookingTo, selectedSort, selectedStructure, structureInput, selectedPropertyType, selectedSubPropertyType, selectedConstructionStatus, selectedPossessionStatus, minPrice, maxPrice, minArea, maxArea]);
+  }, [city, selectedLocality, lookingTo, selectedSort, selectedStructure, structureInput, selectedPropertyType, selectedSubPropertyType, selectedConstructionStatus, selectedPossessionStatus, minPrice, maxPrice, minArea, maxArea]);
 
   const clearAllFilters = () => {
+    setCity('Mohali');
+    setSelectedLocality(null);
     setSelectedPropertyType(null);
     setSelectedSubPropertyType(null);
     setSelectedStructure(null);
@@ -231,11 +264,17 @@ const LastSearched = () => {
             )}
             ListHeaderComponent={
               <View className="flex-row items-center" style={{ marginTop: hp('1%'), marginBottom: hp('3%'), height: hp('4%') }}>
-                <TouchableOpacity className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
+                <TouchableOpacity
+                  onPress={() => setLocalityModalVisible(true)}
+                  className="flex-row items-center bg-[#008E96]/10 rounded-full"
+                  style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}
+                >
                   <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>+ Add</Text>
                 </TouchableOpacity>
                 <View style={{ marginLeft: wp('2%') }}>
-                  <Text className="text-[#008E96] font-semibold" style={{ fontSize: wp('4%') }}>Mohali</Text>
+                  <Text className="text-[#008E96] font-semibold" style={{ fontSize: wp('4%') }}>
+                    {selectedLocality ? (typeof selectedLocality === 'string' ? selectedLocality : (selectedLocality.name || selectedLocality.label)) : city}
+                  </Text>
                 </View>
               </View>
             }
@@ -250,7 +289,9 @@ const LastSearched = () => {
             ListEmptyComponent={
               <View className="items-center" style={{ paddingVertical: hp('10%') }}>
                 <Ionicons name="home-outline" size={wp('12%')} color="#D0D5DD" />
-                <Text className="text-[#667085] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>No listings found for Mohali</Text>
+                <Text className="text-[#667085] font-medium" style={{ marginTop: hp('2%'), fontSize: wp('3.5%') }}>
+                  No listings found for {selectedLocality ? (typeof selectedLocality === 'string' ? selectedLocality : (selectedLocality.name || selectedLocality.label)) : city}
+                </Text>
               </View>
             }
             ListFooterComponent={
@@ -351,9 +392,12 @@ const LastSearched = () => {
                 {/* Searching In */}
                 <View className="flex-row justify-between items-center" style={{ marginTop: hp('1.5%') }}>
                   <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.5%') }}>
-                    You are currently looking in <Text className="font-semibold text-[#101828]">Mohali</Text>
+                    You are currently looking in <Text className="font-semibold text-[#101828]">{city}</Text>
                   </Text>
-                  <TouchableOpacity className="flex-row items-center">
+                  <TouchableOpacity
+                    className="flex-row items-center"
+                    onPress={() => setCityModalVisible(true)}
+                  >
                     <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('4%') }}>Change Location</Text>
                     <Ionicons name="chevron-forward" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1%') }} />
                   </TouchableOpacity>
@@ -364,7 +408,7 @@ const LastSearched = () => {
                   <Text className="text-[#9CA3AF] font-normal" style={{ fontSize: wp('3.5%') }}>Filter Applied</Text>
                   <View className="flex-row" style={{ marginTop: hp('1%') }}>
                     <View className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
-                      <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>Mohali</Text>
+                      <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>{city}</Text>
                       <Ionicons name="close-circle" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1.5%') }} />
                     </View>
                   </View>
@@ -392,8 +436,9 @@ const LastSearched = () => {
                 {/* Localities */}
                 <View style={{ marginTop: hp('4%') }}>
                   <Text className="text-[#101828] font-semibold" style={{ fontSize: wp('4%') }}>Localities</Text>
-                  <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%') }}>
+                  <View className="flex-row items-center" style={{ gap: wp('3%'), marginTop: hp('1.5%'), flexWrap: 'wrap' }}>
                     <TouchableOpacity
+                      onPress={() => setLocalityModalVisible(true)}
                       className="flex-row items-center overflow-hidden"
                       style={{ backgroundColor: '#008E96', paddingHorizontal: wp('4%'), paddingVertical: hp('1.2%'), borderRadius: wp('3%') }}
                     >
@@ -405,10 +450,23 @@ const LastSearched = () => {
                       />
                       <Text className="text-white font-semibold" style={{ fontSize: wp('3.5%') }}>+ Add More</Text>
                     </TouchableOpacity>
-                    <View className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
-                      <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>Mohali</Text>
-                      <Ionicons name="close-circle" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1.5%') }} />
-                    </View>
+                    {selectedLocality ? (
+                      <TouchableOpacity
+                        onPress={() => setSelectedLocality(null)}
+                        className="flex-row items-center bg-[#008E96]/10 rounded-full"
+                        style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}
+                      >
+                        <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>
+                          {typeof selectedLocality === 'string' ? selectedLocality : (selectedLocality.name || selectedLocality.label)}
+                        </Text>
+                        <Ionicons name="close-circle" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1.5%') }} />
+                      </TouchableOpacity>
+                    ) : (
+                      <View className="flex-row items-center bg-[#008E96]/10 rounded-full" style={{ paddingHorizontal: wp('3%'), paddingVertical: hp('0.8%') }}>
+                        <Text className="text-[#008E96] font-medium" style={{ fontSize: wp('3.5%') }}>{city}</Text>
+                        <Ionicons name="close-circle" size={wp('4%')} color="#008E96" style={{ marginLeft: wp('1.5%') }} />
+                      </View>
+                    )}
                   </View>
                 </View>
 
@@ -662,6 +720,121 @@ const LastSearched = () => {
       </Modal>
 
       {/* Sort Modal (Based on CSS) */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={cityModalVisible}
+        onRequestClose={() => setCityModalVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-black/40">
+          <TouchableOpacity activeOpacity={1} className="absolute inset-0" onPress={() => setCityModalVisible(false)} />
+          <View className="bg-white max-h-[60%]" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), paddingBottom: hp('5%') }}>
+            <View className="items-center" style={{ paddingVertical: hp('1.5%') }}>
+              <View className="bg-gray-200 rounded-full" style={{ width: wp('10%'), height: hp('0.5%') }} />
+            </View>
+            <View className="border-b border-gray-100 flex-row justify-between items-center" style={{ paddingHorizontal: wp('5%'), paddingBottom: hp('1.5%') }}>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.5%') }}>Select City</Text>
+              <TouchableOpacity onPress={() => setCityModalVisible(false)}>
+                <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.5%') }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingHorizontal: wp('5%'), marginTop: hp('1%') }}>
+              {cityOptions.map((option) => {
+                const isSelected = city === option;
+                return (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => {
+                      setCity(option);
+                      setSelectedLocality(null);
+                      setCityModalVisible(false);
+                    }}
+                    className="border-b border-gray-50 flex-row justify-between items-center"
+                    style={{ paddingVertical: hp('2%') }}
+                  >
+                    <Text style={{ fontWeight: isSelected ? '600' : '400', fontSize: wp('3.8%') }} className={isSelected ? 'text-[#008E96]' : 'text-[#344054]'}>
+                      {option}
+                    </Text>
+                    {isSelected && (
+                      <View className="rounded-full bg-[#008E96] items-center justify-center" style={{ width: wp('5%'), height: wp('5%') }}>
+                        <Text className="text-white font-bold" style={{ fontSize: wp('2.5%') }}>✓</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={localityModalVisible}
+        onRequestClose={() => setLocalityModalVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-black/40">
+          <TouchableOpacity activeOpacity={1} className="absolute inset-0" onPress={() => setLocalityModalVisible(false)} />
+          <View className="bg-white max-h-[70%]" style={{ borderTopLeftRadius: wp('6%'), borderTopRightRadius: wp('6%'), paddingBottom: hp('5%') }}>
+            <View className="items-center" style={{ paddingVertical: hp('1.5%') }}>
+              <View className="bg-gray-200 rounded-full" style={{ width: wp('10%'), height: hp('0.5%') }} />
+            </View>
+
+            <View className="border-b border-gray-100 flex-row justify-between items-center" style={{ paddingHorizontal: wp('5%'), paddingBottom: hp('1.5%') }}>
+              <Text className="text-[#101828] font-bold" style={{ fontSize: wp('4.5%') }}>Select Locality</Text>
+              <TouchableOpacity onPress={() => setLocalityModalVisible(false)}>
+                <Text className="text-[#6A7282] font-medium" style={{ fontSize: wp('3.5%') }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingHorizontal: wp('5%'), marginTop: hp('1%') }}>
+              {loadingLocalities ? (
+                <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
+                  <ActivityIndicator size="small" color="#008E96" />
+                </View>
+              ) : localitiesList && localitiesList.length > 0 ? (
+                localitiesList.map((loc) => {
+                  const label = loc.name || String(loc);
+                  const key = loc._id || label;
+                  const isSelected = selectedLocality && (
+                    selectedLocality._id === loc._id ||
+                    selectedLocality === loc ||
+                    (typeof selectedLocality === 'string' && selectedLocality === loc.name) ||
+                    (selectedLocality.name && selectedLocality.name === loc.name)
+                  );
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      onPress={() => {
+                        setSelectedLocality(isSelected ? null : loc);
+                        setLocalityModalVisible(false);
+                      }}
+                      className="border-b border-gray-50 flex-row justify-between items-center"
+                      style={{ paddingVertical: hp('2%') }}
+                    >
+                      <Text style={{ fontWeight: isSelected ? '600' : '400', fontSize: wp('3.8%') }} className={isSelected ? 'text-[#008E96]' : 'text-[#344054]'}>
+                        {label}
+                      </Text>
+                      {isSelected && (
+                        <View className="rounded-full bg-[#008E96] items-center justify-center" style={{ width: wp('5%'), height: wp('5%') }}>
+                          <Text className="text-white font-bold" style={{ fontSize: wp('2.5%') }}>✓</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })
+              ) : (
+                <View className="items-center justify-center" style={{ paddingVertical: hp('5%') }}>
+                  <Text className="text-gray-400 font-medium" style={{ fontSize: wp('3.5%') }}>No localities found</Text>
+                </View>
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
       <Modal
         animationType="fade"
         transparent={true}

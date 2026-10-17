@@ -1,10 +1,10 @@
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Dimensions, FlatList, Image, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Dimensions, FlatList, Image, Linking, Modal, ScrollView, Share, Text, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ProjectConfigCard from '../../components/ProjectConfigCard';
 import ProjectContactFormCard from '../../components/ProjectContactFormCard';
 import ProjectDisclaimerCard from '../../components/ProjectDisclaimerCard';
@@ -22,6 +22,7 @@ const ProjectDetails = () => {
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeFloorTab, setActiveFloorTab] = useState('All');
   const [selectedConfigImage, setSelectedConfigImage] = useState(null);
+  const [isSaved, setIsSaved] = useState(false);
   const flatListRef = useRef(null);
 
   // Use custom hook for project details
@@ -42,15 +43,8 @@ const ProjectDetails = () => {
   const summariesArray = Array.isArray(summaries) ? summaries : (summaries ? [summaries] : []);
   const summariesData = summariesArray[0] || null;
 
-  const floorPlanData = [
-    { type: '5 BHK', info: 'Super Builtup Area', area: '5280.0 sq.ft.', price: '₹ 5.02 Cr', bhk: '5 BHK', image: 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=400' },
-    { type: '5 BHK', info: 'Super Builtup Area', area: '5150.0 sq.ft.', price: '₹ 4.89 Cr', bhk: '5 BHK', image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=400' }
-  ];
-
-  const configData = [
-    { title: '3 BHK Apartment', areaRange: '1835 - 1950 sq.ft.', priceRange: '₹ 3.24 Cr - ₹ 3.44 Cr', image: 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=400' },
-    { title: '5 BHK Apartment', areaRange: '2800 - 3200 sq.ft.', priceRange: '₹ 4.50 Cr - ₹ 5.01 Cr', image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=400' }
-  ];
+  // Use real project data only. Do not render hard-coded placeholder content.
+  const fallbackConfigData = [];
 
   // If summaries are available, derive configuration cards from summaries.summaries
   const derivedConfigData = (summariesData && summariesData.summaries && summariesData.summaries.length > 0)
@@ -77,29 +71,28 @@ const ProjectDetails = () => {
         image: (s.images && s.images.length > 0) ? s.images[0] : (s.image || s.layoutImage || null)
       };
     })
-    : configData;
-
-  const dummyTourImage = 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&q=80&w=900';
+    : fallbackConfigData;
 
   const propertyTourData = (summariesData && summariesData.summaries && summariesData.summaries.length > 0)
     ? summariesData.summaries.map((s, index) => {
       const bhkValue = s.structure?.value ? `${s.structure.value} BHK` : 'Flat';
       const areaUnit = s.areaUnit?.label || s.areaUnit?.name || '';
+      const priceValue = s.minPrice || s.price || null;
 
       return {
         id: s._id || index,
         bhk: bhkValue,
         info: s.propertyItem?.label || s.propertyItem?.name || 'Flat',
         area: `${s.area || 'N/A'} ${areaUnit}`.trim(),
-        price: '₹ XX Cr',
-        image: dummyTourImage,
+        price: priceValue ? `₹ ${priceValue}` : 'Price unavailable',
+        image: (s.images && s.images.length > 0) ? s.images[0] : (s.image || s.layoutImage || null),
         quantity: s.quantity,
         activeTabKey: bhkValue,
       };
     })
-    : floorPlanData;
+    : [];
 
-  const propertyTourTabs = summariesData && summariesData.summaries && summariesData.summaries.length > 0
+  const propertyTourTabs = propertyTourData.length > 0
     ? [
       { label: 'All', count: propertyTourData.length },
       ...Array.from(new Map(propertyTourData.map((item) => [item.activeTabKey, item])).values()).map((item) => ({
@@ -107,17 +100,54 @@ const ProjectDetails = () => {
         count: propertyTourData.filter((tourItem) => tourItem.activeTabKey === item.activeTabKey).length,
       }))
     ]
-    : [
-      { label: 'All', count: 6 },
-      { label: '3 BHK', count: 4 },
-      { label: '5 BHK', count: 2 }
-    ];
+    : [{ label: 'All', count: 0 }];
 
   const visiblePropertyTourData = activeFloorTab === 'All'
     ? propertyTourData
     : propertyTourData.filter((item) => item.activeTabKey === activeFloorTab);
 
+  useEffect(() => {
+    if (projectData?.isWishlisted !== undefined) {
+      setIsSaved(Boolean(projectData.isWishlisted));
+    }
+  }, [projectData]);
 
+  const handleShare = async () => {
+    const projectName = projectData?.projectName || 'this project';
+    const shareMessage = `Check out ${projectName} on the app.`;
+
+    try {
+      await Share.share({
+        message: shareMessage,
+        title: projectName,
+      });
+    } catch (error) {
+      console.error('Share failed:', error);
+      Alert.alert('Share', 'Unable to share this project right now.');
+    }
+  };
+
+  const handleWishlistToggle = () => {
+    const nextState = !isSaved;
+    setIsSaved(nextState);
+    Alert.alert(
+      nextState ? 'Saved' : 'Removed',
+      nextState ? 'Project saved to your favorites.' : 'Project removed from your favorites.'
+    );
+  };
+
+  const handleChat = () => {
+    const phone = projectData?.builder?.phone || projectData?.phone || projectData?.contactPhone;
+    const projectName = projectData?.projectName || 'this project';
+
+    if (phone) {
+      const text = encodeURIComponent(`Hi, I am interested in ${projectName}. Can you share more details?`);
+      Linking.openURL(`whatsapp://send?phone=${phone}&text=${text}`);
+      return;
+    }
+
+    Alert.alert('Chat', 'Chat support is not available for this project right now.');
+  };
 
   const formatDate = (value) => {
     if (!value) return 'N/A';
@@ -219,13 +249,25 @@ const ProjectDetails = () => {
                   <Ionicons name="arrow-back" size={wp('6%')} color="white" />
                 </TouchableOpacity>
                 <View className="flex-row" style={{ gap: wp('3%') }}>
-                  <TouchableOpacity className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
+                  <TouchableOpacity
+                    onPress={handleShare}
+                    className="bg-black/40 rounded-full items-center justify-center"
+                    style={{ width: wp('10%'), height: wp('10%') }}
+                  >
                     <Ionicons name="share-social-outline" size={wp('5%')} color="white" />
                   </TouchableOpacity>
-                  <TouchableOpacity className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
-                    <Ionicons name="heart-outline" size={wp('5%')} color="white" />
+                  <TouchableOpacity
+                    onPress={handleWishlistToggle}
+                    className="bg-black/40 rounded-full items-center justify-center"
+                    style={{ width: wp('10%'), height: wp('10%') }}
+                  >
+                    <Ionicons name={isSaved ? 'heart' : 'heart-outline'} size={wp('5%')} color={isSaved ? '#F04438' : 'white'} />
                   </TouchableOpacity>
-                  <TouchableOpacity className="bg-black/40 rounded-full items-center justify-center" style={{ width: wp('10%'), height: wp('10%') }}>
+                  <TouchableOpacity
+                    onPress={handleChat}
+                    className="bg-black/40 rounded-full items-center justify-center"
+                    style={{ width: wp('10%'), height: wp('10%') }}
+                  >
                     <Ionicons name="chatbubble-outline" size={wp('5%')} color="white" />
                   </TouchableOpacity>
                 </View>
@@ -413,7 +455,7 @@ const ProjectDetails = () => {
                 totalPages={brochurePages}
               /> */}
               <ProjectMapCard />
-              <ProjectContactFormCard sellerName={builderName} sellerPhone={projectData.builder?.phone || '1800XXXXXX'} />
+              <ProjectContactFormCard sellerName={builderName} sellerPhone={projectData.builder?.phone || 'Not available'} />
               <ProjectPropertiesSection
                 projectId={projectId}
                 cityName={getDisplayValue(projectData?.city) || 'mohali'}
@@ -426,65 +468,44 @@ const ProjectDetails = () => {
           ) : activeTab === 'Highlights' ? (
             <View className="p-4 gap-6">
               <View className="gap-3">
-                <Text className="text-[#101828] text-[18px] font-medium">Nearby landmarks in Vamana Riseonic</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
-                  <TouchableOpacity className="w-[200px] bg-white border border-[#E5E7EB] rounded-[14px] p-3 gap-2 mr-3">
-                    <View className="flex-row items-center gap-2">
-                      <Ionicons name="school-outline" size={20} color="#101828" />
-                      <Text className="text-[#101828] text-[14px] font-normal underline">School</Text>
-                      <Ionicons name="chevron-forward" size={14} color="#101828" />
-                    </View>
-                    <Text className="text-[#6A7282] text-[14px] font-normal h-[40px]">SHRIRAM e - TECHNO SCHOOL</Text>
-                    <Text className="text-[#101828] text-[16px] font-medium">800 m</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="w-[200px] bg-white border border-[#E5E7EB] rounded-[14px] p-3 gap-2 mr-3">
-                    <View className="flex-row items-center gap-2">
-                      <Ionicons name="medkit-outline" size={20} color="#101828" />
-                      <Text className="text-[#101828] text-[14px] font-normal underline">Hospital</Text>
-                      <Ionicons name="chevron-forward" size={14} color="#101828" />
-                    </View>
-                    <Text className="text-[#6A7282] text-[14px] font-normal h-[40px]">Homi Bhabha Cancer Hospital a...</Text>
-                    <Text className="text-[#101828] text-[16px] font-medium">2.6 km</Text>
-                  </TouchableOpacity>
-                </ScrollView>
+                <Text className="text-[#101828] text-[18px] font-medium">Nearby landmarks</Text>
+                {summariesData?.nearbyLandmarks && summariesData.nearbyLandmarks.length > 0 ? (
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
+                    {summariesData.nearbyLandmarks.map((landmark, index) => (
+                      <View key={landmark._id || `${landmark.name}-${index}`} className="w-[200px] bg-white border border-[#E5E7EB] rounded-[14px] p-3 gap-2 mr-3">
+                        <View className="flex-row items-center gap-2">
+                          <Ionicons name="location-outline" size={20} color="#101828" />
+                          <Text className="text-[#101828] text-[14px] font-normal underline">{landmark.type || 'Landmark'}</Text>
+                        </View>
+                        <Text className="text-[#6A7282] text-[14px] font-normal h-[40px]">{landmark.name || 'Landmark name unavailable'}</Text>
+                        <Text className="text-[#101828] text-[16px] font-medium">{landmark.distance || 'N/A'}</Text>
+                      </View>
+                    ))}
+                  </ScrollView>
+                ) : (
+                  <View className="bg-white border border-[#E5E7EB] rounded-[14px] p-4">
+                    <Text className="text-[#6A7282] text-[14px]">No nearby landmarks available.</Text>
+                  </View>
+                )}
               </View>
               <View className="gap-3">
                 <Text className="text-[#101828] text-[18px] font-medium">Amenities</Text>
-                <View className="flex-row flex-wrap gap-2">
-                  {summariesData && summariesData.amenities && summariesData.amenities.length > 0 ? (
-                    summariesData.amenities.map((am) => (
+                {summariesData && summariesData.amenities && summariesData.amenities.length > 0 ? (
+                  <View className="flex-row flex-wrap gap-2">
+                    {summariesData.amenities.map((am) => (
                       <View key={am._id || am.label} className="w-[31%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-2">
                         <View className="items-center">
                           <MaterialIcons name={am.icon || am.name || 'check'} size={28} color="#008E96" />
                           <Text className="text-[#101828] text-[12px] text-center font-normal mt-2" numberOfLines={2}>{am.label}</Text>
                         </View>
                       </View>
-                    ))
-                  ) : (
-                    [
-                      { icon: '🏊‍♂️', title: 'Swimming Pool' },
-                      { icon: '🌳', title: 'Landscape' },
-                      { icon: '🏋️', title: 'Gymnasium' },
-                      { icon: '🏊‍♂️', title: "Kid's Pool" },
-                      { icon: '💧', title: '24X7 Water' },
-                      { icon: '+20', title: 'More amenities', isMore: true }
-                    ].map((item, index) => (
-                      <View key={index} className="w-[31%] bg-white border border-[#E5E7EB] rounded-[14px] h-[90px] items-center justify-center p-2 mb-2">
-                        {item.isMore ? (
-                          <View className="items-center">
-                            <Text className="text-[#101828] text-[20px] font-medium">+20</Text>
-                            <Text className="text-[#101828] text-[12px] font-normal underline">More amenities</Text>
-                          </View>
-                        ) : (
-                          <>
-                            <Text className="text-[24px] mb-1">{item.icon}</Text>
-                            <Text className="text-[#101828] text-[12px] text-center font-normal" numberOfLines={1}>{item.title}</Text>
-                          </>
-                        )}
-                      </View>
-                    ))
-                  )}
-                </View>
+                    ))}
+                  </View>
+                ) : (
+                  <View className="bg-white border border-[#E5E7EB] rounded-[14px] p-4">
+                    <Text className="text-[#6A7282] text-[14px]">No amenities data available.</Text>
+                  </View>
+                )}
               </View>
               {/* <View className="gap-3">
                 <Text className="text-[#101828] text-[18px] font-medium">Construction details</Text> */}
@@ -573,32 +594,44 @@ const ProjectDetails = () => {
                   </ScrollView>
 
                   {/* Floor Cards */}
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-4">
-                    {visiblePropertyTourData.map((item, index) => (
-                      <View key={index} className="w-[200px] border border-[#E5E7EB] rounded-[14px] p-2 gap-2 mr-4">
-                        <View className="w-full h-[128px] bg-[#F3F4F6] rounded-[10px] overflow-hidden relative">
-                          <Image source={{ uri: item.image }} className="w-full h-full" resizeMode="cover" />
-                          <TouchableOpacity className="absolute top-2 right-2 w-8 h-8 bg-[#101828] rounded-full items-center justify-center">
-                            <MaterialCommunityIcons name="arrow-expand-all" size={16} color="white" />
-                          </TouchableOpacity>
+                  {visiblePropertyTourData.length > 0 ? (
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-4">
+                      {visiblePropertyTourData.map((item, index) => (
+                        <View key={index} className="w-[200px] border border-[#E5E7EB] rounded-[14px] p-2 gap-2 mr-4">
+                          <View className="w-full h-[128px] bg-[#F3F4F6] rounded-[10px] overflow-hidden relative">
+                            {item.image ? (
+                              <Image source={{ uri: item.image }} className="w-full h-full" resizeMode="cover" />
+                            ) : (
+                              <View className="w-full h-full items-center justify-center bg-[#F3F4F6]">
+                                <Text className="text-[#6A7282] text-[12px]">No image available</Text>
+                              </View>
+                            )}
+                            <TouchableOpacity className="absolute top-2 right-2 w-8 h-8 bg-[#101828] rounded-full items-center justify-center">
+                              <MaterialCommunityIcons name="arrow-expand-all" size={16} color="white" />
+                            </TouchableOpacity>
+                          </View>
+                          <View className="px-1 gap-1">
+                            <Text className="text-[#101828] text-[16px] font-bold">{item.bhk}</Text>
+                            <Text className="text-[#6A7282] text-[12px] font-normal">{item.info}</Text>
+                            <Text className="text-[#101828] text-[14px] font-medium">{item.area}</Text>
+                            <Text className="text-[#101828] text-[16px] font-bold">{item.price}</Text>
+                          </View>
+                          <View className="flex-row gap-2 mt-1">
+                            <TouchableOpacity className="w-10 h-10 border border-[#D1D5DC] rounded-[10px] items-center justify-center">
+                              <FontAwesome name="whatsapp" size={20} color="#00C950" />
+                            </TouchableOpacity>
+                            <TouchableOpacity className="flex-1 h-10 border-2 border-[#008E96] rounded-[10px] items-center justify-center">
+                              <Text className="text-[#008E96] text-[14px] font-medium">Contact</Text>
+                            </TouchableOpacity>
+                          </View>
                         </View>
-                        <View className="px-1 gap-1">
-                          <Text className="text-[#101828] text-[16px] font-bold">{item.bhk}</Text>
-                          <Text className="text-[#6A7282] text-[12px] font-normal">{item.info}</Text>
-                          <Text className="text-[#101828] text-[14px] font-medium">{item.area}</Text>
-                          <Text className="text-[#101828] text-[16px] font-bold">{item.price}</Text>
-                        </View>
-                        <View className="flex-row gap-2 mt-1">
-                          <TouchableOpacity className="w-10 h-10 border border-[#D1D5DC] rounded-[10px] items-center justify-center">
-                            <FontAwesome name="whatsapp" size={20} color="#00C950" />
-                          </TouchableOpacity>
-                          <TouchableOpacity className="flex-1 h-10 border-2 border-[#008E96] rounded-[10px] items-center justify-center">
-                            <Text className="text-[#008E96] text-[14px] font-medium">Contact</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    ))}
-                  </ScrollView>
+                      ))}
+                    </ScrollView>
+                  ) : (
+                    <View className="bg-white border border-[#E5E7EB] rounded-[14px] p-4">
+                      <Text className="text-[#6A7282] text-[14px]">No floor plan data available for this project.</Text>
+                    </View>
+                  )}
 
                   {/* Feedback Section */}
                   <View className="flex-row justify-between items-center pt-4 border-t border-[#F3F4F6]">

@@ -30,9 +30,9 @@ const ProjectFinancialServicesCard = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity>
+      {/* <TouchableOpacity>
         <Text className="font-medium text-[#101828] text-[14px] underline">Explore more services →</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

@@ -1032,6 +1032,7 @@ const Buy = () => {
                   experienceYears={seller.experienceYears || "5"}
                   propertiesCount={seller.propertyCount || "0"}
                   location={seller.locality || seller.city || "Mohali"}
+                  phone={seller.phone || seller.mobile || seller.contactPhone || seller.mobileNo || seller.user?.phone}
                 />
               ))}
             </ScrollView>

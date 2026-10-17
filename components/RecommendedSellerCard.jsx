@@ -1,9 +1,25 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight, Phone } from 'lucide-react-native';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, location }) => {
+const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, location, phone, onPressContact }) => {
+  const handlePress = () => {
+    if (onPressContact) {
+      onPressContact();
+      return;
+    }
+
+    const normalizedPhone = phone ? String(phone).replace(/[^\d+]/g, '') : '';
+
+    if (!normalizedPhone) {
+      Alert.alert('Contact unavailable', 'Phone number is not available for this seller.');
+      return;
+    }
+
+    Linking.openURL(`tel:${normalizedPhone}`);
+  };
+
   return (
     <View 
       style={{
@@ -92,7 +108,9 @@ const RecommendedSellerCard = ({ name, experienceYears, propertiesCount, locatio
         </View>
 
         {/* Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
+          onPress={handlePress}
+          activeOpacity={0.8}
           className="bg-white flex-row items-center justify-center"
           style={{ width: '100%', height: hp('3.8%'), borderRadius: 9999, gap: wp('1.8%'), marginTop: hp('0.3%') }}
         >

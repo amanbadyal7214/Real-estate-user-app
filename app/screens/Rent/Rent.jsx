@@ -620,6 +620,7 @@ const Rent = () => {
                   experienceYears={seller.experienceYears || '5'}
                   propertiesCount={seller.propertiesCount || '0'}
                   location={seller.locality || seller.location || 'Mohali'}
+                  phone={seller.phone || seller.mobile || seller.contactPhone || seller.mobileNo || seller.user?.phone}
                 />
               ))}
             </ScrollView>

@@ -154,7 +154,7 @@ const Login = () => {
         <View className="flex-1 justify-center">
           <View className="items-center mb-8">
             <Image
-              source={require("../../assets/images/icon3.jpeg")}
+              source={require("../../assets/images/icon3.png")}
               style={{ width: 240, height: 70 }}
               resizeMode="contain"
             />
@@ -275,10 +275,8 @@ const Login = () => {
               {loading ? "Please wait..." : "Sign in with Google"}
             </Text>
           </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity
-          className="mt-auto py-6"
+           <TouchableOpacity
+          className="mt-2 py-6"
           onPress={() => router.push("/(auth)/Register")}
         >
           <Text className="text-center text-[#6A7282] text-sm font-normal">
@@ -288,6 +286,9 @@ const Login = () => {
             </Text>
           </Text>
         </TouchableOpacity>
+        </View>
+
+       
       </ScrollView>
 
       <DashboardSelectorModal

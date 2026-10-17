@@ -111,7 +111,7 @@ export default function Index() {
         style={[{ width: ICON_WIDTH, height: ICON_HEIGHT }, animatedEllipseStyle]}
       >
         <Image
-          source={require('../assets/images/icon3.jpeg')}
+          source={require('../assets/images/icon3.png')}
           className="w-full h-full rounded-xl"
           resizeMode="cover"
         />

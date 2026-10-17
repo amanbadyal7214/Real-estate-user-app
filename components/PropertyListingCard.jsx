@@ -41,6 +41,8 @@ const PropertyListingCard = ({ data }) => {
 
   const defaultImage = 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000';
   const images = data.images?.length > 0 ? data.images : [defaultImage];
+  const isSeen = Boolean(data.isSeen || data.seen || data.viewed || data.lastViewed || data.userActivity?.seen || data.userActivity?.viewed);
+  const isZeroBrokerage = Boolean(data.zeroBrokerage || data.isZeroBrokerage || data.zeroBrokerageAvailable || data.brokerage === 'zero' || data.brokerageType === 'Zero Brokerage');
 
   // Helper to map amenity names to icons
   const getAmenityIcon = (name) => {
@@ -89,10 +91,12 @@ const PropertyListingCard = ({ data }) => {
 
         {/* Badges Overlay */}
         <View className="absolute top-[12px] left-[12px] flex-row gap-[8px]">
-          <View className="bg-black/50 backdrop-blur-md px-[10px] py-[5px] rounded-[8px] flex-row items-center border border-white/20">
-            <View className="w-[6px] h-[6px] bg-[#34D399] rounded-full mr-[6px]" />
-            <Text className="text-white font-semibold text-[11px] uppercase tracking-[0.4px]">Seen</Text>
-          </View>
+          {isSeen && (
+            <View className="bg-black/50 backdrop-blur-md px-[10px] py-[5px] rounded-[8px] flex-row items-center border border-white/20">
+              <View className="w-[6px] h-[6px] bg-[#34D399] rounded-full mr-[6px]" />
+              <Text className="text-white font-semibold text-[11px] uppercase tracking-[0.4px]">Seen</Text>
+            </View>
+          )}
         </View>
 
         <TouchableOpacity className="absolute top-[12px] right-[12px] w-[36px] h-[36px] bg-black/40 backdrop-blur-md rounded-full items-center justify-center border border-white/20">
@@ -103,10 +107,12 @@ const PropertyListingCard = ({ data }) => {
           <Text className="text-white font-medium text-[11px]">1/{images.length} Photos</Text>
         </View>
 
-        <View className="absolute bottom-[12px] right-[12px] bg-white px-[10px] py-[5px] rounded-[8px] flex-row items-center shadow-sm">
-          <Ionicons name="flash" size={12} color="#F59E0B" />
-          <Text className="text-[#101828] font-bold text-[10px] ml-[4px]">ZERO BROKERAGE</Text>
-        </View>
+        {isZeroBrokerage && (
+          <View className="absolute bottom-[12px] right-[12px] bg-white px-[10px] py-[5px] rounded-[8px] flex-row items-center shadow-sm">
+            <Ionicons name="flash" size={12} color="#F59E0B" />
+            <Text className="text-[#101828] font-bold text-[10px] ml-[4px]">ZERO BROKERAGE</Text>
+          </View>
+        )}
       </View>
 
       {/* Content Section */}

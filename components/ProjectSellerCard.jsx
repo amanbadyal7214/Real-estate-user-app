@@ -21,11 +21,11 @@ const ProjectSellerCard = ({ sellerName, postedBy, onSeeProfile, onViewPhone }) 
           <Text className="font-normal text-[#101828] text-[14px] leading-[20px]" numberOfLines={2}>
             Posted by {postedBy}
           </Text>
-          <TouchableOpacity onPress={onSeeProfile} className="mt-1">
+          {/* <TouchableOpacity onPress={onSeeProfile} className="mt-1">
             <Text className="font-medium text-[#101828] text-[14px] leading-[20px] underline">
               See Seller Profile →
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 

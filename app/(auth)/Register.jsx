@@ -3,21 +3,21 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
 import {
-  Image,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Image,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { SafeAreaView } from "react-native-safe-area-context";
 import DashboardSelectorModal from "../../components/DashboardSelectorModal";
-import Toast from "../../components/Toast";
 import PasswordValidator, { validatePasswordRules } from "../../components/PasswordValidator";
+import Toast from "../../components/Toast";
 import { performRoleBasedRedirect, useRegister } from "../../hooks/Register";
 import { PRIMARY_COLOR } from "../constants/theme";
 
@@ -603,20 +603,8 @@ const Register = () => {
         </View>
 
 
-
-        {/* Social Login removed */}
-
-        <TouchableOpacity
-          className="mt-6 mb-4"
-          onPress={() => router.push("/(auth)/Login")}
-        >
-          <Text className="text-center font-normal text-gray-500">
-            Already have an account? <Text className="font-bold" style={{ color: PRIMARY_COLOR }}>Login</Text>
-          </Text>
-        </TouchableOpacity>
-
         {/* Divider */}
-        <View className="flex-row items-center mb-5">
+        <View className="flex-row items-center my-5">
           <View className="flex-1 h-px bg-[#E4E7EC]" />
           <Text className="mx-3 text-[#9CA3AF] text-sm font-normal">or sign up with</Text>
           <View className="flex-1 h-px bg-[#E4E7EC]" />
@@ -626,7 +614,7 @@ const Register = () => {
         <TouchableOpacity
           onPress={handleGoogleSignUpPress}
           disabled={loading}
-          className="mb-8"
+          className="mb-5"
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -652,6 +640,15 @@ const Register = () => {
           />
           <Text style={{ fontSize: hp("1.8%"), fontWeight: "600", color: "#101828" }}>
             {loading ? "Please wait..." : "Sign up with Google"}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="mt-2 mb-6"
+          onPress={() => router.push("/(auth)/Login")}
+        >
+          <Text className="text-center font-normal text-gray-500">
+            Already have an account? <Text className="font-bold" style={{ color: PRIMARY_COLOR }}>Login</Text>
           </Text>
         </TouchableOpacity>
       </ScrollView>
