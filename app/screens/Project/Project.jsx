@@ -1085,17 +1085,22 @@ const Project = () => {
             </View>
           ) : highDemandProjects.length === 0 ? (
             <View
-              className="bg-white border border-[#F3F4F6]"
+              className="bg-white border border-[#F3F4F6] items-center justify-center"
               style={{
                 borderRadius: wp('5.3%'),
                 paddingHorizontal: wp('4.3%'),
-                paddingVertical: hp('2.5%'),
+                paddingVertical: hp('3%'),
               }}
             >
+              <Ionicons name="flame-outline" size={36} color="#D1D5DB" />
               <Text
-                className="font-medium text-[#6A7282]"
-                style={{ fontSize: wp('3.5%') }}
-              >No high demand projects available right now.</Text>
+                className="font-semibold text-[#364153] mt-3"
+                style={{ fontSize: wp('3.7%') }}
+              >No project found</Text>
+              <Text
+                className="font-normal text-[#6A7282] mt-1 text-center"
+                style={{ fontSize: wp('3.2%') }}
+              >No high demand projects available in this area right now.</Text>
             </View>
           ) : (
             <ScrollView
@@ -1155,10 +1160,17 @@ const Project = () => {
                 </View>
               ))
             ) : (
-              <Text
-                className="font-normal text-[#6A7282]"
-                style={{ fontSize: wp('3.5%') }}
-              >No top developers available right now.</Text>
+              <View className="items-center justify-center w-full py-4">
+                <Ionicons name="business-outline" size={36} color="#D1D5DB" />
+                <Text
+                  className="font-semibold text-[#364153] mt-3"
+                  style={{ fontSize: wp('3.7%') }}
+                >No developers found</Text>
+                <Text
+                  className="font-normal text-[#6A7282] mt-1 text-center"
+                  style={{ fontSize: wp('3.2%') }}
+                >No top developers available in this area right now.</Text>
+              </View>
             )}
           </View>
 
@@ -1188,10 +1200,17 @@ const Project = () => {
                     />
                   ))
                 ) : (
-                  <Text
-                    className="font-normal text-[#6A7282]"
-                    style={{ fontSize: wp('3.5%') }}
-                  >No projects found for this developer.</Text>
+                  <View className="items-center justify-center py-4" style={{ width: wp('60%') }}>
+                    <Ionicons name="folder-open-outline" size={36} color="#D1D5DB" />
+                    <Text
+                      className="font-semibold text-[#364153] mt-3"
+                      style={{ fontSize: wp('3.7%') }}
+                    >No project found</Text>
+                    <Text
+                      className="font-normal text-[#6A7282] mt-1 text-center"
+                      style={{ fontSize: wp('3.2%') }}
+                    >No projects found for this developer.</Text>
+                  </View>
                 )}
               </ScrollView>
             )}

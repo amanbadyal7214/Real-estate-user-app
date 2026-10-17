@@ -536,8 +536,10 @@ const Rent = () => {
                 location={item.location}
               />
             )) : (
-              <View className="rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6">
-                <Text className="font-medium text-[13px] text-[#6A7282]">No owner-listed properties available right now.</Text>
+              <View className="rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6 items-center justify-center w-full">
+                <Ionicons name="home-outline" size={36} color="#D1D5DB" />
+                <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+                <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No owner-listed properties available in this area right now.</Text>
               </View>
             )}
           </ScrollView>
@@ -599,21 +601,29 @@ const Rent = () => {
             <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
-          >
-            {sellers.map((seller) => (
-              <RecommendedSellerCard
-                key={seller.id}
-                name={seller.name || 'Seller'}
-                experienceYears={seller.experienceYears || '5'}
-                propertiesCount={seller.propertiesCount || '0'}
-                location={seller.locality || seller.location || 'Mohali'}
-              />
-            ))}
-          </ScrollView>
+          {sellers.length === 0 ? (
+            <View className="rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6 items-center justify-center w-full">
+              <Ionicons name="people-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No sellers found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No recommended sellers available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
+            >
+              {sellers.map((seller) => (
+                <RecommendedSellerCard
+                  key={seller.id}
+                  name={seller.name || 'Seller'}
+                  experienceYears={seller.experienceYears || '5'}
+                  propertiesCount={seller.propertiesCount || '0'}
+                  location={seller.locality || seller.location || 'Mohali'}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* Recommended Properties Section */}
@@ -628,23 +638,31 @@ const Rent = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
-          >
-            {recommendedProperties.map((item) => (
-              <RecommendedPropertyCard
-                key={item.id}
-                id={item.id || item._id}
-                image={item.image}
-                price={item.price}
-                title={item.title}
-                area={item.area}
-                location={item.location}
-              />
-            ))}
-          </ScrollView>
+          {recommendedProperties.length === 0 ? (
+            <View className="rounded-[20px] bg-white border border-[#F3F4F6] px-4 py-8 items-center justify-center w-full">
+              <Ionicons name="heart-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No recommended properties available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
+            >
+              {recommendedProperties.map((item) => (
+                <RecommendedPropertyCard
+                  key={item.id}
+                  id={item.id || item._id}
+                  image={item.image}
+                  price={item.price}
+                  title={item.title}
+                  area={item.area}
+                  location={item.location}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
 

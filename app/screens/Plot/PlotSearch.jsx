@@ -1,7 +1,9 @@
+import * as Location from 'expo-location';
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Search, TrendingUp } from 'lucide-react-native';
+import { ArrowLeft, ChevronRight, LayoutGrid, MapPin, Search, Target, TrendingUp } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import api from '../../api';
 import { useLocation } from '../../context/LocationContext';
@@ -12,6 +14,7 @@ const PlotSearch = () => {
   const [locality, setLocality] = useState(currentLocation?.locality || "");
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [loadingCurrentLocation, setLoadingCurrentLocation] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,6 +71,42 @@ const PlotSearch = () => {
     });
     // Navigate to Plot listing screen after submitting search
     router.replace('/screens/Plot/Plot');
+  };
+
+  const handleUseCurrentLocation = async () => {
+    try {
+      setLoadingCurrentLocation(true);
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setLoadingCurrentLocation(false);
+        return;
+      }
+
+      const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      const reverseGeocode = await Location.reverseGeocodeAsync({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+
+      if (reverseGeocode.length > 0) {
+        const geo = reverseGeocode[0];
+        const detectedCity = geo.city || geo.district || geo.subregion || 'Mohali';
+        const detectedLocality = geo.name || geo.street || geo.subdistrict || '';
+
+        setCity(detectedCity);
+        setLocality(detectedLocality);
+        updateLocation({
+          city: detectedCity,
+          locality: detectedLocality,
+          pincode: geo.postalCode,
+          display: detectedLocality ? `${detectedLocality}, ${detectedCity}` : detectedCity,
+        });
+      }
+    } catch (error) {
+      console.error('Error getting current location:', error);
+    } finally {
+      setLoadingCurrentLocation(false);
+    }
   };
 
   return (
@@ -164,6 +203,23 @@ const PlotSearch = () => {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Use Current Location */}
+        <TouchableOpacity
+          onPress={handleUseCurrentLocation}
+          disabled={loadingCurrentLocation}
+          className="flex-row items-center border-b border-[#E4E7EC]"
+          style={{ marginHorizontal: wp('3.5%'), paddingVertical: hp('1.5%'), gap: wp('2%') }}
+        >
+          {loadingCurrentLocation ? (
+            <ActivityIndicator size="small" color="#008E96" />
+          ) : (
+            <Target size={wp('4.5%')} color="#008E96" />
+          )}
+          <Text style={{ fontWeight: '500', fontSize: wp('3.4%') }} className="text-[#008E96]">
+            {loadingCurrentLocation ? 'Detecting location...' : 'Use my current location'}
+          </Text>
+        </TouchableOpacity>
 
         {/* Popular Localities Section */}
         <View className="mx-4 mt-4 p-4 rounded-3xl bg-[#EDFBFA]">

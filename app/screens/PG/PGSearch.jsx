@@ -1,9 +1,15 @@
+import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { ArrowLeft, ChevronDown, Mic, Target } from 'lucide-react-native';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocation } from '../../context/LocationContext';
 
 const PGSearch = () => {
+  const { currentLocation, updateLocation } = useLocation();
+  const [loadingCurrentLocation, setLoadingCurrentLocation] = useState(false);
   const popularLocalities = [
     { id: 1, name: 'Kharar' },
     { id: 2, name: 'Sector 115' },
@@ -52,10 +58,50 @@ const PGSearch = () => {
         </View>
 
         {/* Current Location CTA */}
-        <TouchableOpacity className="flex-row items-center px-4 py-3 gap-2 border-b border-[#E4E7EC]">
-          <Target size={20} color="#008E96" />
+        <TouchableOpacity
+          onPress={async () => {
+            try {
+              setLoadingCurrentLocation(true);
+              const { status } = await Location.requestForegroundPermissionsAsync();
+              if (status !== 'granted') {
+                setLoadingCurrentLocation(false);
+                return;
+              }
+
+              const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+              const reverseGeocode = await Location.reverseGeocodeAsync({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+
+              if (reverseGeocode.length > 0) {
+                const geo = reverseGeocode[0];
+                const detectedCity = geo.city || geo.district || geo.subregion || 'Mohali';
+                const detectedLocality = geo.name || geo.street || geo.subdistrict || '';
+
+                updateLocation({
+                  city: detectedCity,
+                  locality: detectedLocality,
+                  pincode: geo.postalCode,
+                  display: detectedLocality ? `${detectedLocality}, ${detectedCity}` : detectedCity,
+                });
+              }
+            } catch (error) {
+              console.error('Error getting current location:', error);
+            } finally {
+              setLoadingCurrentLocation(false);
+            }
+          }}
+          disabled={loadingCurrentLocation}
+          className="flex-row items-center px-4 py-3 gap-2 border-b border-[#E4E7EC]"
+        >
+          {loadingCurrentLocation ? (
+            <ActivityIndicator size="small" color="#008E96" />
+          ) : (
+            <Target size={20} color="#008E96" />
+          )}
           <Text className="font-medium text-[15px] text-[#008E96]">
-            Use my current location
+            {loadingCurrentLocation ? 'Detecting location...' : 'Use my current location'}
           </Text>
         </TouchableOpacity>
 

@@ -1,4 +1,5 @@
 
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Check, TrendingUp } from 'lucide-react-native';
@@ -473,7 +474,9 @@ const Commercial = () => {
             </View>
           ) : (
             <View className="rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6 items-center justify-center">
-              <Text className="font-medium text-[13px] text-[#6A7282] text-center">No properties available in this location.</Text>
+              <Ionicons name="business-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No commercial properties available in this area right now.</Text>
             </View>
           )}
         </View>
@@ -492,26 +495,34 @@ const Commercial = () => {
             </View>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingBottom: 8, paddingRight: 8 }}
-          >
-            {sellerColumns.map((column, columnIndex) => (
-              <View key={`seller-col-${columnIndex}`} style={{ width: wp('75%'), gap: 12 }}>
-                {column.map((seller) => (
-                  <SellerCard
-                    key={seller.id}
-                    name={seller.name}
-                    experienceYears={seller.experienceYears}
-                    propertiesCount={seller.propertiesCount}
-                    avatar={seller.avatar}
-                    tags={seller.tags}
-                  />
-                ))}
-              </View>
-            ))}
-          </ScrollView>
+          {sellers.length === 0 ? (
+            <View className="rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6 items-center justify-center w-full">
+              <Ionicons name="people-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No sellers found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No recommended sellers available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 12, paddingBottom: 8, paddingRight: 8 }}
+            >
+              {sellerColumns.map((column, columnIndex) => (
+                <View key={`seller-col-${columnIndex}`} style={{ width: wp('75%'), gap: 12 }}>
+                  {column.map((seller) => (
+                    <SellerCard
+                      key={seller.id}
+                      name={seller.name}
+                      experienceYears={seller.experienceYears}
+                      propertiesCount={seller.propertiesCount}
+                      avatar={seller.avatar}
+                      tags={seller.tags}
+                    />
+                  ))}
+                </View>
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         <View className="mt-1 mb-4">
@@ -567,7 +578,9 @@ const Commercial = () => {
             </ScrollView>
           ) : (
             <View className="mx-4 rounded-[12px] bg-white border border-[#F3F4F6] px-4 py-6 items-center justify-center">
-              <Text className="font-medium text-[13px] text-[#6A7282] text-center">No recommendations available in this location.</Text>
+              <Ionicons name="heart-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No recommendations available in this area right now.</Text>
             </View>
           )}
         </View>

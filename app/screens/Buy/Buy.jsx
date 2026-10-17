@@ -546,6 +546,12 @@ const Buy = () => {
 
           {discoveryLoading ? (
             <ActivityIndicator color="#008E96" />
+          ) : properties.length === 0 ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6] py-8 px-4">
+              <Ionicons name="home-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">We couldn't find properties in this area. Try changing your location.</Text>
+            </View>
           ) : (
             <PropertyMatchedCards
               data={properties.map(p => ({
@@ -761,24 +767,32 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
-          >
-            {highDemandProperties.map((p, index) => (
-              <HighDemandProjectCard
-                key={index}
-                projectId={p._id}
-                image={p.images?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400"}
-                priceRange={p.price}
-                title={p.title}
-                developer={p.projectName || "Standard"}
-                location={formatPropertyLocation(p)}
-                onPress={() => router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: p._id } })}
-              />
-            ))}
-          </ScrollView>
+          {highDemandProperties.length === 0 ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6] py-8 px-4 w-full">
+              <Ionicons name="flame-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No high demand properties available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 16 }}
+            >
+              {highDemandProperties.map((p, index) => (
+                <HighDemandProjectCard
+                  key={index}
+                  projectId={p._id}
+                  image={p.images?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=400"}
+                  priceRange={p.price}
+                  title={p.title}
+                  developer={p.projectName || "Standard"}
+                  location={formatPropertyLocation(p)}
+                  onPress={() => router.push({ pathname: '/screens/PropertyDetails', params: { propertyId: p._id } })}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         <View className="px-4 mb-6" style={{ gap: 16 }}>
@@ -817,26 +831,34 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
-          >
-            {focusProjects.map((project, index) => (
-              <ProjectFocusCard
-                key={index}
-                projectId={project._id}
-                images={project.media?.map(m => m.fileUrl) || []}
-                title={project.projectName || project.title}
-                location={formatPropertyLocation(project)}
-                price={project.priceRange || project.price}
-                tag={project.tag || "PREMIUM"}
-                developer={project.builder?.name || project.projectName}
-                badgeType={project.badgeType}
-                badgeColor={project.badgeColor}
-              />
-            ))}
-          </ScrollView>
+          {focusProjects.length === 0 ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6] py-8 px-4 w-full">
+              <Ionicons name="business-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No project found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No expert-recommended projects available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 16 }}
+            >
+              {focusProjects.map((project, index) => (
+                <ProjectFocusCard
+                  key={index}
+                  projectId={project._id}
+                  images={project.media?.map(m => m.fileUrl) || []}
+                  title={project.projectName || project.title}
+                  location={formatPropertyLocation(project)}
+                  price={project.priceRange || project.price}
+                  tag={project.tag || "PREMIUM"}
+                  developer={project.builder?.name || project.projectName}
+                  badgeType={project.badgeType}
+                  badgeColor={project.badgeColor}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* Best Rated Localities Section */}
@@ -957,23 +979,31 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
-          >
-            {recommendedProperties.map((item) => (
-              <RecommendedPropertyCard
-                key={item.id}
-                id={item.id || item._id}
-                image={item.image}
-                price={item.price}
-                title={item.title}
-                area={item.area}
-                location={item.location}
-              />
-            ))}
-          </ScrollView>
+          {recommendedProperties.length === 0 ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6] py-8 px-4 w-full">
+              <Ionicons name="heart-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No recommended properties available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
+            >
+              {recommendedProperties.map((item) => (
+                <RecommendedPropertyCard
+                  key={item.id}
+                  id={item.id || item._id}
+                  image={item.image}
+                  price={item.price}
+                  title={item.title}
+                  area={item.area}
+                  location={item.location}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* Recommended Sellers Section */}
@@ -983,21 +1013,29 @@ const Buy = () => {
             <Text className="font-normal text-[11px] text-[#6A7282] mt-0.5">Sellers with complete knowledge about locality</Text>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
-          >
-            {sellers.map((seller, index) => (
-              <RecommendedSellerCard
-                key={index}
-                name={seller.name || "Seller"}
-                experienceYears={seller.experienceYears || "5"}
-                propertiesCount={seller.propertyCount || "0"}
-                location={seller.locality || seller.city || "Mohali"}
-              />
-            ))}
-          </ScrollView>
+          {sellers.length === 0 ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6] py-8 px-4 w-full">
+              <Ionicons name="people-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No sellers found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No recommended sellers available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 12, paddingBottom: 8 }}
+            >
+              {sellers.map((seller, index) => (
+                <RecommendedSellerCard
+                  key={index}
+                  name={seller.name || "Seller"}
+                  experienceYears={seller.experienceYears || "5"}
+                  propertiesCount={seller.propertyCount || "0"}
+                  location={seller.locality || seller.city || "Mohali"}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* Better Priced Properties Section */}
@@ -1012,23 +1050,31 @@ const Buy = () => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 8 }}
-          >
-            {betterPricedProperties.map((property, index) => (
-              <BetterPricedPropertyCard
-                key={property.id || `better-priced-${index}`}
-                id={property.id || property._id}
-                image={property.image}
-                title={property.title}
-                marketer={property.marketer}
-                details={property.details}
-                priceRange={property.priceRange}
-              />
-            ))}
-          </ScrollView>
+          {betterPricedProperties.length === 0 ? (
+            <View className="items-center justify-center rounded-[20px] bg-white border border-[#F3F4F6] py-8 px-4 w-full">
+              <Ionicons name="pricetag-outline" size={36} color="#D1D5DB" />
+              <Text className="font-semibold text-[14px] text-[#364153] mt-3">No property found</Text>
+              <Text className="font-normal text-[12px] text-[#6A7282] mt-1 text-center">No better priced properties available in this area right now.</Text>
+            </View>
+          ) : (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 8 }}
+            >
+              {betterPricedProperties.map((property, index) => (
+                <BetterPricedPropertyCard
+                  key={property.id || `better-priced-${index}`}
+                  id={property.id || property._id}
+                  image={property.image}
+                  title={property.title}
+                  marketer={property.marketer}
+                  details={property.details}
+                  priceRange={property.priceRange}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
 
         {/* Last Searched Section */}
