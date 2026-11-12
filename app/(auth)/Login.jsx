@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import * as AppleAuthentication from "expo-apple-authentication";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
@@ -30,6 +31,7 @@ const Login = () => {
   // Google phone-OTP modal state
   const [googleOtpModalVisible, setGoogleOtpModalVisible] = useState(false);
   const [googleOtp, setGoogleOtp] = useState(["", "", "", "", "", ""]);
+  const [appleAuthAvailable, setAppleAuthAvailable] = useState(false);
   const googleOtpInputs = useRef([]);
 
   const {
@@ -41,14 +43,23 @@ const Login = () => {
     setRoleSelector,
     toast,
     setToast,
-    // Google auth
+    // Google & Apple auth
     handleGoogleSignIn,
+    handleAppleSignIn,
     sendGooglePhoneOtp,
     completeGoogleSignup,
     cancelGoogleSignup,
     googleSignupState,
     googlePhoneOtpSent,
   } = useRegister();
+
+  useEffect(() => {
+    if (Platform.OS === "ios") {
+      AppleAuthentication.isAvailableAsync()
+        .then(setAppleAuthAvailable)
+        .catch(() => setAppleAuthAvailable(false));
+    }
+  }, []);
 
   // When googleSignupState is set, show the phone OTP modal
   useEffect(() => {
@@ -140,6 +151,11 @@ const Login = () => {
 
   const handleGoogleSignInPress = () => {
     handleGoogleSignIn({ onSuccess: handleLoginSuccess, defaultRole: "buyer" });
+  };
+
+  const handleAppleSignInPress = () => {
+    if (loading) return;
+    handleAppleSignIn({ onSuccess: handleLoginSuccess, defaultRole: "buyer" });
   };
 
   return (
@@ -275,6 +291,18 @@ const Login = () => {
               {loading ? "Please wait..." : "Sign in with Google"}
             </Text>
           </TouchableOpacity>
+
+          {/* Apple Sign-In Button (iOS only, Guideline 4.8) */}
+          {Platform.OS === "ios" && appleAuthAvailable ? (
+            <AppleAuthentication.AppleAuthenticationButton
+              buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+              buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+              cornerRadius={12}
+              style={{ width: "100%", height: 48, marginTop: 12 }}
+              onPress={handleAppleSignInPress}
+            />
+          ) : null}
+
            <TouchableOpacity
           className="mt-2 py-6"
           onPress={() => router.push("/(auth)/Register")}
@@ -330,8 +358,8 @@ const Login = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Google user info banner */}
-            {googleSignupState?.googleUser?.name ? (
+            {/* Social user info banner */}
+            {googleSignupState?.googleUser?.name || googleSignupState?.googleUser?.email ? (
               <View
                 style={{
                   flexDirection: "row",
@@ -344,12 +372,16 @@ const Login = () => {
               >
                 <Ionicons name="person-circle-outline" size={28} color={PRIMARY_COLOR} />
                 <View style={{ marginLeft: 8 }}>
-                  <Text style={{ fontWeight: "600", color: "#101828", fontSize: 13 }}>
-                    {googleSignupState.googleUser.name}
-                  </Text>
-                  <Text style={{ color: "#6A7282", fontSize: 12 }}>
-                    {googleSignupState.googleUser.email}
-                  </Text>
+                  {googleSignupState?.googleUser?.name ? (
+                    <Text style={{ fontWeight: "600", color: "#101828", fontSize: 13 }}>
+                      {googleSignupState.googleUser.name}
+                    </Text>
+                  ) : null}
+                  {googleSignupState?.googleUser?.email ? (
+                    <Text style={{ color: "#6A7282", fontSize: 12 }}>
+                      {googleSignupState.googleUser.email}
+                    </Text>
+                  ) : null}
                 </View>
               </View>
             ) : null}

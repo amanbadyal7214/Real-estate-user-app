@@ -1,8 +1,9 @@
+import * as AppleAuthentication from "expo-apple-authentication";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 import api from "../app/api";
 import { validatePasswordRules } from "../components/PasswordValidator";
 
@@ -444,10 +445,11 @@ export const useRegister = () => {
         }
     };
 
-    // ─── Google Auth Flow (expo-web-browser — no extra package needed) ──────────
+    // ─── Google & Apple Social Auth ───────────────────────────────────────────
 
     // Ref to persist the onSuccess / defaultRole options across the async OAuth popup
     const googleOptionsRef = useRef({});
+    const appleOptionsRef = useRef({});
 
     /**
      * Called once we have an id_token from Google OAuth.
@@ -477,7 +479,7 @@ export const useRegister = () => {
                 }
             } else if (response.data.isNewUser) {
                 // ── New Google user – needs phone verification ──
-                setGoogleSignupState({ idToken, googleUser, role: defaultRole });
+                setGoogleSignupState({ provider: "google", idToken, googleUser, role: defaultRole });
                 setFormData(prev => ({
                     ...prev,
                     name: googleUser?.name || prev.name,
@@ -494,6 +496,120 @@ export const useRegister = () => {
             showToast(extractApiError(error, "Google sign-in failed. Please try again."), "error");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const _processAppleCredential = async (credential) => {
+        const { onSuccess, defaultRole = "buyer" } = appleOptionsRef.current;
+        const fullName = [
+            credential?.fullName?.givenName,
+            credential?.fullName?.middleName,
+            credential?.fullName?.familyName,
+        ]
+            .filter(Boolean)
+            .join(" ")
+            .trim();
+
+        const appleUser = {
+            name: fullName || "",
+            email: credential?.email || "",
+        };
+
+        setLoading(true);
+        try {
+            const payload = {
+                identityToken: credential.identityToken,
+                authorizationCode: credential.authorizationCode || undefined,
+                appleUserId: credential.user,
+                email: credential.email || undefined,
+                name: fullName || undefined,
+            };
+            console.log("API Request: POST /auth/apple (initial)", {
+                appleUserId: credential.user,
+                hasIdentityToken: !!credential.identityToken,
+            });
+            const response = await api.post("/auth/apple", payload);
+            console.log("API Response: /auth/apple", response.data);
+
+            if (response.data.success) {
+                const { token, role, user } = response.data;
+                await Promise.all([
+                    SecureStore.setItemAsync("token", token),
+                    SecureStore.setItemAsync("userRole", typeof role === "string" ? role : JSON.stringify(role)),
+                    SecureStore.setItemAsync("userData", JSON.stringify(user)),
+                ]);
+                showToast("Signed in with Apple!", "success");
+                if (typeof onSuccess === "function") {
+                    onSuccess(response.data);
+                } else {
+                    performRoleBasedRedirect(role, "/screens/Buy/Buy", setRoleSelector);
+                }
+            } else if (response.data.isNewUser) {
+                setGoogleSignupState({
+                    provider: "apple",
+                    idToken: credential.identityToken,
+                    authorizationCode: credential.authorizationCode || undefined,
+                    appleUserId: credential.user,
+                    googleUser: appleUser,
+                    role: defaultRole,
+                });
+                setFormData(prev => ({
+                    ...prev,
+                    name: appleUser.name || prev.name,
+                    email: appleUser.email || prev.email,
+                    role: defaultRole,
+                    phone: "",
+                }));
+                showToast("Almost there! Verify your phone to complete sign-up.", "info");
+            } else {
+                showToast(extractResponseError(response.data, "Apple sign-in failed."), "error");
+            }
+        } catch (error) {
+            const status = error.response?.status;
+            console.error("API Error: /auth/apple", error.response?.data || error.message);
+            if (status === 404 || status === 405 || status === 501) {
+                showToast("Apple Sign-In (/auth/apple) is not enabled on the server yet.", "error");
+            } else {
+                showToast(extractApiError(error, "Apple sign-in failed. Please try again."), "error");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAppleSignIn = async (options = {}) => {
+        if (Platform.OS !== "ios") {
+            showToast("Sign in with Apple is only available on iOS.", "info");
+            return;
+        }
+
+        appleOptionsRef.current = options;
+        try {
+            const available = await AppleAuthentication.isAvailableAsync();
+            if (!available) {
+                showToast("Sign in with Apple is not available on this device.", "error");
+                return;
+            }
+
+            const credential = await AppleAuthentication.signInAsync({
+                requestedScopes: [
+                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                ],
+            });
+
+            if (!credential?.identityToken) {
+                showToast("Apple sign-in failed – no identity token received.", "error");
+                return;
+            }
+
+            await _processAppleCredential(credential);
+        } catch (error) {
+            if (error?.code === "ERR_REQUEST_CANCELED") {
+                return;
+            }
+            console.error("Apple Sign-In error:", error?.message || error);
+            showToast("Apple sign-in failed. Please try again.", "error");
         }
     };
 
@@ -583,15 +699,15 @@ export const useRegister = () => {
     };
 
     /**
-     * Step 2 of Google new-user flow:
+     * Step 2 of Google / Apple new-user flow:
      *  - POST /auth/verify-phone-otp  (validate the OTP entered by user)
-     *  - POST /auth/google             (complete registration with phone + role)
+     *  - POST /auth/google or /auth/apple (complete registration with phone + role)
      */
     const completeGoogleSignup = async (options = {}) => {
         const { enteredOtp, onSuccess } = options;
 
         if (!googleSignupState) {
-            showToast("Google sign-in state lost. Please try again.", "error");
+            showToast("Social sign-in state lost. Please try again.", "error");
             return false;
         }
 
@@ -607,29 +723,42 @@ export const useRegister = () => {
 
         setLoading(true);
         try {
+            const isApple = googleSignupState.provider === "apple";
+
             // 1. Verify the phone OTP
-            console.log("API Request: POST /auth/verify-phone-otp (Google signup verify)");
+            console.log(`API Request: POST /auth/verify-phone-otp (${isApple ? "Apple" : "Google"} signup verify)`);
             const verifyRes = await api.post("/auth/verify-phone-otp", {
                 phone: formData.phone,
                 otp: enteredOtp.trim(),
             });
-            console.log("API Response: /auth/verify-phone-otp (Google signup verify)", verifyRes.data);
+            console.log("API Response: /auth/verify-phone-otp (social signup verify)", verifyRes.data);
 
             if (!verifyRes.data.success) {
                 showToast(extractResponseError(verifyRes.data, "Incorrect OTP. Please try again."), "error");
                 return false;
             }
 
-            // 2. Complete Google signup
-            const role = googleSignupState.role || formData.role || "buyer";
-            const payload = {
-                idToken: googleSignupState.idToken,
-                phone: formData.phone,
-                role,
-            };
-            console.log("API Request: POST /auth/google (complete signup)", { ...payload, idToken: "[redacted]" });
-            const signupRes = await api.post("/auth/google", payload);
-            console.log("API Response: /auth/google (complete signup)", signupRes.data);
+            // 2. Complete Google or Apple signup
+            const role = formData.role || googleSignupState.role || "buyer";
+            const endpoint = isApple ? "/auth/apple" : "/auth/google";
+            const payload = isApple
+                ? {
+                    identityToken: googleSignupState.idToken,
+                    authorizationCode: googleSignupState.authorizationCode || undefined,
+                    appleUserId: googleSignupState.appleUserId,
+                    email: googleSignupState.googleUser?.email || formData.email || undefined,
+                    name: googleSignupState.googleUser?.name || formData.name || undefined,
+                    phone: formData.phone,
+                    role,
+                }
+                : {
+                    idToken: googleSignupState.idToken,
+                    phone: formData.phone,
+                    role,
+                };
+            console.log(`API Request: POST ${endpoint} (complete signup)`, { ...payload, idToken: "[redacted]", identityToken: "[redacted]" });
+            const signupRes = await api.post(endpoint, payload);
+            console.log(`API Response: ${endpoint} (complete signup)`, signupRes.data);
 
             if (signupRes.data.success) {
                 const { token, role: userRole, user } = signupRes.data;
@@ -684,8 +813,9 @@ export const useRegister = () => {
         handleRegister,
         handleVerifyEmailOtp,
         handleLogin,
-        // Google auth
+        // Google & Apple social auth
         handleGoogleSignIn,
+        handleAppleSignIn,
         sendGooglePhoneOtp,
         completeGoogleSignup,
         cancelGoogleSignup,

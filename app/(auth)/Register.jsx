@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import * as AppleAuthentication from "expo-apple-authentication";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
@@ -27,10 +28,11 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
 
-  // Google phone-OTP modal state
+  // Google / Apple phone-OTP modal state
   const [googleOtpModalVisible, setGoogleOtpModalVisible] = useState(false);
   const [googleOtp, setGoogleOtp] = useState(["", "", "", "", "", ""]);
   const [googleSelectedRole, setGoogleSelectedRole] = useState("buyer");
+  const [appleAuthAvailable, setAppleAuthAvailable] = useState(false);
   const googleOtpInputs = useRef([]);
 
   // Supported signup roles (admin excluded)
@@ -61,8 +63,9 @@ const Register = () => {
     resetForm,
     toast,
     setToast,
-    // Google auth
+    // Google & Apple auth
     handleGoogleSignIn,
+    handleAppleSignIn,
     sendGooglePhoneOtp,
     completeGoogleSignup,
     cancelGoogleSignup,
@@ -73,6 +76,11 @@ const Register = () => {
   useEffect(() => {
     checkToken();
     updateFormData("role", "buyer");
+    if (Platform.OS === "ios") {
+      AppleAuthentication.isAvailableAsync()
+        .then(setAppleAuthAvailable)
+        .catch(() => setAppleAuthAvailable(false));
+    }
   }, []);
 
   // When the hook sets googleSignupState (new Google user), open the modal
@@ -272,6 +280,11 @@ const Register = () => {
 
   const handleGoogleSignUpPress = () => {
     handleGoogleSignIn({ defaultRole: "buyer" });
+  };
+
+  const handleAppleSignUpPress = () => {
+    if (loading) return;
+    handleAppleSignIn({ defaultRole: "buyer" });
   };
 
   return (
@@ -614,7 +627,7 @@ const Register = () => {
         <TouchableOpacity
           onPress={handleGoogleSignUpPress}
           disabled={loading}
-          className="mb-5"
+          className={Platform.OS === "ios" && appleAuthAvailable ? "mb-3" : "mb-5"}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -642,6 +655,17 @@ const Register = () => {
             {loading ? "Please wait..." : "Sign up with Google"}
           </Text>
         </TouchableOpacity>
+
+        {/* Apple Sign-Up Button (iOS only, Guideline 4.8) */}
+        {Platform.OS === "ios" && appleAuthAvailable ? (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_UP}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={12}
+            style={{ width: "100%", height: 48, marginBottom: 20 }}
+            onPress={handleAppleSignUpPress}
+          />
+        ) : null}
 
         <TouchableOpacity
           className="mt-2 mb-6"
@@ -755,15 +779,19 @@ const Register = () => {
             {/* Header */}
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
               <Text style={{ fontSize: 20, fontWeight: "700", color: "#101828" }}>
-                {googlePhoneOtpSent ? "Verify Your Phone" : "Complete Google Sign-Up"}
+                {googlePhoneOtpSent
+                  ? "Verify Your Phone"
+                  : googleSignupState?.provider === "apple"
+                  ? "Complete Apple Sign-Up"
+                  : "Complete Google Sign-Up"}
               </Text>
               <TouchableOpacity onPress={handleGoogleOtpModalClose}>
                 <Ionicons name="close" size={24} color="#6A7282" />
               </TouchableOpacity>
             </View>
 
-            {/* Google user info banner */}
-            {googleSignupState?.googleUser?.name ? (
+            {/* Social user info banner */}
+            {googleSignupState?.googleUser?.name || googleSignupState?.googleUser?.email ? (
               <View
                 style={{
                   flexDirection: "row",
@@ -776,12 +804,16 @@ const Register = () => {
               >
                 <Ionicons name="person-circle-outline" size={28} color={PRIMARY_COLOR} />
                 <View style={{ marginLeft: 8 }}>
-                  <Text style={{ fontWeight: "600", color: "#101828", fontSize: 13 }}>
-                    {googleSignupState.googleUser.name}
-                  </Text>
-                  <Text style={{ color: "#6A7282", fontSize: 12 }}>
-                    {googleSignupState.googleUser.email}
-                  </Text>
+                  {googleSignupState?.googleUser?.name ? (
+                    <Text style={{ fontWeight: "600", color: "#101828", fontSize: 13 }}>
+                      {googleSignupState.googleUser.name}
+                    </Text>
+                  ) : null}
+                  {googleSignupState?.googleUser?.email ? (
+                    <Text style={{ color: "#6A7282", fontSize: 12 }}>
+                      {googleSignupState.googleUser.email}
+                    </Text>
+                  ) : null}
                 </View>
               </View>
             ) : null}

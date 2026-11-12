@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import {
   ArrowLeft,
@@ -348,12 +348,14 @@ const Profile = () => {
     }
   }, []);
 
-  React.useEffect(() => {
-    checkLoginStatus();
-    fetchActivitySummary().catch((err) => {
-      console.error("Error fetching activity summary in Profile screen:", err);
-    });
-  }, [checkLoginStatus, fetchActivitySummary]);
+  useFocusEffect(
+    React.useCallback(() => {
+      checkLoginStatus();
+      fetchActivitySummary().catch((err) => {
+        console.error("Error fetching activity summary in Profile screen:", err);
+      });
+    }, [checkLoginStatus, fetchActivitySummary])
+  );
 
   React.useEffect(() => {
     if (activeTab === 'saved') {
