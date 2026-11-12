@@ -1,5 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Audio } from "expo-av";
+import {
+  RecordingPresets,
+  requestRecordingPermissionsAsync,
+  setAudioModeAsync,
+  useAudioRecorder,
+} from "expo-audio";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -16,23 +21,21 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const LocationSelection = () => {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [recording, setRecording] = useState(null);
+  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const [isListening, setIsListening] = useState(false);
 
   async function startRecording() {
     try {
-      const permission = await Audio.requestPermissionsAsync();
+      const permission = await requestRecordingPermissionsAsync();
 
-      if (permission.status === "granted") {
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: true,
-          playsInSilentModeIOS: true,
+      if (permission.granted) {
+        await setAudioModeAsync({
+          allowsRecording: true,
+          playsInSilentMode: true,
         });
 
-        const { recording } = await Audio.Recording.createAsync(
-          Audio.RecordingOptionsPresets.HIGH_QUALITY
-        );
-        setRecording(recording);
+        await audioRecorder.prepareToRecordAsync();
+        audioRecorder.record();
         setIsListening(true);
       } else {
         Alert.alert("Permission denied", "Please grant microphone access.");
@@ -43,22 +46,25 @@ const LocationSelection = () => {
   }
 
   async function stopRecording() {
-    setRecording(undefined);
-    setIsListening(false);
-    await recording.stopAndUnloadAsync();
-    const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
+    try {
+      setIsListening(false);
+      await audioRecorder.stop();
+      const uri = audioRecorder.uri;
+      console.log("Recording stopped and stored at", uri);
 
-    // Note: To convert this to text, you would typically send 'uri' to an API
-    // like Google Cloud Speech-to-Text or OpenAI Whisper.
-    Alert.alert(
-      "Recorded",
-      "Voice captured! (Integration with transcription API needed for full text conversion)"
-    );
+      // Note: To convert this to text, you would typically send 'uri' to an API
+      // like Google Cloud Speech-to-Text or OpenAI Whisper.
+      Alert.alert(
+        "Recorded",
+        "Voice captured! (Integration with transcription API needed for full text conversion)"
+      );
+    } catch (err) {
+      console.error("Failed to stop recording", err);
+    }
   }
 
   const handleVoiceSearch = () => {
-    if (recording) {
+    if (isListening) {
       stopRecording();
     } else {
       startRecording();
@@ -99,7 +105,7 @@ const LocationSelection = () => {
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }} style={{ paddingHorizontal: wp('2%') }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingHorizontal: wp('2%') }}>
       {/* Header */}
       <View className="flex-row items-center border-b border-gray-50" style={{ paddingHorizontal: wp('4%'), paddingVertical: hp('2%'), marginTop: hp('5%') }}>
         <TouchableOpacity onPress={() => router.back()} className="p-1">
@@ -110,7 +116,7 @@ const LocationSelection = () => {
         </Text>
       </View>
 
-      <ScrollView style={{ flex: 1 }} style={{ paddingHorizontal: wp('4%') }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1, paddingHorizontal: wp('4%') }} showsVerticalScrollIndicator={false}>
         <Text className="text-[#6A7282] font-normal" style={{ fontSize: wp('3.5%'), marginBottom: hp('3%') }}>
           Choose a city which can be changed later
         </Text>

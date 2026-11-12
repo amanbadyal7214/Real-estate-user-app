@@ -1,7 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useIsFocused } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { router, useIsFocused } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { ChevronRight, Home, LayoutGrid, MapPin } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';

@@ -9,8 +9,6 @@ config.resolver.extraNodeModules = {
   "react-native-css-interop": path.resolve(__dirname, "node_modules/react-native-css-interop"),
 };
 
-config.resolver.sourceExts = ["js", "jsx", "ts", "tsx", "json", "svg", "mjs", "cjs"];
-
 module.exports = withNativeWind(config, { input: "./global.css" });
 
 

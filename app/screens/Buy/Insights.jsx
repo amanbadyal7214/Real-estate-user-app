@@ -1,5 +1,4 @@
-import { useIsFocused } from '@react-navigation/native';
-import { router, Stack } from 'expo-router';
+import { router, Stack, useIsFocused } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { ArrowLeft } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
